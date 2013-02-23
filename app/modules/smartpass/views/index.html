@@ -1,0 +1,427 @@
+
+<div id="smartpass" class="container" >
+   
+		<div class="hero row-fluid feature-row">
+	        <div class="span9">
+	            <h2 class="ng-binding">Passbook Module</h2>
+	            <p class="ng-binding">
+	                With the SmartPass module you can easily create Apple iOS Passbook Passes.
+	            </p>
+					<h4 class="title">What is Passbook?</h4>
+			        <p class="text">Passbook is Apple's new feature for iPhone and iPod touch on iOS 6. Passbook lets you store your digital tickets, boarding passes, and coupons.</p>
+					<p class="text">You can find more recommended Passbook Apps <a href="#other-pass-apps">here</a>.</p>
+			        <p>For more information about developing for Passbook please refer to the 
+			            <a href="http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/PassKit_PG/Chapters/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW55" target="_blank">Passbook Programming Guide</a>.
+			   </p>
+				<p>
+					<a class="btn btn-large btn-primary" data-toggle="modal" ng-click="SmartPass.clearPass();" href="#smartpass-modal" ><i class="icon-pencil"></i> Create New Pass</a>
+				</p>	            
+	        </div>
+	        <div class="span3">
+	            <a href="#" class=""> <img ng-src="{{cdn}}/img/passbook-hero.png"/> </a>
+	        </div>
+	    </div>
+
+    
+		<div id="smartpass-row" class="row-fluid">
+			<div class="span12">
+				
+							<widget title="Passes">
+								<table id="Screens-table" class="table table-hover table-condensed table-bordered" ng-init="SmartPass.getPasses()">
+					             		       <thead>
+							                        <tr>
+							                            <th>Type</th>
+							                            <th>Organization</th>
+							                            <th>Description</th>
+
+							                            <th>Last Updated</th>
+
+							                        </tr>
+							                    </thead>
+							                    <tbody>
+							                        <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
+							                            <td>
+							                                <a href="#smartpass-modal" ng-click="SmartPass.selectPass(pass);" data-toggle="modal">
+							                                    <img ng-src="{{cdn}}/img/{{pass.type}}.png" alt="{{pass.type}} Icon" style="height:50px; width:50px"/>
+							                                </a>
+							                            </td>
+							                            <td>
+																<a href="#smartpass-modal" ng-click="SmartPass.selectPass(pass);" data-toggle="modal">
+															{{pass.organizationName}}
+								                                </a>
+
+														</td>
+
+							                            <td>
+															<a href="#smartpass-modal" ng-click="SmartPass.selectPass(pass);" data-toggle="modal">
+							                                {{pass.description}}
+							                                </a>
+
+							                             </td>
+							                           
+							                            <td>{{pass.updated | date: 'medium'}}</td>
+
+							                        </tr>
+							                    </tbody>
+							                </table>
+										</div>
+
+
+
+
+					</widget>
+
+
+
+
+					<div class="modal fade hide" id="smartpass-modal">
+					  <div class="modal-header">
+					    <button type="button" class="close" data-dismiss="modal">×</button>
+					    <h3>Pass Form</h3>
+					  </div>
+					  <div class="modal-body">
+					    	  <form class="form-horizontal">
+
+
+
+				                         <legend>
+				                            Details
+				
+
+				                        </legend>
+				
+				
+				                         <formitem title="Pass Type:">
+												<select ng-model="pass.type" 
+													ng-change="SmartPass.loadSchema(t)"
+													ng-options="t.name as t.title for t in SmartPass.types"></select>
+					                        </formitem>
+
+				                        <formitem title="Organization Name:">
+				                            <input type="text" ng-model="pass.organizationName" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Logo Text:">
+				                            <input type="text" ng-model="pass.logoText" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Description:">
+				                            <textarea ng-model="pass.description" class="span12"></textarea>
+				                        </formitem>
+
+				                         <legend>
+				                            Primary Fields 
+											<a class="label label-success" ng-click="pass[pass.type].primaryFields.push({})">
+				                                <i class="icon-plus"></i>
+				                            </a>
+				                        </legend>
+
+				                        <formitem title="Primary Field #{{$index}}:" ng-repeat="a in pass[pass.type].primaryFields">
+
+				                             <div class="controls-row meta-row" >
+				                                <input type="text" name="key" ng-model="a.key" class="span3" placeholder="Key"/>
+				                                <input type="text" name="label" ng-model="a.label" class="span3" placeholder="Label"/>
+				                                <input type="text" name="value" ng-model="a.value" class="span3" placeholder="Value"/>
+				                                <span class="help-inline">
+				                                        <a class="label label-red remove-row-btn" ng-click="pass[pass.type].primaryFields.splice($index, 1)">
+				                                            <i class="icon-remove"></i>
+				                                        </a>
+
+				                               </span>
+				                               <br/>
+				                            </div>
+
+
+				                        </formitem>
+
+										 <legend>
+				                            Extra Fields
+				                            <a class="label label-success" ng-click="pass[pass.type].auxiliaryFields.push({})">
+				                                <i class="icon-plus"></i>
+				                            </a>
+				                        </legend>
+				                         <formitem title="Extra Field #{{$index}}:" ng-repeat="a in pass[pass.type].auxiliaryFields">
+
+				                            <div class="controls-row meta-row" >
+				                                <input type="text" name="key" ng-model="a.key" class="span3" placeholder="Key"/>
+				                                <input type="text" name="label" ng-model="a.label" class="span3" placeholder="Label"/>
+				                                <input type="text" name="value" ng-model="a.value" class="span3" placeholder="Value"/>
+				                                <span class="help-inline">
+				                                      <a class="label label-red remove-row-btn" ng-click="pass[pass.type].auxiliaryFields.splice($index, 1)">
+				                                          <i class="icon-remove"></i>
+				                                      </a>
+
+				                               </span>
+											<br/>
+				                            </div>
+
+				                        </formitem>
+
+										 <legend>
+				                            Back Fields
+												<a class="label label-success" ng-click="pass[pass.type].backFields.push({})">
+				                                	<i class="icon-plus"></i>
+				                            	</a>
+				                        </legend>
+				                        <formitem title="Back Field #{{$index}}:" ng-repeat="a in pass[pass.type].backFields">
+
+				                             <div class="controls-row meta-row">
+				                                <input type="text" name="key" ng-model="a.key" class="span3" placeholder="Key"/>
+				                                <input type="text" name="label" ng-model="a.label" class="span3" placeholder="Label"/>
+				                                <input type="text" name="value" ng-model="a.value" class="span3" placeholder="Value"/>
+				                                	<span class="help-inline">
+				                                       <a class="label label-red remove-row-btn" ng-click="pass[pass.type].backFields.splice($index, 1)">
+				                                           <i class="icon-remove"></i>
+				                                       </a>
+				                               		</span>
+											&nbsp;
+				                            </div>
+
+				                        </formitem>
+				                         <legend>
+				                            Locations 
+				                            <a class="label label-success" ng-click="pass.locations.push({})">
+				                                <i class="icon-plus"></i> 
+				                            </a>
+				                        </legend>
+				                        <formitem title="Location #{{$index}}:" ng-repeat="l in pass.locations">
+				                            <div class="controls-row meta-row" >
+				                                <input type="text" name="latitude" ng-model="l.latitude" class="span4" placeholder="Latitude"/>
+				                                <input type="text" name="longitude" ng-model="l.longitude" class="span4" placeholder="Longitude"/>
+				                                	<span class="help-inline">
+				                                        <a class="label label-red remove-row-btn" ng-click="pass.locations.splice($index, 1)">
+				                                            <i class="icon-remove"></i>
+				                                        </a>
+
+				                                    </span>
+												&nbsp;
+				                            </div>
+				                        </formitem>
+
+
+				                         <legend>    
+				                            Barcode
+				                        </legend>
+				                        <formitem title="Format:">
+				                            <select ng-model="pass.barcode.format" class="input-medium" ng-options="format.name for format in SmartPass.barcodes"></select>
+				                        </formitem>
+				                        <formitem title="Messsage:">
+											<textarea ng-model="pass.barcode.message"></textarea>
+				                        </formitem>
+				                        <formitem title="Encoding:">
+				                            <input type="text" ng-model="pass.barcode.messageEncoding" class="input-medium"/>
+				                        </formitem>
+
+
+
+				                        <legend>
+				                            Style
+				                        </legend>
+										 <formitem title="Label Color:">
+					                           <input type="text" ng-model="pass.labelColor" class="colorpicker"/>
+				                        </formitem>
+				                        <formitem title="Foreground Color:">
+				                            <input type="text" ng-model="pass.foregroundColor" class="colorpicker"/>
+				                        </formitem>
+				                        <formitem title="Background Color:">
+				                            <input type="text" ng-model="pass.backgroundColor" class="colorpicker"/>
+				                        </formitem>
+
+										<formitem title="Icon:">
+											<div id="PassIconDiv">
+												<img id="pass_icon" alt="Pass Icon" src="http://placehold.it/250x250&text=Drop Image Here"/>
+											</div>
+											<input name="data[Pass][icon]" id="PassIcon" value="" type="file" class="file-url-input">
+										</formitem>
+										<formitem title="Icon@2x:">
+											<div id="PassIconDiv">
+												<img id="pass_icon2x" alt="Pass Icon" src="http://placehold.it/250x250&text=Drop Image Here"/>
+											</div>
+											<input name="data[Pass][icon2x]" id="PassIcon2x" value="" type="file" class="file-url-input">
+										</formitem>
+
+
+				                        <legend>
+				                            Identity
+				                        </legend>
+				                        <formitem title="ID:">
+				                            <input type="text" ng-model="pass._id" disabled="true" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Identifier:">
+				                            <input type="text" ng-model="pass.passTypeIdentifier" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Serial Number:">
+				                            <input type="text" ng-model="pass.serialNumber" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Team Identifier:">
+				                            <input type="text" ng-model="pass.teamIdentifier" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Web Service URL:">
+				                            <input type="text" ng-model="pass.webServiceURL" class="span12"/>
+				                        </formitem>
+				                        <formitem title="Authentication Token:">
+				                            <input type="text" ng-model="pass.authenticationToken" class="span12"/>
+				                        </formitem>
+
+				                        <legend>
+				                            Web Service API
+				                        </legend>
+				                        <formitem title="Register Device:">
+				                            <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+				                            <span class="help-block">
+				                                <span class="label label-warning">POST</span>
+				                                Handles registering a device to recieve push notifications.</span>
+				                        </formitem>
+				                        <formitem title="Unregister Device:">
+				                            <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+				                            <span class="help-block">
+				                                <span class="label label-warning">DELETE</span>
+				                                Handles unregistering a device
+				                                .</span>
+				                        </formitem>
+				                        <formitem title="Get Passes on Device:">
+				                            <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="span12"/>
+				                            <span class="help-block">
+				                                <span class="label label-warning">GET</span>
+				                                Handles getting the serial numbers for Passes associated with a device.
+				                            </span>
+				                        </formitem>
+
+				                        <formitem title="Latest Version:">
+				                            <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+				                            <span class="help-block">
+				                                <span class="label label-warning">GET</span>
+				                                Handles getting the serial numbers for Passes associated with a device.
+				                            </span>
+				                        </formitem>
+
+										<legend>pass.json</legend>
+										<textarea class="span12">{{pass || json}}</textarea>
+
+
+				                <!-- @TODO: [
+				                Barcode Dictionary Keys
+
+				                Information about a pass’s barcode.
+
+				                Key name
+				                Type
+				                Description
+				                altText
+				                string
+				                Optional. Text displayed near the barcode. For example, a human-readable version of the barcode data in case the barcode doesn’t scan.
+				                format
+				                string
+				                Required. Barcode format. Must be one of the following values: PKBarcodeFormatQR, PKBarcodeFormatPDF417, PKBarcodeFormatAztec.
+				                message
+				                string
+				                Required. Message or payload to be displayed as a barcode.
+				                messageEncoding
+				                IANA character set name, as a string
+				                Required. Text encoding that is used to convert the message from the string representation to a data representation to render the barcode. The value is typically iso-8859-1, but you may use another encoding that is supported by your barcode scanning infrastructure.
+				                ] -->
+
+				                    </form>
+					  </div>
+					  <div class="modal-footer">
+					    <a href="#" class="btn" data-dismiss="modal">Close</a>
+					    <a ng-click="SmartPass.deletePass(pass)" class="btn btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Delete</a>
+					    <a ng-click="SmartPass.savePass(pass)" class="btn btn-primary" data-dismiss="modal"><i class="icon-ok"></i> Save changes</a>
+
+					  </div>
+					</div>
+
+
+
+
+
+				<div class="span12 hidden">	
+					<div class="clearfix">
+
+			            <!-- @TODO: [
+
+
+			            Key name
+			            Type
+			            Description
+			            headerFields
+			            array of field dictionaries
+			            Optional. Fields to be displayed in the header on the front of the pass.
+			            Use header fields sparingly; unlike all other fields, they remain visible when a stack of passes are displayed.
+			            primaryFields
+			            array of field dictionaries
+			            Optional. Fields to be displayed prominently on the front of the pass.
+			            secondaryFields
+			            array of field dictionaries
+			            Optional. Fields to be displayed on the front of the pass.
+			            auxiliaryFields
+			            array of field dictionaries
+			            Optional. Additional fields to be displayed on the front of the pass.
+			            backFields
+			            array of field dictionaries
+			            Optional. Fields to be on the back of the pass.
+			            transitType
+			            string
+			            Required for boarding passes; otherwise not allowed. Type of transit. Must be one of the following values: PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
+			            ] -->
+
+			            <!-- @TODO: [Pass Visual Styles] -->
+			            <div id="pass-device" class="span3">
+			                <div id="demo-pass" class="pass" >
+			                    <div class="pass-header">
+			                      <h1><i class="icon icon-{{pass.icon}}"></i>{{pass.logoText}} <small></small></h1>
+			                    </div>                  
+			                    <div class="media">
+			                      <a class="pull-right" href="#">
+			                        <img class="media-object object" ng-src="{{pass.thumbnail}}"/>
+			                      </a>
+			                      <div class="media-body">
+			                        <h4 class="media-heading">{{pass.description}}</h4>
+			                        <!-- Nested media object -->
+			                        <div class="media">
+
+			                           <span ng-repeat="a in pass[pass.type].primaryFields">
+			                                <dt>{{a.label}}</dt><dd>{{a.value}}</dd>
+			                            </span>
+			                           <span ng-repeat="a in pass[pass.type].secondaryFields">
+			                                <dt>{{a.label}}</dt><dd>{{a.value}}</dd>
+			                            </span>
+
+			                           <span ng-repeat="a in pass[pass.type].auxiliaryFields">
+			                                <dt>{{a.label}}</dt><dd>{{a.value}}</dd>
+			                            </span>
+
+			                            <div class="back">
+			                                  <span ng-repeat="a in pass[pass.type].backFields">
+			                                        <dt>{{a.label}}</dt><dd>{{a.value}}</dd>
+			                                    </span>
+			                            </div>
+			                           <div id="pass-barcode" class="barcode">
+
+			                           </div>
+			                        </div>
+			                      </div>
+			                    </div>
+			                </div>
+			            </div>
+
+			        </div>  
+
+
+
+				</div><!--/6-->
+
+
+
+
+
+
+
+
+
+
+
+
+			</div>
+		</div>
+	
+	
+</div>

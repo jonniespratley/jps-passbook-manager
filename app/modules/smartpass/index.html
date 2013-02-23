@@ -1,0 +1,66 @@
+<html ng-app="SmartPassModule">
+    <head>
+
+      
+		<link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/branches/release-1-Jun-2011/styles/sunburst.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+	   <script type="text/javascript" src="//www.google.com/jsapi"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <link id="theme-core"  type="text/css" rel="stylesheet" href="/dist/css/myappmatrix-1.0.css"/>		
+
+		<script src="/dist/js/myappmatrix-1.0-plugins.js"></script>
+		<script src="/dist/js/myappmatrix-1.0-core.js"></script>
+		
+		
+		<!-- @TODO: [Modules Controller] -->
+		<script type="text/javascript" src="controllers.js"></script>
+		<script type="text/javascript" src="components.js"></script>
+		<link rel="stylesheet" href="styles.css" type="text/css" title="no title" charset="utf-8"/>
+ 
+        <title>SmartPass Module | AppMatrix Engine</title>
+       
+    </head>
+
+    <body>
+	
+	
+	
+		<!-- @TODO: [SmartPass Navbar] -->
+        <div class="navbar navbar-fixed-top navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="#">SmartPass</a>
+                    <ul class="nav">
+						<li class="active">
+							<a href="#/index">SmartPass</a>
+						</li>
+                        <li class="">
+                            <a href="#/docs">Docs</a>
+                        </li>
+                       
+                	     <li>
+                          <a href="#/mobile">Mobile</a>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+
+
+        	<div id="wrap" class="container-fluid">
+				<div id="container-row" class="row-fluid">
+					<div class="span12 page">
+						<div ng-view></div>	
+					</div>
+				</div>
+  
+			 
+		</div><!--/container-->
+                
+
+	
+                
+	 
+    </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "ame-coupons",
+  "version": "1.0.0",
+  "repository" : "git://github.com/appmatrixinc/ame-angular/tree/master/app/modules/coupons",
+  "main": ["controllers.js", "views/index.html", "views/form.html"],
+  "dependencies": {
+    "jquery": "~1.7.2",
+    "ame" : "~1.0.0"
+  }
+}
