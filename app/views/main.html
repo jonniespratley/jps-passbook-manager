@@ -4,16 +4,37 @@
 		<div class="hero-unit">
 			<div class="row-fluid feature-row">
 			    <div class="span8">
-			        <h1 class="ng-binding">Passbook Manager</h1>
+			        <h1 class="ng-binding">Easy Passes</h1>
 			        <p class="ng-binding">
 			            With this interface you can easily create Apple iOS Passbook Passes.
 			        </p>
 					<p>
-						<a class="btn btn-large btn-primary" data-toggle="modal" ng-click="SmartPass.clearPass();" href="#smartpass-modal" ><i class="icon-pencil"></i> Create New Pass</a>
+							<a class="btn btn-large btn-inverse" data-toggle="modal" ng-click="SmartPass.clearPass();" href="#/manage" ><i class="icon-pencil icon-2x pull-left"></i>Start using<br/> Manager</a>
+						<a class="btn btn-large btn-github" href="https://github.com/jonniespratley/jps-passbook-manager" target="_blank" onclick="_gaq.push(['_trackEvent', 'Outbound Link', 'View Project on GitHub']);">
+						            <i class="icon-github icon-2x pull-left"></i>
+						            View Project<br>on GitHub</a>
+					
 					</p>	            
 			    </div>
 			    <div class="span4">
-			        <a href="#" class=""> <img ng-src="http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com/img/passbook-hero.png"/> </a>
+					<div id="iconCarousel" class="carousel slide">
+					        <!-- Carousel items -->
+					        <div class="carousel-inner">
+					          <div class="item active"><div><img ng-src="http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com/img/passbook-hero.png"/></div></div>
+					          <div class="item"><div><i class="icon-cloud-download"></i></div></div>
+					          <div class="item"><div><i class="icon-lightbulb"></i></div></div>
+					          <div class="item"><div><i class="icon-group"></i></div></div>
+					          <div class="item "><div><i class="icon-ambulance"></i></div></div>
+
+					        </div>
+					        <!-- Carousel nav -->
+					        <a class="carousel-control left" href="#iconCarousel" data-slide="prev" onclick="_gaq.push(['_trackEvent', 'iconCarousel', 'Prev']);">
+					        </a>
+					        <a class="carousel-control right" href="#iconCarousel" data-slide="next" onclick="_gaq.push(['_trackEvent', 'iconCarousel', 'Next']);">
+					        
+					</a>
+					      </div>
+			      
 			    </div>
 			</div>
 		</div>

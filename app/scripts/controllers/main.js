@@ -3,7 +3,7 @@
 jpsPassbookManagerApp.controller('MainCtrl', function($scope, $rootScope, $http) {
 
 	$rootScope.App = {
-		name: 'Passbook Manager',
+		name: 'jps-passbook-manager',
 		menu: [
 			{ id: null, slug: 'home', title: 'Home', icon: 'home', href:'#/home' },
 			{ id: null, slug: 'manage', title: 'Manage', icon: 'edit', href:'#/manage' },

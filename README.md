@@ -1,13 +1,42 @@
 # Passbook Manager
 This is a simple interface for creating iOS Passbook passes from content.
 
+
+### Creating a pass
+
+
+
+### Signing a pass
+
+
+
+### Validating a pass
+
+
+
+
+### Distributing a pass
+
+
+
+
+
+
+
+
+
 ## Getting Started
-Download the [production version][min] or the [development version][max].
+Fork this repo and start the web server by using:
 
-[min]: https://raw.github.com/appmatrixinc/appmatrix.js/master/dist/appmatrix.min.js
-[max]: https://raw.github.com/appmatrixinc/appmatrix.js/master/dist/appmatrix.js
-
-
+	yeoman server
+	
+Then start the passbook web service server by using:
+	
+	node server
+	
+	
+	
+	
 ## Documentation
 Here is a look at the package of the module object.
 

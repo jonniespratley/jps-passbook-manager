@@ -177,6 +177,7 @@ jpsPassbookManagerApp.controller('ManageCtrl', function($scope, $rootScope, $htt
 	
 	
 	$rootScope.SmartPass.coupon = {
+		"mode": "edit",
 		"formatVersion" : 1,
 		"passTypeIdentifier" : "pass.myappmatrix.coupons",
 		"serialNumber" : "E5982H-I2",
@@ -220,7 +221,7 @@ jpsPassbookManagerApp.controller('ManageCtrl', function($scope, $rootScope, $htt
 		}
 	};
  
-	$scope.pass = $rootScope.SmartPass.coupon;
+	$scope.pass = angular.copy($rootScope.SmartPass.coupon);
 	$scope.order = 'updated';
 	$scope.reverse = false;
 	$scope.pass.type = 'coupon';
