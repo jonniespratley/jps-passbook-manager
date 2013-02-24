@@ -1,5 +1,5 @@
 /* ======================[ @TODO: Inline Editable ]====================== */
-builderApp.directive('ngEnter', function() {
+jpsPassbookManagerApp.directive('ngEnter', function() {
 	return function(scope, elm, attrs) {
 		elm.bind('keypress', function(e) {
 			if (e.charCode === 13)
@@ -7,7 +7,7 @@ builderApp.directive('ngEnter', function() {
 		});
 	};
 });
-builderApp.directive('myTable', function() {
+jpsPassbookManagerApp.directive('myTable', function() {
 	return function(scope, element, attrs) {
 
 		// apply DataTable options, use defaults if none specified by user
@@ -61,7 +61,7 @@ builderApp.directive('myTable', function() {
 		});
 	};
 });
-builderApp.directive('inlineEdit', function() {
+jpsPassbookManagerApp.directive('inlineEdit', function() {
 	return {
 		// can be in-lined or async loaded by xhr
 		// or inlined as JS string (using template property)
@@ -72,7 +72,7 @@ builderApp.directive('inlineEdit', function() {
 	};
 });
 
-builderApp.directive('contenteditable', function() {
+jpsPassbookManagerApp.directive('contenteditable', function() {
 	return {
 		require : 'ngModel',
 		link : function(scope, elm, attrs, ctrl) {
@@ -122,7 +122,7 @@ builderApp.directive('contenteditable', function() {
  </pane>
  </tabs>
  */
-builderApp.directive('tabs', function() {
+jpsPassbookManagerApp.directive('tabs', function() {
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -171,7 +171,7 @@ builderApp.directive('tabs', function() {
  * <box title="Name">[Contents]</box>
  *
  */
-builderApp.directive('box', function() {
+jpsPassbookManagerApp.directive('box', function() {
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -194,7 +194,7 @@ builderApp.directive('box', function() {
  M - Comment: <!-- directive: my-directive exp -->
  *
  */
-builderApp.directive('mediaobject', function() {
+jpsPassbookManagerApp.directive('mediaobject', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -211,7 +211,7 @@ builderApp.directive('mediaobject', function() {
 
 	};
 });
-builderApp.directive('iconobject', function() {
+jpsPassbookManagerApp.directive('iconobject', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -229,7 +229,7 @@ builderApp.directive('iconobject', function() {
 	};
 });
 
-builderApp.directive('amMediaObject', function() {
+jpsPassbookManagerApp.directive('amMediaObject', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -251,7 +251,7 @@ builderApp.directive('amMediaObject', function() {
  *
  * Feature Item
  */
-builderApp.directive('featureitem', function() {
+jpsPassbookManagerApp.directive('featureitem', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -273,7 +273,7 @@ builderApp.directive('featureitem', function() {
  *
  * Feature Item
  */
-builderApp.directive('featureObject', function() {
+jpsPassbookManagerApp.directive('featureObject', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -296,7 +296,7 @@ builderApp.directive('featureObject', function() {
  * <formitem title="Label:" type="text">[Contents]</box>
  *
  */
-builderApp.directive('formitem', function() {
+jpsPassbookManagerApp.directive('formitem', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -328,7 +328,7 @@ builderApp.directive('formitem', function() {
 	};
 });
 
-builderApp.directive('moduleForm', function() {
+jpsPassbookManagerApp.directive('moduleForm', function() {
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -352,7 +352,7 @@ builderApp.directive('moduleForm', function() {
  * @usage
  * <featureRow title="Label:" type="text">[Contents]</featureRow>
  */
-builderApp.directive('featureRow', function() {
+jpsPassbookManagerApp.directive('featureRow', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -373,7 +373,7 @@ builderApp.directive('featureRow', function() {
  * Blank Slate directive for displaying a form for creating a record when no
  * reocrds are found.
  */
-builderApp.directive('blankslate', function() {
+jpsPassbookManagerApp.directive('blankslate', function() {
 	return {
 		restrict : 'E',
 		replace : true,
@@ -394,7 +394,7 @@ builderApp.directive('blankslate', function() {
 /**
  * @TODO - Name, docs, usage
  */
-builderApp.directive('portlet', function() {
+jpsPassbookManagerApp.directive('portlet', function() {
 	return {
 		restrict : 'E',
 		// This HTML will replace the zippy directive.
@@ -411,7 +411,7 @@ builderApp.directive('portlet', function() {
 /**
  * @TODO - Name, docs, usage
  */
-builderApp.directive('thumbox', function() {
+jpsPassbookManagerApp.directive('thumbox', function() {
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -428,7 +428,7 @@ builderApp.directive('thumbox', function() {
 /**
  * @TODO - Name, docs, usage
  */
-builderApp.directive('widget', function() {
+jpsPassbookManagerApp.directive('widget', function() {
 	return {
 
 		restrict : 'E',
@@ -474,7 +474,7 @@ builderApp.directive('widget', function() {
 /**
  * @TODO - Name, docs, usage
  */
-builderApp.directive('uploader', function() {
+jpsPassbookManagerApp.directive('uploader', function() {
 	return {
 		restrict : 'A',
 		replace : true,
@@ -531,7 +531,7 @@ A - Attribute: <div my-directive="exp"> </div>
 C - Class: <div class="my-directive: exp;"></div>
 M - Comment: <!-- directive: my-directive exp -->
  */
-builderApp.directive('amMobileNavbar', function() {
+jpsPassbookManagerApp.directive('amMobileNavbar', function() {
 	return {
 		restrict : 'A',
 		transclude : true,
@@ -665,7 +665,7 @@ angular.module('jcfTree.directive', []).directive('treeElement', function($compi
 
 				var linkFunction = $compile(template);
 
-				lbuilderAppinkFunction(scope);
+				ljpsPassbookManagerAppinkFunction(scope);
 
 				element.html(null).append(template);
 

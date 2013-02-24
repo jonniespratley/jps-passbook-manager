@@ -16,6 +16,22 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [])
         controller: 'MainCtrl',
 		resolve: routeResolver
       })
+      .when('/manage', {
+        templateUrl: 'views/manage.html',
+        controller: 'ManageCtrl'
+      })
+      .when('/passes', {
+        templateUrl: 'views/passes.html',
+        controller: 'PassesCtrl'
+      })
+      .when('/docs', {
+        templateUrl: 'views/docs.html',
+        controller: 'DocsCtrl'
+      })
+      .when('/server', {
+        templateUrl: 'views/server.html',
+        controller: 'ServerCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
