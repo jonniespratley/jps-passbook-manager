@@ -5,11 +5,16 @@
 @import url('bootstrap.min.css');
 @import url('bootstrap-responsive.min.css');
 @import url("font-awesome.css");
+input[type=text]{
 
-body{
-	background-color: #fcfcfc;
 }
- 
+body{
+
+
+}
+ hr{
+
+}
 .hero-unit{
 	margin-top: 25px;
 	text-align: center;

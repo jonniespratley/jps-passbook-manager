@@ -1,6 +1,18 @@
 # Getting Started
 This is a simple web app interface for creating iOS Passbook passes from content.
 
+* What your product can do
+* If your product is what they’ve been looking for
+* If your product will help users accomplish their tasks - This
+* Whether or not they should join your service or pay for your product
+* Address issues or concerns up front
+* Address the top concerns your users might have when they are trying to decide whether or not to use your product or not. 
+* “Is it safe”, 
+* “Can I import my app easily?”, 
+* “Can I export my app if I decide to move?”.  
+ 
+
+
 
 ### 1. Fork It
 Clone or fork this repo. 

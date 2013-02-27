@@ -32,22 +32,18 @@
             <script src="scripts/vendor/json3.min.js"></script>
         <![endif]-->
 
-		<div class="navbar navbar-static-top navbar-inverse">
+		<div class="navbar navbar-static-top navbar-inverse" bs-navbar>
 	      <div class="navbar-inner">
 	        <div class="container">
 	          	<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-				      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				        <span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-				      </a>
-	          <a class="brand brand-calvus" href="#"><span>{{App.name}}</span></a>
+		      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </a>
+	          <a class="brand brand-calvus" href="#"> <i class="icon-{{App.icon}}"></i> <span>{{App.name}}</span></a>
 			  <div class="nav-collapse collapse">
-	            <ul class="nav pull-right animated">
-				 
-	              <li ng-repeat="item in App.menu"><a href="{{item.href}}"><i class="icon-{{item.icon}}"></i> {{item.title}}</a></li>		  
-		
-	            </ul>
+	           	
 			  </div>
 	        </div>
 	      </div>
@@ -58,37 +54,38 @@
 				</div>
 				<hr/>
 				<footer id="footer" class="clearfix">
-						<div id="copywrite">
-						  <div class="container">
-						    <div class="row">
-							  <div class="span12">
-							    <p>&copy; 2013 @jonniespratley <span id="totop" class="pull-right">Back to Top <i class="icon-arrow-up icon-white"></i></span></p>			
-							  </div>		  
-							</div>	  
-					      </div>	  
-					    </div>
+					<div id="copywrite">
+					  <div class="container">
+					    <div class="row">
+						  <div class="span12">
+						    <p>&copy; 2013 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a> 
+							<span id="totop" class="pull-right">Back to Top <i class="icon-arrow-up icon-white"></i></span></p>			
+						  </div>		  
+						</div>	  
+				      </div>	  
+				    </div>
 				</footer>
 
-				
 			</div>
 
 
 	
-			<script src="scripts/vendor/jquery.min.js"></script>
-	        <script src="scripts/vendor/angular.min.js"></script>
-	        <script src="scripts/vendor/angular-strap.min.js"></script>
-	        <script src="scripts/vendor/angular-ui.min.js"></script>
-	        <script src="scripts/vendor/bootstrap.min.js"></script>
-	        <script src="scripts/vendor/markdown.js"></script>
+		<script src="scripts/vendor/jquery.min.js"></script>
+        <script src="scripts/vendor/angular.min.js"></script>
+        <script src="scripts/vendor/angular-resource.js"></script>
+        <script src="scripts/vendor/angular-strap.min.js"></script>
+        <script src="scripts/vendor/angular-ui.min.js"></script>
+        <script src="scripts/vendor/bootstrap.min.js"></script>
+        <script src="scripts/vendor/markdown.js"></script>
 	
         <!-- build:js scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/components/components.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/manage.js"></script>
         <script src="scripts/controllers/passes.js"></script>
         <script src="scripts/controllers/docs.js"></script>
         <script src="scripts/controllers/server.js"></script>
+        <script src="scripts/services/api.js"></script>
         <!-- endbuild -->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

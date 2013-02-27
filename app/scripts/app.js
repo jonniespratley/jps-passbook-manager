@@ -1,6 +1,7 @@
 'use strict';
 
-var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [])
+var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [ 'ngResource', 'ui', '$strap.directives',
+])
   .config(['$routeProvider', function($routeProvider) {
 	var routeResolver = {
 		delay : function($q, $timeout) {
