@@ -32,7 +32,7 @@
             <script src="scripts/vendor/json3.min.js"></script>
         <![endif]-->
 
-		<div class="navbar navbar-static-top navbar-inverse" bs-navbar>
+		<div class="navbar navbar-fixed-top navbar-inverse" bs-navbar>
 	      <div class="navbar-inner">
 	        <div class="container">
 	          	<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -43,7 +43,11 @@
 		      </a>
 	          <a class="brand brand-calvus" href="#"> <i class="icon-{{App.icon}}"></i> <span>{{App.name}}</span></a>
 			  <div class="nav-collapse collapse">
-	           	
+	           	<ul class="nav">
+	           	    <li ng-repeat="item in App.menu">
+	           	        <a ng-href="{{item.href}}"><i class="icon-{{item.icon}}"></i> <span>{{item.title}}</span></a>
+	           	    </li>
+	           	</ul>
 			  </div>
 	        </div>
 	      </div>
@@ -59,7 +63,7 @@
 					    <div class="row">
 						  <div class="span12">
 						    <p>&copy; 2013 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a> 
-							<span id="totop" class="pull-right">Back to Top <i class="icon-arrow-up icon-white"></i></span></p>			
+							<span id="totop" class="pull-right"><a class="scroll">Back to Top </a><i class="icon-arrow-up icon-white"></i></span></p>			
 						  </div>		  
 						</div>	  
 				      </div>	  

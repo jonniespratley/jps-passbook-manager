@@ -1,10 +1,19 @@
+
+
 /* @override http://localhost:4040/styles/main.css */
 
 /* Will be compiled down to a single stylesheet with your sass files 
-*/
+
 @import url('bootstrap.min.css');
 @import url('bootstrap-responsive.min.css');
+*/
+@import url("//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css");
+
+@import url("styles.css");
 @import url("font-awesome.css");
+
+
+
 input[type=text]{
 
 }
@@ -12,6 +21,7 @@ body{
 
 
 }
+
  hr{
 
 }
@@ -57,7 +67,7 @@ background: #000;
     
 }
 .navbar-fixed-top .navbar-inner {
-	opacity: .9;
+
 	-webkit-border-top-right-radius: 0px;
 	-webkit-border-bottom-right-radius: 0px;
 	-webkit-border-bottom-left-radius: 0px;

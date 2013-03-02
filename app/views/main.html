@@ -44,7 +44,7 @@
 			</div>
 
 
-			<ul class="nav nav-tabs" id="main_tabs">
+			<ul class="nav nav-tabs hidden" id="main_tabs">
 			  <li class="active"><a href="#main_pane">Main</a></li>
 			  <li><a href="#passes_pane" data-toggle="tab">Passes</a></li>
 			  <li><a href="#server_pane" data-toggle="tab">Server</a></li>
@@ -65,18 +65,16 @@
 						   </p>        
 						</div>	
 					</div>
+			  	<ng-include src="'/views/passes.html'" scope="" onload=""></ng-include>           
+                <ng-include src="'/views/server.html'" scope="" onload=""></ng-include>         
+                <div id="docs"></div>
 
 			  </div>
 			  <div class="tab-pane" id="passes_pane" ng-controller="PassesCtrl">
-			  	<ng-include src="'/views/passes.html'" scope="" onload=""></ng-include>		  	
 			  </div>
 			  <div class="tab-pane" id="server_pane">
-				<ng-include src="'/views/server.html'" scope="" onload=""></ng-include>		  	
 			  </div>
 			  <div class="tab-pane" id="docs_pane">
-				<div id="docs">
-					
-				</div>
 			  </div>
 			</div><!--/tabcontent-->
 

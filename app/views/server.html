@@ -1,51 +1,52 @@
-<div class="row-fluid">
+<div class="row-fluid" ng-controller="PassesCtrl">
     <div class="span12">
-        <legend>
-    API Server
-</legend>
-<p>
-    This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
-</p>
-<pre>
-    // * REST METHODS:
-// *
-// * HTTP     METHOD          URL
-// * ======|==============|==============================================
-// * GET      findAll         http://localhost:4040/passbookmanager
-// * GET      findById        http://localhost:4040/passbookmanager/passes/:id
-// * POST     add             http://localhost:4040/passbookmanager/passes
-// * PUT      update          http://localhost:4040/passbookmanager/passes/:id
-// * DELETE   destroy         http://localhost:4040/passbookmanager/passes/:id
-</pre>
-<form class="form-horizontal" ng-controller="PassesCtrl">
-    <legend>
-        Web Service API
-    </legend>
-    <formitem title="Register Device:">
-        <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
-        <span class="help-block"><a ng-click="Api.registerDevice(pass);" class="label label-info">POST</a> Handles registering a device to recieve push notifications.</span>
+       
+            <legend>Server <small>devices, passes, and notifications</small></legend>
+       
         
-
-    </formitem>
-    <formitem title="Unregister Device:">
-        <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
-        <span class="help-block"> <a ng-click="Api.unregisterDevice(pass);" class="label label-info">DELETE</a> Handles unregistering a device.</span>
+        <legend>Status</legend>
+        <div id="status">
             
-
-
-    </formitem>
-    <formitem title="Get Passes on Device:">
-        <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="span12"/>
-        <span class="help-block"> <a ng-click="Api.getPassesOnDevice(pass);" class="label label-info">GET</a> Handles getting the serial numbers for Passes associated with a device. </span>
-
+        </div>
+        
+        
+        <!-- <legend>Devices</legend>
+        <div id="devices">
+            
+        </div>
+        
+        <legend>Passes</legend>
+        <div id="passes">
+            
+        </div>
+        
+        <legend>Notifications</legend>
+        <div id="notifications">
+            
+        </div>
+         -->
+        
+         <legend>
+                Web Service API
+            </legend>
+        <form class="form-horizontal">
            
-
-    </formitem>
-    <formitem title="Latest Version:">
-        <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
-        <span class="help-block"><a ng-click="Api.getLatestVersion(pass);" class="label label-info">GET</a> Handles getting the serial numbers for Passes associated with a device. </span>
-                    
-    </formitem>
-</form>
+            <formitem title="Register Device:">
+                <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+                <span class="help-block"><a ng-click="Api.registerDevice(pass);" class="label label-info">POST</a> Handles registering a device to recieve push notifications.</span>
+            </formitem>
+            <formitem title="Unregister Device:">
+                <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+                <span class="help-block"> <a ng-click="Api.unregisterDevice(pass);" class="label label-info">DELETE</a> Handles unregistering a device.</span>
+            </formitem>
+            <formitem title="Get Passes on Device:">
+                <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="span12"/>
+                <span class="help-block"> <a ng-click="Api.getPassesOnDevice(pass);" class="label label-info">GET</a> Handles getting the serial numbers for Passes associated with a device. </span>
+            </formitem>
+            <formitem title="Latest Version:">
+                <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+                <span class="help-block"><a ng-click="Api.getLatestVersion(pass);" class="label label-info">GET</a> Handles getting the serial numbers for Passes associated with a device. </span>
+            </formitem>
+        </form>
     </div>
 </div>
