@@ -13,7 +13,6 @@ var qs = require('querystring');
 var express = require('express');
 var app = express();
 
-
 //Configuration Object to hold settings for server
 var config = {
     name : 'passbookmanager',
@@ -22,9 +21,9 @@ var config = {
     security : {
         salt : 'a58e325c6df628d07a18b673a3420986'
     },
-    server:{
-        host: 'localhost',
-        port: 4040
+    server : {
+        host : 'localhost',
+        port : 4040
     },
     db : {
         username : 'amadmin',
@@ -32,48 +31,101 @@ var config = {
         host : 'localhost',
         port : 27017
     },
-    collections:['devices', 'passes', 'notifications', 'settings'],
+    collections : ['devices', 'passes', 'notifications', 'settings'],
     staticDir : './app',
     publicDir : __dirname + '/www',
     uploadsTmpDir : './temp',
     uploadsDestDir : './app/files/uploads'
 };
 
-
-
- 
 //**Resource** - this is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 var RestResource = {
     useversion : 'v1',
+    name : 'passbookmanager',
+    databaseName : 'passbookmanager',
     urls : {
         v1 : '/api/v1',
         v2 : '/api/v2/'
     },
     //Configuration object from above, to hold settings
-    config: null,
+    config : null,
+    server : null,
+    db : null,
+    mongoServer : mongo.Server,
+    mongoDb : mongo.Db,
+    bson : mongo.BSONPure,
+    host : config.db.host,
+    port : config.db.port,
+    /**
+     * I am the example schema for this resources.
+     */
+    schema : {
+        id : 0,
+        appid : 'com.domain.app',
+        title : 'This is the title',
+        body : 'This is the body.',
+        created : new Date(),
+        modified : new Date
+    },
+    /**
+     * I enable logging or not.
+     */
+    debug : true,
+    /**
+     * I am the interal logger.
+     */
+    log : function(obj) {
+        if (this.debug) {
+            console.log(obj);
+        }
+    },
     //Init the resource applying the config object
-    init: function(config){
+    init : function(config) {
+        var self = this;
         this.config = config;
+        self.server = new Server(self.host, self.port, {
+            auto_reconnect : true,
+            safe : false
+        });
+        self.db = new Db(self.databaseName, self.server);
+        /**
+         * Open the database and check for collection, if none
+         * then create it with the schema.
+         */
+        self.db.open(function(err, db) {
+            if (!err) {
+                self.log('Connected to ' + self.databaseName);
+                db.collection(self.name, {
+                    safe : true
+                }, function(err, collection) {
+                    if (err) {
+                        self.log('The collection doesnt exist. creating it with sample data...');
+                        self.populateDb();
+                    }
+                });
+            }
+        });
     },
     //Display default message on index /
-    index : function (req, res, next) {
+    index : function(req, res, next) {
         res.json({
             message : this.config.message + ' -  ' + config.version
         });
     },
     //Display list of default collections /
-    collections : function (req, res, next) {
+    collections : function(req, res, next) {
         res.json({
             message : config.message + ' -  ' + config.version,
-            results: config.collections
+            results : config.collections
         });
     },
-    get : function (req, res, next) {
+    get : function(req, res, next) {
+        var self = this;
         var query = req.query.query ? JSON.parse(req.query.query) : {};
         // Providing an id overwrites giving a query in the URL
         if (req.params.id) {
             query = {
-                '_id' : new BSON.ObjectID (req.params.id)
+                '_id' : new BSON.ObjectID(req.params.id)
             };
         }
         //Pass a appid param to get all records for that appid
@@ -92,27 +144,27 @@ var RestResource = {
         //Log for interal usage
         console.log('query', query, 'options', options);
         //new database instance
-        var db = new mongo.Db (req.params.db, new mongo.Server (config.db.host, config.db.port, {
+        var db = new mongo.Db(req.params.db, new mongo.Server(config.db.host, config.db.port, {
             auto_reconnect : true,
             safe : true
         }));
         //open database
-        db.open(function (err, db) {
+        db.open(function(err, db) {
             if (err) {
                 console.log(err);
             } else {
                 //prep collection
-                db.collection(req.params.collection, function (err, collection) {
+                db.collection(req.params.collection, function(err, collection) {
                     //query
-                    collection.find(query, options, function (err, cursor) {
-                        cursor.toArray(function (err, docs) {
+                    collection.find(query, options, function(err, cursor) {
+                        cursor.toArray(function(err, docs) {
                             if (err) {
                                 console.log(err);
                             } else {
                                 var result = [];
                                 if (req.params.id) {
                                     if (docs.length > 0) {
-                                        result = Resource.flavorize(null, docs[0], "out");
+                                        result = self.flavorize(null, docs[0], "out");
                                         res.header('Content-Type', 'application/json');
                                         res.jsonp(200, result);
                                     } else {
@@ -120,7 +172,7 @@ var RestResource = {
                                         //res.send(404);
                                     }
                                 } else {
-                                    docs.forEach(function (doc) {
+                                    docs.forEach(function(doc) {
                                         result.push(doc);
                                     });
                                     res.header('Content-Type', 'application/json');
@@ -134,31 +186,31 @@ var RestResource = {
             }
         });
     },
-    add : function (req, res, next) {
+    add : function(req, res, next) {
         var data = req.body;
         if (data) {
-            var db = new mongo.Db (req.params.db, new mongo.Server (config.db.host, config.db.port, {
+            var db = new mongo.Db(req.params.db, new mongo.Server(config.db.host, config.db.port, {
                 auto_reconnect : true,
                 safe : true
             }));
-            db.open(function (err, db) {
+            db.open(function(err, db) {
                 if (err) {
                     console.log(err);
                 } else {
-                    db.collection(req.params.collection, function (err, collection) {
-                        collection.count(function (err, count) {
+                    db.collection(req.params.collection, function(err, collection) {
+                        collection.count(function(err, count) {
                             console.log("There are " + count + " records.");
                         });
                     });
                     var results = [];
-                    db.collection(req.params.collection, function (err, collection) {
+                    db.collection(req.params.collection, function(err, collection) {
                         //Check if the posted data is an array, if it is, then loop and insert each document
                         if (data.length) {
                             //insert all docs
                             for (var i = 0; i < data.length; i++) {
                                 var obj = data[i];
                                 console.log(obj);
-                                collection.insert(obj, function (err, docs) {
+                                collection.insert(obj, function(err, docs) {
                                     results.push(obj);
                                 });
                             }
@@ -169,7 +221,7 @@ var RestResource = {
                                 results : results
                             });
                         } else {
-                            collection.insert(req.body, function (err, docs) {
+                            collection.insert(req.body, function(err, docs) {
                                 res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
                                 res.header('Content-Type', 'application/json');
                                 res.send('{"ok":1}', 201);
@@ -184,17 +236,17 @@ var RestResource = {
             res.send('{"ok":0}', 200);
         }
     },
-    edit : function (req, res, next) {
+    edit : function(req, res, next) {
         var spec = {
-            '_id' : new BSON.ObjectID (req.params.id)
+            '_id' : new BSON.ObjectID(req.params.id)
         };
-        var db = new mongo.Db (req.params.db, new mongo.Server (config.db.host, config.db.port, {
+        var db = new mongo.Db(req.params.db, new mongo.Server(config.db.host, config.db.port, {
             'auto_reconnect' : true,
             'safe' : true
         }));
-        db.open(function (err, db) {
-            db.collection(req.params.collection, function (err, collection) {
-                collection.update(spec, req.body, true, function (err, docs) {
+        db.open(function(err, db) {
+            db.collection(req.params.collection, function(err, collection) {
+                collection.update(spec, req.body, true, function(err, docs) {
                     res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
                     res.header('Content-Type', 'application/json');
                     res.send('{"ok":1}');
@@ -204,21 +256,67 @@ var RestResource = {
             });
         });
     },
-    view : function (req, res, next) {
+    view : function(req, res, next) {
     },
-    destroy : function (req, res, next) {
+    /**
+     * I populate the document db with the schema.
+     */
+    populateDb : function() {
+        var self = this;
+        self.db.collection(self.name, function(err, collection) {
+            collection.insert(self.schema, {
+                safe : true
+            }, function(err, result) {
+                self.log(result);
+            });
+        });
+    },
+    dbStatus : function() {
+        console.log('get db status');
+    },
+    /**
+     * I find all of the records
+     * @param {Object} req
+     * @param {Object} res
+     */
+    findAll : function(req, res) {
+        RestResource.db.collection(req.params.collection, function(err, collection) {
+
+            collection.find().toArray(function(err, items) {
+                RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
+                res.send(items);
+            });
+        });
+    },
+    /**
+     * I find one of the records by id.
+     * @param {Object} req
+     * @param {Object} res
+     */
+    findById : function(req, res) {
+        var id = req.params.id;
+        this.log(RestResource.name + ':findById - ' + id);
+        RestResource.db.collection(RestResource.name, function(err, collection) {
+            collection.findOne({
+                '_id' : new BSON.ObjectID(id)
+            }, function(err, item) {
+                res.send(item);
+            });
+        });
+    },
+    destroy : function(req, res, next) {
         var params = {
-            _id : new BSON.ObjectID (req.params.id)
+            _id : new BSON.ObjectID(req.params.id)
         };
         console.log('Delete by id ' + req.params.id);
-        var db = new mongo.Db (req.params.db, new mongo.Server (config.db.host, config.db.port, {
+        var db = new mongo.Db(req.params.db, new mongo.Server(config.db.host, config.db.port, {
             auto_reconnect : true,
             safe : true
         }));
-        db.open(function (err, db) {
-            db.collection(req.params.collection, function (err, collection) {
+        db.open(function(err, db) {
+            db.collection(req.params.collection, function(err, collection) {
                 console.log('found ', collection.collectionName, params);
-                collection.remove(params, function (err, docs) {
+                collection.remove(params, function(err, docs) {
                     if (!err) {
                         res.header('Content-Type', 'application/json');
                         res.send('{"ok":1}');
@@ -231,7 +329,52 @@ var RestResource = {
         });
     }
 };
-app.configure(function () {
+
+
+
+//Get file contents from a file
+function getFile (localPath, mimeType, res) {
+    fs.readFile(localPath, function (err, contents) {
+        if (!err) {
+            res.writeHead(200, {
+                "Content-Type" : mimeType,
+                "Content-Length" : contents.length
+            });
+            res.end(contents);
+        } else {
+            res.writeHead(500);
+            res.end();
+        }
+    });
+};
+
+
+//Write contents to a file
+function writeFile (localPath, contents, callback) {
+    // create a stream, and create the file if it doesn't exist
+    stream = fs.createWriteStream(localPath);
+    console.log('writeFile', localPath);
+    stream.on("open", function () {
+        // write to and close the stream at the same time
+        stream.end(contents, 'utf-8');
+        callback({name: localPath, contents: contents});
+    });
+};
+
+
+
+
+/**
+ * Command Server for executing build commands from the Web app.
+ */
+var sys = require('sys')
+var exec = require('child_process').exec;
+var child;
+
+
+
+
+app.configure(function() {
     app.use(express.bodyParser({
         keepExtensions : true,
         uploadDir : './app/files/uploads'
@@ -240,99 +383,121 @@ app.configure(function () {
     app.use(express.directory('./app'));
     app.use(express.logger('dev'));
     app.use("jsonp callback", true);
-    
-    app.use(function (err, req, res, next) {
+
+    app.use(function(err, req, res, next) {
         console.error(err.stack);
         res.send(500, 'Something broke!');
     });
     // simple logger
-    app.use(function (req, res, next) {
+    app.use(function(req, res, next) {
         console.log('%s %s', req.method, req.url);
         next();
     });
 });
 
-
-
-
 /* ======================[ @TODO: Listen for Device registration token ]====================== */
 
 //callback handler
-var onError = function (error, note) {
+var onError = function(error, note) {
     console.log('Error is: %s', error);
     console.log('Note ' + note);
 };
 
 //Test device tokens
-var deviceTokens = [
-	'54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 
-	'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'
-];
+var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];
 
 //API Endpoint
-app.get('/api', function(req, res){
-  var body = config.name;
-  res.setHeader('Content-Type', 'text/plain');
-  res.setHeader('Content-Length', body.length);
-  res.end(body);
+app.get('/api', function(req, res) {
+    var body = config.name;
+    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader('Content-Length', body.length);
+    res.end(body);
 });
 
 
-//API Version Endpoint - http://localhost:3535/smartpass/v1	
-app.get('/api/'+config.version, function(req, res) {
-	res.json({message: config.name});
+//Execute command - http://localhost:4040/api/v1/cmd/ls
+app.get('/api/' + config.version + '/' + 'cmd' + '/' + ':command', function(req, res) {
+    var results = {};
+
+    child = exec(req.params.command, function(error, stdout, stderr) {
+        results.stdout = stdout;    
+        sys.print('stdout: ' + stdout);
+
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+        
+        res.json({
+            message : config.name,
+            results: results
+        });
+    });
 });
- 
- 
- 
+
+
+
+//API Version Endpoint - http://localhost:3535/smartpass/v1
+app.get('/api/' + config.version, function(req, res) {
+    res.json({
+        message : config.name
+    });
+});
+
 //Register Pass Endpoint
-app.post('/api/'+config.version+'/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function(req, res) {
-	res.json({message: config.name});
+app.post('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function(req, res) {
+    res.json({
+        message : config.name
+    });
 });
 
 //Logging Endpoint
-app.post('/api/'+config.version+'/log', function(req, res) {
-	console.log(req.body);
-	res.json({message: config.name});
+app.post('/api/' + config.version + '/log', function(req, res) {
+    console.log(req.body);
+    res.json({
+        message : config.name
+    });
 });
 
 //Unregister Pass
-app.delete('/api/'+config.version+'/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber', function(req, res) {
-	console.log( 'Register device ' + req.param('token'));
-    res.json({message: config.name + ' - ' + 'Delete device ' + req.param('token')});
+app.delete ('/api/' + config.version + '/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber',
+function(req, res) {
+    console.log('Register device ' + req.param('token'));
+    res.json({
+        message : config.name + ' - ' + 'Delete device ' + req.param('token')
+    });
 
 });
 
 //Register device
-app.get('/api/'+config.version+'/register/:token', function(req, res){
-	console.log( 'Register device ' + req.param('token'));
-    res.json({message: config.name + ' - ' + 'Register device ' + req.param('token')});
+app.get('/api/' + config.version + '/register/:token', function(req, res) {
+    console.log('Register device ' + req.param('token'));
+    res.json({
+        message : config.name + ' - ' + 'Register device ' + req.param('token')
+    });
 });
 
 //Get serial numbers
-app.get('/api/'+config.version+'/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function(req, res){
+app.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function(req, res) {
 
-	console.log('Push to device ' + req.param('token'));
-    res.json({message: config.name + ' - ' + 'Push to device ' + req.param('token')});
+    console.log('Push to device ' + req.param('token'));
+    res.json({
+        message : config.name + ' - ' + 'Push to device ' + req.param('token')
+    });
 });
 
 //Get latest version of pass
-app.get('/api/'+config.version+'/passes/:passTypeIdentifier/:serialNumber', function(req, res){
+app.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function(req, res) {
 
-	console.log('Push to device ' + req.param('token'));
+    console.log('Push to device ' + req.param('token'));
 });
 
 //Send push to device
-app.get('/api/'+config.version+'/push/:token', function(req, res){
-	console.log('Push to device ' + req.param('token'));
+app.get('/api/' + config.version + '/push/:token', function(req, res) {
+    console.log('Push to device ' + req.param('token'));
 });
-
-
-
 
 //Initialize the REST resource server with our configuration object.
 RestResource.init(config);
-
 
 // * REST METHODS:
 // *
@@ -344,12 +509,13 @@ RestResource.init(config);
 // * PUT      update          http://localhost:4040/passbookmanager/passes/:id
 // * DELETE   destroy         http://localhost:4040/passbookmanager/passes/:id
 app.get('/api/' + config.version + '/' + config.name, RestResource.collections);
-app.get('/api/' + config.version + '/:db/:collection/:id?', RestResource.get);
+app.get('/api/' + config.version + '/:db/:collection/:id?', RestResource.findAll);
+app.get('/api/' + config.version + '/:db/:collection/:id?', RestResource.findById);
 app.post('/api/' + config.version + '/:db/:collection', RestResource.add);
 app.put('/api/' + config.version + '/:db/:collection/:id', RestResource.edit);
-app.delete ('/api/' + config.version + '/:db/:collection/:id', RestResource.destroy);
+app.
+delete ('/api/' + config.version + '/:db/:collection/:id', RestResource.destroy);
 
 app.listen(config.server.port);
 console.log(config.message + ' running @' + config.server.host + ':' + config.server.port);
-
 

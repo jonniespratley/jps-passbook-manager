@@ -4,12 +4,15 @@
 
 /* Will be compiled down to a single stylesheet with your sass files 
 
+
+*/
 @import url('bootstrap.min.css');
 @import url('bootstrap-responsive.min.css');
-*/
-@import url("//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css");
-
 @import url("styles.css");
+@import url("colorpicker.css");
+@import url("datepicker.css");
+@import url("prettify.css");
+@import url("bootstrap-wysihtml5-0.0.2.css");
 @import url("font-awesome.css");
 
 

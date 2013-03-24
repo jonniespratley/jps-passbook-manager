@@ -6,6 +6,16 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
     $scope.$location = $location;
     $scope.$routeParams = $routeParams;
     $scope.cdn = 'http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com';
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+                 .toString(16)
+                 .substring(1);
+    };
+    
+    function guid() {
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+             s4() + '-' + s4() + s4() + s4();
+    }
     $scope.classes = [{
         title : 'Builder',
         body : 'This is the desc',
@@ -64,9 +74,13 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
             name : 'Aztec Barcode',
             value : 'PKBarcodeFormatAztec'
         }],
-        loadSchema: function(){
+        init: function(){
+            $('.colorpicker').colorpicker();
+            return this;  
+        },
+        loadSchema : function() {
             console.log($scope.pass.type);
-            $http.get('passes/'+$scope.pass.type+'.json').success(function(data){
+            $http.get('passes/' + $scope.pass.type + '.json').success(function(data) {
                 $scope.pass = data;
                 console.log('loadSchema', $scope.pass.type, data);
             });
@@ -77,8 +91,10 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
             console.log('selectPass', p);
         },
         clearPass : function() {
-            $rootScope.SmartPass.pass = angular.copy($rootScope.SmartPass.coupon);
-            $scope.pass = angular.copy($rootScope.SmartPass.coupon);
+            $rootScope.SmartPass.pass = null;
+           // $rootScope.SmartPass.pass = angular.copy($rootScope.SmartPass.coupon);
+           
+            $scope.pass = null;
             console.log('clearPass', this);
         },
         deletePass : function(p) {
@@ -86,8 +102,7 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
             $scope.pass = p;
             var c = confirm('Are you sure?');
             if (c) {
-                $http.
-                delete ('/api/v1/passbookmanager/passes/' + p._id).success(function(data) {
+                $http.delete ('/api/v1/passbookmanager/passes/' + p._id).success(function(data) {
                     angular.element('#pass-' + p._id).remove();
                     console.log('deletePass', data);
                 });
@@ -96,23 +111,26 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
         },
         getPasses : function() {
             var options = {
-                params: {
-                    callback: 'JSON_CALLBACK'
+                params : {
+                    callback : 'JSON_CALLBACK'
                 }
             };
-            $http.jsonp('api/v1/passbookmanager/passes', options).success(function(data) {
+            $http.get('api/v1/passbookmanager/passes', options).success(function(data) {
                 $rootScope.SmartPass.passes = data;
                 console.log('getPasses', data);
             });
         },
         savePass : function(p) {
             p.updated = new Date();
+            p.serialNumber = guid();
             if (p._id) {
                 $http.put('/api/v1/passbookmanager/passes/' + p._id, p).success(function(data) {
                     console.log('savePass', data);
                     if (data.ok) {
                         $rootScope.SmartPass.pass = null;
                         $rootScope.SmartPass.getPasses();
+                        $rootScope.SmartPass.clearPass();
+                        
                     }
                 });
             } else {
@@ -133,8 +151,7 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
             console.log('signPass', p);
         }
     };
-    
-    
+
     $rootScope.SmartPass.storeCard = {
         "formatVersion" : 1,
         "passTypeIdentifier" : "pass.passbookmanager.coupons",
@@ -173,10 +190,9 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
             }]
         }
     };
-    
-    
+
     $rootScope.SmartPass.coupon = {
-        "mode": "edit",
+        "mode" : "edit",
         "formatVersion" : 1,
         "passTypeIdentifier" : "pass.myappmatrix.coupons",
         "serialNumber" : "E5982H-I2",
@@ -219,18 +235,20 @@ jpsPassbookManagerApp.controller('PassesCtrl', function($scope, $rootScope, $htt
             }]
         }
     };
- 
+
     $scope.pass = angular.copy($rootScope.SmartPass.coupon);
     $scope.order = 'updated';
     $scope.reverse = false;
     $scope.pass.type = 'coupon';
+    
+    
     /**
      * UI Fixes
      */
-   // $('input[type=text]').addClass('span12');
-    //  $('.datepicker').datepicker();
-    //  $('.timepicker').timepicker();
-    //angular.element('.colorpicker').colorpicker();
- 
+    // $('input[type=text]').addClass('span12');
+    
+
     console.log('RootScope', $rootScope);
+    window.SmartPass = $rootScope.SmartPass.init();
+    
 });

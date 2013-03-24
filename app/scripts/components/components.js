@@ -7,6 +7,27 @@ jpsPassbookManagerApp.directive('ngEnter', function() {
 		});
 	};
 });
+
+
+jpsPassbookManagerApp.directive('ngColorpicker', function() {
+  return {
+    restrict: 'A', 
+    replace: true,
+    transclude: true,
+    scope:{
+      id: '@',
+      ngModel: '@',
+      title: '@',
+      image: '@'
+    },
+    template: '<input class="colorpicker" type="text" id="{{id}}-colorpicker"/>',
+    link: function postLink(scope, element, attrs) {
+      angular.element('.colorpicker').colorpicker();
+      console.log('function');
+    }
+  };
+});
+
 jpsPassbookManagerApp.directive('myTable', function() {
 	return function(scope, element, attrs) {
 

@@ -52,45 +52,8 @@
 	        </div>
 	      </div>
 	    </div>
-			<div class="hero-unit">
-				<div class="row-fluid feature-row">
-				    <div class="span8">
-				        <h1 class="ng-binding">{{App.hero.title}}</h1>
-				        <p class="ng-binding">
-				            {{App.hero.body}}
-				        </p>
-						<p>
-								<a class="btn btn-large btn-inverse" data-toggle="modal" ng-click="SmartPass.clearPass();" href="#/manage" ><i class="icon-pencil icon-2x pull-left"></i>Start using<br/> Manager</a>
-							<a class="btn btn-large btn-github" href="https://github.com/jonniespratley/jps-passbook-manager" target="_blank" onclick="_gaq.push(['_trackEvent', 'Outbound Link', 'View Project on GitHub']);">
-							            <i class="icon-github icon-2x pull-left"></i>
-							            View Project<br>on GitHub</a>
-
-						</p>	            
-				    </div>
-				    <div class="span4">
-						<div id="iconCarousel" class="carousel slide">
-						        <!-- Carousel items -->
-						        <div class="carousel-inner pass-carousel">
-						          <div class="item "><div><img ng-src="http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com/img/passbook-hero.png"/></div></div>
-						          <div class="item"><div><img ng-src="https://dl.dropbox.com/u/26906414/jonnie/jps-passbook-manager/img/pass1.png"/></div></div>
-						          <div class="item active"><div><img ng-src="https://dl.dropbox.com/u/26906414/jonnie/jps-passbook-manager/img/pass2.png"/></div></div>
-						          <div class="item"><div><img ng-src="https://dl.dropbox.com/u/26906414/jonnie/jps-passbook-manager/img/pass2-back.png"/></div></div>
-
-
-
-						        </div>
-						        <!-- Carousel nav 
-						        <a class="carousel-control left" href="#iconCarousel" data-slide="prev" onclick="_gaq.push(['_trackEvent', 'iconCarousel', 'Prev']);">
-						        </a>
-						        <a class="carousel-control right" href="#iconCarousel" data-slide="next" onclick="_gaq.push(['_trackEvent', 'iconCarousel', 'Next']);">
-
-						</a>
-						-->
-						      </div>
-
-				    </div>
-				</div>
-			</div>
+		<br/>
+		<br/>
 	
 			<div id="content" class="container">
 				<div id="content-view" ng-view>
@@ -120,6 +83,12 @@
         <script src="scripts/vendor/angular-strap.min.js"></script>
         <script src="scripts/vendor/angular-ui.min.js"></script>
         <script src="scripts/vendor/bootstrap.min.js"></script>
+        <script src="scripts/vendor/bootstrap-wysihtml5.js"></script>
+        <script src="scripts/vendor/bootstrap-colorpicker.js"></script>
+        <script src="scripts/vendor/bootstrap-datepicker.js"></script>
+        <script src="scripts/vendor/bootstrap-timepicker.js"></script>
+        <script src="scripts/vendor/prettify.js"></script>
+        <script src="scripts/vendor/jquery.qrcode.min.js"></script>
         <script src="scripts/vendor/markdown.js"></script>
 	
         <!-- build:js scripts/scripts.js -->

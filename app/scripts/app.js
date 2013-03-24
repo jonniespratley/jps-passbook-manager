@@ -37,3 +37,9 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [ 'ngResourc
         redirectTo: '/'
       });
   }]);
+
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+    $('.timepicker').timepicker();
+    $('.colorpicker').colorpicker();
+});

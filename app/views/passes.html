@@ -1,5 +1,5 @@
 <div id="smartpass-row" class="row-fluid" ng-controller="PassesCtrl">
-    <div class="span12">
+    <div class="span12" ng-hide="SmartPass.pass">
         <legend>
             Passes
         </legend>
@@ -7,17 +7,22 @@
             <thead>
                 <tr>
                     <th>Type</th>
-                    <th>Organization</th>
                     <th>Description</th>
                     <th>Last Updated</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
                     <td><a data-toggle="modal" href="#smartpass-modal" ng-click="SmartPass.selectPass(pass);" > <img ng-src="{{cdn}}/img/{{pass.type}}.png" alt="{{pass.type}} Icon" style="height:50px; width:50px"/> </a></td>
-                    <td><a ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a></td>
-                    <td><a  ng-click="SmartPass.selectPass(pass);" > {{pass.description}} </a></td>
+                    
+                    <td>
+                        <a ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a><br/>
+                        {{pass.description}}</td>
                     <td>{{pass.updated | date: 'medium'}}</td>
+                    <td class="actions">
+                        <a ng-click="SmartPass.deletePass(pass)" class="btn btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Delete</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -83,7 +88,7 @@
             <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div class="clearfix row-fluid">
+    <div class="clearfix row-fluid" ng-show="SmartPass.pass">
         <div class="span7">
 
             <form class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
@@ -171,11 +176,15 @@
                 <formitem title="Label Color:">
                     <input type="text" ng-model="pass.labelColor" class="colorpicker"/>
                 </formitem>
+
                 <formitem title="Foreground Color:">
-                    <input type="text" ng-model="pass.foregroundColor" class="colorpicker"/>
+                    <span 
+                        ng-model="pass.foregroundColor"
+                        ng-colorpicker="red" 
+                        class="colorpicker" data-color="{{pass.foregroundColor}}" data-color-format="rgb"></span>
                 </formitem>
                 <formitem title="Background Color:">
-                    <input type="text" ng-model="pass.backgroundColor" class="colorpicker"/>
+                    <input type="text" ng-model="pass.backgroundColor" class="colorpicker" data-color="{{pass.backgroundColor}}" data-color-format="rgb"/>
                 </formitem>
                 <formitem title="Icon:">
                     <div id="PassIconDiv">
@@ -234,6 +243,7 @@
 
                 <div class="form-actions">
                     <a ng-click="SmartPass.deletePass(pass)" class="btn btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Delete</a>
+                    <a ng-click="SmartPass.clearPass()" class="btn btn"><i class="icon-"></i>Clear</a>
                     <a ng-click="SmartPass.savePass(pass)" class="btn btn-primary" data-dismiss="modal"><i class="icon-ok"></i> Save changes</a>
                 </div>
             </form>
