@@ -13,7 +13,7 @@ jpsPassbookManagerApp.directive('ngColorpicker', function() {
   return {
     restrict: 'A', 
     replace: true,
-    transclude: true,
+    transclude: false,
     scope:{
       id: '@',
       ngModel: '@',
