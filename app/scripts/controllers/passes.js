@@ -72,9 +72,9 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
         }],
         init: function () {
 
-            $('.datepicker').datepicker();
-            $('.timepicker').timepicker();
-            $('.colorpicker').colorpicker();
+            //$('.datepicker').datepicker();
+            //$('.timepicker').timepicker();
+            //$('.colorpicker').colorpicker();
             this.getPasses();
             return this;
 

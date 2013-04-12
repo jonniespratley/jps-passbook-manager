@@ -11,7 +11,6 @@
 					<a class="btn btn-large btn-github" href="https://github.com/jonniespratley/jps-passbook-manager" target="_blank" onclick="_gaq.push(['_trackEvent', 'Outbound Link', 'View Project on GitHub']);">
 					            <i class="icon-github icon-2x pull-left"></i>
 					            View Project<br>on GitHub</a>
-
 				</p>	            
 		    </div>
 		    <div class="span4">
@@ -27,12 +26,13 @@
 
 				        </div>
 				        <!-- Carousel nav 
+								-->
 				        <a class="carousel-control left" href="#iconCarousel" data-slide="prev" onclick="_gaq.push(['_trackEvent', 'iconCarousel', 'Prev']);">
 				        </a>
 				        <a class="carousel-control right" href="#iconCarousel" data-slide="next" onclick="_gaq.push(['_trackEvent', 'iconCarousel', 'Next']);">
 
 				</a>
-				-->
+
 				      </div>
 
 		    </div>
@@ -64,17 +64,23 @@
 						   </p>        
 						</div>	
 					</div>
-			  	<ng-include src="'/views/passes.html'" scope="" onload=""></ng-include>           
-                <ng-include src="'/views/server.html'" scope="" onload=""></ng-include>         
-                <div id="docs"></div>
+
 
 			  </div>
-			  <div class="tab-pane" id="passes_pane" ng-controller="PassesCtrl">
+			<!--
+
+			 <div class="tab-pane" id="passes_pane" ng-controller="PassesCtrl">
+				<ng-include src="'/views/passes.html'" scope="" onload=""></ng-include>           
 			  </div>
 			  <div class="tab-pane" id="server_pane">
+				
+                <ng-include src="'/views/server.html'" scope="" onload=""></ng-include>         
+			  	
 			  </div>
 			  <div class="tab-pane" id="docs_pane">
+	                <div id="docs"></div>
 			  </div>
+						--> 
 			</div><!--/tabcontent-->
 
 
