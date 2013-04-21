@@ -2,17 +2,7 @@
  * @author Jonnie Spratley, AppMatrix
  * @created 02/26/13
  */
-var mongo = require('mongodb');
-var Server = mongo.Server;
-var Db = mongo.Db;
-var BSON = mongo.BSONPure;
-var fs = require('fs');
-var http = require('http');
-var url = require('url');
-var qs = require('querystring');
-var express = require('express');
-var app = express();
-
+alloy generate model session authorized:Bool user:text account:text smartapp:text modules:List menu:List appid:string
 //Configuration Object to hold settings for server
 var config = {
     name : 'passbookmanager',
@@ -38,7 +28,25 @@ var config = {
     uploadsDestDir : './app/files/uploads'
 };
 
-//**Resource** - this is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
+
+//## Dependencies
+var mongo = require('mongodb');
+var Server = mongo.Server;
+var Db = mongo.Db;
+var BSON = mongo.BSONPure;
+var fs = require('fs');
+var http = require('http');
+var url = require('url');
+var qs = require('querystring');
+var express = require('express');
+var app = express();
+
+
+
+
+
+//## REST Resource 
+//This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 var RestResource = {
     useversion : 'v1',
     name : 'passbookmanager',
@@ -106,19 +114,26 @@ var RestResource = {
             }
         });
     },
-    //Display default message on index /
+    
+    //### index()
+    //Display default message on index 
     index : function(req, res, next) {
         res.json({
             message : this.config.message + ' -  ' + config.version
         });
     },
-    //Display list of default collections /
+    
+    //### collections()
+    //Display list of default collections 
     collections : function(req, res, next) {
         res.json({
             message : config.message + ' -  ' + config.version,
             results : config.collections
         });
     },
+    
+    //### get()
+    //Fetch all records.
     get : function(req, res, next) {
         var self = this;
         var query = req.query.query ? JSON.parse(req.query.query) : {};
@@ -186,6 +201,9 @@ var RestResource = {
             }
         });
     },
+    
+    //### add()
+    //Handle saving a document to the database.
     add : function(req, res, next) {
         var data = req.body;
         if (data) {
@@ -236,6 +254,9 @@ var RestResource = {
             res.send('{"ok":0}', 200);
         }
     },
+    
+    //### edit()
+    //Handle updating a document in the database.
     edit : function(req, res, next) {
         var spec = {
             '_id' : new BSON.ObjectID(req.params.id)
@@ -256,11 +277,14 @@ var RestResource = {
             });
         });
     },
+    
+    //### view()
+    //Handle fetching associated documents for document detail view.
     view : function(req, res, next) {
     },
-    /**
-     * I populate the document db with the schema.
-     */
+    
+    //### populateDb()
+     //I populate the document db with the schema.
     populateDb : function() {
         var self = this;
         self.db.collection(self.name, function(err, collection) {
@@ -271,6 +295,8 @@ var RestResource = {
             });
         });
     },
+    
+    
     dbStatus : function() {
         console.log('get db status');
     },
@@ -331,7 +357,7 @@ var RestResource = {
 };
 
 
-
+//### readFile()
 //Get file contents from a file
 function getFile (localPath, mimeType, res) {
     fs.readFile(localPath, function (err, contents) {
@@ -349,6 +375,7 @@ function getFile (localPath, mimeType, res) {
 };
 
 
+//### writeFile()
 //Write contents to a file
 function writeFile (localPath, contents, callback) {
     // create a stream, and create the file if it doesn't exist
@@ -397,11 +424,13 @@ app.configure(function() {
 
 /* ======================[ @TODO: Listen for Device registration token ]====================== */
 
+//### onError()
 //callback handler
 var onError = function(error, note) {
     console.log('Error is: %s', error);
     console.log('Note ' + note);
 };
+
 
 //Test device tokens
 var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];

@@ -151,7 +151,11 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
         signPass: function (p) {
             console.log('signPass', p);
         },
-        new: function(){
+        updatedQrcode: function(p){
+            
+            angular.element('#pass-qrcode').qrcode(p.barcode.message); 
+        },
+        add: function(){
             this.pass = $scope.SmartPass.storeCard;
         }
     };

@@ -6,7 +6,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [ 'ngResourc
 	var routeResolver = {
 		delay : function($q, $timeout) {
 			var delay = $q.defer();
-			$timeout(delay.resolve, 700);
+			$timeout(delay.resolve, 300);
 			return delay.promise;
 		}
 	};
@@ -27,6 +27,16 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [ 'ngResourc
         controller: 'PassesCtrl',
         resolve: routeResolver
       })
+      .when('/passes/add', {
+        templateUrl: 'views/passes_add.html',
+        controller: 'PassesCtrl',
+        resolve: routeResolver
+      })
+      .when('/passes/edit/:id', {
+        templateUrl: 'views/passes_add.html',
+        controller: 'PassesCtrl',
+        resolve: routeResolver
+      })
       .when('/docs', {
         templateUrl: 'views/docs.html',
         controller: 'DocsCtrl',
@@ -43,7 +53,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [ 'ngResourc
   }]);
 
 angular.element(document).ready(function () {
-	$(".scroll").click(function (event) {
+	$('.scroll').click(function (event) {
 		event.preventDefault();
 		$('html,body').animate({
 			scrollTop : $(this.hash).offset().top - 50
@@ -67,7 +77,7 @@ angular.element(document).ready(function () {
 	$('.sec-header h3').live("click", function () {
 		$(this).next().slideToggle(200);
 	});
-	$('legend').live("click", function () {
+	$('.toggle').live("click", function () {
 		$(this).next('div').slideToggle(200);
 	});
 });
