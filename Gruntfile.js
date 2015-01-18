@@ -46,7 +46,7 @@ module.exports = function (grunt) {
     connect: {
       livereload: {
         options: {
-          port: 9000,
+          port: 9005,
           // Change this to '0.0.0.0' to access the server from outside.
           hostname: 'localhost',
           middleware: function (connect) {
@@ -237,7 +237,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('server', [
     'clean:server',
-    'coffee:dist',
+    //'coffee:dist',
     'compass:server',
     'livereload-start',
     'connect:livereload',
@@ -257,7 +257,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'jshint',
     'test',
-    'coffee',
+  //  'coffee',
     'compass:dist',
     'useminPrepare',
     'imagemin',

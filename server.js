@@ -2,7 +2,9 @@
  * @author Jonnie Spratley, AppMatrix
  * @created 02/26/13
  */
-alloy generate model session authorized:Bool user:text account:text smartapp:text modules:List menu:List appid:string
+
+ var port = process.env.PORT || 1333;
+ var host = process.env.VCAP_APP_HOST || "127.0.0.1";
 //Configuration Object to hold settings for server
 var config = {
     name : 'passbookmanager',
@@ -12,8 +14,8 @@ var config = {
         salt : 'a58e325c6df628d07a18b673a3420986'
     },
     server : {
-        host : 'localhost',
-        port : 4040
+        host : host,
+        port : port
     },
     db : {
         username : 'amadmin',
@@ -45,7 +47,7 @@ var app = express();
 
 
 
-//## REST Resource 
+//## REST Resource
 //This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 var RestResource = {
     useversion : 'v1',
@@ -114,24 +116,24 @@ var RestResource = {
             }
         });
     },
-    
+
     //### index()
-    //Display default message on index 
+    //Display default message on index
     index : function(req, res, next) {
         res.json({
             message : this.config.message + ' -  ' + config.version
         });
     },
-    
+
     //### collections()
-    //Display list of default collections 
+    //Display list of default collections
     collections : function(req, res, next) {
         res.json({
             message : config.message + ' -  ' + config.version,
             results : config.collections
         });
     },
-    
+
     //### get()
     //Fetch all records.
     get : function(req, res, next) {
@@ -201,7 +203,7 @@ var RestResource = {
             }
         });
     },
-    
+
     //### add()
     //Handle saving a document to the database.
     add : function(req, res, next) {
@@ -254,7 +256,7 @@ var RestResource = {
             res.send('{"ok":0}', 200);
         }
     },
-    
+
     //### edit()
     //Handle updating a document in the database.
     edit : function(req, res, next) {
@@ -277,12 +279,12 @@ var RestResource = {
             });
         });
     },
-    
+
     //### view()
     //Handle fetching associated documents for document detail view.
     view : function(req, res, next) {
     },
-    
+
     //### populateDb()
      //I populate the document db with the schema.
     populateDb : function() {
@@ -295,8 +297,8 @@ var RestResource = {
             });
         });
     },
-    
-    
+
+
     dbStatus : function() {
         console.log('get db status');
     },
@@ -449,13 +451,13 @@ app.get('/api/' + config.version + '/' + 'cmd' + '/' + ':command', function(req,
     var results = {};
 
     child = exec(req.params.command, function(error, stdout, stderr) {
-        results.stdout = stdout;    
+        results.stdout = stdout;
         sys.print('stdout: ' + stdout);
 
         if (error !== null) {
             console.log('exec error: ' + error);
         }
-        
+
         res.json({
             message : config.name,
             results: results
@@ -547,4 +549,3 @@ delete ('/api/' + config.version + '/:db/:collection/:id', RestResource.destroy)
 
 app.listen(config.server.port);
 console.log(config.message + ' running @' + config.server.host + ':' + config.server.port);
-
