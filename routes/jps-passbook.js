@@ -1,25 +1,30 @@
-var fs = require('fs'), path = require('path'), q = require('q');
+var fs = require('fs'), path = require('path'),
+    Q = require('q');
+var q = Q;
 var spawn = require('child_process').spawn;
 
 /**
  * I handle signing a pass with signpass bin.
  * @param pathToPass
  */
-function signPass(pathToPass) {
+function signPass(pathToPass, callback) {
     var signpass = spawn('bin/signpass', ['-p', pathToPass]);
 
     signpass.stdout.on('data', function (data) {
-        console.log('stdout: ' + data);
+        //console.log('stdout: ' + data);
     });
 
-    signpass.stderr.on('data', function (data) {
-        console.log('stderr: ' + data);
+    signpass.on('error', function (err) {
+        //console.log('signpass process exited with code ' + code);
+        throw err;
     });
 
     signpass.on('close', function (code) {
-        console.log('signpass process exited with code ' + code);
+        if (code !== 0) {
+            console.log('signpass process exited with code ' + code);
+        }
+        callback(pathToPass);
     });
-
 };
 
 /**
@@ -29,7 +34,7 @@ function signPass(pathToPass) {
  * @returns {*}
  */
 function exportPass(passFile, passContent) {
-    var defer = q.defer();
+    var defer = Q.defer();
 
     var passFilename = path.resolve(passFile);
     passFilename = passFilename.replace(' ', '');
@@ -82,6 +87,8 @@ function writeFile(localPath, contents, callback) {
         // write to and close the stream at the same time
         stream.end(contents, 'utf-8');
         callback({
+            directory: path.dirname(localPath),
+            filename: path.basename(localPath),
             name: localPath,
             contents: contents
         });
@@ -93,18 +100,9 @@ function writeFile(localPath, contents, callback) {
  * @param localPath
  * @returns {*}
  */
-function createDirectory(localPath) {
-    var defer = q.defer();
-
+function createDirectory(localPath, callback) {
     console.log('creating directory', path.normalize(localPath));
-    fs.mkdir(path.normalize(localPath), function (err) {
-        if (err) {
-            defer.reject(err);
-        } else {
-            defer.resolve(localPath);
-        }
-    });
-    return defer.promise;
+    return fs.mkdir(path.normalize(localPath), 0777, callback);
 };
 
 
@@ -113,30 +111,25 @@ function createDirectory(localPath) {
  * @param localPath
  * @param pass
  */
-function createPass(localPath, pass){
+function createPass(localPath, pass, callback) {
     var defer = q.defer();
-    createDirectory(localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw').then(function(dir){
-       console.log(dir, 'created');
-        exportPass(dir + '/pass.json', pass).then(function(res){
-            console.warn(res);
-            defer.resolve(res);
-        }, function(err){
-            defer.reject(err);
-        });
-
-    }, function(err){
-        defer.reject(err);
+    var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw';
+    fs.mkdir(path.normalize(passPath), 0777, function (err) {
+        if (err) {
+            throw err;
+        } else {
+            writeFile(passPath + '/pass.json', JSON.stringify(pass), callback);
+        }
     });
-    return defer.promise;
-
 };
-
 
 
 module.exports = {
     name: 'jps-passbook',
     sign: signPass,
+    signPass: signPass,
     export: exportPass,
+    exportPass: exportPass,
     createDirectory: createDirectory,
     createPass: createPass
 };

@@ -1,12 +1,13 @@
 var assert = require('assert'), path = require('path');
 
-var jpsPassbook = require(path.resolve(__dirname, '../routes/jps-passbook'));
-
+var jpsPassbook = require(path.resolve(__dirname, '../../routes/jps-passbook'));
+var testPassName = 'Test_Pass_';
+var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var testPass = {
     "_id": "54bd3924e8d30273263d8f64",
     "mode": "edit",
     "formatVersion": 1,
-    "passTypeIdentifier" : "pass.jsapps.io",
+    "passTypeIdentifier": "pass.jsapps.io",
     "serialNumber": "f45b1a3b-aa94-cacf-eddf-679db4e701c3",
     "teamIdentifier": "J62UV6D7WJ",
     "webServiceURL": "http://localhost:1333/smartpass/v1",
@@ -24,7 +25,7 @@ var testPass = {
     ],
     "organizationName": " Coupon",
     "logoText": "Logo",
-    "description": "20% off any products",
+    "description": "Test Coupon",
     "foregroundColor": "#111",
     "backgroundColor": "#222",
     "coupon": {
@@ -59,19 +60,42 @@ var testPass = {
     "updated": "2015-01-19T17:04:34.845Z"
 };
 
+var testPassfile = '';
 
-module.exports['jpsPassbook'] = {
-    'test module name': function (test) {
-        test.equals(jpsPassbook.name, 'jps-passbook');
-        test.done();
-    },
 
-    'test createPass': function (test) {
-        jpsPassbook.createPass(path.resolve(__dirname, '../www/passes'), testPass).then(function (res) {
-            console.log(res);
-            test.done();
-        }, function (err) {
-            test.done();
+describe('jps-passbook', function () {
+
+
+    it('should reject promise on error', function (done) {
+        jpsPassbook.createDirectory('.tmp/no/path', function (err, f) {
+            if (err) {
+                assert('got response');
+                done();
+            } else {
+                assert.fail(err);
+                done();
+            }
+
         });
-    }
-};
+    });
+
+
+    it('should create a pass', function (done) {
+        testPass.description = testPassName + Date.now();
+
+        jpsPassbook.createPass(testPassDir, testPass, function (data) {
+            assert.equal(data.directory, testPassDir + path.sep + testPass.description + '.raw', 'returns filename');
+
+            testPassDir = data.directory;
+            done();
+        });
+    });
+
+    it('should sign a pass', function(done){
+       jpsPassbook.signPass(testPassDir, function(pass){
+           assert.ok(pass, 'returns pass location');
+           done();
+       });
+
+    });
+});

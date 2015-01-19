@@ -235,6 +235,17 @@ module.exports = function (grunt) {
             options: {
                 reporter: 'verbose'
             }
+        },
+        // Configure a mochaTest task
+        mochaTest: {
+          test: {
+            options: {
+              reporter: 'spec',
+              quiet: false,
+              clearRequireCache: false
+            },
+            src: ['test/routes/*-spec.js']
+          }
         }
     });
 
