@@ -2,8 +2,8 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> 
-	<html class="no-js" ng-app="jpsPassbookManagerApp">  
+<!--[if gt IE 8]><!-->
+	<html class="no-js" ng-app="jpsPassbookManagerApp">
 	<!--<![endif]-->
     <head>
         <meta charset="utf-8"/>
@@ -20,12 +20,12 @@
 	    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
 	    <link rel="shortcut icon" href="ico/favicon.png">
     </head>
-    <body ng-controller="MainCtrl">
+    <body ng-controller="MainCtrl" ng-cloak>
 
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
         <![endif]-->
-        
+
         <!--[if lt IE 9]>
 
             <script src="scripts/vendor/es5-shim.min.js"></script>
@@ -54,10 +54,10 @@
 	    </div>
 		<br/>
 		<br/>
-	
+
 			<div id="content" class="container">
 				<div id="content-view" ng-view>
-					
+
 				</div>
 				<hr/>
 				<footer id="footer" class="clearfix">
@@ -65,18 +65,18 @@
 					  <div class="container">
 					    <div class="row">
 						  <div class="span12">
-						    <p>&copy; 2013 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a> 
-							<span id="totop" class="pull-right"><a class="scroll">Back to Top </a><i class="icon-arrow-up icon-white"></i></span></p>			
-						  </div>		  
-						</div>	  
-				      </div>	  
+						    <p>&copy; 2013 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a>
+							<span id="totop" class="pull-right"><a class="scroll">Back to Top </a><i class="icon-arrow-up icon-white"></i></span></p>
+						  </div>
+						</div>
+				      </div>
 				    </div>
 				</footer>
 
 			</div>
 
 
-	
+
 		<script src="scripts/vendor/jquery.min.js"></script>
         <script src="scripts/vendor/angular.min.js"></script>
         <script src="scripts/vendor/angular-resource.js"></script>
@@ -90,7 +90,7 @@
         <script src="scripts/vendor/prettify.js"></script>
         <script src="scripts/vendor/jquery.qrcode.min.js"></script>
         <script src="scripts/vendor/markdown.js"></script>
-	
+
         <!-- build:js scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/components/components.js"></script>
@@ -110,4 +110,3 @@
         </script>
     </body>
 </html>
-

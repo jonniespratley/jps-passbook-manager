@@ -6,9 +6,8 @@
 
 .pass {
 
-	width: 320px;
-	height: 400px;
-	margin: 10px auto;		
+	
+	margin: 10px auto;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-background-clip: padding-box;
@@ -57,11 +56,11 @@ div.pass-header i {
 
 
 .pass .object {
-	
+
 }
 
 .pass dt {
-	
+
 }
 
 .pass dd {

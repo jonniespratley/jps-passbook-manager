@@ -59,7 +59,7 @@ angular.element(document).ready(function () {
 			scrollTop : $(this.hash).offset().top - 50
 		}, 'slow');
 	});
-	
+
 	angular.element(document).find('.delete-btn').on('click', function (e) {
 		e.preventDefault();
 		var c = confirm('DELETE: Are you sure?');
@@ -74,7 +74,7 @@ angular.element(document).ready(function () {
 	$('.page-header h1').live("click", function () {
 		$(this).next().slideToggle(200);
 	});
-	$('.sec-header h3').live("click", function () {
+	$('.sec-header h3, legend').live("click", function () {
 		$(this).next().slideToggle(200);
 	});
 	$('.toggle').live("click", function () {

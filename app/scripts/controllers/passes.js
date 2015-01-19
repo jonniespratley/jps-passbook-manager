@@ -40,7 +40,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
     }];
     $scope.SmartPass = {
         api: {
-            url: 'http://localhost:3535/smartpass/v1'
+            url: 'http://'+ location.hostname +':'+ location.port +'/smartpass/v1'
         },
         types: [{
             name: 'generic',
@@ -72,9 +72,9 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
         }],
         init: function () {
 
-            //$('.datepicker').datepicker();
-            //$('.timepicker').timepicker();
-            //$('.colorpicker').colorpicker();
+          //  $('.datepicker').datepicker();
+          //  $('.timepicker').timepicker();
+          //  $('.colorpicker').colorpicker();
             this.getPasses();
             return this;
 
@@ -93,7 +93,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
         },
         clearPass: function () {
             $scope.SmartPass.pass = null;
-            // $scope.SmartPass.pass = angular.copy($scope.SmartPass.coupon);
+            $scope.SmartPass.pass = angular.copy($scope.SmartPass.coupon);
 
             $scope.pass = null;
             console.log('clearPass', this);
@@ -152,8 +152,9 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
             console.log('signPass', p);
         },
         updatedQrcode: function(p){
-            
-            angular.element('#pass-qrcode').qrcode(p.barcode.message); 
+            angular.element('#pass-qrcode')
+              .empty()
+              .qrcode(p.barcode.message);
         },
         add: function(){
             this.pass = $scope.SmartPass.storeCard;
@@ -199,13 +200,14 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
         }
     };
 
+
     $scope.SmartPass.coupon = {
         "mode": "edit",
         "formatVersion": 1,
-        "passTypeIdentifier": "pass.myappmatrix.coupons",
+        "passTypeIdentifier": "pass.jsapps.coupons",
         "serialNumber": "E5982H-I2",
         "teamIdentifier": "J62UV6D7WJ",
-        "webServiceURL": "http://localhost:3535/smartpass/v1",
+        "webServiceURL": 'http://'+ location.hostname +':'+ location.port +'/smartpass/v1',
         "authenticationToken": "000000000012341234",
         "barcode": {
             "message": "123456789",
@@ -216,8 +218,8 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
             "longitude": -122.3748889,
             "latitude": 37.6189722
         }],
-        "organizationName": "MyAppMatrix Coupon",
-        "logoText": "MyAppMatrix",
+        "organizationName": " Coupon",
+        "logoText": "Logo",
         "description": "20% off any products",
         "foregroundColor": "#111",
         "backgroundColor": "#222",
@@ -258,5 +260,13 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 
     console.log('RootScope', $scope);
     window.SmartPass = $scope.SmartPass.init();
+
+    $(document).ready(function(){
+
+      $('legend').bind('click', function(e){
+        $(this).next().slideToggle();
+        console.log(e);
+      });
+    });
 
 });
