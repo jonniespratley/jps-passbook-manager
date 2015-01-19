@@ -1,13 +1,12 @@
 <div class="container">
 
-    <div id="smartpass-row" class="row-fluid">
+    <div id="smartpass-row" class="row">
 
 
-        <div class="span12 clearfix content">
+        <div class="col-sm-12 clearfix content">
 
             <!-- @TODO: [Pass Table] -->
-            <table id="passes-table" class="table table-hover table-condensed table-bordered"
-                   ng-init="SmartPass.getPasses()">
+            <table id="passes-table" class="table table-hover table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th>Type</th>
@@ -18,7 +17,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
-                        <td><a> <img ng-src="{{cdn}}/img/{{pass.type}}.png" alt="{{pass.type}} Icon" style="height:50px; width:50px"/> </a></td>
+                        <td class="pass-icon"><a> <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/> </a></td>
 
                         <td><a ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
                         <br/>

@@ -1,6 +1,9 @@
 'use strict';
 
-var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [ 'ngResource', 'ui', '$strap.directives',
+var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
+'ngRoute',
+'ngResource',
+'mgcrea.ngStrap'
 ])
   .config(['$routeProvider', function($routeProvider) {
 	var routeResolver = {
@@ -71,13 +74,13 @@ angular.element(document).ready(function () {
 		console.log(e);
 	});
 	//Toggle content
-	$('.page-header h1').live("click", function () {
+	$('.page-header h1').bind("click", function () {
 		$(this).next().slideToggle(200);
 	});
-	$('.sec-header h3, legend').live("click", function () {
+	$('.sec-header h3, legend').bind("click", function () {
 		$(this).next().slideToggle(200);
 	});
-	$('.toggle').live("click", function () {
+	$('.toggle').bind("click", function () {
 		$(this).next('div').slideToggle(200);
 	});
 });

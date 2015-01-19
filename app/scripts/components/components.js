@@ -11,7 +11,7 @@ jpsPassbookManagerApp.directive('ngEnter', function() {
 
 jpsPassbookManagerApp.directive('ngColorpicker', function() {
   return {
-    restrict: 'A', 
+    restrict: 'A',
     replace: true,
     transclude: false,
     scope:{
@@ -345,7 +345,7 @@ jpsPassbookManagerApp.directive('formitem', function() {
 		link : function postLink(scope, iElement, iAttrs) {
 			//console.log('postLink', scope, iElement, iAttrs);
 		},
-		template : '<div class="control-group">' + '<div class="control-label"><label for="{{name}}">{{title}} </label></div>' + '<div class="controls" ng-transclude>' + '</div>' + '</div>'
+		template : '<div class="form-group">' + '<div class="control-label col-sm-2"><label for="{{name}}">{{title}} </label></div>' + '<div class="col-sm-10" ng-transclude>' + '</div>' + '</div>'
 	};
 });
 
@@ -464,12 +464,12 @@ jpsPassbookManagerApp.directive('widget', function() {
 		template : '<div class="portlet opened">' + '<h4 class="portlet-header ui-widget-header ui-corner-all"><i class="icon-{{icon}}"></i> {{title}}' + '<span class="ui-icon toggle-icon ui-icon-plusthick"></span>' + '</h4>' + '<section class="portlet-container-toggle"><div class="portlet-content" ng-transclude></div></section>' + '</div>',
 		// The linking function will add behavior to the template
 		link : function(scope, element, attrs) {
-			
+
 			// Title element
 			var title = angular.element(element.find('h4')),
-			
-			
-			
+
+
+
 			// Opened / closed state
 			opened = false;
 
@@ -505,13 +505,13 @@ jpsPassbookManagerApp.directive('uploader', function() {
 			icon : '@icon',
 			collapsed: '@collapsed'
 		},
-		template : '<div class="ame-uploader">' 
-				+ '<div ng-transclude>[AME File Uploader]</div>' 
+		template : '<div class="ame-uploader">'
+				+ '<div ng-transclude>[AME File Uploader]</div>'
 				+ '<input name="data[image]" id="ame-uploader-input" value="" type="file" class="file-url-input ame-uploader">'
 				+ '<div id="ame-uploader-div" class="upload-image-wrap drop-zone"><img id="ame-uploader-image" alt=" Image" src="http://placehold.it/250x250&text=Drop Image Here" ng-src="file.url"/></div>'
 			+ '</div>',
 		link: function(scope, element, attrs){
-	
+
 			$('#ame-uploader-input').live('change', function(e) {
 				var files = e.currentTarget.files;
 
@@ -520,7 +520,7 @@ jpsPassbookManagerApp.directive('uploader', function() {
 					$rootScope.Products.selectedProduct.Product.image = imageurl;
 					$('#product_image').attr('src', imageurl);
 				});
-				
+
 				for (var i = 0, f; f = files[i]; i++) {
 					if (!f.type.match('image.*')) {
 						continue;
@@ -537,8 +537,8 @@ jpsPassbookManagerApp.directive('uploader', function() {
 					reader.readAsDataURL(f);
 				}
 			});
-	
-			
+
+
 		}
 	};
 });
@@ -727,4 +727,3 @@ angular.module('jcfTree.directive', []).directive('treeElement', function($compi
 		}
 	};
 });
-

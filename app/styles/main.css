@@ -1,31 +1,26 @@
-
-
 /* @override http://localhost:4040/styles/main.css */
 
-/* Will be compiled down to a single stylesheet with your sass files 
+/* Will be compiled down to a single stylesheet with your sass files
 
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 */
 
-@import url('bootstrap.min.css');
-@import url('bootstrap-responsive.min.css');
+@import url('../bower_components/bootstrap/dist/css/bootstrap.css');
+@import url('../bower_components/bootstrap/dist/css/bootstrap-theme.css');
+@import url("../bower_components/bootstrap-colorpicker/css/colorpicker.css");
+@import url("../bower_components/bootstrap-timepicker/css/bootstrap-timepicker.css");
+@import url("../bower_components/bootstrap-datepicker/css/datepicker3.css");
+
+@import url("../bower_components/bootstrap-wysihtml5/src/bootstrap-wysihtml5.css");
+
 @import url("styles.css");
-@import url("colorpicker.css");
-@import url("datepicker.css");
-@import url("prettify.css");
-@import url("bootstrap-wysihtml5-0.0.2.css");
-@import url("font-awesome.css");
-
-
 
 input[type=text]{
-
 }
-body{
 
-padding-top: 25px;
+body{
+	padding-top: 55px;
 }
 
 .blank-slate {
@@ -43,12 +38,12 @@ padding-top: 25px;
 	margin-top: 25px;
 	text-align: center;
 	text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);
-	color: #eee;	
+	color: #eee;
 	background: -webkit-linear-gradient(45deg, #111 0%,#444 100%) !important;
 	background: -o-linear-gradient(45deg, #111 0%,#444 100%);
 	background: -ms-linear-gradient(45deg, #111 0%,#444 100%);
 	background: linear-gradient(45deg, #111 0%,#444 100%) !important;
-	
+
 	background: #111;
 	padding: 25px 25px 10px;
 }
@@ -59,7 +54,7 @@ padding-top: 25px;
 .pass-carousel{
 	padding: 2px;
 	height: 250px;
-	
+
 	overflow: hidden;
 
 }
@@ -78,7 +73,7 @@ background: #000;
        -o-transition: all .5s ease;
       -ms-transition: all .5s ease;
           transition: all .5s ease;
-    
+
 }
 .navbar-fixed-top .navbar-inner {
 
@@ -96,8 +91,7 @@ background: #000;
 	border-top-left-radius: 0px;
 
 	box-shadow: 0px 1px 1px #000;
-	
+
 
 
 }
-

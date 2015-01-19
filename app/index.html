@@ -3,13 +3,14 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
-	<html class="no-js" ng-app="jpsPassbookManagerApp">
+	<html class="no-js">
 	<!--<![endif]-->
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title></title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Passbook Manager</title>
+
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		    <meta name="description" content="">
 		    <meta name="author" content="Jonnie Spratley">
 		    <link rel="stylesheet" href="styles/main.css"/>
@@ -20,7 +21,7 @@
 	    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
 	    <link rel="shortcut icon" href="ico/favicon.png">
     </head>
-    <body ng-controller="MainCtrl" ng-cloak>
+    <body ng-app="jpsPassbookManagerApp" ng-controller="MainCtrl">
 
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
@@ -32,29 +33,7 @@
             <script src="scripts/vendor/json3.min.js"></script>
         <![endif]-->
 
-		<div class="navbar navbar-fixed-top navbar-inverse" bs-navbar>
-	      <div class="navbar-inner">
-	        <div class="container">
-	          	<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-		      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		      </a>
-	          <a class="brand brand-calvus" href="#"> <i class="icon-{{App.icon}}"></i> <span>{{App.name}}</span></a>
-			  <div class="nav-collapse collapse">
-	           	<ul class="nav">
-	           	    <li ng-repeat="item in App.menu">
-	           	        <a ng-href="{{item.href}}"><i class="icon-{{item.icon}}"></i> <span>{{item.title}}</span></a>
-	           	    </li>
-	           	</ul>
-			  </div>
-	        </div>
-	      </div>
-	    </div>
-		<br/>
-		<br/>
-
+		 	<ng-include src="'views/_header.html'"></ng-include>
 			<div id="content" class="container">
 				<div id="content-view" ng-view>
 
@@ -65,7 +44,7 @@
 					  <div class="container">
 					    <div class="row">
 						  <div class="span12">
-						    <p>&copy; 2013 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a>
+						    <p>&copy; 2015 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a>
 							<span id="totop" class="pull-right"><a class="scroll">Back to Top </a><i class="icon-arrow-up icon-white"></i></span></p>
 						  </div>
 						</div>
@@ -76,37 +55,52 @@
 			</div>
 
 
+		<!-- build:js scripts/vendor.js -->
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
+		<script src="bower_components/angular-resource/angular-resource.js"></script>
 
-		<script src="scripts/vendor/jquery.min.js"></script>
-        <script src="scripts/vendor/angular.min.js"></script>
-        <script src="scripts/vendor/angular-resource.js"></script>
-        <script src="scripts/vendor/angular-strap.min.js"></script>
-        <script src="scripts/vendor/angular-ui.min.js"></script>
-        <script src="scripts/vendor/bootstrap.min.js"></script>
-        <script src="scripts/vendor/bootstrap-wysihtml5.js"></script>
-        <script src="scripts/vendor/bootstrap-colorpicker.js"></script>
-        <script src="scripts/vendor/bootstrap-datepicker.js"></script>
-        <script src="scripts/vendor/bootstrap-timepicker.js"></script>
-        <script src="scripts/vendor/prettify.js"></script>
-        <script src="scripts/vendor/jquery.qrcode.min.js"></script>
-        <script src="scripts/vendor/markdown.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
 
-        <!-- build:js scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/components/components.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/passes.js"></script>
-        <script src="scripts/controllers/docs.js"></script>
-        <script src="scripts/controllers/server.js"></script>
-        <script src="scripts/services/api.js"></script>
-        <!-- endbuild -->
+    <script src="bower_components/bootstrap/js/affix.js"></script>
+		<script src="bower_components/bootstrap/js/alert.js"></script>
+		<script src="bower_components/bootstrap/js/button.js"></script>
+		<script src="bower_components/bootstrap/js/modal.js"></script>
+		<script src="bower_components/bootstrap/js/dropdown.js"></script>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+		<script src="bower_components/bootstrap/js/tab.js"></script>
+		<script src="bower_components/bootstrap/js/tooltip.js"></script>
+		<script src="bower_components/bootstrap/js/popover.js"></script>
+		<script src="bower_components/bootstrap/js/scrollspy.js"></script>
+
+		<script src="bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+		<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+		<script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+		<script src="bower_components/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+
+		<script src="bower_components/jquery-qrcode/jquery.qrcode.min.js"></script>
+    <script src="scripts/vendor/markdown.js"></script>
+		<!-- endbuild -->
+
+
+    <!-- build:js scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/components/components.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/passes.js"></script>
+    <script src="scripts/controllers/docs.js"></script>
+    <script src="scripts/controllers/server.js"></script>
+    <script src="scripts/services/api.js"></script>
+    <!-- endbuild -->
+
+    <!-- TODO - Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+        var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
     </body>
 </html>

@@ -1,6 +1,6 @@
 <!-- @TODO: [Pass form] -->
-<div class="clearfix row-fluid">
-    <div class="span12">
+<div class="clearfix row">
+    <div class="col-sm-12">
 
         <form class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
 
@@ -32,9 +32,9 @@
             <div id="pass-primaryFields" class="well">
                 <formitem title="Primary Field #{{$index}}:" ng-repeat="a in pass[pass.type].primaryFields">
                     <div class="controls-row meta-row" >
-                        <input type="text" name="key" ng-model="a.key" class="span3" placeholder="Key"/>
-                        <input type="text" name="label" ng-model="a.label" class="span3" placeholder="Label"/>
-                        <input type="text" name="value" ng-model="a.value" class="span3" placeholder="Value"/>
+                        <input type="text" name="key" ng-model="a.key" class="form-control col-sm-2" placeholder="Key"/>
+                        <input type="text" name="label" ng-model="a.label" class="form-control col-sm-2" placeholder="Label"/>
+                        <input type="text" name="value" ng-model="a.value" class="form-control col-sm-2" placeholder="Value"/>
                         <span class="help-inline"> <a class="label label-red remove-row-btn" ng-click="pass[pass.type].primaryFields.splice($index, 1)"> <i class="icon-remove"></i> </a> </span>
                         <br/>
                     </div>
@@ -81,8 +81,8 @@
             <div id="pass-locationFields" class="well">
                 <formitem title="Location #{{$index}}:" ng-repeat="l in pass.locations">
                     <div class="controls-row meta-row" >
-                        <input type="text" name="latitude" ng-model="l.latitude" class="span4" placeholder="Latitude"/>
-                        <input type="text" name="longitude" ng-model="l.longitude" class="span4" placeholder="Longitude"/>
+                        <input type="text" name="latitude" ng-model="l.latitude" class="form-control col-sm-4" placeholder="Latitude"/>
+                        <input type="text" name="longitude" ng-model="l.longitude" class="form-control col-sm-4" placeholder="Longitude"/>
                         <span class="help-inline"> <a class="label label-red remove-row-btn" ng-click="pass.locations.splice($index, 1)"> <i class="icon-remove"></i> </a> </span>
                         &nbsp;
                     </div>
@@ -100,9 +100,9 @@
                 </formitem>
                 <formitem title="Messsage:">
                     <div class="controls-row">
-                        <textarea class="span6" ng-model="pass.barcode.message"></textarea>
+                        <textarea class="form-control" ng-model="pass.barcode.message"></textarea>
                         <div class="span6">
-                            <button ng-click="SmartPass.updatedQrcode(pass)" class="btn"><i class="icon-refresh"></i> Refresh</button>
+                            <button type="button" ng-click="SmartPass.updatedQrcode(pass)" class="btn"><i class="icon-refresh"></i> Refresh</button>
                             <div class="pass-qrcode-wrap">
                                 <div id="pass-qrcode"></div>
                             </div>
@@ -121,17 +121,20 @@
             </legend>
             <div id="pass-styleFields" class="well">
                 <formitem title="Label Color:">
-                    <input type="text" ng-model="pass.labelColor" class="colorpicker"/>
+                    <input type="text" ng-model="pass.labelColor" class="colorpicker" ng-colorpicker/>
                 </formitem>
 
                 <formitem title="Foreground Color:">
-                    <span
+                    <input type="text"
                     ng-model="pass.foregroundColor"
-                    ng-colorpicker="red"
-                    class="colorpicker" data-color="#ffffff" data-color-format="rgb"></span>
+                    class="colorpicker"
+                    ng-colorpicker/>
                 </formitem>
                 <formitem title="Background Color:">
-
+                  <input type="text"
+                    ng-model="pass.backgroundColor"
+                    ng-colorpicker
+                    class="colorpicker"/>
                 </formitem>
                 <formitem title="Icon:">
                     <div id="PassIconDiv">
@@ -153,22 +156,22 @@
             </legend>
             <div id="pass-identityFields" class="well">
                 <formitem title="ID:">
-                    <input type="text" ng-model="pass._id" disabled="true" class="span12"/>
+                    <input type="text" ng-model="pass._id" disabled="true" class="form-control"/>
                 </formitem>
                 <formitem title="Identifier:">
-                    <input type="text" ng-model="pass.passTypeIdentifier" class="span12"/>
+                    <input type="text" ng-model="pass.passTypeIdentifier" class="form-control"/>
                 </formitem>
                 <formitem title="Serial Number:">
-                    <input type="text" ng-model="pass.serialNumber" class="span12"/>
+                    <input type="text" ng-model="pass.serialNumber" class="form-control"/>
                 </formitem>
                 <formitem title="Team Identifier:">
-                    <input type="text" ng-model="pass.teamIdentifier" class="span12"/>
+                    <input type="text" ng-model="pass.teamIdentifier" class="form-control"/>
                 </formitem>
                 <formitem title="Web Service URL:">
-                    <input type="text" ng-model="pass.webServiceURL" class="span12"/>
+                    <input type="text" ng-model="pass.webServiceURL" class="form-control"/>
                 </formitem>
                 <formitem title="Authentication Token:">
-                    <input type="text" ng-model="pass.authenticationToken" class="span12"/>
+                    <input type="text" ng-model="pass.authenticationToken" class="form-control"/>
                 </formitem>
             </div>
 
@@ -178,27 +181,27 @@
             </legend>
             <div id="pass-webserviceFields" class="well">
                 <formitem title="Register Device:">
-                    <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+                    <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="form-control"/>
                     <span class="help-block"> <span class="label label-info">POST</span> Handles registering a device to recieve push notifications.</span>
                 </formitem>
                 <formitem title="Unregister Device:">
-                    <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+                    <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="form-control"/>
                     <span class="help-block"> <span class="label label-info">DELETE</span> Handles unregistering a device
                         .</span>
                 </formitem>
                 <formitem title="Get Passes on Device:">
-                    <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="span12"/>
+                    <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="form-control"/>
                     <span class="help-block"> <span class="label label-info">GET</span> Handles getting the serial numbers for Passes associated with a device. </span>
                 </formitem>
                 <formitem title="Latest Version:">
-                    <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
+                    <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="form-control"/>
                     <span class="help-block"> <span class="label label-info">GET</span> Handles getting the serial numbers for Passes associated with a device. </span>
                 </formitem>
             </div>
 
             <!-- @TODO: [Pass Actions] -->
             <div class="form-actions">
-                
+
                 <a ng-click="SmartPass.clearPass()" class="btn btn"><i class="icon-remove"></i> Cancel</a>
                 <a ng-click="SmartPass.savePass(pass)" class="btn btn-success" data-dismiss="modal"><i class="icon-ok"></i> Save changes</a>
             </div>
@@ -262,4 +265,3 @@
         </div>
     </div>
 </div><!--Pass build -->
-

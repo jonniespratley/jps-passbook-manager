@@ -534,6 +534,10 @@ app.delete('/api/' + config.version + '/:db/:collection/:id', RestResource.destr
  * TODO - Sign a pass
  */
 var signpass = require(__dirname + '/routes/jps-passbook');
+
+/**
+ * I am the signpass route
+ */
 app.get('/api/' + config.version + '/signpass', function(req, res) {
 
 	var passFile = req.param('path');
@@ -545,32 +549,35 @@ app.get('/api/' + config.version + '/signpass', function(req, res) {
 		res.send(400, 'Must provide file path!');
 	}
 });
+
+/**
+ * I am the export pass route.
+ */
 app.get('/api/' + config.version + '/export', function(req, res) {
 	var id = req.param('id');
 	if (id) {
         console.log(RestResource.name + ':findById - ' + id);
+
         RestResource.db.collection(RestResource.name, function(err, collection) {
             collection.findOne({
                 '_id' : new BSON.ObjectID(id)
             }, function(err, item) {
                 passContent = item;
                 console.log('found pass', item);
-                signpass.export(config.publicDir + path.sep + id + '.json', passContent).then(function() {
+
+                signpass.createPass(config.publicDir, passContent).then(function() {
                     res.send(passId + ' exported');
                 }, function(err) {
                     res.send(err);
                 });
             });
         });
-
-
 	} else {
 		res.send(400, 'Must provide file path!');
 	}
-
-
-
 });
+
+
 
 app.use(express.static(config.staticDir));
 app.use(express.directory('./app'));
