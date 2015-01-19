@@ -1,7 +1,7 @@
 {
 		"type": "boardingPass",
   "formatVersion" : 1,
-  "passTypeIdentifier": "pass.myappmatrix.coupons",
+  "passTypeIdentifier": "pass.jsapps.io",
   "serialNumber" : "gT6zrHkaW",
   "teamIdentifier" : "A1B2C3D4E5",
   "webServiceURL" : "https://example.com/passes/",

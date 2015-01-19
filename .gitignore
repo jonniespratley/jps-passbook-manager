@@ -6,3 +6,5 @@ app/components
 .DS_Store
 docs
 db
+.idea
+.project

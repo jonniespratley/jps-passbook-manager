@@ -1,0 +1,49 @@
+<!-- @TODO: [Pass Visual Styles] -->
+<div id="pass-device" class="">
+    <div id="demo-pass" class="pass">
+        <div class="pass-header">
+            <h1><i class="icon icon-{{pass.icon}}"></i>{{pass.logoText}} <small></small></h1>
+        </div>
+        <div class="media">
+            <a class="pull-right" href="#"> <img class="media-object object" ng-src="{{pass.thumbnail}}"/> </a>
+            <div class="media-body">
+                <h4 class="media-heading">{{pass.description}}</h4>
+                <!-- Nested media object -->
+                <div class="media">
+                  <span ng-repeat="a in pass[pass.type].primaryFields">
+                    <dt>
+                        {{a.label}}
+                    </dt>
+                    <dd>
+                        {{a.value}}
+                    </dd> </span>
+                    <span ng-repeat="a in pass[pass.type].secondaryFields">
+                      <dt>
+                          {{a.label}}
+                      </dt>
+                      <dd>
+                          {{a.value}}
+                      </dd> </span>
+                      <span ng-repeat="a in pass[pass.type].auxiliaryFields">
+                        <dt>
+                            {{a.label}}
+                        </dt>
+                        <dd>
+                            {{a.value}}
+                        </dd> </span>
+                    <div class="back">
+                          <span ng-repeat="a in pass[pass.type].backFields">
+                            <dt>
+                                {{a.label}}
+                            </dt>
+                            <dd>
+                                {{a.value}}
+                            </dd> </span>
+                    </div>
+                    <div id="pass-barcode" class="barcode"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

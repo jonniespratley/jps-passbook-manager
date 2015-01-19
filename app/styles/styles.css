@@ -1,4 +1,7 @@
 /* @override http://localhost:4040/styles/styles.css */
+.td-actions{
+    width:50px;
+}
 .pass{
 	border: 1px solid #ccc;
 	background-color: #eee;
@@ -6,7 +9,7 @@
 
 .pass {
 
-	
+
 	margin: 10px auto;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
