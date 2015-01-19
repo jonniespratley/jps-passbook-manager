@@ -6,7 +6,7 @@ var testPass = {
     "_id": "54bd3924e8d30273263d8f64",
     "mode": "edit",
     "formatVersion": 1,
-    "passTypeIdentifier": "pass.jsapps.coupons",
+    "passTypeIdentifier" : "pass.jsapps.io",
     "serialNumber": "f45b1a3b-aa94-cacf-eddf-679db4e701c3",
     "teamIdentifier": "J62UV6D7WJ",
     "webServiceURL": "http://localhost:1333/smartpass/v1",
