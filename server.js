@@ -2,6 +2,18 @@
  * @author Jonnie Spratley, AppMatrix
  * @created 02/26/13
  */
+ //## Dependencies
+ var mongo = require('mongodb');
+ var Server = mongo.Server;
+ var Db = mongo.Db;
+ var BSON = mongo.BSONPure;
+ var fs = require('fs');
+ var http = require('http');
+ var url = require('url');
+ var qs = require('querystring');
+ var express = require('express');
+ var app = express();
+ var mongoose = require('mongoose');
 
  var port = process.env.PORT || 1333;
  var host = process.env.VCAP_APP_HOST || "127.0.0.1";
@@ -18,8 +30,8 @@ var config = {
         port : port
     },
     db : {
-        username : 'amadmin',
-        password : 'fred',
+        username : 'admin',
+        password : 'admin',
         host : 'localhost',
         port : 27017
     },
@@ -31,17 +43,36 @@ var config = {
 };
 
 
-//## Dependencies
-var mongo = require('mongodb');
-var Server = mongo.Server;
-var Db = mongo.Db;
-var BSON = mongo.BSONPure;
-var fs = require('fs');
-var http = require('http');
-var url = require('url');
-var qs = require('querystring');
-var express = require('express');
-var app = express();
+var cloudServices = null;
+var dbcreds = null;
+var dbconn = null;
+
+//Test if services
+if(process.env.VCAP_SERVICES){
+  cloudServices = JSON.parse(process.env.VCAP_SERVICES);
+
+  console.warn('cloud services', cloudServices);
+  //var dbcreds = services['mongodb'][0].credentials;
+}
+
+if(dbcreds){
+  console.log(dbcreds);
+  dbconn = mongoose.connect(dbcreds.host, dbcreds.db, dbcreds.port, {user: dbcreds.username, pass: dbcreds.password});
+}
+console.log("attempting to connect to mongodb");
+
+if(process.env.MONGODB_URL){
+  config.db.host = MONGODB_URL;
+  console.warn('trying to connecto to ', process.env.MONGODB_URL);
+  dbconn = mongoose.connect(process.env.MONGODB_URL);
+} else {
+  dbconn = mongoose.connect("127.0.0.1", config.name, 27017);
+}
+
+
+
+
+
 
 
 
@@ -51,7 +82,7 @@ var app = express();
 //This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 var RestResource = {
     useversion : 'v1',
-    name : 'passbookmanager',
+    name : 'passes',
     databaseName : 'passbookmanager',
     urls : {
         v1 : '/api/v1',
@@ -109,7 +140,7 @@ var RestResource = {
                     safe : true
                 }, function(err, collection) {
                     if (err) {
-                        self.log('The collection doesnt exist. creating it with sample data...');
+                        self.log('The collection '+ self.name +' exist. creating it with sample data...', self.populateDb());
                         self.populateDb();
                     }
                 });
@@ -214,6 +245,7 @@ var RestResource = {
                 safe : true
             }));
             db.open(function(err, db) {
+              console.warn('adding to db', db, data);
                 if (err) {
                     console.log(err);
                 } else {

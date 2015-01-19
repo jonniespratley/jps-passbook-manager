@@ -6,14 +6,12 @@
 		"start": "node server"
 	},
 	"dependencies": {
-		"bower" : "latest",
 		"mongodb": "1.1.x",
 		"mongoose": "3.3.x",
 		"restify": "1.4.x",
 		"node-gcm": "0.9.x",
 		"request": "2.0.x",
 		"express": "3.x",
-		"mongodb": "1.1.x",
 		"url": "0.7.x"
 	},
 	"devDependencies": {
