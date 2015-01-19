@@ -1,8 +1,6 @@
 name: passbook-manager
 #document-root: app
 app-dir: app
-framework:
-  type: node
 buildpack: https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
 instances: 1
 mem: 256
@@ -18,5 +16,5 @@ hooks:
     - grunt
 #  post-staging:
     #- python manage.py syncdb --noinput
-#  pre-running:
-    #- python prerunsetup.py
+  pre-running:
+    - sh bin/db.sh
