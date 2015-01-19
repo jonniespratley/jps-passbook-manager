@@ -9,7 +9,7 @@
             <table id="passes-table" class="table table-hover table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th>Type</th>
+                        <th class="th-type">Type</th>
                         <th>Description</th>
                         <th>Last Updated</th>
                         <th class="td-actions">Actions</th>
@@ -17,20 +17,63 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
-                        <td class="pass-icon"><a> <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/> </a></td>
+                        <td class="pass-icon"><a>
+                          <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
+                          </a>
+                        </td>
 
-                        <td><a ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
+                        <td><a href="" ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
                         <br/>
                         {{pass.description}}</td>
                         <td>{{pass.updated | date: 'medium'}}</td>
-                        <td class="td-actions">
-                        <div class="btn-group">
-                            <a ng-click="SmartPass.selectPass(pass)" class="btn" data-dismiss="modal"><i class="icon-edit"></i></a>
-                            <a ng-click="SmartPass.deletePass(pass)" class="btn btn-danger" data-dismiss="modal"><i class="icon-remove"></i></a>
-                        </div></td>
+                        <td>
+
+
+                              <a ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-primary" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
+                              <a ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
+
+                        </td>
                     </tr>
                 </tbody>
             </table>
+
+
+
+            <!-- @TODO Thumbnails -->
+            <ul class="media-list clearfix hidden">
+              <li class="media col-sm-3" ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" data-id="pass-{{pass._id}}">
+                <a class="media-left" href="#" ng-click="SmartPass.selectPass(pass);">
+                  <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">{{pass.organizationName}}</h4>
+                  <p>{{pass.description}}</p>
+                  <p class="media-actions">
+                    <a href="" ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
+                    <a href="" ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
+                  </p>
+                </div>
+              </li>
+            </ul>
+
+            <div class="row hidden">
+              <div class="col-sm-3" ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" data-id="pass-{{pass._id}}">
+                <div class="thumbnail" ng-click="SmartPass.selectPass(pass);">
+                  <img data-src="holder.js/300x300" alt="...">
+
+                  <div class="caption">
+                    <h3>
+                      {{pass.organizationName}}
+                    </h3>
+                    <p>{{pass.description}}</p>
+                    <p>
+                      <a href="" ng-click="SmartPass.exportPass(pass)" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
+                      <a href="" ng-click="SmartPass.deletePass(pass)" class="btn btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
         </div>
 

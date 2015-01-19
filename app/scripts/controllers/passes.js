@@ -151,8 +151,12 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
         packagePass: function (p) {
             console.log('packagePass', p);
         },
-        signPass: function (p) {
-            console.log('signPass', p);
+        exportPass: function (p) {
+
+            console.log('exportPass', p);
+            $http.get('api/v1/passbookmanager/passes/' + p._id + '/export').success(function (data) {
+              console.log('export result', data);
+            });
         },
         updatedQrcode: function (p) {
             angular.element('#pass-qrcode')

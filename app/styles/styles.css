@@ -1,6 +1,11 @@
 /* @override http://localhost:4040/styles/styles.css */
+.th-type{
+  width:75px;
+  text-align: center;
+}
 .td-actions{
-    width:50px;
+    width:110px;
+    text-align: center;
 }
 .pass{
 	border: 1px solid #ccc;
