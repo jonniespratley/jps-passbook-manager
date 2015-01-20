@@ -6,3 +6,7 @@ app/components
 .DS_Store
 docs
 db
+.idea
+npm-debug.log
+*.log
+atlassian-ide-plugin.xml
