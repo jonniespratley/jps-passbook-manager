@@ -5,9 +5,10 @@ var mountFolder = function (connect, dir) {
 };
 
 module.exports = function (grunt) {
-    // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').concat(['gruntacular']).forEach(grunt.loadNpmTasks);
-
+	
+	require('load-grunt-tasks')(grunt);
+	require('time-grunt')(grunt);
+  
     // configurable paths
     var yeomanConfig = {
         app: 'app',
