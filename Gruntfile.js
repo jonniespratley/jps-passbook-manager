@@ -233,6 +233,12 @@ module.exports = function (grunt) {
             },
             src: ['test/routes/*-spec.js']
           }
+        },
+        karma: {
+          unit: {
+            configFile: 'karma.conf.js',
+            singleRun: true
+          }
         }
     });
 
@@ -252,6 +258,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         //'clean:server',
+      //  'jshint',
+        'karma',
         'mochaTest'
     ]);
 

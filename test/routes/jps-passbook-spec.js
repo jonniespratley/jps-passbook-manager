@@ -1,5 +1,5 @@
-var assert = require('assert'), path = require('path');
-
+var assert = require('assert'), path = require('path'), fs = require('fs');
+var os = require('os');
 var jpsPassbook = require(path.resolve(__dirname, '../../routes/jps-passbook'));
 var testPassName = 'Test_Pass_';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
@@ -64,12 +64,11 @@ var testPassfile = '';
 
 
 describe('jps-passbook', function () {
+
     it('should create a pass', function (done) {
         testPass.description = testPassName;
-
         jpsPassbook.createPass(testPassDir, testPass, function (data) {
             assert.equal(data.directory, testPassDir + path.sep + testPass.description + '.raw', 'returns filename');
-
             testPassDir = data.directory;
             done();
         });
