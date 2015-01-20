@@ -20,7 +20,11 @@ var app = express();
 //## REST Resource
 //This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 
-module.exports = function (config) {
+module.exports = function (options, app) {
+	var config = options;
+	console.warn('rest-resource initialized', config);
+
+
 	var RestResource = {
 		useversion: 'v1',
 		name: 'passes',
@@ -56,17 +60,19 @@ module.exports = function (config) {
 		/**
 		 * I am the interal logger.
 		 */
-		log: function (obj) {
+		log: function () {
 			if (this.debug) {
-				console.log(obj);
+				console.warn(arguments);
 			}
 		},
 		//Init the resource applying the config object
-		init: function (config) {
+		init: function (c) {
 			var self = this;
-			this.config = config;
+			RestResource.config = c;
+
 
 			MongoClient.connect(config.db.url, function (err, db) {
+				self.log('Trying to connect to', self.databaseName);
 				self.db = db;
 				if (!err) {
 					self.log('Connected to ' + self.databaseName);
@@ -78,8 +84,12 @@ module.exports = function (config) {
 							self.populateDb();
 						}
 					});
+				} else {
+					console.error('Could not connect to mongodb');
 				}
 			});
+
+			return this;
 
 		},
 
@@ -249,13 +259,16 @@ module.exports = function (config) {
 		//I populate the document db with the schema.
 		populateDb: function () {
 			var self = this;
-			RestResource.db.collection(self.name, function (err, collection) {
-				collection.insert(self.schema, {
-					safe: true
-				}, function (err, result) {
-					self.log(result);
+			MongoClient.connect(config.db.url, function (err, db) {
+				db.collection(self.name, function (err, collection) {
+					collection.insert(self.schema, {
+						safe: true
+					}, function (err, result) {
+						self.log(result);
+					});
 				});
 			});
+
 		},
 
 		dbStatus: function () {
@@ -267,12 +280,15 @@ module.exports = function (config) {
 		 * @param {Object} res
 		 */
 		findAll: function (req, res) {
-			RestResource.db.collection(req.params.collection, function (err, collection) {
-				collection.find().toArray(function (err, items) {
-					RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
-					res.send(items);
+			MongoClient.connect(config.db.url, function (err, db) {
+				db.collection(req.params.collection, function (err, collection) {
+					collection.find().toArray(function (err, items) {
+						RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
+						res.send(items);
+					});
 				});
 			});
+
 		},
 		/**
 		 * I find one of the records by id.
@@ -282,37 +298,42 @@ module.exports = function (config) {
 		findById: function (req, res) {
 			var id = req.params.id;
 			this.log(RestResource.name + ':findById - ' + id);
-			RestResource.db.collection(RestResource.name, function (err, collection) {
-				collection.findOne({
-					'_id': new BSON.ObjectID(id)
-				}, function (err, item) {
-					res.send(item);
+			MongoClient.connect(config.db.url, function (err, db) {
+				db.collection(RestResource.name, function (err, collection) {
+					collection.findOne({
+						'_id': new BSON.ObjectID(id)
+					}, function (err, item) {
+						res.send(item);
+					});
 				});
 			});
+
 		},
 		destroy: function (req, res, next) {
 			var params = {
 				_id: new BSON.ObjectID(req.params.id)
 			};
 			console.log('Delete by id ' + req.params.id);
-			var db = new mongo.Db(req.params.db, new mongo.Server(config.db.host, config.db.port, {
-				auto_reconnect: true,
-				safe: true
-			}));
-
-			RestResource.db.collection(req.params.collection, function (err, collection) {
-				console.log('found ', collection.collectionName, params);
-				collection.remove(params, function (err, docs) {
-					if (!err) {
-						res.header('Content-Type', 'application/json');
-						res.send('{"ok":1}');
-						db.close();
-					} else {
-						console.log(err);
-					}
+			MongoClient.connect(config.db.url, function (err, db) {
+				db.collection(req.params.collection, function (err, collection) {
+					console.log('found ', collection.collectionName, params);
+					collection.remove(params, function (err, docs) {
+						if (!err) {
+							res.header('Content-Type', 'application/json');
+							res.send('{"ok":1}');
+							db.close();
+						} else {
+							console.log(err);
+						}
+					});
 				});
 			});
 
+
+
 		}
 	};
+
+
+	return RestResource.init(config);
 };

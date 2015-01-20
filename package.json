@@ -7,15 +7,18 @@
   },
   "dependencies": {
     "body-parser": "^1.10.1",
-    "express": "~3.x",
+    "express": "^4.11.0",
     "fs-utils": "^0.6.0",
     "json-parser": "^0.2.4",
+    "method-override": "^2.3.1",
     "mongodb": "^1.4.28",
     "mongoose": "3.3.x",
     "node-gcm": "0.9.x",
     "q": "^1.1.2",
     "request": "2.0.x",
     "restify": "1.4.x",
+    "serve-index": "^1.6.0",
+    "serve-static": "^1.8.0",
     "url": "0.7.x"
   },
   "devDependencies": {
