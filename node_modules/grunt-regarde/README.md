@@ -2,6 +2,8 @@
 
 > Observe files for changes and run tasks
 
+*Requires grunt 0.4*
+
 
 ## Getting Started
 

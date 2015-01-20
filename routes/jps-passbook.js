@@ -1,7 +1,8 @@
-var fs = require('fs'), path = require('path'),
-	Q = require('q');
-var q = Q;
-var spawn = require('child_process').spawn;
+var fs = require('fs'),
+		path = require('path'),
+		fsutils = require('fs-utils'),
+		Q = require('q'),
+		spawn = require('child_process').spawn;
 
 /**
  * I handle signing a pass with signpass bin.
@@ -103,24 +104,20 @@ function writeFile(localPath, contents, callback) {
 function createDirectory(localPath, callback) {
 	console.log('creating directory', path.normalize(localPath));
 	try {
-		//2. remove directory
-		fs.rmdir(path.normalize(localPath), function (err) {
-			if (err) {
-				//throw new Error('Problem removing directory: ' + localPath);
-			}
+
 			//3. create new directory
 			fs.mkdir(localPath, function (er) {
 				if (er) {
-					throw new Error('Problem creating directory:' + localPath);
+					throw new Error(er, 'Problem creating directory:' + localPath);
 				}
-				callback(localPath);
 			});
-		});
+
 	} catch (err) {
+		//fsutils.rmdir(localPath);
 		//3. create new directory
 		fs.mkdir(localPath, function (er) {
 			if (er) {
-				throw new Error('Problem creating directory:' + localPath);
+				throw new Error(er, 'Problem creating directory:' + localPath);
 			}
 			callback(localPath);
 		});
@@ -136,7 +133,7 @@ function createDirectory(localPath, callback) {
  * @param pass
  */
 function createPass(localPath, pass, callback) {
-	var defer = q.defer();
+	var defer = Q.defer();
 	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw';
 	createDirectory(path.normalize(passPath), function (data) {
 		console.log('writing pass', data);

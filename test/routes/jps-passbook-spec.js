@@ -1,4 +1,5 @@
-var assert = require('assert'), path = require('path'), fs = require('fs');
+var assert = require('assert'), path = require('path'),
+    fs = require('fs-utils');
 var os = require('os');
 var jpsPassbook = require(path.resolve(__dirname, '../../routes/jps-passbook'));
 var testPassName = 'Test_Pass_';
@@ -64,6 +65,14 @@ var testPassfile = '';
 
 
 describe('jps-passbook', function () {
+    beforeEach(function(done){
+      //fs.mkdir(testPassDir);
+      done();
+    });
+    afterEach(function(done){
+      //fs.del(testPassDir);
+      done();
+    });
 
     it('should create a pass', function (done) {
         testPass.description = testPassName;
