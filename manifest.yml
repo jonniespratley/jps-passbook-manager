@@ -1,8 +1,6 @@
 name: passbook-manager
 #document-root: app
-app-dir: app
 buildpack: https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
-instances: 1
 mem: 256
 processes:
   web: node server.js
@@ -13,8 +11,4 @@ hooks:
   pre-staging:
     - npm install bower grunt-cli
     - bower install
-    - grunt
-#  post-staging:
-    #- python manage.py syncdb --noinput
-  pre-running:
-    - sh bin/db.sh
+    - grunt -v

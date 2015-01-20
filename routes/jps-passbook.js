@@ -102,25 +102,31 @@ function writeFile(localPath, contents, callback) {
  */
 function createDirectory(localPath, callback) {
     console.log('creating directory', path.normalize(localPath));
-    //1. check if folder exists
-    fs.stat(path.normalize(localPath), function(err, stats){
-        //is it a directory
-        if(stats && stats.isDirectory()){
-            //2. remove directory
-            fs.rmdir(path.normalize(localPath), function(err){
-                if(err){
-                    throw new Error('Problem removing directory: ' + localPath);
-                }
-                //3. create new directory
-                fs.mkdir(localPath, function(er){
-                    if(er){
-                        throw new Error('Problem creating directory:' + localPath);
-                    }
-                    callback(localPath);
-                });
-            });
+    try {
+      //2. remove directory
+      fs.rmdir(path.normalize(localPath), function(err){
+        if(err){
+          //throw new Error('Problem removing directory: ' + localPath);
         }
-    });
+        //3. create new directory
+        fs.mkdir(localPath, function(er){
+          if(er){
+            throw new Error('Problem creating directory:' + localPath);
+          }
+          callback(localPath);
+        });
+      });
+    } catch (err) {
+      //3. create new directory
+      fs.mkdir(localPath, function(er){
+        if(er){
+          throw new Error('Problem creating directory:' + localPath);
+        }
+        callback(localPath);
+      });
+    }
+
+
 };
 
 
@@ -132,9 +138,11 @@ function createDirectory(localPath, callback) {
 function createPass(localPath, pass, callback) {
     var defer = q.defer();
     var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw';
-    createDirectory(path.normalize(passPath), 0777, function (data) {
-        console.log('write to ', data);
-        writeFile(passPath + '/pass.json', JSON.stringify(pass), callback);
+    createDirectory(path.normalize(passPath), function (data) {
+      console.log('writing pass', data);
+        writeFile(passPath + '/pass.json', JSON.stringify(pass), function(d){
+          callback(d);
+        });
     });
 };
 

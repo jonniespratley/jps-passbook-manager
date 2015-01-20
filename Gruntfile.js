@@ -86,7 +86,8 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= yeoman.app %>/scripts/{,*/}*.js'
+                '<%= yeoman.app %>/scripts/{,*/}*.js',
+                '!<%= yeoman.app %>/scripts/vendor/{,*/}*.js'
             ]
         },
         testacular: {
@@ -111,21 +112,7 @@ module.exports = function (grunt) {
             }
         },
         compass: {
-            options: {
-                sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
-                imagesDir: '<%= yeoman.app %>/images',
-                javascriptsDir: '<%= yeoman.app %>/scripts',
-                fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: '<%= yeoman.app %>/components',
-                relativeAssets: true
-            },
-            dist: {},
-            server: {
-                options: {
-                    debugInfo: true
-                }
-            }
+            dist: {}
         },
         concat: {
             dist: {
@@ -264,19 +251,16 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'clean:server',
-        'coffee',
-        'compass',
-        'connect:test',
-        'testacular'
+        //'clean:server',
+        'mochaTest'
     ]);
 
     grunt.registerTask('build', [
         'clean:dist',
-        'jshint',
+      //  'jshint',
         'test',
         //  'coffee',
-        'compass:dist',
+        //'compass:dist',
         'useminPrepare',
         'imagemin',
         'cssmin',
@@ -289,5 +273,5 @@ module.exports = function (grunt) {
         'uglify'
     ]);
 
-    grunt.registerTask('default', ['build']);
+    grunt.registerTask('default', ['test', 'build']);
 };

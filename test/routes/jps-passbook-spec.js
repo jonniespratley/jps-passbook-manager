@@ -64,8 +64,6 @@ var testPassfile = '';
 
 
 describe('jps-passbook', function () {
-
-
     it('should create a pass', function (done) {
         testPass.description = testPassName;
 
