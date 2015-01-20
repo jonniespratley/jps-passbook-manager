@@ -1,26 +1,17 @@
 //## Dependencies
 var mongo = require('mongodb');
-var path = require('path');
-var Server = mongo.Server;
-var Db = mongo.Db;
 var BSON = mongo.BSONPure;
-var fs = require('fs');
-var http = require('http');
-var url = require('url');
-var qs = require('querystring');
 var express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
 
-var app = express();
 
 
 //## REST Resource
 //This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 
 module.exports = function (options, app) {
+	'use strict';
+
 	var config = options;
 	console.warn('rest-resource initialized', config);
 
@@ -51,7 +42,7 @@ module.exports = function (options, app) {
 			title: 'This is the title',
 			body: 'This is the body.',
 			created: new Date(),
-			modified: new Date
+			modified: new Date()
 		},
 		/**
 		 * I enable logging or not.
@@ -68,12 +59,13 @@ module.exports = function (options, app) {
 		//Init the resource applying the config object
 		init: function (c) {
 			var self = this;
-			RestResource.config = c;
 
+			//Set the config
+			RestResource.config = c;
 
 			MongoClient.connect(config.db.url, function (err, db) {
 				self.log('Trying to connect to', self.databaseName);
-				self.db = db;
+				RestResource.db = db;
 				if (!err) {
 					self.log('Connected to ' + self.databaseName);
 					db.collection(self.name, {
@@ -96,23 +88,25 @@ module.exports = function (options, app) {
 		//### index()
 		//Display default message on index
 		index: function (req, res, next) {
-			res.json({
+			res.status(200).send({
 				message: this.config.message + ' -  ' + config.version
 			});
+			next();
 		},
 
 		//### collections()
 		//Display list of default collections
 		collections: function (req, res, next) {
-			res.json({
+			res.status(200).send({
 				message: config.message + ' -  ' + config.version,
 				results: config.collections
 			});
+			next();
 		},
 
 		//### get()
 		//Fetch all records.
-		get: function (req, res, next) {
+		fetch: function (req, res, next) {
 			var self = this;
 			var query = req.query.query ? JSON.parse(req.query.query) : {};
 
@@ -124,7 +118,7 @@ module.exports = function (options, app) {
 			}
 			//Pass a appid param to get all records for that appid
 			if (req.param('appid')) {
-				query['appid'] = String(req.param('appid'));
+				query.appid = String(req.param('appid'));
 			}
 			var options = req.params.options || {};
 
@@ -132,9 +126,9 @@ module.exports = function (options, app) {
 			var test = ['limit', 'sort', 'fields', 'skip', 'hint', 'explain', 'snapshot', 'timeout'];
 
 			//loop and test
-			for (o in req.query) {
-				if (test.indexOf(o) >= 0) {
-					options[o] = req.query[o];
+			for (var s in req.query) {
+				if (test.indexOf(s) >= 0) {
+					options[s] = req.query[s];
 				}
 			}
 			//Log for interal usage
@@ -156,19 +150,18 @@ module.exports = function (options, app) {
 									var result = [];
 									if (req.params.id) {
 										if (docs.length > 0) {
-											result = self.flavorize(null, docs[0], "out");
+											result = self.flavorize(null, docs[0], 'out');
 											res.header('Content-Type', 'application/json');
-											res.jsonp(200, result);
+											res.status(200).send(result);
 										} else {
-											res.jsonp(404, 'Not found');
-											//res.send(404);
+											res.status(404).send({message: 'Not found'});
 										}
 									} else {
 										docs.forEach(function (doc) {
 											result.push(doc);
 										});
-										res.header('Content-Type', 'application/json');
-										res.jsonp(200, result);
+										//res.header('Content-Type', 'application/json');
+										res.status(200).send(result);
 									}
 									db.close();
 								}
@@ -177,47 +170,55 @@ module.exports = function (options, app) {
 					});
 				}
 			});
+			next();
 		},
 
-		//### add()
-		//Handle saving a document to the database.
+		/**
+		 * I handle adding a document to the collection
+		 * @param req
+		 * @param res
+		 * @param next
+		 */
 		add: function (req, res, next) {
 			var data = req.body;
+			var results = [];
 			if (data) {
-
 				MongoClient.connect(config.db.url, function (err, db) {
-					console.warn('adding to db', db, data);
+					RestResource.log('add() - trying to add document to ', RestResource.name, data);
+
 					if (err) {
-						console.log(err);
+						console.error('add() - Error trying to add document');
+
 					} else {
+
 						db.collection(req.params.collection, function (err, collection) {
 							collection.count(function (err, count) {
-								console.log("There are " + count + " records.");
+								console.log('There are ' + count + ' records.');
 							});
 						});
-						var results = [];
+
+
 						db.collection(req.params.collection, function (err, collection) {
-							//Check if the posted data is an array, if it is, then loop and insert each document
 							if (data.length) {
-								//insert all docs
 								for (var i = 0; i < data.length; i++) {
 									var obj = data[i];
-									console.log(obj);
+
+									console.warn('added document', i, obj);
+
 									collection.insert(obj, function (err, docs) {
 										results.push(obj);
 									});
 								}
 								db.close();
-								//  res.header('Location', '/'+req.params.db+'/'+req.params.collection+'/'+docs[0]._id.toHexString());
+								res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
 								res.header('Content-Type', 'application/json');
-								res.jsonp(200, {
-									results: results
-								});
+								res.status(200).send(results);
+
 							} else {
 								collection.insert(req.body, function (err, docs) {
 									res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
 									res.header('Content-Type', 'application/json');
-									res.send('{"ok":1}', 201);
+									res.status(201).send({message: 'Document created!'});
 									db.close();
 								});
 							}
@@ -225,8 +226,8 @@ module.exports = function (options, app) {
 					}
 				});
 			} else {
-				res.header('Content-Type', 'application/json');
-				res.send('{"ok":0}', 200);
+
+				res.status(200).send({message: 'Document created!'});
 			}
 		},
 
@@ -242,7 +243,7 @@ module.exports = function (options, app) {
 					collection.update(spec, req.body, true, function (err, docs) {
 						res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
 						res.header('Content-Type', 'application/json');
-						res.send('{"ok":1}');
+						res.status(200).send({message: 'Document ' + req.params.id + ' updated!'});
 						db.close();
 						console.log('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
 					});
@@ -284,7 +285,7 @@ module.exports = function (options, app) {
 				db.collection(req.params.collection, function (err, collection) {
 					collection.find().toArray(function (err, items) {
 						RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
-						res.send(items);
+						res.status(200).send(items);
 					});
 				});
 			});
@@ -303,7 +304,7 @@ module.exports = function (options, app) {
 					collection.findOne({
 						'_id': new BSON.ObjectID(id)
 					}, function (err, item) {
-						res.send(item);
+						res.status(200).send(item);
 					});
 				});
 			});
@@ -314,21 +315,23 @@ module.exports = function (options, app) {
 				_id: new BSON.ObjectID(req.params.id)
 			};
 			console.log('Delete by id ' + req.params.id);
+
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(req.params.collection, function (err, collection) {
 					console.log('found ', collection.collectionName, params);
+
 					collection.remove(params, function (err, docs) {
 						if (!err) {
-							res.header('Content-Type', 'application/json');
-							res.send('{"ok":1}');
+
+							res.status(200).send({message: 'Document ' + req.params.id + ' was removed!'});
 							db.close();
 						} else {
-							console.log(err);
+							console.error(err);
+							res.status(400).send(err);
 						}
 					});
 				});
 			});
-
 
 
 		}
