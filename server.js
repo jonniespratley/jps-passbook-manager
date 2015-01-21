@@ -52,9 +52,14 @@ var signpass = require(__dirname + path.sep + 'routes/jps-passbook');
 var rest = new RestResource(config);
 var app = express();
 
+
+
+if(process.env.MONGODB_URL){
+	config.db.url = process.env.MONGODB_URL;
+	console.warn('changing mongodb url', process.env.MONGODB_URL);
+}
+
 require(__dirname + path.sep + 'routes/jps-passbook-routes')(config, app);
-
-
 
 // * REST METHODS:
 // *
