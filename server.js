@@ -3,9 +3,7 @@
  * @created 02/26/13
  */
 //## Dependencies
-var express = require('express'),
-	bodyParser = require('body-parser'),
-	jsonParser = bodyParser.json();
+var express = require('express');
 var path = require('path');
 
 
@@ -45,37 +43,16 @@ var config = {
 	uploadsDestDir: __dirname + path.sep + 'www'
 };
 
-
-//Initialize the REST resource server with our configuration object.
-var RestResource = require(__dirname + path.sep + 'routes/rest-resource');
-var signpass = require(__dirname + path.sep + 'routes/jps-passbook');
-var rest = new RestResource(config);
-var app = express();
-
-
-
 if(process.env.MONGODB_URL){
 	config.db.url = process.env.MONGODB_URL;
 	console.warn('changing mongodb url', process.env.MONGODB_URL);
 }
 
-require(__dirname + path.sep + 'routes/jps-passbook-routes')(config, app);
 
-// * REST METHODS:
-// *
-// * HTTP     METHOD          URL
-// * ======|==============|==============================================
-// * GET      findAll         http://localhost:4040/passbookmanager
-// * GET      findById        http://localhost:4040/passbookmanager/passes/:id
-// * POST     add             http://localhost:4040/passbookmanager/passes
-// * PUT      update          http://localhost:4040/passbookmanager/passes/:id
-// * DELETE   destroy         http://localhost:4040/passbookmanager/passes/:id
-app.get('/api/' + config.version + '/' + config.name, rest.collections);
-app.get('/api/' + config.version + '/:db/:collection/:id?', rest.findAll);
-app.get('/api/' + config.version + '/:db/:collection/:id?', rest.findById);
-app.post('/api/' + config.version + '/:db/:collection', bodyParser.json(), rest.add);
-app.put('/api/' + config.version + '/:db/:collection/:id', bodyParser.json(), rest.edit);
-app.delete('/api/' + config.version + '/:db/:collection/:id', rest.destroy);
+//Initialize the REST resource server with our configuration object.
+var app = express();
+require(__dirname + path.sep + 'routes'+ path.sep +'jps-passbook-routes')(config, app);
+
 
 //Start the server
 app.listen(config.server.port, function () {

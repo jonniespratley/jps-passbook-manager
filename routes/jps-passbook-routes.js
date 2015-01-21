@@ -20,26 +20,45 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 var router = express.Router();
 
+/**
+ * Passbook Routes - This file contains the API routes needed for Passbook and Passbook Manager
+ * @example
+ *
+
+ var app = express();
+ require(__dirname + path.sep + 'routes'+ path.sep +'jps-passbook-routes')(config, app);
+
+
+ //Start the server
+ app.listen(config.server.port, function () {
+	console.log(config.message + ' running @: ' + config.server.host + ':' + config.server.port);
+ });
+
+ * @param config
+ * @param app
+ */
 module.exports = function (config, app) {
 	var RestResource = require('./rest-resource')(config);
-	router.route('/posts/:postId')
-		.all(function (request, response, next) {
-			// This will be called for request with any HTTP method
-			console.warn('route.all called');
-		})
-		.post(function (request, response, next) {
-		})
-		.get(function (request, response, next) {
-			response.json(request.post);
-		})
-		.put(function (request, response, next) {
-			// ... Update the post
-			response.json(request.post);
-		})
-		.delete(function (request, response, next) {
-			// ... Delete the post
-			response.json({'message': 'ok'});
-		})
+
+	/**
+	 * RESTful METHODS:
+	 *
+	 * HTTP     METHOD          URL
+	 * ======|==============|==============================================
+	 * GET      findAll         http://localhost:4040/passbookmanager
+	 * GET      findById        http://localhost:4040/passbookmanager/passes/:id
+	 * POST     add             http://localhost:4040/passbookmanager/passes
+	 * PUT      update          http://localhost:4040/passbookmanager/passes/:id
+	 * DELETE   destroy         http://localhost:4040/passbookmanager/passes/:id
+	 */
+
+	app.get('/api/' + config.version + '/' + config.name, RestResource.collections);
+	app.get('/api/' + config.version + '/:db/:collection/:id?', RestResource.findAll);
+	app.get('/api/' + config.version + '/:db/:collection/:id?', RestResource.findById);
+	app.post('/api/' + config.version + '/:db/:collection', bodyParser.json(), RestResource.add);
+	app.put('/api/' + config.version + '/:db/:collection/:id', bodyParser.json(), RestResource.edit);
+	app.delete('/api/' + config.version + '/:db/:collection/:id', RestResource.destroy);
+
 
 	/* ======================[ @TODO: Listen for Device registration token ]====================== */
 
@@ -53,15 +72,15 @@ module.exports = function (config, app) {
 //Test device tokens
 	var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];
 
-//API Endpoint
+	//API Endpoint
 	router.get('/api', function (req, res) {
 		var body = config.name;
 		res.setHeader('Content-Type', 'text/plain');
 		res.setHeader('Content-Length', body.length);
-		res.end(body);
+		res.status(200).send(body);
 	});
 
-//Execute command - http://localhost:4040/api/v1/cmd/ls
+	//Execute command - http://localhost:4040/api/v1/cmd/ls
 	router.get('/api/' + config.version + '/' + 'cmd' + '/' + ':command', function (req, res) {
 		var results = {}, child;
 		child = exec(req.params.command, function (error, stdout, stderr) {
@@ -72,7 +91,7 @@ module.exports = function (config, app) {
 				console.log('exec error: ' + error);
 			}
 
-			res.json({
+			res.status(200).send({
 				message: config.name,
 				results: results
 			});
@@ -81,7 +100,7 @@ module.exports = function (config, app) {
 
 	//API Version Endpoint - http://localhost:3535/smartpass/v1
 	router.get('/api/' + config.version, function (req, res) {
-		res.json({
+		res.status(200).send({
 			message: config.name
 		});
 	});
@@ -136,8 +155,6 @@ module.exports = function (config, app) {
 	});
 
 
-
-
 	/**
 	 * I am the signpass route
 	 */
@@ -178,8 +195,8 @@ module.exports = function (config, app) {
 					passContent = item;
 					console.log('found pass', item._id);
 					jpsPassbook.createPass(config.publicDir, passContent, function (data) {
-							res.status(200).send(data);
-						});
+						res.status(200).send(data);
+					});
 				});
 			});
 		} else {
@@ -191,13 +208,12 @@ module.exports = function (config, app) {
 	app.use(serveStatic(config.staticDir, null));
 
 	app.use(function (req, res, next) {
-		res.header('Connection', 'keep-alive');
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-	//	res.header('Access-Control-Allow-Headers', 'Content-Type');
+		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,HEAD,CONNECT');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
 		res.header('Cache-Control', 'no-cache');
-		//res.header('Content-Type', 'application/json');
+
 		console.log('jps-passbook-routes', req.path);
 		next();
 	});
