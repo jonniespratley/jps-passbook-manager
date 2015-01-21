@@ -9,6 +9,6 @@ hooks:
 #  pre-push:
     #- gulp test
   pre-staging:
-    - npm install bower grunt-cli
+    - npm install -g bower grunt-cli
     - bower install
-    - grunt -v
+    - grunt build test -v
