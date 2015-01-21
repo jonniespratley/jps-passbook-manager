@@ -160,7 +160,7 @@
   {
     "type": "eventTicket",
     "formatVersion": 1,
-    "passTypeIdentifier": "pass.myappmatrix.coupons",
+    "passTypeIdentifier": "pass.jsapps.io",
     "serialNumber": "e00d770f-5c2b-de30-f1e9-377ac57528bb",
     "teamIdentifier": "A1B2C3D4E5",
     "webServiceURL": "https://example.com/passes/",

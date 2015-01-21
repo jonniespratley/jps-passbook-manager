@@ -78,8 +78,6 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			//  $('.timepicker').timepicker();
 			//  $('.colorpicker').colorpicker();
 			this.getPasses();
-			return this;
-
 		},
 		loadSchema: function () {
 			console.log($scope.pass.type);
@@ -108,6 +106,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 				$http.delete('/api/v1/passbookmanager/passes/' + p._id).success(function (data) {
 					angular.element('#pass-' + p._id).remove();
 					console.log('deletePass', data);
+					$scope.SmartPass.getPasses();
 				});
 			}
 			;
@@ -130,7 +129,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			if (p._id) {
 				$http.put('/api/v1/passbookmanager/passes/' + p._id, p).success(function (data) {
 					console.log('savePass', data);
-					if (data.ok) {
+					if (data) {
 						$scope.SmartPass.pass = null;
 						$scope.SmartPass.getPasses();
 						$scope.SmartPass.clearPass();
@@ -140,7 +139,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			} else {
 				$http.post('/api/v1/passbookmanager/passes', p).success(function (data) {
 					//$scope.SmartPass.pass = data;
-					if (data.ok) {
+					if (data) {
 						$scope.SmartPass.pass = null;
 						$scope.SmartPass.getPasses();
 					}
@@ -153,19 +152,20 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		},
 		exportPass: function (p) {
 			console.log('exportPass', p);
+			$scope.SmartPass.pass = p;
 			$http.get('api/v1/passbookmanager/passes/' + p._id + '/export').success(function (data) {
 				console.log('export result', data);
 				$scope.SmartPass.signPass(p, data.filename);
-				$scope.SmartPass.pass.filename = data;
+				$scope.SmartPass.pass.url = data.filename;
 			});
 		},
 		signPass: function (p, path) {
+			var signUrl = 'api/v1/passbookmanager/passes/' + p._id + '/sign?path=' + path;
+
+			window.open(signUrl);
 			console.log('signPass', path);
-			$http.get('api/v1/passbookmanager/passes/' + p._id + '/sign?path=' + path).success(function (data) {
-				console.log('sign result', data);
-				$scope.SmartPass.pass.url = data;
-				
-			});
+
+
 		},
 		updatedQrcode: function (p) {
 			angular.element('#pass-qrcode')
@@ -220,7 +220,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.SmartPass.coupon = {
 		"mode": "edit",
 		"formatVersion": 1,
-		"passTypeIdentifier": "pass.jsapps.coupons",
+		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "E5982H-I2",
 		"teamIdentifier": "J62UV6D7WJ",
 		"webServiceURL": 'http://' + location.hostname + ':' + location.port + '/smartpass/v1',
@@ -267,22 +267,8 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.reverse = false;
 	$scope.pass.type = 'coupon';
 
-
-	/**
-	 * UI Fixes
-	 */
-		// $('input[type=text]').addClass('span12');
-
-
-	console.log('RootScope', $scope);
-	window.SmartPass = $scope.SmartPass.init();
-
-	$(document).ready(function () {
-
-		$('legend').bind('click', function (e) {
-			$(this).next().slideToggle();
-			console.log(e);
-		});
-	});
-
+	$scope.toggle = function(event){
+		console.log(event);
+		$(event.target).next().slideToggle();
+	}
 });

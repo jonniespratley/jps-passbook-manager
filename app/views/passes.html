@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-init="SmartPass.init()">
 
     <div id="smartpass-row" class="row">
 
@@ -31,12 +31,16 @@
 
                               <a ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-primary" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
                               <a ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
-				<a href="{{pass.url}}">{{pass.url}}</a>
-				<!--
+
+
 				<br/>
-				
-				<img src="img/Add_to_Passbook_Badge_US_1014.svg">
-				-->
+        <a href="{{pass.url}}" target="_blank">
+
+				<img
+          ng-show="pass.url"
+          class="passbook-badge"
+          src="img/Add_to_Passbook_Badge_US_1014.svg">
+        </a>
                         </td>
                     </tr>
                 </tbody>
@@ -85,7 +89,7 @@
 
         </div>
 
-      
+
 
     </div>
 

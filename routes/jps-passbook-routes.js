@@ -196,7 +196,7 @@ module.exports = function (config, app) {
 		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
 		res.header('Access-Control-Allow-Headers', 'Content-Type');
 		res.header('Cache-Control', 'no-cache');
-		res.header('Content-Type', 'application/json');
+		//res.header('Content-Type', 'application/json');
 		console.log('jps-passbook-routes', req.path);
 		next();
 	});
