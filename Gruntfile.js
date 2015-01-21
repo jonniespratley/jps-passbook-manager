@@ -245,18 +245,32 @@ module.exports = function (grunt) {
 			}
 		},
 		mkdir: {
-		    all: {
-		      options: {
-		        mode: '0777',
-		        create: ['.tmp']
-		      }
-		    }
-		  }
+			all: {
+				options: {
+					mode: '0777',
+					create: ['.tmp']
+				}
+			}
+		},
+		'saucelabs-mocha': {
+			all: {
+				options: {
+					urls: ['passbook-manager.jsapps.io'],
+					build: process.env.CI_BUILD_NUMBER,
+					testname: 'Sauce Unit Test for passbook-manager.jsapps.io',
+					browsers: [{
+						browserName: 'chrome',
+						version: '31',
+						platform: 'XP'
+					}]
+				}
+			}
+		}
 	});
 
 	grunt.renameTask('regarde', 'watch');
 	// remove when mincss task is renamed
-	grunt.renameTask('mincss', 'cssmin');
+	//grunt.renameTask('mincss', 'cssmin');
 
 	grunt.registerTask('server', [
 		'clean:server',
