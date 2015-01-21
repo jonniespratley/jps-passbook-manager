@@ -1,0 +1,27 @@
+{
+	"name": "passbookmanager",
+	"message": "Passbook Manager API Server",
+	"version": "v1",
+	"security": {"salt": "a58e325c6df628d07a18b673a3420986"},
+	"server": {
+		"host": "",
+		"port": ""
+	},
+	"db": {
+		"username": "demouser",
+		"password": "demopassword",
+		"host": "ds031611.mongolab.com",
+		"port": 31611,
+		"url": "mongodb://localhost:27017"
+	},
+	"collections": [
+		"devices",
+		"passes",
+		"notifications",
+		"settings"
+	],
+	"staticDir": "app",
+	"publicDir": "www",
+	"uploadsTmpDir": ".tmp",
+	"uploadsDestDir": "www"
+}

@@ -3,53 +3,17 @@
  * @created 02/26/13
  */
 //## Dependencies
-var express = require('express');
-var path = require('path');
-
+var express = require('express'), path = require('path'), fs = require('fs-extra');
 
 var port = process.env.PORT || 1333;
 var host = process.env.VCAP_APP_HOST || "127.0.0.1";
-
-var cloudServices = null;
-var dbcreds = null;
-var dbconn = null;
-
-//Configuration Object to hold settings for server
-
-//mongodb://admin:admin@ds031611.mongolab.com:31611/passbookmanager
-var config = {
-	name: 'passbookmanager',
-	message: 'Passbook Manager API Server',
-	version: 'v1',
-	security: {
-		salt: 'a58e325c6df628d07a18b673a3420986'
-	},
-	server: {
-		host: host,
-		port: port
-	},
-	db: {
-		username: 'demouser',
-		password: 'demopassword',
-		host: 'ds031611.mongolab.com',
-		port: 31611,
-
-		url: 'mongodb://localhost:27017'
-	},
-	collections: ['devices', 'passes', 'notifications', 'settings'],
-	staticDir: './app',
-	publicDir: __dirname + path.sep + 'www',
-	uploadsTmpDir: __dirname + path.sep + '.tmp',
-	uploadsDestDir: __dirname + path.sep + 'www'
-};
+var config = fs.readJsonSync(__dirname + path.sep + 'config' + path.sep + 'config.json');
 
 if(process.env.MONGODB_URL){
 	config.db.url = process.env.MONGODB_URL;
 	console.warn('changing mongodb url', process.env.MONGODB_URL);
 }
 
-
-//Initialize the REST resource server with our configuration object.
 var app = express();
 require(__dirname + path.sep + 'routes'+ path.sep +'jps-passbook-routes')(config, app);
 

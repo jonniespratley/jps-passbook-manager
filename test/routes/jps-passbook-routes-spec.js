@@ -1,10 +1,12 @@
-var assert = require('assert'), path = require('path'), fs = require('fs-utils'), os = require('os');
+var assert = require('assert'), path = require('path'), fs = require('fs-extra'), os = require('os');
+
 //3rd Party
 var request = require('supertest'), express = require('express');
 
 //Test vars
 var testPassName = 'Test_Pass_';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
+var config = fs.readJsonSync(path.resolve(__dirname, '../../config/config.js'));
 
 //Test Instances
 var app = express();
