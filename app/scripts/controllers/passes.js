@@ -152,10 +152,19 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			console.log('packagePass', p);
 		},
 		exportPass: function (p) {
-
 			console.log('exportPass', p);
 			$http.get('api/v1/passbookmanager/passes/' + p._id + '/export').success(function (data) {
 				console.log('export result', data);
+				$scope.SmartPass.signPass(p, data.filename);
+				$scope.SmartPass.pass.filename = data;
+			});
+		},
+		signPass: function (p, path) {
+			console.log('signPass', path);
+			$http.get('api/v1/passbookmanager/passes/' + p._id + '/sign?path=' + path).success(function (data) {
+				console.log('sign result', data);
+				$scope.SmartPass.pass.url = data;
+				
 			});
 		},
 		updatedQrcode: function (p) {

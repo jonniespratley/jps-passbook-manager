@@ -2,6 +2,7 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	jsonParser = bodyParser.json();
 
+var jpsPassbook = require('./jps-passbook');
 var serveStatic = require('serve-static');
 var mongo = require('mongodb');
 var path = require('path');
@@ -20,7 +21,7 @@ var exec = require('child_process').exec;
 var router = express.Router();
 
 module.exports = function (config, app) {
-
+	var RestResource = require('./rest-resource')(config);
 	router.route('/posts/:postId')
 		.all(function (request, response, next) {
 			// This will be called for request with any HTTP method
@@ -143,11 +144,12 @@ module.exports = function (config, app) {
 	router.get('/api/' + config.version + '/:db/:collection/:id/sign', function (req, res) {
 		var passFile = req.param('path');
 		if (passFile) {
-			signpass.sign(passFile, function () {
-				res.send(200, {message: passFile + ' signed.'});
+			jpsPassbook.sign(passFile, function (data) {
+				//res.status(200).send({message: passFile + ' signed.', filename: data});
+				res.status(200).download(data);
 			});
 		} else {
-			res.send(400, {message: 'Must provide path to .raw folder!'});
+			res.status(400).send({message: 'Must provide path to .raw folder!'});
 		}
 	});
 
@@ -170,21 +172,17 @@ module.exports = function (config, app) {
 					'_id': new BSON.ObjectID(id)
 				}, function (err, item) {
 					if (err) {
-						res.send(400, err);
+						res.status(400).send(err);
 					}
 					passContent = item;
 					console.log('found pass', item);
-					try {
-						signpass.createPass(config.publicDir, passContent, function (data) {
-							res.send(data);
+					jpsPassbook.createPass(config.publicDir, passContent, function (data) {
+							res.status(200).send(data);
 						});
-					} catch (e) {
-						res.send(500, e);
-					}
 				});
 			});
 		} else {
-			res.send(400, 'Must provide file path!');
+			res.status(400).send('Must provide file path!');
 		}
 	});
 
@@ -205,7 +203,7 @@ module.exports = function (config, app) {
 
 	app.use(function (err, req, res, next) {
 		console.error(err.stack);
-		res.send(500, 'Something broke!');
+		res.status(500).send('Something broke!');
 	});
 
 	app.use(function (req, res, next) {

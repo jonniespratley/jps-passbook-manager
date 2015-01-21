@@ -5,14 +5,14 @@ var fsextra = require('fs-extra');
  * @param pathToPass
  */
 function signPass(pathToPass, callback) {
-	var signpass = spawn('bin/signpass', ['-p', pathToPass]);
-
+	var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
+	console.warn('bin/signpass -p '+ pathToPass);
 	signpass.stdout.on('data', function(data) {
-		//console.log('stdout: ' + data);
+		console.log('stdout: ' + data);
 	});
 
 	signpass.on('error', function(err) {
-		//console.log('signpass process exited with code ' + code);
+		console.log('signpass process exited with code ' + code);
 		throw err;
 	});
 
@@ -20,7 +20,7 @@ function signPass(pathToPass, callback) {
 		if (code !== 0) {
 			console.log('signpass process exited with code ' + code);
 		}
-		callback(pathToPass);
+		callback(pathToPass.replace('.raw', '.pkpass'));
 	});
 };
 
@@ -126,7 +126,7 @@ function checkDirectory(localPath, callback) {
 function createPass(localPath, pass, callback) {
 	var defer = Q.defer();
 	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw';
-	fsextra.outputFile(passPath + '/pass.json', JSON.stringify(pass), function(d) {
+	fsextra.outputJson(passPath + '/pass.json', pass, function(d) {
 			callback({
 				directory: path.dirname(passPath),
 				filename: passPath
