@@ -146,7 +146,8 @@ module.exports = function (config, app) {
 		if (passFile) {
 			jpsPassbook.sign(passFile, function (data) {
 				//res.status(200).send({message: passFile + ' signed.', filename: data});
-				res.status(200).download(data);
+
+				res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
 			});
 		} else {
 			res.status(400).send({message: 'Must provide path to .raw folder!'});
@@ -175,7 +176,7 @@ module.exports = function (config, app) {
 						res.status(400).send(err);
 					}
 					passContent = item;
-					console.log('found pass', item);
+					console.log('found pass', item._id);
 					jpsPassbook.createPass(config.publicDir, passContent, function (data) {
 							res.status(200).send(data);
 						});
@@ -194,7 +195,7 @@ module.exports = function (config, app) {
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-		res.header('Access-Control-Allow-Headers', 'Content-Type');
+	//	res.header('Access-Control-Allow-Headers', 'Content-Type');
 		res.header('Cache-Control', 'no-cache');
 		//res.header('Content-Type', 'application/json');
 		console.log('jps-passbook-routes', req.path);
