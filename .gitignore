@@ -11,3 +11,5 @@ db
 
 .tmp
 www
+*.log
+atlassian-ide-plugin.xml
