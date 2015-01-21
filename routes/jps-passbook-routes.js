@@ -105,30 +105,34 @@ module.exports = function (config, app) {
 		});
 	});
 
-//Register Pass Endpoint
+	//Register Pass Endpoint
 	router.post('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
-		res.json({
-			message: config.name
+		res.status(200).send({
+			message: 'Register pass on device'
 		});
 	});
 
-//Logging Endpoint
+	//Logging Endpoint
+	router.get('/api/' + config.version + '/log', function (req, res) {
+		res.status(200).send({
+			message: 'Drain logs'
+		});
+	});
 	router.post('/api/' + config.version + '/log', function (req, res) {
-		console.log(req.body);
-		res.json({
-			message: config.name
+		res.status(200).send({
+			message: 'Drain logs'
 		});
 	});
 
-//Unregister Pass
+	//Unregister Pass
 	router.delete('/api/' + config.version + '/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber', function (req, res) {
 		console.log('Register device ' + req.param('token'));
-		res.json({
+		res.status(200).send({
 			message: config.name + ' - ' + 'Delete device ' + req.param('token')
 		});
 	});
 
-//Register device
+	//Register device
 	router.get('/api/' + config.version + '/register/:token', function (req, res) {
 		console.log('Register device ' + req.param('token'));
 		res.json({
@@ -136,22 +140,28 @@ module.exports = function (config, app) {
 		});
 	});
 
-//Get serial numbers
+	//Get serial numbers
 	router.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res) {
 		console.log('Push to device ' + req.param('token'));
-		res.json({
+		res.status(200).send({
 			message: config.name + ' - ' + 'Push to device ' + req.param('token')
 		});
 	});
 
-//Get latest version of pass
+	//Get latest version of pass
 	router.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function (req, res) {
 		console.log('Push to device ' + req.param('token'));
+		res.status(200).send({
+			message: 'Push to device'
+		});
 	});
 
-//Send push to device
+	//Send push to device
 	router.get('/api/' + config.version + '/push/:token', function (req, res) {
 		console.log('Push to device ' + req.param('token'));
+		res.status(200).send({
+			message: 'Device push token'
+		});
 	});
 
 
@@ -214,18 +224,14 @@ module.exports = function (config, app) {
 		res.header('Access-Control-Allow-Headers', 'Content-Type');
 		res.header('Cache-Control', 'no-cache');
 
-		console.log('jps-passbook-routes', req.path);
+		//console.log('jps-passbook-routes', req.path);
+		//console.log('%s %s', req.method, req.url);
 		next();
 	});
 
 	app.use(function (err, req, res, next) {
 		console.error(err.stack);
 		res.status(500).send('Something broke!');
-	});
-
-	app.use(function (req, res, next) {
-		console.log('%s %s', req.method, req.url);
-		next();
 	});
 
 

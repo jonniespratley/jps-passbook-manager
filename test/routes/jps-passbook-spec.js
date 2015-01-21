@@ -63,7 +63,7 @@ describe('jps-passbook', function() {
 		done();
 	});
 
-	it('should create a pass file, a directory with .raw appended and a pass.json file inside the folder', function(done) {
+	it('should create a pass file with .raw appended', function(done) {
 		testPass.description = testPassName;
 		jpsPassbook.createPass(testPassDir, testPass, function(data) {
 			assert.equal(data.filename, testPassDir + path.sep + testPass.description + '.raw');

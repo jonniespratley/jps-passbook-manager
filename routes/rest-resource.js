@@ -13,7 +13,7 @@ module.exports = function (options, app) {
 	'use strict';
 
 	var config = options;
-	console.warn('rest-resource initialized', config);
+	console.warn('rest-resource initialized');
 
 
 	var RestResource = {
@@ -51,9 +51,9 @@ module.exports = function (options, app) {
 		/**
 		 * I am the interal logger.
 		 */
-		log: function () {
+		log: function (str) {
 			if (this.debug) {
-				console.warn(arguments);
+				console.warn('[rest-resource] - ', str);
 			}
 		},
 		//Init the resource applying the config object
@@ -64,10 +64,12 @@ module.exports = function (options, app) {
 			RestResource.config = c;
 
 			MongoClient.connect(config.db.url, function (err, db) {
-				self.log('Trying to connect to', self.databaseName);
+				self.log('Trying to connect to ' + self.databaseName);
+
 				RestResource.db = db;
 				if (!err) {
-					self.log('Connected to ' + self.databaseName);
+					self.log('Connected to ' + self.databaseName + ' @ ' + config.db.url);
+
 					db.collection(self.name, {
 						safe: true
 					}, function (err, collection) {
@@ -89,7 +91,7 @@ module.exports = function (options, app) {
 		//Display default message on index
 		index: function (req, res, next) {
 			res.status(200).send({
-				message: this.config.message + ' -  ' + config.version
+				message: RestResource.config.message + ' -  ' + RestResource.config.version
 			});
 			next();
 		},
@@ -98,8 +100,8 @@ module.exports = function (options, app) {
 		//Display list of default collections
 		collections: function (req, res, next) {
 			res.status(200).send({
-				message: config.message + ' -  ' + config.version,
-				results: config.collections
+				message: RestResource.config.message + ' -  ' + RestResource.config.version,
+				results: RestResource.config.collections
 			});
 			next();
 		},
@@ -137,7 +139,7 @@ module.exports = function (options, app) {
 			//open database
 			MongoClient.connect(config.db.url, function (err, db) {
 				if (err) {
-					console.log(err);
+					console.error(err);
 				} else {
 					//prep collection
 					db.collection(req.params.collection, function (err, collection) {
