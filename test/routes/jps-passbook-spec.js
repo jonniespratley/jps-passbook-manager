@@ -77,7 +77,8 @@ describe('jps-passbook', function () {
     it('should create a pass', function (done) {
         testPass.description = testPassName;
         jpsPassbook.createPass(testPassDir, testPass, function (data) {
-            assert.equal(data.directory, testPassDir + path.sep + testPass.description + '.raw', 'returns filename');
+            assert.equal(data.filename, 
+            	testPassDir + path.sep + testPass.description + '.raw');
             testPassDir = data.directory;
             done();
         });

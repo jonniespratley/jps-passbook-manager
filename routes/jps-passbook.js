@@ -1,9 +1,5 @@
-var fs = require('fs'),
-		path = require('path'),
-		fsutils = require('fs-utils'),
-		Q = require('q'),
-		spawn = require('child_process').spawn;
-
+var fs = require('fs'), path = require('path'), fsutils = require('fs-utils'), Q = require('q'), spawn = require('child_process').spawn;
+var fsextra = require('fs-extra');
 /**
  * I handle signing a pass with signpass bin.
  * @param pathToPass
@@ -11,16 +7,16 @@ var fs = require('fs'),
 function signPass(pathToPass, callback) {
 	var signpass = spawn('bin/signpass', ['-p', pathToPass]);
 
-	signpass.stdout.on('data', function (data) {
+	signpass.stdout.on('data', function(data) {
 		//console.log('stdout: ' + data);
 	});
 
-	signpass.on('error', function (err) {
+	signpass.on('error', function(err) {
 		//console.log('signpass process exited with code ' + code);
 		throw err;
 	});
 
-	signpass.on('close', function (code) {
+	signpass.on('close', function(code) {
 		if (code !== 0) {
 			console.log('signpass process exited with code ' + code);
 		}
@@ -40,7 +36,7 @@ function exportPass(passFile, passContent) {
 	var passFilename = path.resolve(passFile);
 	passFilename = passFilename.replace(' ', '');
 
-	fs.writeFile(passFilename, JSON.stringify(passContent), function (err) {
+	fs.writeFile(passFilename, JSON.stringify(passContent), function(err) {
 		console.log(err);
 		if (err) {
 			defer.reject(err);
@@ -52,7 +48,6 @@ function exportPass(passFile, passContent) {
 	return defer.promise;
 }
 
-
 /**
  * I handle reading the contents of a file.
  * @param localPath
@@ -60,11 +55,11 @@ function exportPass(passFile, passContent) {
  * @param res
  */
 function getFile(localPath, mimeType, res) {
-	fs.readFile(localPath, function (err, contents) {
+	fs.readFile(localPath, function(err, contents) {
 		if (!err) {
 			res.writeHead(200, {
-				"Content-Type": mimeType,
-				"Content-Length": contents.length
+				"Content-Type" : mimeType,
+				"Content-Length" : contents.length
 			});
 			res.end(contents);
 		} else {
@@ -84,14 +79,14 @@ function writeFile(localPath, contents, callback) {
 	// create a stream, and create the file if it doesn't exist
 	stream = fs.createWriteStream(localPath);
 	console.log('writeFile', localPath);
-	stream.on("open", function () {
+	stream.on("open", function() {
 		// write to and close the stream at the same time
 		stream.end(contents, 'utf-8');
 		callback({
-			directory: path.dirname(localPath),
-			filename: path.basename(localPath),
-			name: localPath,
-			contents: contents
+			directory : path.dirname(localPath),
+			filename : path.basename(localPath),
+			name : localPath,
+			contents : contents
 		});
 	});
 };
@@ -103,29 +98,25 @@ function writeFile(localPath, contents, callback) {
  */
 function createDirectory(localPath, callback) {
 	console.log('creating directory', path.normalize(localPath));
-	try {
 
-			//3. create new directory
-			fs.mkdir(localPath, function (er) {
-				if (er) {
-					throw new Error(er, 'Problem creating directory:' + localPath);
-				}
-			});
-
-	} catch (err) {
-		//fsutils.rmdir(localPath);
-		//3. create new directory
-		fs.mkdir(localPath, function (er) {
-			if (er) {
-				throw new Error(er, 'Problem creating directory:' + localPath);
-			}
-			callback(localPath);
-		});
-	}
-
-
+	fsextra.ensureDir(localPath, function(er) {
+		if (er) {
+			throw new Error(er, 'Problem creating directory:' + localPath);
+		}
+		callback(localPath);
+	});
 };
+function checkDirectory(localPath, callback) {
+	console.log('checking directory', path.normalize(localPath));
 
+	fsutils.rmdir(localPath);
+	fs.mkdir(localPath, function(er) {
+		if (er) {
+			throw new Error(er, 'Problem creating directory:' + localPath);
+		}
+		callback(localPath);
+	});
+};
 
 /**
  * I handle creating the pass.raw folder and writing the pass.json file into it.
@@ -135,21 +126,20 @@ function createDirectory(localPath, callback) {
 function createPass(localPath, pass, callback) {
 	var defer = Q.defer();
 	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw';
-	createDirectory(path.normalize(passPath), function (data) {
-		console.log('writing pass', data);
-		writeFile(passPath + '/pass.json', JSON.stringify(pass), function (d) {
-			callback(d);
+	fsextra.outputFile(passPath + '/pass.json', JSON.stringify(pass), function(d) {
+			callback({
+				directory: path.dirname(passPath),
+				filename: passPath
+			});
 		});
-	});
 };
 
-
 module.exports = {
-	name: 'jps-passbook',
-	sign: signPass,
-	signPass: signPass,
-	export: exportPass,
-	exportPass: exportPass,
-	createDirectory: createDirectory,
-	createPass: createPass
+	name : 'jps-passbook',
+	sign : signPass,
+	signPass : signPass,
+	export : exportPass,
+	exportPass : exportPass,
+	createDirectory : createDirectory,
+	createPass : createPass
 };

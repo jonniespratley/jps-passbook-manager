@@ -175,30 +175,7 @@
                 </formitem>
             </div>
 
-            <!-- @TODO: [Web Service Fields] -->
-            <legend>
-                Web Service API
-            </legend>
-            <div id="pass-webserviceFields" class="well">
-                <formitem title="Register Device:">
-                    <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="form-control"/>
-                    <span class="help-block"> <span class="label label-info">POST</span> Handles registering a device to recieve push notifications.</span>
-                </formitem>
-                <formitem title="Unregister Device:">
-                    <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="form-control"/>
-                    <span class="help-block"> <span class="label label-info">DELETE</span> Handles unregistering a device
-                        .</span>
-                </formitem>
-                <formitem title="Get Passes on Device:">
-                    <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="form-control"/>
-                    <span class="help-block"> <span class="label label-info">GET</span> Handles getting the serial numbers for Passes associated with a device. </span>
-                </formitem>
-                <formitem title="Latest Version:">
-                    <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="form-control"/>
-                    <span class="help-block"> <span class="label label-info">GET</span> Handles getting the serial numbers for Passes associated with a device. </span>
-                </formitem>
-            </div>
-
+            
             <!-- @TODO: [Pass Actions] -->
             <div class="form-actions">
 
