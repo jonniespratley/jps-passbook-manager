@@ -39,10 +39,12 @@
 <![endif]-->
 
 <ng-include src="'views/_header.html'"></ng-include>
-<div id="content" class="container">
-	<div id="content-view" ng-view>
+<div id="content">
 
-	</div>
+	<section id="content-view" ng-view>
+
+	</section>
+	
 	<hr/>
 	<footer id="footer" class="clearfix">
 		<div id="copywrite">
@@ -62,13 +64,15 @@
 
 
 <!-- build:js scripts/vendor.js -->
-<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/bootcards/dist/js/bootcards.js"></script>
+<script src="bower_components/angular-bootcards/dist/angular-bootcards.js"></script>
 <script src="bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
 <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>

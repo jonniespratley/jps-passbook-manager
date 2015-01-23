@@ -1,5 +1,11 @@
 $(document).ready(function () {
-
+ bootcards.init( {
+        offCanvasHideOnMainClick : true,
+        offCanvasBackdrop : true,
+        enableTabletPortraitMode : true,
+        disableRubberBanding : true,
+        disableBreakoutSelector : 'a.no-break-out'
+      });
 	$('.scroll').click(function (event) {
 		event.preventDefault();
 		$('html,body').animate({

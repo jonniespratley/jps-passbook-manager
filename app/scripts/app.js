@@ -3,7 +3,8 @@
 var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'ngRoute',
 	'ngResource',
-	'mgcrea.ngStrap'
+	'mgcrea.ngStrap',
+	'bootcards'
 ])
 	.config(['$routeProvider', function ($routeProvider) {
 		var routeResolver = {

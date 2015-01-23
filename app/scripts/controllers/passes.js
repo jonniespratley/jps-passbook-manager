@@ -6,6 +6,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.$location = $location;
 	$scope.$routeParams = $routeParams;
 	$scope.cdn = 'http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com';
+	$scope.passFilter = null;
 	function s4() {
 		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 	}
