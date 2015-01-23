@@ -131,9 +131,16 @@ function checkDirectory(localPath, callback) {
  * @param pass
  */
 function createPass(options) {
-
+	var passFilename;
 	var defer = Q.defer();
-	var passPath = options.path + path.sep + options.pass.description.replace(/\W/g, '_') + '.raw';
+	if(options.filename){
+		passFilename = options.filename;
+	} else {
+		passFilename = options.pass.organizationName + ' ' + options.pass.description;
+	}
+	passFilename = passFilename.replace(/\W/g, '-');
+
+	var passPath = options.path + path.sep + passFilename + '.raw';
 	fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
 		options.callback({
 			directory: path.dirname(passPath),

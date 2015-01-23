@@ -21,7 +21,7 @@ var testPass = {
 		"longitude" : -122.3748889,
 		"latitude" : 37.6189722
 	}],
-	"organizationName" : " Coupon",
+	"organizationName" : "Coupon",
 	"logoText" : "Logo",
 	"description" : "Test Coupon",
 	"foregroundColor" : "#111",
@@ -68,9 +68,22 @@ describe('jps-passbook', function() {
 		var options = {
 			path: testPassDir,
 			pass: testPass,
-			filename: 'My Custom Pass',
 			callback: function(data) {
-				assert.equal(data.path, testPassDir + path.sep + testPass.description + '.raw');
+				assert.equal(data.path, testPassDir + path.sep + testPass.organizationName + '-' + testPass.description + '.raw');
+				testPassDir = data.directory;
+				done();
+			}
+		};
+		jpsPassbook.createPass(options);
+	});
+	it('should create a custom named pass file, a directory with .raw and a pass.json', function(done) {
+		testPass.description = testPassName;
+		var options = {
+			path: testPassDir,
+			pass: testPass,
+			filename: 'My-Test-Pass',
+			callback: function(data) {
+				assert.equal(data.filename, 'My-Test-Pass.raw');
 				testPassDir = data.directory;
 				done();
 			}
