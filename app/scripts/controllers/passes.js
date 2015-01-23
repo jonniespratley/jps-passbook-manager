@@ -182,7 +182,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "SMS001",
 		"teamIdentifier": "J62UV6D7WJ",
-		"webServiceURL": "https://www.test.com/smartpasses/",
+		"webServiceURL": "https://passbook-manager.jsapps.io/api/v1/",
 		"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
 		"organizationName": "Apple Retail: Arden Fair",
 		"description": "Apple Retail Store Credio",

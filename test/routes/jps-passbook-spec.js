@@ -10,7 +10,7 @@ var testPass = {
 	"passTypeIdentifier" : "pass.jsapps.io",
 	"serialNumber" : "f45b1a3b-aa94-cacf-eddf-679db4e701c3",
 	"teamIdentifier" : "J62UV6D7WJ",
-	"webServiceURL" : "http://localhost:1333/smartpass/v1",
+	"webServiceURL" : "https://passbook-manager.jsapps.io/smartpass/v1",
 	"authenticationToken" : "000000000012341234",
 	"barcode" : {
 		"message" : "123456789",
@@ -63,14 +63,21 @@ describe('jps-passbook', function() {
 		done();
 	});
 
-	it('should create a pass file, a directory with .raw appended and a pass.json file inside the folder', function(done) {
+	it('should create a pass file, a directory with .raw and a pass.json', function(done) {
 		testPass.description = testPassName;
-		jpsPassbook.createPass(testPassDir, testPass, function(data) {
-			assert.equal(data.filename, testPassDir + path.sep + testPass.description + '.raw');
-			testPassDir = data.directory;
-			done();
-		});
+		var options = {
+			path: testPassDir,
+			pass: testPass,
+			filename: 'My Custom Pass',
+			callback: function(data) {
+				assert.equal(data.path, testPassDir + path.sep + testPass.description + '.raw');
+				testPassDir = data.directory;
+				done();
+			}
+		};
+		jpsPassbook.createPass(options);
 	});
+
 
 	it('should sign a pass', function(done) {
 		jpsPassbook.signPass(testPassDir, function(pass) {
