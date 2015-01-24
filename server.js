@@ -47,9 +47,7 @@ var config = {
 
 
 //Initialize the REST resource server with our configuration object.
-var RestResource = require(__dirname + path.sep + 'routes/rest-resource');
-var signpass = require(__dirname + path.sep + 'routes/jps-passbook');
-var rest = new RestResource(config);
+
 var app = express();
 
 
@@ -60,22 +58,7 @@ if(process.env.MONGODB_URL){
 }
 
 require(__dirname + path.sep + 'routes/jps-passbook-routes')(config, app);
-
-// * REST METHODS:
-// *
-// * HTTP     METHOD          URL
-// * ======|==============|==============================================
-// * GET      findAll         http://localhost:4040/passbookmanager
-// * GET      findById        http://localhost:4040/passbookmanager/passes/:id
-// * POST     add             http://localhost:4040/passbookmanager/passes
-// * PUT      update          http://localhost:4040/passbookmanager/passes/:id
-// * DELETE   destroy         http://localhost:4040/passbookmanager/passes/:id
-app.get('/api/' + config.version + '/' + config.name, rest.collections);
-app.get('/api/' + config.version + '/:db/:collection/:id?', rest.findAll);
-app.get('/api/' + config.version + '/:db/:collection/:id?', rest.findById);
-app.post('/api/' + config.version + '/:db/:collection', bodyParser.json(), rest.add);
-app.put('/api/' + config.version + '/:db/:collection/:id', bodyParser.json(), rest.edit);
-app.delete('/api/' + config.version + '/:db/:collection/:id', rest.destroy);
+require(__dirname + path.sep + 'routes/rest-resource-routes')(config, app);
 
 //Start the server
 app.listen(config.server.port, function () {

@@ -18,28 +18,16 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 var router = express.Router();
 
-module.exports = function(config, app) {
-	var RestResource = require('./rest-resource')(config);
-	router.route('/posts/:postId').all(function(request, response, next) {
-		// This will be called for request with any HTTP method
-		console.warn('route.all called');
-	}).post(function(request, response, next) {
-	}).get(function(request, response, next) {
-		response.json(request.post);
-	}).put(function(request, response, next) {
-		// ... Update the post
-		response.json(request.post);
-	}).delete(function(request, response, next) {
-		// ... Delete the post
-		response.json({
-			'message' : 'ok'
-		});
-	})
+module.exports = function (config, app) {
+
+
+	var rest = require('./rest-resource')(config);
+
 	/* ======================[ @TODO: Listen for Device registration token ]====================== */
 
 	//### onError()
 	//callback handler
-	var onError = function(error, note) {
+	var onError = function (error, note) {
 		console.log('Error is: %s', error);
 		console.log('Note ' + note);
 	};
@@ -48,7 +36,7 @@ module.exports = function(config, app) {
 	var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];
 
 	//API Endpoint
-	router.get('/api', function(req, res) {
+	router.get('/api', function (req, res) {
 		var body = config.name;
 		res.setHeader('Content-Type', 'text/plain');
 		res.setHeader('Content-Length', body.length);
@@ -56,9 +44,9 @@ module.exports = function(config, app) {
 	});
 
 	//Execute command - http://localhost:4040/api/v1/cmd/ls
-	router.get('/api/' + config.version + '/' + 'cmd' + '/' + ':command', function(req, res) {
+	router.get('/api/' + config.version + '/' + 'cmd' + '/' + ':command', function (req, res) {
 		var results = {}, child;
-		child = exec(req.params.command, function(error, stdout, stderr) {
+		child = exec(req.params.command, function (error, stdout, stderr) {
 			results.stdout = stdout;
 			sys.print('stdout: ' + stdout);
 
@@ -67,82 +55,82 @@ module.exports = function(config, app) {
 			}
 
 			res.json({
-				message : config.name,
-				results : results
+				message: config.name,
+				results: results
 			});
 		});
 	});
 
 	//API Version Endpoint - http://localhost:3535/smartpass/v1
-	router.get('/api/' + config.version, function(req, res) {
+	router.get('/api/' + config.version, function (req, res) {
 		res.json({
-			message : config.name
+			message: config.name
 		});
 	});
 
 	//Register Pass Endpoint
-	router.post('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function(req, res) {
+	router.post('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
 		res.json({
-			message : config.name
+			message: config.name
 		});
 	});
 
 	//Logging Endpoint
-	router.post('/api/' + config.version + '/log', function(req, res) {
+	router.post('/api/' + config.version + '/log', function (req, res) {
 		console.log(req.body);
 		res.json({
-			message : config.name
+			message: config.name
 		});
 	});
 
 	//Unregister Pass
-	router.delete('/api/' + config.version + '/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber', function(req, res) {
+	router.delete('/api/' + config.version + '/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber', function (req, res) {
 		console.log('Register device ' + req.param('token'));
 		res.json({
-			message : config.name + ' - ' + 'Delete device ' + req.param('token')
+			message: config.name + ' - ' + 'Delete device ' + req.param('token')
 		});
 	});
 
 	//Register device
-	router.get('/api/' + config.version + '/register/:token', function(req, res) {
+	router.get('/api/' + config.version + '/register/:token', function (req, res) {
 		console.log('Register device ' + req.param('token'));
 		res.json({
-			message : config.name + ' - ' + 'Register device ' + req.param('token')
+			message: config.name + ' - ' + 'Register device ' + req.param('token')
 		});
 	});
 
 	//Get serial numbers
-	router.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function(req, res) {
+	router.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res) {
 		console.log('Push to device ' + req.param('token'));
 		res.json({
-			message : config.name + ' - ' + 'Push to device ' + req.param('token')
+			message: config.name + ' - ' + 'Push to device ' + req.param('token')
 		});
 	});
 
 	//Get latest version of pass
-	router.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function(req, res) {
+	router.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function (req, res) {
 		console.log('Push to device ' + req.param('token'));
 	});
 
 	//Send push to device
-	router.get('/api/' + config.version + '/push/:token', function(req, res) {
+	router.get('/api/' + config.version + '/push/:token', function (req, res) {
 		console.log('Push to device ' + req.param('token'));
 	});
 
 	/**
 	 * I am the signpass route
 	 */
-	router.get('/api/' + config.version + '/:db/:collection/:id/sign', function(req, res) {
+	router.get('/api/' + config.version + '/:db/:collection/:id/sign', function (req, res) {
 		var passFile = req.param('path');
 		if (passFile) {
-			jpsPassbook.sign(passFile, function(data) {
+			jpsPassbook.sign(passFile, function (data) {
 				//res.status(200).send({message: passFile + ' signed.', filename: data});
 
 				res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
 			});
 		} else {
 			res.status(400).send({
-				message : 'Must provide path to .raw folder!'
+				message: 'Must provide path to .raw folder!'
 			});
 		}
 	});
@@ -156,40 +144,36 @@ module.exports = function(config, app) {
 	 * signpass binary.
 	 *
 	 */
-	router.get('/api/' + config.version + '/:db/:collection/:id/export', function(req, res) {
-		var id = req.param('id');
-		if (id) {
-			console.log(RestResource.name + ':findById - ' + id);
+	router.get('/api/' + config.version + '/:db/:collection/:id/export', function (req, res) {
+		var db = req.params.db;
+		var col = req.params.col;
+		var id = req.params.id;
 
-			RestResource.db.collection(RestResource.name, function(err, collection) {
-				collection.findOne({
-					'_id' : new BSON.ObjectID(id)
-				}, function(err, item) {
-					if (err) {
-						res.status(400).send(err);
-					}
-					passContent = item;
-					console.log('found pass', item._id);
-					
-					var options = {
-						pass : passContent,
-						path : config.publicDir,
-						callback : function(data) {
-							res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
-							res.status(200).send(data);
-						}
-					};
-					jpsPassbook.createPass(options);
+		console.log('route:export', db, col, id);
+
+		if (id) {
+
+			rest.findById(col, id).then(function (data) {
+				var options = {
+					pass: data,
+					path: config.publicDir
+				};
+				jpsPassbook.createPass(options).then(function (pass) {
+					res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
+					res.status(200).send(pass);
 				});
+			}, function (err) {
+				req.status(400).send(err);
 			});
+
 		} else {
-			res.status(400).send('Must provide file path!');
+			res.status(400).send('Must provide _id');
 		}
 	});
 
 	app.use(serveStatic(config.staticDir, null));
 
-	app.use(function(req, res, next) {
+	app.use(function (req, res, next) {
 		res.header('Connection', 'keep-alive');
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
@@ -201,12 +185,12 @@ module.exports = function(config, app) {
 		next();
 	});
 
-	app.use(function(err, req, res, next) {
+	app.use(function (err, req, res, next) {
 		console.error(err.stack);
 		res.status(500).send('Something broke!');
 	});
 
-	app.use(function(req, res, next) {
+	app.use(function (req, res, next) {
 		console.log('%s %s', req.method, req.url);
 		next();
 	});

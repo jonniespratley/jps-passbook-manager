@@ -1,5 +1,5 @@
 var fs = require('fs'), path = require('path'), fsutils = require('fs-utils'), Q = require('q'), spawn = require('child_process').spawn, fsextra = require('fs-extra');
-
+'use strict';
 
 /**
  * I handle signing a pass with signpass bin.
@@ -149,8 +149,7 @@ function checkDirectory(localPath, callback) {
  * @param pass
  */
 function createPass(options) {
-	var passFilename;
-	var defer = Q.defer();
+	var passFilename, defer = Q.defer();
 	if(options.filename){
 		passFilename = options.filename;
 	} else {
@@ -160,12 +159,13 @@ function createPass(options) {
 
 	var passPath = options.path + path.sep + passFilename + '.raw';
 	fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
-		options.callback({
+		defer.resolve({
 			directory: path.dirname(passPath),
 			path: passPath,
 			filename: path.basename(passPath)
 		});
 	});
+	return defer.promise;
 };
 
 /**

@@ -1,9 +1,8 @@
 //## Dependencies
 var mongo = require('mongodb');
 var BSON = mongo.BSONPure;
-var express = require('express');
 var MongoClient = require('mongodb').MongoClient;
-
+var q = require('q');
 
 
 //## REST Resource
@@ -65,14 +64,18 @@ module.exports = function (options, app) {
 
 			MongoClient.connect(config.db.url, function (err, db) {
 				self.log('Trying to connect to', self.databaseName);
+
 				RestResource.db = db;
+
 				if (!err) {
 					self.log('Connected to ' + self.databaseName);
+
 					db.collection(self.name, {
 						safe: true
 					}, function (err, collection) {
+
 						if (err) {
-							self.log('The collection ' + self.name + ' exist. creating it with sample data...', self.populateDb());
+							console.log('The collection ' + self.name + ' exist. creating it with sample data...', collection);
 							self.populateDb();
 						}
 					});
@@ -91,86 +94,82 @@ module.exports = function (options, app) {
 			res.status(200).send({
 				message: this.config.message + ' -  ' + config.version
 			});
-			next();
+
 		},
 
-		//### collections()
-		//Display list of default collections
-		collections: function (req, res, next) {
-			res.status(200).send({
-				message: config.message + ' -  ' + config.version,
-				results: config.collections
-			});
-			next();
+		/**
+		 * @description I fetch all of the collection in the database.
+		 * @param db
+		 * @returns {*}
+		 */
+		collections: function (db) {
+			var defer = q.defer();
+
+			return defer.promise;
 		},
 
-		//### get()
-		//Fetch all records.
-		fetch: function (req, res, next) {
+		/**
+		 * @description I fetch all records from the collection specified.
+		 * @param col
+		 * @param query
+		 * @param options
+		 * @returns {*}
+		 */
+		fetch: function (col, query, options) {
 			var self = this;
-			var query = req.query.query ? JSON.parse(req.query.query) : {};
-
-			// Providing an id overwrites giving a query in the URL
-			if (req.params.id) {
-				query = {
-					'_id': new BSON.ObjectID(req.params.id)
-				};
-			}
-			//Pass a appid param to get all records for that appid
-			if (req.param('appid')) {
-				query.appid = String(req.param('appid'));
-			}
-			var options = req.params.options || {};
-
-			//Test array of legal query params
 			var test = ['limit', 'sort', 'fields', 'skip', 'hint', 'explain', 'snapshot', 'timeout'];
+			var defer = q.defer();
+			var db = self.databaseName;
+
+			options = options || {};
+
 
 			//loop and test
-			for (var s in req.query) {
+			for (var s in query) {
 				if (test.indexOf(s) >= 0) {
-					options[s] = req.query[s];
+					options[s] = query[s];
 				}
 			}
+
+
 			//Log for interal usage
-			console.log('query', query, 'options', options);
+			console.log('db', db, 'collection', col, 'query', query, 'options', options);
 
 			//open database
 			MongoClient.connect(config.db.url, function (err, db) {
 				if (err) {
 					console.log(err);
+					defer.reject({error: err});
 				} else {
+
 					//prep collection
-					db.collection(req.params.collection, function (err, collection) {
+					db.collection(col, function (err, collection) {
+						if (err) {
+							console.log(err);
+							defer.reject({error: err});
+						}
 						//query
 						collection.find(query, options, function (err, cursor) {
 							cursor.toArray(function (err, docs) {
 								if (err) {
 									console.log(err);
+									defer.reject({error: err});
 								} else {
-									var result = [];
-									if (req.params.id) {
-										if (docs.length > 0) {
-											result = self.flavorize(null, docs[0], 'out');
-											res.header('Content-Type', 'application/json');
-											res.status(200).send(result);
-										} else {
-											res.status(404).send({message: 'Not found'});
-										}
-									} else {
-										docs.forEach(function (doc) {
-											result.push(doc);
-										});
-										//res.header('Content-Type', 'application/json');
-										res.status(200).send(result);
-									}
+									var results = [];
+									docs.forEach(function (doc) {
+										results.push(doc);
+									});
 									db.close();
+
+									defer.resolve(results);
+
 								}
 							});
 						});
 					});
 				}
 			});
-			next();
+			return defer.promise;
 		},
 
 		/**
@@ -179,76 +178,78 @@ module.exports = function (options, app) {
 		 * @param res
 		 * @param next
 		 */
-		add: function (req, res, next) {
-			var data = req.body;
+		add: function (col, data) {
+			var defer = q.defer();
 			var results = [];
 			if (data) {
 				MongoClient.connect(config.db.url, function (err, db) {
-					RestResource.log('add() - trying to add document to ', RestResource.name, data);
+					console.log('add() - trying to add document to ', col, data);
 
 					if (err) {
 						console.error('add() - Error trying to add document');
-
+						defer.reject({error: err});
 					} else {
 
-						db.collection(req.params.collection, function (err, collection) {
-							collection.count(function (err, count) {
-								console.log('There are ' + count + ' records.');
-							});
-						});
-
-
-						db.collection(req.params.collection, function (err, collection) {
+						db.collection(col, function (err, collection) {
 							if (data.length) {
 								for (var i = 0; i < data.length; i++) {
 									var obj = data[i];
-
 									console.warn('added document', i, obj);
-
 									collection.insert(obj, function (err, docs) {
 										results.push(obj);
 									});
 								}
+
 								db.close();
-								res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
-								res.header('Content-Type', 'application/json');
-								res.status(200).send(results);
+
+								console.warn('Done adding ', data.length, 'records');
+								defer.resolve(results);
 
 							} else {
-								collection.insert(req.body, function (err, docs) {
-									res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
-									res.header('Content-Type', 'application/json');
-									res.status(201).send({message: 'Document created!'});
+								collection.insert(data, function (err, docs) {
 									db.close();
+									if (err) {
+										defer.reject({
+											error: err
+										});
+									} else {
+										defer.resolve({
+											message: 'Document created!'
+										});
+									}
 								});
 							}
 						});
 					}
 				});
 			} else {
-
-				res.status(200).send({message: 'Document created!'});
+				defer.resolve({
+					message: 'Document created!'
+				});
 			}
+			return defer.promise;
 		},
 
 		//### edit()
 		//Handle updating a document in the database.
-		edit: function (req, res, next) {
+		edit: function (col, id, data) {
+			var defer = q.defer();
 			var spec = {
-				'_id': new BSON.ObjectID(req.params.id)
+				'_id': new BSON.ObjectID(id)
 			};
-
 			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(req.params.collection, function (err, collection) {
-					collection.update(spec, req.body, true, function (err, docs) {
-						res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
-						res.header('Content-Type', 'application/json');
-						res.status(200).send({message: 'Document ' + req.params.id + ' updated!'});
+				db.collection(col, function (err, collection) {
+					collection.update(spec, data, true, function (err, docs) {
 						db.close();
-						console.log('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
+						if (err) {
+							defer.reject({error: err});
+						} else {
+							defer.resolve(docs);
+						}
 					});
 				});
 			});
+			return defer.promise;
 		},
 
 		//### view()
@@ -272,68 +273,116 @@ module.exports = function (options, app) {
 
 		},
 
-		dbStatus: function () {
+		getColStatus: function (name) {
+			var defer = q.defer();
+			db.collection(name, function (err, collection) {
+				collection.count(function (err, count) {
+					if (err) {
+						defer.reject({error: err});
+					} else {
+						console.log('There are ' + count + ' records in', name);
+						defer.resolve({
+							count: count
+						});
+					}
+
+
+				});
+			});
 			console.log('get db status');
+			return defer.promise;
 		},
 		/**
 		 * I find all of the records
 		 * @param {Object} req
 		 * @param {Object} res
 		 */
-		findAll: function (req, res) {
+		findAll: function (col, id) {
+			var defer = q.defer();
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(req.params.collection, function (err, collection) {
 					collection.find().toArray(function (err, items) {
-						RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
-						res.status(200).send(items);
+						console.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
+
+						if (err) {
+							defer.reject({error: err});
+						} else {
+							defer.resolve(items);
+						}
+
+
 					});
 				});
 			});
-
+			return defer.promise;
 		},
 		/**
 		 * I find one of the records by id.
 		 * @param {Object} req
 		 * @param {Object} res
 		 */
-		findById: function (req, res) {
-			var id = req.params.id;
-			this.log(RestResource.name + ':findById - ' + id);
+		findById: function (col, id) {
+			var defer = q.defer();
+
+			console.log(col + ':findById - ' + id);
+
 			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(RestResource.name, function (err, collection) {
+				db.collection(col, function (err, collection) {
+					if (err) {
+						defer.reject({error: err});
+					}
 					collection.findOne({
 						'_id': new BSON.ObjectID(id)
 					}, function (err, item) {
-						res.status(200).send(item);
-					});
-				});
-			});
-
-		},
-		destroy: function (req, res, next) {
-			var params = {
-				_id: new BSON.ObjectID(req.params.id)
-			};
-			console.log('Delete by id ' + req.params.id);
-
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(req.params.collection, function (err, collection) {
-					console.log('found ', collection.collectionName, params);
-
-					collection.remove(params, function (err, docs) {
-						if (!err) {
-
-							res.status(200).send({message: 'Document ' + req.params.id + ' was removed!'});
-							db.close();
+						if (err) {
+							defer.reject({error: err});
 						} else {
-							console.error(err);
-							res.status(400).send(err);
+							defer.resolve(item);
 						}
 					});
 				});
 			});
 
+			return defer.promise
+		},
+		/**
+		 * I handle removing a record from a collection
+		 * @param req
+		 * @param res
+		 */
+		destroy: function (col, id) {
+			var defer = q.defer();
+			var params = {
+				_id: new BSON.ObjectID(id)
+			};
+			console.log('Delete by id ' + id, 'from', col);
 
+			MongoClient.connect(config.db.url, function (err, db) {
+
+				db.collection(col, function (err, collection) {
+					if (err) {
+						console.error(err);
+						defer.reject({
+							error: err
+						});
+					}
+					console.log('found ', collection.collectionName, params);
+
+					collection.findAndRemove(params, function (err, doc) {
+						if (err) {
+							console.error(err);
+							defer.reject({
+								error: err
+							});
+						} else {
+							defer.resolve({
+								message: 'Document ' + id + ' was removed!'
+							});
+						}
+					});
+				});
+			});
+			return defer.promise;
 		}
 	};
 
