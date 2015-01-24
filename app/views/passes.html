@@ -13,7 +13,7 @@
 									</div>
 								</div>
 								<div class="col-xs-3">
-									<a class="btn btn-primary btn-block" href="#"> <i class="fa fa-plus"></i> Add </a>
+									<a class="btn btn-primary btn-block" href="" data-toggle="modal" data-target="#pass-modal"> <i class="fa fa-plus"></i> Add </a>
 								</div>
 							</div>
 						</form>
@@ -37,13 +37,27 @@
 		</div>
 		<div class="col-sm-7 bootcards-cards">
 
-			<bootcards-file></bootcards-file>
+			<div
+				ng-show="!editMode" 
+				ng-include 
+				src="'/views/_pass_file_card.html'"></div>
+
+			<div
+				ng-hide="editMode" 
+				ng-include 
+				src="'/views/passes_add.html'"></div>
+
+			<div
+				ng-include 
+				src="'/views/_pass_modal.html'"></div>
+
+			
 
 		</div>
 	</div>
 </div>
 
-<div class="container">
+<div class="container hidden">
 
 	<div id="smartpass-row" class="row">
 
@@ -78,7 +92,7 @@
 			</table>
 
 			<div class="row">
-				<div class="col-sm-7" ng-include src="'/views/passes_add.html'"></div>
+
 				<div class="col-sm-4" ng-include src="'/views/passes_preview.html'"></div>
 			</div>
 

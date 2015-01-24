@@ -3,9 +3,9 @@
 	"formatVersion": 1,
 	"serialNumber": "8j23fm3",
 	"passTypeIdentifier": "pass.jsapps.io",
-	"webServiceURL": "http://localhost:3535/smartpass/v1",
+	"webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
 	"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
-	"teamIdentifier": "A1B2C3D4E5",
+	"teamIdentifier": "USE9YUYDFH",
 	"locations": [
 		{
 			"longitude": -122.3748889,

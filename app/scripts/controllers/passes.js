@@ -41,6 +41,10 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		template: 'ame-studio/smartapp/index.html',
 		slug: 'smartapp'
 	}];
+	$scope.editMode = false;
+	$scope.toggleEditMode = function(){
+		$scope.editMode = ($scope.editMode ? true : false);
+	};
 	$scope.SmartPass = {
 		api: {
 			url: 'http://' + location.hostname + ':' + location.port + '/smartpass/v1'
@@ -88,7 +92,11 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			});
 		},
 		selectPass: function (p) {
+			p.teamIdentifier = 'USE9YUYDFH';
+			p.passTypeIdentifier = 'pass.jsapps.io';
+			
 			$scope.SmartPass.pass = p;
+
 			$scope.pass = p;
 			console.log('selectPass', p);
 		},
@@ -125,15 +133,16 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			});
 		},
 		savePass: function (p) {
-			p.updated = new Date();
+
+			p.updated = new Date().toString();
 			p.serialNumber = guid();
 			if (p._id) {
 				$http.put('/api/v1/passbookmanager/passes/' + p._id, p).success(function (data) {
 					console.log('savePass', data);
 					if (data) {
-						$scope.SmartPass.pass = null;
+						//$scope.SmartPass.pass = null;
 						$scope.SmartPass.getPasses();
-						$scope.SmartPass.clearPass();
+						//$scope.SmartPass.clearPass();
 
 					}
 				});
@@ -141,7 +150,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 				$http.post('/api/v1/passbookmanager/passes', p).success(function (data) {
 					//$scope.SmartPass.pass = data;
 					if (data) {
-						$scope.SmartPass.pass = null;
+					//	$scope.SmartPass.pass = null;
 						$scope.SmartPass.getPasses();
 					}
 					console.log('createPass', data);
@@ -156,7 +165,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			$scope.SmartPass.pass = p;
 			$http.get('/api/v1/passbookmanager/passes/' + p._id + '/export').success(function (data) {
 				console.log('export result', data);
-				$scope.SmartPass.signPass(p, data.filename);
+				$scope.SmartPass.signPass(p, data.path);
 			});
 		},
 		signPass: function (p, path) {
@@ -164,8 +173,6 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);
-
-
 		},
 		updatedQrcode: function (p) {
 			angular.element('#pass-qrcode')
@@ -181,7 +188,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		"formatVersion": 1,
 		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "SMS001",
-		"teamIdentifier": "J62UV6D7WJ",
+		"teamIdentifier": "USE9YUYDFH",
 		"webServiceURL": "https://passbook-manager.jsapps.io/api/v1/",
 		"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
 		"organizationName": "Apple Retail: Arden Fair",
@@ -262,7 +269,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		}
 	};
 
-	$scope.pass = angular.copy($scope.SmartPass.coupon);
+	$scope.pass = angular.copy($scope.SmartPass.storeCard);
 	$scope.order = 'updated';
 	$scope.reverse = false;
 	$scope.pass.type = 'coupon';
@@ -270,5 +277,5 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.toggle = function(event){
 		console.log(event);
 		$(event.target).next().slideToggle();
-	}
+	};
 });

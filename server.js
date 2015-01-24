@@ -40,9 +40,9 @@ var config = {
 	},
 	collections: ['devices', 'passes', 'notifications', 'settings'],
 	staticDir: './app',
-	publicDir: __dirname + path.sep + 'www',
+	publicDir: __dirname + path.sep + 'www/public',
 	uploadsTmpDir: __dirname + path.sep + '.tmp',
-	uploadsDestDir: __dirname + path.sep + 'www'
+	uploadsDestDir: __dirname + path.sep + 'www/public'
 };
 
 

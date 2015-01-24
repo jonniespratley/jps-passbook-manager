@@ -1,10 +1,11 @@
 {
 	"formatVersion": 1,
-	"passTypeIdentifier": "pass.jsapps.io",
+	
 	"serialNumber": "E5982H-I2",
-	"teamIdentifier": "J62UV6D7WJ",
-	"webServiceURL": "http://localhost:3535/smartpass/v1",
-	"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
+	"passTypeIdentifier": "pass.jsapps.io",
+	"webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
+	"authenticationToken": "vxwxd7J8AlNNFPS8k0a8FfUFtq0ewzFdc",
+	"teamIdentifier": "USE9YUYDFH",
 	"barcode": {
 		"message": "123456789",
 		"format": "PKBarcodeFormatPDF417",
