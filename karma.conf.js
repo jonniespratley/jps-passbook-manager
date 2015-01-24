@@ -11,7 +11,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-		 'app/bower_components/jquery/jquery.js',
+		 'app/bower_components/jquery/dist/jquery.js',
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/bower_components/angular-resource/angular-resource.js',
@@ -21,6 +21,8 @@ module.exports = function(config) {
 		 'app/bower_components/angular-strap/dist/angular-strap.tpl.js',
 
 		 'app/bower_components/bootstrap/dist/js/bootstrap.js',
+		 'app/bower_components/bootcards/dist/js/bootcards.js',
+		 'app/bower_components/angular-bootcards/dist/angular-bootcards.js',
 		 'app/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
 		 'app/bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
 		 'app/bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js',
