@@ -1,7 +1,7 @@
-	<form form class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
+<form form class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
 	<tabs>
 		<pane title="Details">
-				<div id="pass-detailFields" class="well">
+			<div id="pass-detailFields" class="well">
 				<formitem title="Pass Type:">
 					<select
 					class="form-control"
@@ -21,8 +21,8 @@
 			</div>
 
 		</pane>
-		<pane title="Fields">
-				Primary Fields <a class="label label-default" ng-click="pass[pass.type].primaryFields.push({})"> <i class="glyphicon glyphicon-plus"></i> </a>
+		<pane title="Front">
+			Primary Fields <a class="label label-default" ng-click="pass[pass.type].primaryFields.push({})"> <i class="glyphicon glyphicon-plus"></i> </a>
 			<div id="pass-primaryFields" class="well">
 				<formitem title="Primary Field #{{$index}}:" ng-repeat="a in pass[pass.type].primaryFields">
 					<div class="controls-row meta-row" >
@@ -34,7 +34,7 @@
 					</div>
 				</formitem>
 			</div>
-			
+
 			<!-- @TODO: [Extra Fields] -->
 			<legend>
 				Extra Fields <a class="label label-default" ng-click="pass[pass.type].auxiliaryFields.push({})"> <i class="glyphicon glyphicon-plus"></i> </a>
@@ -52,9 +52,9 @@
 			</div>
 
 		</pane>
-		
-		<pane title="Back Fields">
-			
+
+		<pane title="Back">
+
 			<!-- @TODO: [Back Fields] -->
 			<legend>
 				Back Fields <a class="label label-default" ng-click="pass[pass.type].backFields.push({})"> <i class="glyphicon glyphicon-plus"></i> </a>
@@ -69,10 +69,11 @@
 						&nbsp;
 					</div>
 				</formitem>
+			</div>
 
 		</pane>
 		<pane title="Locations">
-				<!-- @TODO: [Locations] -->
+			<!-- @TODO: [Locations] -->
 			<legend>
 				Locations <a class="label label-default" ng-click="pass.locations.push({latitude: '37.6189722', longitude: '-122.3748889'})"> <i class="glyphicon glyphicon-plus"></i> </a>
 			</legend>
@@ -90,10 +91,11 @@
 
 		</pane>
 		<pane title="Barcode">
-				<!-- @TODO: [Barcode Fields] -->
+			<!-- @TODO: [Barcode Fields] -->
 			<legend>
 				Barcode
 			</legend>
+			
 			<div id="pass-barcodeFields" class="well">
 				<formitem title="Format:">
 					<select ng-model="pass.barcode.format" ng-options="format.name for format in SmartPass.barcodes"></select>
@@ -114,12 +116,11 @@
 				<formitem title="Encoding:">
 					<input type="text" ng-model="pass.barcode.messageEncoding"/>
 				</formitem>
-
 			</div>
 
 		</pane>
 		<pane title="Style">
-			
+
 			<!-- @TODO: [Style Fields] -->
 			<legend>
 				Style
@@ -157,7 +158,7 @@
 
 		</pane>
 		<pane title="Identity">
-				<!-- @TODO: [Identity Fields] -->
+			<!-- @TODO: [Identity Fields] -->
 			<legend>
 				Identity
 			</legend>
@@ -183,8 +184,5 @@
 			</div>
 		</pane>
 	</tabs>
-			
 
-		
-
-		</form>
+</form>

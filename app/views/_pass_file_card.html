@@ -18,11 +18,17 @@
 				<strong>Added by {{pass.organizationName}} on {{pass.updated | date:'mediumDate'}}</strong>
 			</p>
 		</div>
+		<div class="list-group-item" ng-repeat="o in pass.generic.backFields">
+			<p class="list-group-item-text">{{o.label}}</p>
+			<h4 class="list-group-item-heading">{{o.value}}</h4>
+		</div>
+
 		<div class="list-group-item">
 			<p class="list-group-item-text">
 				MediaFile card description lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum commodo, nulla ut porta interdum, mi mi venenatis felis, vitae pellentesque ante eros at enim.
 			</p>
 		</div>
+
 	</div>
 	<div class="panel-footer">
 		<div class="btn-group btn-group-justified">
@@ -33,7 +39,7 @@
 				</button>
 			</div>
 			<div class="btn-group">
-				<button class="btn btn-default" ng-click="toggleEditMode()">
+				<button class="btn btn-default" ng-click="toggleEditMode()" data-target="#pass-modal" data-toggle="modal">
 					<i class="fa fa-star"></i>
 					Edit
 				</button>
@@ -47,3 +53,4 @@
 		</div>
 	</div>
 </div>
+	<pre>{{ pass | json }}</pre>

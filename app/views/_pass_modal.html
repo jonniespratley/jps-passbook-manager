@@ -11,7 +11,7 @@
             </button>
           </div>
           <div class="btn-group pull-right">
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success"  data-dismiss="modal" ng-click="SmartPass.savePass(pass)">
               Save
             </button>
           </div>
@@ -21,13 +21,13 @@
 
         <div class="modal-body">
           <div
-						ng-include 
+						ng-include
 						src="'/views/_pass_form.html'"></div>
         </div>
 
         <div class="modal-footer">
           <small class="pull-">Built with {{App.name}}</small>
-          
+
         </div>
 
       </form>

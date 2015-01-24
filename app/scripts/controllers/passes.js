@@ -94,7 +94,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		selectPass: function (p) {
 			p.teamIdentifier = 'USE9YUYDFH';
 			p.passTypeIdentifier = 'pass.jsapps.io';
-			
+
 			$scope.SmartPass.pass = p;
 
 			$scope.pass = p;

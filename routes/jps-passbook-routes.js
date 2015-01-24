@@ -175,6 +175,7 @@ module.exports = function(config, app) {
 						pass : passContent,
 						path : config.publicDir,
 						callback : function(data) {
+							res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
 							res.status(200).send(data);
 						}
 					};
