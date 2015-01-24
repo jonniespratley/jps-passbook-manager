@@ -6,8 +6,25 @@ var fs = require('fs'), path = require('path'), fsutils = require('fs-utils'), Q
  * @param pathToPass
  */
 function signPass(pathToPass, callback) {
+	var cmd = 'bin/signpass -p ' + pathToPass;
+	console.warn(cmd);
+
+
+	var exec = require('child_process').exec,
+
+		signpass = exec('bin/signpass -p ' + pathToPass,
+		function (error, stdout, stderr) {
+			console.log('stdout: ' + stdout);
+			console.log('stderr: ' + stderr);
+			if (error !== null) {
+				console.log('exec error: ' + error);
+			}
+			callback(pathToPass.replace('.raw', '.pkpass'));
+		});
+
+	/*
 	var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
-	console.warn('bin/signpass -p ' + pathToPass);
+	console.warn(cmd);
 	signpass.stdout.on('data', function (data) {
 		console.log('stdout: ' + data);
 	});
@@ -23,6 +40,7 @@ function signPass(pathToPass, callback) {
 		}
 		callback(pathToPass.replace('.raw', '.pkpass'));
 	});
+	*/
 };
 
 /**

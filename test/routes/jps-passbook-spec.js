@@ -2,7 +2,7 @@ var assert = require('assert'), path = require('path'), fs = require('fs-utils')
 var os = require('os');
 var jpsPassbook = require(path.resolve(__dirname, '../../routes/jps-passbook'));
 var testPassName = 'Test_Pass_';
-var testPassDir = path.resolve(__dirname, '../../.tmp/');
+var testPassDir = path.resolve(__dirname, '../../.tmp/www');
 var testPass = {
 	"_id" : "54bd3924e8d30273263d8f64",
 	"mode" : "edit",
@@ -84,7 +84,7 @@ describe('jps-passbook', function() {
 			filename: 'My-Test-Pass',
 			callback: function(data) {
 				assert.equal(data.filename, 'My-Test-Pass.raw');
-				testPassDir = data.directory;
+				testPassDir = data.path;
 				done();
 			}
 		};
