@@ -70,8 +70,14 @@ module.exports = function (config, app) {
 
 	//Register Pass Endpoint
 	router.post('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
-		res.json({
-			message: config.name
+		rest.add('devices', {
+			params: req.params,
+			query: req.query,
+			data: req.body
+		}).then(function(data){
+			res.status(200).send({
+				message: config.name + ' - ' + 'Register device ' + req.param('token')
+			});
 		});
 	});
 
@@ -93,14 +99,20 @@ module.exports = function (config, app) {
 
 	//Register device
 	router.get('/api/' + config.version + '/register/:token', function (req, res) {
-		console.log('Register device ' + req.param('token'));
-		res.json({
-			message: config.name + ' - ' + 'Register device ' + req.param('token')
+
+		console.warn('Register device ' + req.param('token'));
+		rest.add('registrations', {
+			token: req.param('token'),
+			query: req.query
+		}).then(function(data){
+			res.status(200).send({
+				message: config.name + ' - ' + 'Register device ' + req.param('token')
+			});
 		});
 	});
 
 	//Get serial numbers
-	router.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res) {
+	router.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res, next) {
 		console.log('Push to device ' + req.param('token'));
 		res.json({
 			message: config.name + ' - ' + 'Push to device ' + req.param('token')
@@ -108,24 +120,24 @@ module.exports = function (config, app) {
 	});
 
 	//Get latest version of pass
-	router.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function (req, res) {
+	router.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function (req, res, next) {
 		console.log('Push to device ' + req.param('token'));
 	});
 
 	//Send push to device
-	router.get('/api/' + config.version + '/push/:token', function (req, res) {
+	router.get('/api/' + config.version + '/push/:token', function (req, res, rext) {
 		console.log('Push to device ' + req.param('token'));
 	});
+
 
 	/**
 	 * I am the signpass route
 	 */
-	router.get('/api/' + config.version + '/:db/:collection/:id/sign', function (req, res) {
+	router.get('/api/' + config.version + '/:db/:col/:id/sign', function (req, res, next) {
 		var passFile = req.param('path');
 		if (passFile) {
 			jpsPassbook.sign(passFile, function (data) {
 				//res.status(200).send({message: passFile + ' signed.', filename: data});
-
 				res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
 			});
 		} else {
@@ -144,15 +156,14 @@ module.exports = function (config, app) {
 	 * signpass binary.
 	 *
 	 */
-	router.get('/api/' + config.version + '/:db/:collection/:id/export', function (req, res) {
+	router.get('/api/' + config.version + '/:db/:col/:id/export', function (req, res) {
 		var db = req.params.db;
 		var col = req.params.col;
 		var id = req.params.id;
 
-		console.log('route:export', db, col, id);
+		console.warn('route:export', db, col, id);
 
 		if (id) {
-
 			rest.findById(col, id).then(function (data) {
 				var options = {
 					pass: data,
@@ -171,31 +182,6 @@ module.exports = function (config, app) {
 		}
 	});
 
-	app.use(serveStatic(config.staticDir, null));
-
-	app.use(function (req, res, next) {
-		res.header('Connection', 'keep-alive');
-		res.header('Access-Control-Allow-Origin', '*');
-		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-		//	res.header('Access-Control-Allow-Headers', 'Content-Type');
-		res.header('Cache-Control', 'no-cache');
-		//res.header('Content-Type', 'application/json');
-		console.log('jps-passbook-routes', req.path);
-		next();
-	});
-
-	app.use(function (err, req, res, next) {
-		console.error(err.stack);
-		res.status(500).send('Something broke!');
-	});
-
-	app.use(function (req, res, next) {
-		console.log('%s %s', req.method, req.url);
-		next();
-	});
-
 	app.use('/', router);
-
 	console.warn('jps-passbook-routes initialized');
 };

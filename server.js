@@ -36,7 +36,7 @@ var config = {
 		host: 'ds031611.mongolab.com',
 		port: 31611,
 
-		url: 'mongodb://localhost:27017'
+		url: 'mongodb://localhost:27017/passbookmanager'
 	},
 	collections: ['devices', 'passes', 'notifications', 'settings'],
 	staticDir: './app',

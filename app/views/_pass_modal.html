@@ -6,8 +6,8 @@
 
         <div class="modal-header">
           <div class="btn-group pull-left">
-            <button class="btn btn-danger" data-dismiss="modal">
-              Cancel
+            <button class="btn btn-danger" data-dismiss="modal" ng-click="SmartPass.deletePass(pass)">
+              Delete
             </button>
           </div>
           <div class="btn-group pull-right">
@@ -15,7 +15,6 @@
               Save
             </button>
           </div>
-
           <h3 class="modal-title">New Pass</h3>
         </div>
 
@@ -26,12 +25,25 @@
         </div>
 
         <div class="modal-footer">
-          <small class="pull-">Built with {{App.name}}</small>
-
+          <small class="pull-left">Built with {{App.name}}</small>
+          <a href="" class="btn btn-link btn-xs pull-right" data-toggle="modal" data-target="#pass-source-modal">View Source</a>
         </div>
 
       </form>
     </div>
 
+  </div>
+</div>
+
+<div id="pass-source-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Pass.json</h3>
+          </div>
+        <div class="modal-body">
+          <pre>{{pass | json}}</pre>
+        </div>
+    </div>
   </div>
 </div>

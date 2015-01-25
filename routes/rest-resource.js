@@ -12,7 +12,7 @@ module.exports = function (options, app) {
 	'use strict';
 
 	var config = options;
-	console.warn('rest-resource initialized', config);
+	console.warn('rest-resource initialized');
 
 
 	var RestResource = {
@@ -57,11 +57,15 @@ module.exports = function (options, app) {
 		},
 		//Init the resource applying the config object
 		init: function (c) {
+			this.config = c;
+
+			return this;
+		},
+		connect: function(){
 			var self = this;
 
 			//Set the config
-			RestResource.config = c;
-
+			var config = RestResource.config;
 			MongoClient.connect(config.db.url, function (err, db) {
 				self.log('Trying to connect to', self.databaseName);
 
@@ -83,8 +87,6 @@ module.exports = function (options, app) {
 					console.error('Could not connect to mongodb');
 				}
 			});
-
-			return this;
 
 		},
 
@@ -275,18 +277,20 @@ module.exports = function (options, app) {
 
 		getColStatus: function (name) {
 			var defer = q.defer();
-			db.collection(name, function (err, collection) {
-				collection.count(function (err, count) {
-					if (err) {
-						defer.reject({error: err});
-					} else {
-						console.log('There are ' + count + ' records in', name);
-						defer.resolve({
-							count: count
-						});
-					}
+			MongoClient.connect(config.db.url, function (err, db) {
+				db.collection(name, function (err, collection) {
+					collection.count(function (err, count) {
+						if (err) {
+							defer.reject({error: err});
+						} else {
+							console.log('There are ' + count + ' records in', name);
+							defer.resolve({
+								count: count
+							});
+						}
 
 
+					});
 				});
 			});
 			console.log('get db status');
@@ -299,11 +303,10 @@ module.exports = function (options, app) {
 		 */
 		findAll: function (col, id) {
 			var defer = q.defer();
+			console.warn( col, ':findAll - ', id);
 			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(req.params.collection, function (err, collection) {
+				db.collection(col, function (err, collection) {
 					collection.find().toArray(function (err, items) {
-						console.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
-
 						if (err) {
 							defer.reject({error: err});
 						} else {
@@ -324,8 +327,7 @@ module.exports = function (options, app) {
 		findById: function (col, id) {
 			var defer = q.defer();
 
-			console.log(col + ':findById - ' + id);
-
+			console.warn(col, ':findById - ', id);
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					if (err) {
@@ -342,8 +344,7 @@ module.exports = function (options, app) {
 					});
 				});
 			});
-
-			return defer.promise
+			return defer.promise;
 		},
 		/**
 		 * I handle removing a record from a collection
@@ -385,7 +386,6 @@ module.exports = function (options, app) {
 			return defer.promise;
 		}
 	};
-
 
 	return RestResource.init(config);
 };

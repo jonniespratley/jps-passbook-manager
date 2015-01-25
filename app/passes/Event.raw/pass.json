@@ -1,10 +1,10 @@
 {
   "formatVersion" : 1,
-  "passTypeIdentifier" : "pass.jsapps.io",
   "serialNumber" : "nmyuxofgnb",
-  "teamIdentifier" : "A1B2C3D4E5",
-  "webServiceURL" : "https://example.com/passes/",
-  "authenticationToken" : "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
+  "authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
+  "passTypeIdentifier": "pass.jsapps.io",
+  "webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
+  "teamIdentifier": "USE9YUYDFH",
   "relevantDate" : "2011-12-08T13:00-08:00",
   "locations" : [
     {

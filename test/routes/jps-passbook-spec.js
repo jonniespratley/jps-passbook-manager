@@ -63,32 +63,35 @@ describe('jps-passbook', function() {
 		done();
 	});
 
+
+
 	it('should create a pass file, a directory with .raw and a pass.json', function(done) {
 		testPass.description = testPassName;
 		var options = {
 			path: testPassDir,
-			pass: testPass,
-			callback: function(data) {
-				assert.equal(data.path, testPassDir + path.sep + testPass.organizationName + '-' + testPass.description + '.raw');
-				testPassDir = data.directory;
-				done();
-			}
+			pass: testPass
 		};
-		jpsPassbook.createPass(options);
+
+		jpsPassbook.createPass(options).then(function(data) {
+			assert.equal(data.path, testPassDir + path.sep + testPass.organizationName + '-' + testPass.description + '.raw');
+			testPassDir = data.directory;
+			done();
+		});
 	});
+
+
 	it('should create a custom named pass file, a directory with .raw and a pass.json', function(done) {
 		testPass.description = testPassName;
 		var options = {
 			path: testPassDir,
 			pass: testPass,
-			filename: 'My-Test-Pass',
-			callback: function(data) {
-				assert.equal(data.filename, 'My-Test-Pass.raw');
-				testPassDir = data.path;
-				done();
-			}
+			filename: 'My-Test-Pass'
 		};
-		jpsPassbook.createPass(options);
+		jpsPassbook.createPass(options).then(function(data) {
+			assert.equal(data.filename, 'My-Test-Pass.raw');
+			testPassDir = data.path;
+			done();
+		});
 	});
 
 

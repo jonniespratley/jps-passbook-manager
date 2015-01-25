@@ -2,9 +2,9 @@
 	"type": "generic",
 	"formatVersion": 1,
 	"serialNumber": "8j23fm3",
+	"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
 	"passTypeIdentifier": "pass.jsapps.io",
 	"webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
-	"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
 	"teamIdentifier": "USE9YUYDFH",
 	"locations": [
 		{

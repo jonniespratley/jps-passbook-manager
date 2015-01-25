@@ -7,15 +7,13 @@ var fs = require('fs'), path = require('path'), fsutils = require('fs-utils'), Q
  */
 function signPass(pathToPass, callback) {
 	var cmd = 'bin/signpass -p ' + pathToPass;
-	console.warn(cmd);
+	//console.warn(cmd);
 
 
 	var exec = require('child_process').exec,
 
 		signpass = exec('bin/signpass -p ' + pathToPass,
 		function (error, stdout, stderr) {
-			console.log('stdout: ' + stdout);
-			console.log('stderr: ' + stderr);
 			if (error !== null) {
 				console.log('exec error: ' + error);
 			}

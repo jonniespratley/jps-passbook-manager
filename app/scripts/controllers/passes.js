@@ -123,9 +123,6 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		},
 		getPasses: function () {
 			var options = {
-				params: {
-					callback: 'JSON_CALLBACK'
-				}
 			};
 			$http.get('api/v1/passbookmanager/passes', options).success(function (data) {
 				$scope.SmartPass.passes = data;

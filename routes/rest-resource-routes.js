@@ -19,18 +19,17 @@ module.exports = function (config, app) {
 	var router = express.Router();
 
 
-	//app.get('/api/' + config.version + '/' + config.name, rest.collections);
+	app.get('/api/' + config.version + '/' + config.name, function(req, res, next){
+		res.status(200).send({message: 'Get collections'});
+	});
 
-	app.get('/api/' + config.version + '/:db/:col', function (req, res, next) {
+	router.get('/api/' + config.version + '/:db/:col', function (req, res, next) {
 		var db = req.params.db;
 		var col = req.params.col;
 		var query = req.query;
 		var options = {};
 
-		console.log('route:getall', db, col);
-
 		rest.fetch(col, query, options).then(function (data) {
-			console.log(data);
 			res.status(200).send(data);
 		}, function (err) {
 			res.status(400).send(err);
@@ -38,22 +37,20 @@ module.exports = function (config, app) {
 	});
 
 
-	app.get('/api/' + config.version + '/:db/:col/:id?', function (req, res, next) {
+	router.get('/api/' + config.version + '/:db/:col/:id?', function (req, res, next) {
 		var db = req.params.db;
 		var col = req.params.col;
 		var id = req.params.id;
 
-		console.log('route:get1', db, col, id);
-
 		rest.findById(col, id).then(function (data) {
-			console.log(data);
 			res.status(200).send(data);
 		}, function (err) {
 			res.status(400).send(err);
 		});
 	});
 
-	app.post('/api/' + config.version + '/:db/:col', bodyParser.json(), function(req, res, next){
+
+	router.post('/api/' + config.version + '/:db/:col', bodyParser.json(), function(req, res, next){
 		var db = req.params.db, col = req.params.col, data = req.body;
 		rest.add(col, data).then(function(msg){
 			res.status(200).send(msg);
@@ -61,7 +58,9 @@ module.exports = function (config, app) {
 			res.status(400).send(err);
 		});
 	});
-	app.put('/api/' + config.version + '/:db/:col/:id', bodyParser.json(), function(req, res, next){
+
+
+	router.put('/api/' + config.version + '/:db/:col/:id', bodyParser.json(), function(req, res, next){
 		var db = req.params.db, col = req.params.col, data = req.body, id = req.params.id;
 		rest.edit(col, id, data).then(function(msg){
 			res.status(200).send(msg);
@@ -69,7 +68,9 @@ module.exports = function (config, app) {
 			res.status(400).send(err);
 		});
 	});
-	app.delete('/api/' + config.version + '/:db/:col/:id', function(req, res, next){
+
+
+	router.delete('/api/' + config.version + '/:db/:col/:id', function(req, res, next){
 		var db = req.params.db, col = req.params.col, id = req.params.id;
 		rest.destroy(col, id).then(function(msg){
 			res.status(200).send(msg);
@@ -80,6 +81,21 @@ module.exports = function (config, app) {
 
 
 	// mount the router on the app
+	router.use(express.static(config.staticDir));
+
+	//router.use(serveStatic(config.staticDir, null));
+	router.use(function (req, res, next) {
+		res.header('Connection', 'keep-alive');
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+		res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, CONNECT');
+		res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
+		res.header('Cache-Control', 'no-cache');
+		res.header('Content-Type', 'application/json');
+		console.log('jps-passbook-routes', req.path);
+		next();
+	});
+
 
 	app.use('/', router);
 };
