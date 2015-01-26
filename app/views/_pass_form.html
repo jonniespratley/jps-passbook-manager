@@ -95,7 +95,7 @@
 			<legend>
 				Barcode
 			</legend>
-			
+
 			<div id="pass-barcodeFields" class="well">
 				<formitem title="Format:">
 					<select ng-model="pass.barcode.format" ng-options="format.name for format in SmartPass.barcodes"></select>
@@ -131,10 +131,14 @@
 				</formitem>
 
 				<formitem title="Foreground Color:">
-					<input type="text"
-					ng-model="pass.foregroundColor"
-					class="colorpicker"
-					ng-colorpicker/>
+					<div class="input-group">
+						<input type="text"
+						ng-model="pass.foregroundColor"
+						class="colorpicker"
+						ng-colorpicker/>
+						<span class="input-group-addon"><i></i></span>
+					</div>
+
 				</formitem>
 				<formitem title="Background Color:">
 					<input type="text"

@@ -53,7 +53,7 @@ module.exports = function (config, app) {
 	router.post('/api/' + config.version + '/:db/:col', bodyParser.json(), function(req, res, next){
 		var db = req.params.db, col = req.params.col, data = req.body;
 		rest.add(col, data).then(function(msg){
-			res.status(200).send(msg);
+			res.status(201).send(msg);
 		}, function (err) {
 			res.status(400).send(err);
 		});
@@ -65,7 +65,7 @@ module.exports = function (config, app) {
 		rest.edit(col, id, data).then(function(msg){
 			res.status(200).send(msg);
 		}, function (err) {
-			res.status(400).send(err);
+			res.status(404).send(err);
 		});
 	});
 
@@ -92,7 +92,8 @@ module.exports = function (config, app) {
 		res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
 		res.header('Cache-Control', 'no-cache');
 		res.header('Content-Type', 'application/json');
-		console.log('jps-passbook-routes', req.path);
+
+		console.warn('jps-passbook-routes', req.method, req.body, req.path, JSON.stringify(req.body));
 		next();
 	});
 

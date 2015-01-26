@@ -183,6 +183,11 @@ module.exports = function (options, app) {
 		add: function (col, data) {
 			var defer = q.defer();
 			var results = [];
+
+			//TODO - add created_at and updated_at
+			data.created_at = new Date();
+			data.updated_at = new Date();
+
 			if (data) {
 				MongoClient.connect(config.db.url, function (err, db) {
 					console.log('add() - trying to add document to ', col, data);
@@ -239,15 +244,23 @@ module.exports = function (options, app) {
 			var spec = {
 				'_id': new BSON.ObjectID(id)
 			};
+			data._id = new BSON.ObjectID(id);
+			data.updated_at = new Date();
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
+					if (err) {
+						defer.reject({error: err});
+					}
+
+
 					collection.update(spec, data, true, function (err, docs) {
-						db.close();
 						if (err) {
 							defer.reject({error: err});
 						} else {
+							console.warn('found document', id, 'updating with ', data);
 							defer.resolve(docs);
 						}
+						db.close();
 					});
 				});
 			});

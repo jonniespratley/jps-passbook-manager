@@ -36,7 +36,7 @@ module.exports = function (config, app) {
 	var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];
 
 	//API Endpoint
-	router.get('/api', function (req, res) {
+	router.get(config.baseUrl, function (req, res) {
 		var body = config.name;
 		res.setHeader('Content-Type', 'text/plain');
 		res.setHeader('Content-Length', body.length);
@@ -44,7 +44,7 @@ module.exports = function (config, app) {
 	});
 
 	//Execute command - http://localhost:4040/api/v1/cmd/ls
-	router.get('/api/' + config.version + '/' + 'cmd' + '/' + ':command', function (req, res) {
+	router.get(config.baseUrl + '/' + 'cmd' + '/' + ':command', function (req, res) {
 		var results = {}, child;
 		child = exec(req.params.command, function (error, stdout, stderr) {
 			results.stdout = stdout;
@@ -68,31 +68,33 @@ module.exports = function (config, app) {
 		});
 	});
 
-	//Register Pass on device Endpoint
-	//{{url}}/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/gT6zrHkaW
-	router.post(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
+	var registerPass = function (req, res, next) {
 		var device = {
 			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
 			passTypeIdentifier: req.params.passTypeIdentifier,
-			serialNumber: req.params.serialNumber
+			serialNumber: req.params.serialNumber,
+			pushToken: req.body,
+			authToken: req.get('Authorization')
 		};
 
 		rest.add('registrations', device).then(function(data){
 			res.status(200).send({
-				message: 'Registered device ' + device.deviceLibraryIdentifier
+				message: 'Registered device ' + device.deviceLibraryIdentifier,
+				data: device
 			});
 		}, function(err){
 			res.status(400).send(err);
 		});
 
 
-	});
+	};
 
+	//Register Pass on device Endpoint
+	//{{url}}/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/gT6zrHkaW
+	router.post(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
+	router.post(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
 
-
-	//Unregister Pass on device
-
-	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
+	var unregisterPass = function (req, res) {
 
 		var device = {
 			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
@@ -109,15 +111,30 @@ module.exports = function (config, app) {
 			res.status(400).send(err);
 		});
 
-	});
+	};
+
+	//Unregister Pass on device
+	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
+	router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
+
 
 
 	//Logging Endpoint
-	router.post(config.baseUrl +  '/log', function (req, res) {
-		console.log(req.body);
-		res.json({
-			message: config.name
+	router.post(config.baseUrl +  '/log', jsonParser, function (req, res) {
+
+		var data = {
+			body: JSON.stringify(req.body),
+			params: req.params,
+			url: req.path,
+			time: Date.now()
+		};
+		console.warn('log', data);
+		rest.add('log', data).then(function(msg){
+			res.status(200).send(msg);
+		}, function(err){
+			res.status(400).send(err);
 		});
+
 	});
 
 
@@ -144,10 +161,33 @@ module.exports = function (config, app) {
 		});
 	});
 
+
+
 	//Get latest version of pass
-	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber', function (req, res, next) {
-		console.log('Push to device ' + req.param('token'));
+	// /api/v1/v1/passes/pass.jsapps.io/8j23fm3
+	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber?', function (req, res, next) {
+
+
+		var obj = {
+			passTypeIdentifier: req.params.passTypeIdentifier,
+			serialNumber: req.params.serialNumber
+		};
+
+		rest.fetch('passes', {}, obj).then(function(data){
+			res.status(200).send(data);
+		}, function(err){
+			res.status(400).send(err);
+		});
+		console.log('Compare pass serial number and get passes', JSON.stringify(obj));
+
 	});
+
+
+
+
+
+
+
 
 	//Send push to device
 	router.get(config.baseUrl + '/push/:token', function (req, res, rext) {
@@ -195,8 +235,7 @@ module.exports = function (config, app) {
 					path: config.publicDir
 				};
 				jpsPassbook.createPass(options).then(function (pass) {
-					res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
-					res.status(200).send(pass);
+					res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).send(pass);
 				});
 			}, function (err) {
 				req.status(400).send(err);

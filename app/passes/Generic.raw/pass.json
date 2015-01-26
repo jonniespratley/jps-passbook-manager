@@ -1,14 +1,18 @@
 {
   "formatVersion" : 1,
+  "passTypeIdentifier" : "pass.com.toytown.membership",
   "serialNumber" : "8j23fm3",
-  "authenticationToken": "vxwxd7J8AlNNFPS9k0a0FfUFtq0ewzFdc",
-  "passTypeIdentifier": "pass.jsapps.io",
-  "webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
-  "teamIdentifier": "USE9YUYDFH",
+  "webServiceURL" : "https://example.com/passes/",
+  "authenticationToken" : "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
+  "teamIdentifier" : "A1B2C3D4E5",
   "locations" : [
     {
       "longitude" : -122.3748889,
       "latitude" : 37.6189722
+    },
+    {
+      "longitude" : -122.03118,
+      "latitude" : 37.33182
     }
   ],
   "barcode" : {
