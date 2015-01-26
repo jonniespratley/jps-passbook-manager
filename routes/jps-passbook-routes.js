@@ -62,43 +62,68 @@ module.exports = function (config, app) {
 	});
 
 	//API Version Endpoint - http://localhost:3535/smartpass/v1
-	router.get('/api/' + config.version, function (req, res) {
+	router.get(config.baseUrl, function (req, res) {
 		res.json({
 			message: config.name
 		});
 	});
 
-	//Register Pass Endpoint
-	router.post('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
-		rest.add('devices', {
-			params: req.params,
-			query: req.query,
-			data: req.body
-		}).then(function(data){
+	//Register Pass on device Endpoint
+	//{{url}}/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/gT6zrHkaW
+	router.post(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
+		var device = {
+			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
+			passTypeIdentifier: req.params.passTypeIdentifier,
+			serialNumber: req.params.serialNumber
+		};
+
+		rest.add('registrations', device).then(function(data){
 			res.status(200).send({
-				message: config.name + ' - ' + 'Register device ' + req.param('token')
+				message: 'Registered device ' + device.deviceLibraryIdentifier
 			});
+		}, function(err){
+			res.status(400).send(err);
 		});
+
+
 	});
 
+
+
+	//Unregister Pass on device
+
+	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', function (req, res) {
+
+		var device = {
+			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
+			passTypeIdentifier: req.params.passTypeIdentifier,
+			serialNumber: req.params.serialNumber
+		};
+
+
+		console.log('Un-register device ' + device.deviceLibraryIdentifier);
+
+		rest.destroy( 'registrations', device).then(function(data){
+			res.status(200).send(data);
+		}, function(err){
+			res.status(400).send(err);
+		});
+
+	});
+
+
 	//Logging Endpoint
-	router.post('/api/' + config.version + '/log', function (req, res) {
+	router.post(config.baseUrl +  '/log', function (req, res) {
 		console.log(req.body);
 		res.json({
 			message: config.name
 		});
 	});
 
-	//Unregister Pass
-	router.delete('/api/' + config.version + '/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber', function (req, res) {
-		console.log('Register device ' + req.param('token'));
-		res.json({
-			message: config.name + ' - ' + 'Delete device ' + req.param('token')
-		});
-	});
+
 
 	//Register device
-	router.get('/api/' + config.version + '/register/:token', function (req, res) {
+	router.get(config.baseUrl + '/register/:token', function (req, res) {
 
 		console.warn('Register device ' + req.param('token'));
 		rest.add('registrations', {
@@ -112,7 +137,7 @@ module.exports = function (config, app) {
 	});
 
 	//Get serial numbers
-	router.get('/api/' + config.version + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res, next) {
+	router.get(config.baseUrl +  '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res, next) {
 		console.log('Push to device ' + req.param('token'));
 		res.json({
 			message: config.name + ' - ' + 'Push to device ' + req.param('token')
@@ -120,12 +145,12 @@ module.exports = function (config, app) {
 	});
 
 	//Get latest version of pass
-	router.get('/api/' + config.version + '/passes/:passTypeIdentifier/:serialNumber', function (req, res, next) {
+	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber', function (req, res, next) {
 		console.log('Push to device ' + req.param('token'));
 	});
 
 	//Send push to device
-	router.get('/api/' + config.version + '/push/:token', function (req, res, rext) {
+	router.get(config.baseUrl + '/push/:token', function (req, res, rext) {
 		console.log('Push to device ' + req.param('token'));
 	});
 
@@ -133,7 +158,7 @@ module.exports = function (config, app) {
 	/**
 	 * I am the signpass route
 	 */
-	router.get('/api/' + config.version + '/:db/:col/:id/sign', function (req, res, next) {
+	router.get(config.baseUrl + '/:db/:col/:id/sign', function (req, res, next) {
 		var passFile = req.param('path');
 		if (passFile) {
 			jpsPassbook.sign(passFile, function (data) {
@@ -156,7 +181,7 @@ module.exports = function (config, app) {
 	 * signpass binary.
 	 *
 	 */
-	router.get('/api/' + config.version + '/:db/:col/:id/export', function (req, res) {
+	router.get(config.baseUrl +  '/:db/:col/:id/export', function (req, res) {
 		var db = req.params.db;
 		var col = req.params.col;
 		var id = req.params.id;

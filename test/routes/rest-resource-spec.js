@@ -74,4 +74,17 @@ describe('rest-resource', function(){
 			done();
 		});
 	});
+
+
+	it('destroy(col, obj) - should remove object', function(done){
+		rest.destroy('passes', {_id: testId}).then(function(data){
+			assert.ok(data, 'returns correct object');
+			done();
+		}, function(err){
+			console.log(err);
+			assert.fail();
+		});
+	});
+
+
 });

@@ -20,6 +20,7 @@ var dbconn = null;
 
 //mongodb://admin:admin@ds031611.mongolab.com:31611/passbookmanager
 var config = {
+	baseUrl: '/api/v1',
 	name: 'passbookmanager',
 	message: 'Passbook Manager API Server',
 	version: 'v1',

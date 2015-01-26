@@ -351,12 +351,19 @@ module.exports = function (options, app) {
 		 * @param req
 		 * @param res
 		 */
-		destroy: function (col, id) {
+		destroy: function (col, query) {
 			var defer = q.defer();
-			var params = {
-				_id: new BSON.ObjectID(id)
-			};
-			console.log('Delete by id ' + id, 'from', col);
+			var params = query;
+			if(!query){
+				throw new Error('Must provide query object!');
+			}
+
+			if(query._id){
+				params._id = new BSON.ObjectID(query._id);
+			}
+
+
+			console.log('Delete by id ', params, 'from', col);
 
 			MongoClient.connect(config.db.url, function (err, db) {
 
@@ -377,7 +384,7 @@ module.exports = function (options, app) {
 							});
 						} else {
 							defer.resolve({
-								message: 'Document ' + id + ' was removed!'
+								message: 'Document was removed!'
 							});
 						}
 					});
