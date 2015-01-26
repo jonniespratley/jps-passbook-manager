@@ -67,21 +67,31 @@ describe('rest-resource', function(){
 		});
 	});
 
-
-	it('getColStatus - should return object', function(done){
-		rest.getColStatus('passes').then(function(data){
-			assert.ok(data, 'is object');
-			done();
-		});
-	});
-
-
 	it('destroy(col, obj) - should remove object', function(done){
 		rest.destroy('passes', {_id: testId}).then(function(data){
 			assert.ok(data, 'returns correct object');
 			done();
 		}, function(err){
 			console.log(err);
+			assert.fail();
+		});
+	});
+
+	it('getCollections() - should return object', function(done){
+		rest.getCollections('').then(function(data){
+			assert.ok(data.length > 0, 'returns array');
+			done();
+		}, function(err){
+			assert.fail();
+		});
+	});
+
+
+	it('getCollectionStatus(name) - should return object', function(done){
+		rest.getCollectionStatus('passes').then(function(data){
+			assert.ok(data.name === 'passes', 'returns correct object');
+			done();
+		}, function(err){
 			assert.fail();
 		});
 	});

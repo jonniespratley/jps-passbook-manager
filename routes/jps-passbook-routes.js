@@ -1,5 +1,5 @@
 var express = require('express'), bodyParser = require('body-parser'), jsonParser = bodyParser.json();
-
+var chalk = require('chalk');
 var jpsPassbook = require('./jps-passbook');
 var serveStatic = require('serve-static');
 var mongo = require('mongodb');
@@ -35,6 +35,55 @@ module.exports = function (config, app) {
 	//Test device tokens
 	var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];
 
+
+
+	//Handle unregistering a device
+	var unregisterPass = function (req, res, next) {
+
+		var device = {
+			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
+			passTypeIdentifier: req.params.passTypeIdentifier,
+			serialNumber: req.params.serialNumber
+		};
+
+		console.log(chalk.yellow('[unregister] - [%s] with pass id [%s] and serial [%s]'), device.deviceLibraryIdentifier, device.passTypeIdentifier, device.serialNumber);
+
+		rest.destroy( 'registrations', device).then(function(data){
+			res.status(200).send(data);
+		}, function(err){
+			res.status(400).send(err);
+		});
+	};
+
+
+	var registerPass = function (req, res, next) {
+		var device = {
+			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
+			passTypeIdentifier: req.params.passTypeIdentifier,
+			serialNumber: req.params.serialNumber,
+			pushToken: req.body.pushToken,
+			authToken: req.get('Authorization')
+		};
+
+		console.log(chalk.yellow('[register] - [%s] with pass id [%s], serial [%s], pushToken [%s], authToken [%s]'),
+			device.deviceLibraryIdentifier,
+			device.passTypeIdentifier,
+			device.serialNumber,
+			device.pushToken,
+			device.authToken);
+
+		rest.add('registrations', device).then(function(data){
+			res.status(200).send({
+				message: 'Registered device ' + device.deviceLibraryIdentifier,
+				data: device
+			});
+		}, function(err){
+			res.status(400).send(err);
+		});
+
+
+	};
+
 	//API Endpoint
 	router.get(config.baseUrl, function (req, res) {
 		var body = config.name;
@@ -61,61 +110,15 @@ module.exports = function (config, app) {
 		});
 	});
 
-	//API Version Endpoint - http://localhost:3535/smartpass/v1
-	router.get(config.baseUrl, function (req, res) {
-		res.json({
-			message: config.name
-		});
-	});
-
-	var registerPass = function (req, res, next) {
-		var device = {
-			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
-			passTypeIdentifier: req.params.passTypeIdentifier,
-			serialNumber: req.params.serialNumber,
-			pushToken: req.body,
-			authToken: req.get('Authorization')
-		};
-
-		rest.add('registrations', device).then(function(data){
-			res.status(200).send({
-				message: 'Registered device ' + device.deviceLibraryIdentifier,
-				data: device
-			});
-		}, function(err){
-			res.status(400).send(err);
-		});
-
-
-	};
 
 	//Register Pass on device Endpoint
 	//{{url}}/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/gT6zrHkaW
 	router.post(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
 	router.post(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
 
-	var unregisterPass = function (req, res) {
-
-		var device = {
-			deviceLibraryIdentifier: req.params.deviceLibraryIdentifier,
-			passTypeIdentifier: req.params.passTypeIdentifier,
-			serialNumber: req.params.serialNumber
-		};
-
-
-		console.log('Un-register device ' + device.deviceLibraryIdentifier);
-
-		rest.destroy( 'registrations', device).then(function(data){
-			res.status(200).send(data);
-		}, function(err){
-			res.status(400).send(err);
-		});
-	};
-
 	//Unregister Pass on device
-	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier?', unregisterPass);
-	router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier?', unregisterPass);
-
+	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
+	router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
 
 
 	//Logging Endpoint
@@ -127,7 +130,6 @@ module.exports = function (config, app) {
 			url: req.path,
 			time: Date.now()
 		};
-		console.warn('log', data);
 		rest.add('log', data).then(function(msg){
 			res.status(200).send(msg);
 		}, function(err){
@@ -135,7 +137,6 @@ module.exports = function (config, app) {
 		});
 
 	});
-
 
 
 	//Register device
@@ -152,22 +153,29 @@ module.exports = function (config, app) {
 		});
 	});
 
-	/**
-	 * I handle getting the passes for a device
-	 */
+	//I handle getting the passes for a device
 	router.get(config.baseUrl +  '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res, next) {
-		console.log('Checking device ' + req.get('Authorization'));
+		console.log('Checking device ' + req.params.deviceLibraryIdentifier);
+		var result = {
+			serialNumbers:[],
+			lastUpdated: Date.now()
+		};
 
+		rest.fetch('registrations', { deviceLibraryIdentifier: req.params.deviceLibraryIdentifier }).then(function(data){
+			console.log('found these', data);
 
-		res.status(200).send({
-			message: 'Get passes for device ' + req.get('Authorization')
+			for (var i = 0; i < data.length; i++) {
+				result.serialNumbers.push(data[i].serialNumber);
+			}
+
+			res.status(200).send(result);
 		});
+
+
+
 	});
 
-
-
 	//Get latest version of pass
-	// /api/v1/v1/passes/pass.jsapps.io/8j23fm3
 	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber?', function (req, res, next) {
 
 
@@ -175,6 +183,10 @@ module.exports = function (config, app) {
 			passTypeIdentifier: req.params.passTypeIdentifier,
 			serialNumber: req.params.serialNumber
 		};
+
+		if(req.query.lastest){
+			consol.warn('Get latest');
+		}
 
 		rest.fetch('passes', {}, obj).then(function(data){
 			res.status(200).send(data);
@@ -186,21 +198,13 @@ module.exports = function (config, app) {
 	});
 
 
-
-
-
-
-
-
 	//Send push to device
 	router.get(config.baseUrl + '/push/:token', function (req, res, rext) {
 		console.log('Push to device ' + req.param('token'));
 	});
 
 
-	/**
-	 * I am the signpass route
-	 */
+	//I am the signpass route
 	router.get(config.baseUrl + '/:db/:col/:id/sign', function (req, res, next) {
 		var passFile = req.param('path');
 		if (passFile) {
@@ -215,15 +219,7 @@ module.exports = function (config, app) {
 		}
 	});
 
-	/**
-	 * I am the export pass route.
-	 *
-	 * I handle taking a pass's id, quering the database,
-	 * taking the contents of the pass and invoking the createPass method which
-	 * creates a .raw folder containing a pass.json file and then invokes the
-	 * signpass binary.
-	 *
-	 */
+	//I am the export pass route.
 	router.get(config.baseUrl +  '/:db/:col/:id/export', function (req, res) {
 		var db = req.params.db;
 		var col = req.params.col;
@@ -249,6 +245,16 @@ module.exports = function (config, app) {
 		}
 	});
 
+
+
+	//Global route handler
+	app.use(function(req, res, next){
+		console.log(chalk.green('[jps-passbook-routes] - %s - %s %s %s %s'), req.method, req.url, JSON.stringify(req.query), req.body, JSON.stringify(req.params));
+		next();
+	});
+
+
 	app.use('/', router);
-	console.warn('jps-passbook-routes initialized');
+
+	console.warn(chalk.yellow('jps-passbook-routes initialized'));
 };

@@ -3,6 +3,7 @@ var mongo = require('mongodb');
 var BSON = mongo.BSONPure;
 var MongoClient = require('mongodb').MongoClient;
 var q = require('q');
+var assert = require('assert');
 
 
 //## REST Resource
@@ -63,31 +64,21 @@ module.exports = function (options, app) {
 		},
 		connect: function(){
 			var self = this;
+			var defer = q.defer();
+			var config = self.config;
 
-			//Set the config
-			var config = RestResource.config;
 			MongoClient.connect(config.db.url, function (err, db) {
-				self.log('Trying to connect to', self.databaseName);
-
-				RestResource.db = db;
-
+				console.log('Trying to connect to', self.databaseName);
+				self.db = db;
 				if (!err) {
 					self.log('Connected to ' + self.databaseName);
-
-					db.collection(self.name, {
-						safe: true
-					}, function (err, collection) {
-
-						if (err) {
-							console.log('The collection ' + self.name + ' exist. creating it with sample data...', collection);
-							self.populateDb();
-						}
-					});
+					defer.resolve(db);
 				} else {
 					console.error('Could not connect to mongodb');
+					defer.reject('Could not connect to mongodb');
 				}
 			});
-
+			return defer.promise;
 		},
 
 		//### index()
@@ -99,16 +90,6 @@ module.exports = function (options, app) {
 
 		},
 
-		/**
-		 * @description I fetch all of the collection in the database.
-		 * @param db
-		 * @returns {*}
-		 */
-		collections: function (db) {
-			var defer = q.defer();
-
-			return defer.promise;
-		},
 
 		/**
 		 * @description I fetch all records from the collection specified.
@@ -288,27 +269,7 @@ module.exports = function (options, app) {
 
 		},
 
-		getColStatus: function (name) {
-			var defer = q.defer();
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(name, function (err, collection) {
-					collection.count(function (err, count) {
-						if (err) {
-							defer.reject({error: err});
-						} else {
-							console.log('There are ' + count + ' records in', name);
-							defer.resolve({
-								count: count
-							});
-						}
 
-
-					});
-				});
-			});
-			console.log('get db status');
-			return defer.promise;
-		},
 		/**
 		 * I find all of the records
 		 * @param {Object} req
@@ -401,6 +362,56 @@ module.exports = function (options, app) {
 							});
 						}
 					});
+				});
+			});
+			return defer.promise;
+		},
+		/**
+		* @description I get all of the collection in the database.
+		* @param db
+		* @returns {*}
+		*/
+		getCollections: function () {
+			var defer = q.defer();
+
+			this.connect().then(function(db){
+				// Return the information of a all collections, using the callback format
+				db.collectionNames(function(err, items) {
+					defer.resolve(items);
+					db.close();
+				});
+			});
+
+			return defer.promise;
+		},
+		getCollectionStatus: function (name) {
+			var defer = q.defer();
+			MongoClient.connect(config.db.url, function (err, db) {
+				db.collection(name, function (err, collection) {
+					collection.count(function (err, count) {
+						if (err) {
+							defer.reject({error: err});
+						} else {
+							console.log('There are ' + count + ' records in', name);
+							defer.resolve({
+								name: name,
+								count: count
+							});
+						}
+					});
+				});
+			});
+			console.log('get db status');
+			return defer.promise;
+		},
+		stats: function(){
+			var defer = q.defer();
+			this.connect().then(function(db){
+				db.stats(function(err, stats) {
+					assert.equal(null, err);
+					assert.ok(stats != null);
+					db.close();
+					defer.resolve(stats);
 				});
 			});
 			return defer.promise;

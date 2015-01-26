@@ -19,9 +19,37 @@ module.exports = function (config, app) {
 	var router = express.Router();
 
 
-	app.get('/api/' + config.version + '/' + config.name, function(req, res, next){
+	router.get('/api/' + config.version + '/' + config.name, function(req, res, next){
 		res.status(200).send({message: 'Get collections'});
 	});
+
+	router.get(config.baseUrl + '/stats', function(req, res, next){
+		console.log('stats');
+		rest.stats().then(function(data){
+			res.status(200).send(data);
+		}, function (err) {
+			res.status(400).send(err);
+		});
+	});
+
+	router.get(config.baseUrl + '/collections', function(req, res, next){
+		console.log('getCollections');
+		rest.collections().then(function(data){
+			res.status(200).send(data);
+		}, function (err) {
+			res.status(400).send(err);
+		});
+	});
+
+	router.get(config.baseUrl + '/collections/:name', function(req, res, next){
+		console.log('getCollectionStatus');
+		rest.getCollectionStatus(req.params.name).then(function(data){
+			res.status(200).send(data);
+		}, function (err) {
+			res.status(400).send(err);
+		});
+	});
+
 
 	router.get('/api/' + config.version + '/:db/:col', function (req, res, next) {
 		var db = req.params.db;
