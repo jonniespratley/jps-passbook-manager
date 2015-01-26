@@ -29,7 +29,6 @@ var config = {
 };
 
 //Initialize the REST resource server with our configuration object.
-
 var app = express();
 var RestRoutes = require(path.resolve(__dirname, '../../routes/rest-resource-routes'));
 
@@ -39,7 +38,9 @@ app.listen(config.server.port, function(){
 	console.log('test server running');
 });
 
-describe('rest-resource-routes', function () {
+
+
+xdescribe('rest-resource-routes', function () {
 
 	it('GET - /:db/:col - should return array', function (done) {
 		request(app)

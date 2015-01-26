@@ -110,12 +110,11 @@ module.exports = function (config, app) {
 		}, function(err){
 			res.status(400).send(err);
 		});
-
 	};
 
 	//Unregister Pass on device
-	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
-	router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
+	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier?', unregisterPass);
+	router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier?', unregisterPass);
 
 
 
@@ -153,11 +152,15 @@ module.exports = function (config, app) {
 		});
 	});
 
-	//Get serial numbers
-	router.get(config.baseUrl +  '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res, next) {
-		console.log('Push to device ' + req.param('token'));
-		res.json({
-			message: config.name + ' - ' + 'Push to device ' + req.param('token')
+	/**
+	 * I handle getting the passes for a device
+	 */
+	router.get(config.baseUrl +  '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier', function (req, res, next) {
+		console.log('Checking device ' + req.get('Authorization'));
+
+
+		res.status(200).send({
+			message: 'Get passes for device ' + req.get('Authorization')
 		});
 	});
 
