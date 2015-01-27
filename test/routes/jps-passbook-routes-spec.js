@@ -41,10 +41,9 @@ app.listen(config.server.port, function () {
 });
 
 describe('jps-passbook-routes', function () {
-	xit('GET - api/v1 - should return object', function (done) {
+	it('GET - api/v1/v1/devices - should return object with serialNumbers and lastUpdated', function (done) {
 		request(app)
-			.get('/api/v1')
-			.set('Accept', 'application/json')
+			.get('/api/v1/v1/devices/ae08f43d52d750802f4486335ca93857/registrations/pass.jsapps.io/123456')
 			.expect(200, done);
 	});
 });
