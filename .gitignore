@@ -5,7 +5,8 @@ app/bower_components
 app/components
 .DS_Store
 docs
-db
+db/*.0
+db/*.ns
 .idea
 .project
 
