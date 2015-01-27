@@ -141,6 +141,16 @@ function checkDirectory(localPath, callback) {
 	});
 };
 
+function copyPassArtifacts(passType, dest){
+	var defer = Q.defer();
+
+	console.warn('Copying artifacts from', 'www/passes/'+passType, 'to', dest);
+
+	defer.resolve('Done');
+
+	return defer.promise;
+};
+
 /**
  * I handle creating the pass.raw folder and writing the pass.json file into it.
  * @param localPath
@@ -155,14 +165,36 @@ function createPass(options) {
 	}
 	passFilename = passFilename.replace(/\W/g, '-');
 
+	//pass folder path
 	var passPath = options.path + path.sep + passFilename + '.raw';
-	fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
-		defer.resolve({
-			directory: path.dirname(passPath),
-			path: passPath,
-			filename: path.basename(passPath)
+
+	//artifact folder path
+	var artifactPath = path.resolve(__dirname, '..' + path.sep + 'www' + path.sep + 'passes' + path.sep + options.pass.type);
+
+	//Create directory
+	fsextra.ensureDir(passPath, function(err){
+		if(err){
+			defer.reject({error: err});
+		}
+
+		//Copy artifacts
+		fsextra.copy(artifactPath, passPath, function(err) {
+			if(err){
+				defer.reject({error: err});
+			} else {
+				//Create .json
+				fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
+					defer.resolve({
+						directory: path.dirname(passPath),
+						path: passPath,
+						filename: path.basename(passPath)
+					});
+				});
+			}
 		});
+
 	});
+
 	return defer.promise;
 };
 

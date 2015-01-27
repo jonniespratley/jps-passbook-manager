@@ -25,7 +25,9 @@
 						href=""
 						ng-click="SmartPass.selectPass(pass);"
 						ng-repeat="pass in SmartPass.passes | orderBy:order:reverse | filter:passFilter"
-						data-id="{{pass._id}}"> <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon pull-left img-rounded"/> <h4 class="list-group-item-heading"> {{pass.description}} </h4>
+						data-id="{{pass._id}}">
+						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon pull-left img-rounded"/> 
+						<h4 class="list-group-item-heading"> {{pass.description}} </h4>
 						<p class="list-group-item-text">
 							{{pass.organizationName}}
 						</p> </a>

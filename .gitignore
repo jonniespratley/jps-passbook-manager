@@ -10,6 +10,6 @@ db
 .project
 
 .tmp
-www
+www/public
 *.log
 atlassian-ide-plugin.xml
