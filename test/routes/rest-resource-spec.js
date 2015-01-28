@@ -5,40 +5,15 @@ var assert = require('assert'),
 		fs = require('fs-utils'),
 		express = require('express'),
 		request = require('supertest');
-
-//mongodb://admin:admin@ds031611.mongolab.com:31611/passbookmanager
-var config = {
-	name: 'passbookmanager',
-	message: 'Passbook Manager API Server',
-	version: 'v1',
-	security: {
-		salt: 'a58e325c6df628d07a18b673a3420986'
-	},
-	server: {
-		host: 'localhost',
-		port: 4141
-	},
-	db: {
-		username: 'demouser',
-		password: 'demopassword',
-		host: 'ds031611.mongolab.com',
-		port: 31611,
-		url : 'mongodb://localhost:27017/passbookmanager'
-	},
-	collections: ['devices', 'passes', 'notifications', 'settings'],
-	staticDir: './app',
-	publicDir: __dirname + path.sep + 'www/public',
-	uploadsTmpDir: __dirname + path.sep + '.tmp',
-	uploadsDestDir: __dirname + path.sep + 'www/public'
-};
-
-var RestResource = require(path.resolve(__dirname, '../../routes/rest-resource'));
-var rest = new RestResource(config);
+var require_helper = require('../../require_helper');
+var config = require_helper('test/test-config');
 
 var testId = null, testSerial = null;
-
+var RestResource = require_helper( 'routes/rest-resource');
+var rest = new RestResource(config);
 
 describe('rest-resource', function(){
+
 
 
 	it('findAll(col) - should return array of objects', function(done){

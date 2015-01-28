@@ -168,11 +168,11 @@ module.exports = function (options, app) {
 			//TODO - add created_at and updated_at
 			data.created_at = new Date();
 			data.updated_at = new Date();
-
+		console.log('add() - trying to add document to ', col, data);
+		
 			if (data) {
-				MongoClient.connect(config.db.url, function (err, db) {
-					console.log('add() - trying to add document to ', col, data);
-
+				MongoClient.connect(this.config.db.url, function (err, db) {
+					
 					if (err) {
 						console.error('add() - Error trying to add document');
 						defer.reject({error: err});
@@ -195,16 +195,18 @@ module.exports = function (options, app) {
 
 							} else {
 								collection.insert(data, function (err, docs) {
-									db.close();
+									
 									if (err) {
 										defer.reject({
 											error: err
 										});
 									} else {
 										defer.resolve({
-											message: 'Document created!'
+											message: 'Document added to ' + col,
+											data: docs[0]._id
 										});
 									}
+									db.close();
 								});
 							}
 						});

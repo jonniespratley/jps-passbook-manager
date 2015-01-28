@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scope, $rootScope, $http, $document, $compile, $route, $routeParams, $location) {
-	$scope.name = "SmartPassCtrl";
+	$scope.name = "PassesCtrl";
 	$scope.$route = $route;
 	$scope.$location = $location;
 	$scope.$routeParams = $routeParams;
 	$scope.cdn = 'http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com';
 	$scope.passFilter = null;
+
 	function s4() {
 		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 	}
@@ -15,32 +16,6 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 	}
 
-	$scope.classes = [{
-		title: 'Builder',
-		body: 'This is the desc',
-		template: 'ame-studio/builder/index.html',
-		slug: 'builder'
-	}, {
-		title: 'Wizard',
-		body: 'This is the desc',
-		template: 'ame-studio/wizard/index.html',
-		slug: 'wizard'
-	}, {
-		title: 'Device',
-		body: 'This is the desc',
-		template: 'ame-studio/device/index.html',
-		slug: 'device'
-	}, {
-		title: 'Simulator',
-		body: 'This is the desc',
-		template: 'ame-studio/templates/DeviceWiki.html',
-		slug: 'simulator'
-	}, {
-		title: 'SmartApp',
-		body: 'This is the desc',
-		template: 'ame-studio/smartapp/index.html',
-		slug: 'smartapp'
-	}];
 	$scope.editMode = false;
 	$scope.toggleEditMode = function(){
 		$scope.editMode = ($scope.editMode ? true : false);
@@ -112,7 +87,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			$scope.pass = p;
 			var c = confirm('Are you sure?');
 			if (c) {
-				$http.delete('/api/v1/passbookmanager/passes/' + p._id).success(function (data) {
+				$http.delete('/api/v1/passes/' + p._id).success(function (data) {
 					angular.element('#pass-' + p._id).remove();
 					console.log('deletePass', data);
 					$scope.SmartPass.getPasses();
@@ -124,7 +99,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		getPasses: function () {
 			var options = {
 			};
-			$http.get('api/v1/passbookmanager/passes', options).success(function (data) {
+			$http.get('api/v1/passes', options).success(function (data) {
 				$scope.SmartPass.passes = data;
 				console.log('getPasses', data);
 			});
@@ -132,7 +107,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		savePass: function (p) {
 			p.updated = new Date().toTimeString();
 			if (p._id) {
-				$http.put('/api/v1/passbookmanager/passes/' + p._id, p).success(function (data) {
+				$http.put('/api/v1/passes/' + p._id, p).success(function (data) {
 					console.log('savePass', data);
 					if (data) {
 						//$scope.SmartPass.pass = null;
@@ -141,7 +116,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 					}
 				});
 			} else {
-				$http.post('/api/v1/passbookmanager/passes', p).success(function (data) {
+				$http.post('/api/v1/passes', p).success(function (data) {
 					//$scope.SmartPass.pass = data;
 					if (data) {
 					//	$scope.SmartPass.pass = null;
@@ -157,13 +132,13 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		exportPass: function (p) {
 			console.log('exportPass', p);
 			$scope.SmartPass.pass = p;
-			$http.get('/api/v1/passbookmanager/passes/' + p._id + '/export').success(function (data) {
+			$http.get('/api/v1/passes/' + p._id + '/export').success(function (data) {
 				console.log('export result', data);
 				$scope.SmartPass.signPass(p, data.path);
 			});
 		},
 		signPass: function (p, path) {
-			var signUrl = '/api/v1/passbookmanager/passes/' + p._id + '/sign?path=' + path;
+			var signUrl = '/api/v1/passes/' + p._id + '/sign?path=' + path;
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);
@@ -185,8 +160,8 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "E5982H-I2",
 		"teamIdentifier": "J62UV6D7WJ",
-		"webServiceURL": 'http://' + location.hostname + ':' + location.port + '/smartpass/v1',
-		"authenticationToken": "000000000012341234",
+		"webServiceURL": 'https://passbook-manager.jsapps.io/api/v1',
+		"authenticationToken": "00000000001234",
 		"barcode": {
 			"message": "123456789",
 			"format": "PKBarcodeFormatQR",
@@ -196,7 +171,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			"longitude": -122.3748889,
 			"latitude": 37.6189722
 		}],
-		"organizationName": " Coupon",
+		"organizationName": "Coupon",
 		"logoText": "Logo",
 		"description": "20% off any products",
 		"foregroundColor": "#111",

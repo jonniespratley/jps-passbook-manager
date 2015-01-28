@@ -59,7 +59,7 @@ if(process.env.MONGODB_URL){
 }
 
 require(__dirname + path.sep + 'routes/jps-passbook-routes')(config, app);
-require(__dirname + path.sep + 'routes/rest-resource-routes')(config, app);
+//require(__dirname + path.sep + 'routes/rest-resource-routes')(config, app);
 
 //Start the server
 app.listen(config.server.port, function () {

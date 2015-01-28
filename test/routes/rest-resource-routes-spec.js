@@ -1,32 +1,7 @@
 var assert = require('assert'), path = require('path'), fs = require('fs-utils'), express = require('express'), request = require('supertest');
 
-
-//mongodb://admin:admin@ds031611.mongolab.com:31611/passbookmanager
-var config = {
-	name: 'passbookmanager',
-	message: 'Passbook Manager API Server',
-	version: 'v1',
-	security: {
-		salt: 'a58e325c6df628d07a18b673a3420986'
-	},
-	server: {
-		host: 'localhost',
-		port: 4141
-	},
-	db: {
-		username: 'demouser',
-		password: 'demopassword',
-		host: 'ds031611.mongolab.com',
-		port: 31611,
-
-		url: 'mongodb://localhost:27017/passbookmanager'
-	},
-	collections: ['devices', 'passes', 'notifications', 'settings'],
-	staticDir: './app',
-	publicDir: __dirname + path.sep + 'www/public',
-	uploadsTmpDir: __dirname + path.sep + '.tmp',
-	uploadsDestDir: __dirname + path.sep + 'www/public'
-};
+var require_helper = require('../../require_helper');
+var config = require_helper('test/test-config');
 
 var testPass = {
 	"type": "eventTicket",
@@ -77,8 +52,10 @@ var testPass = {
 	},
 	"updated": "20:25:38 GMT-0800 (PST)"
 };
-//Initialize the REST resource server with our configuration object.
-var app = express();
+
+
+
+	var app = express();
 var RestRoutes = require(path.resolve(__dirname, '../../routes/rest-resource-routes'));
 
 RestRoutes(config, app);
@@ -86,28 +63,25 @@ RestRoutes(config, app);
 app.listen(config.server.port, function () {
 	console.log('test server running');
 });
-
-
 describe('rest-resource-routes', function () {
 
-	it('POST - /:db/:col - should create object in collection', function (done) {
+	it('POST - /:col - should create object in collection', function (done) {
 		request(app)
-			.post('/api/v1/passbookmanager/passes')
+			.post('/api/v1/passes')
 			.send(testPass)
 			.expect(201, done);
-
 	});
 
-	it('GET - /:db/:col - should return array of collection objects', function (done) {
+	it('GET - /:col - should return array of collection objects', function (done) {
 		request(app)
-			.get('/api/v1/passbookmanager/passes')
+			.get('/api/v1/passes')
 			.set('Accept', 'application/json')
 			.expect(200, done);
 	});
-	it('GET - /:db/:col?limit=1 - should return array of 1 object', function (done) {
+	
+	it('GET - /:col?limit=1 - should return array of 1 object', function (done) {
 		request(app)
-			.get('/api/v1/passbookmanager/devices?limit=1')
-			.set('Accept', 'application/json')
+			.get('/api/v1/passes?limit=1')
 			.end(function(err, res){
 				if(err){
 					assert.fail();
@@ -118,10 +92,9 @@ describe('rest-resource-routes', function () {
 			});
 	});
 
-	it('GET - /:db/:col/:id - should return object', function (done) {
+	it('GET - /:col/:id - should return object', function (done) {
 		request(app)
-			.get('/api/v1/passbookmanager/devices/512eb5873598dc0000000001')
-			.set('Accept', 'application/json')
+			.get('/api/v1/devices/512eb5873598dc0000000001')
 			.expect(200, done);
 	});
 });

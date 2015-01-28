@@ -20,7 +20,7 @@ module.exports = function (config, app) {
 	var router = express.Router();
 
 
-	router.get('/api/' + config.version + '/' + config.name, function(req, res, next){
+	router.get(config.baseUrl, function(req, res, next){
 		res.status(200).send({message: 'Get collections'});
 	});
 
@@ -83,14 +83,14 @@ module.exports = function (config, app) {
 	});
 
 	//POST - Create 1 record
-	router.post('/api/' + config.version + '/:col', bodyParser.json(), function(req, res, next){
+	router.post(config.baseUrl + '/:col*', bodyParser.json(), function(req, res, next){
 		var col = req.params.col, data = req.body;
 		rest.add(col, data).then(function(msg){
 			res.status(201).send(msg);
 		}, function (err) {
 			res.status(400).send(err);
 		});
-		next();
+	
 	});
 
 	//PUT - Update 1 record
@@ -130,7 +130,7 @@ module.exports = function (config, app) {
 		res.header('Content-Type', 'application/json');
 
 		console.log(
-			chalk.green('[rest-routes] -', req.method, req.url, req.query, req.get('Authorization'), JSON.stringify(req.body))
+			chalk.yellow('[rest-routes] -', req.method, req.url, JSON.stringify(req.query), req.get('Authorization'), JSON.stringify(req.body))
 		);
 		next();
 	});
