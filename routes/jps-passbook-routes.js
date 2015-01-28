@@ -19,23 +19,7 @@ var exec = require('child_process').exec;
 var router = express.Router();
 
 module.exports = function (config, app) {
-
-
 	var rest = require('./rest-resource')(config);
-
-	/* ======================[ @TODO: Listen for Device registration token ]====================== */
-
-	//### onError()
-	//callback handler
-	var onError = function (error, note) {
-		console.log('Error is: %s', error);
-		console.log('Note ' + note);
-	};
-
-	//Test device tokens
-	var deviceTokens = ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'];
-
-
 
 	//Handle unregistering a device
 	var unregisterPass = function (req, res, next) {
@@ -65,19 +49,19 @@ module.exports = function (config, app) {
 			authToken: req.get('Authorization')
 		};
 
-		console.log(chalk.yellow('[register] - [%s] with pass id [%s], serial [%s], pushToken [%s], authToken [%s]'),
+		console.log(chalk.yellow('[register] - [%s] \n [passTypeId] - [%s], \n [serial] - [%s], \n [pushToken] - [%s], \n [authToken] - [%s]'),
 			device.deviceLibraryIdentifier,
 			device.passTypeIdentifier,
 			device.serialNumber,
 			device.pushToken,
 			device.authToken);
-			
+
 		//Check if device and pass already exist, if so, return passes
 		rest.fetch('registrations', null, {serialNumber: device.serialNumber, deviceLibraryIdentifier: device.deviceLibraryIdentifier}).then(function(o){
-			
+
 			console.warn('found registration', o);
 			res.status(200).send(o);
-			
+
 		}, function(e){
 			rest.add('registrations', device).then(function(data){
 				res.status(200).send({
@@ -86,11 +70,12 @@ module.exports = function (config, app) {
 				});
 			}, function(err){
 				res.status(400).send(err);
-			});	
+			});
 		});
- 
-
 	};
+
+
+
 
 	//API Endpoint
 	router.get(config.baseUrl, function (req, res) {
@@ -121,8 +106,8 @@ module.exports = function (config, app) {
 
 	//Register Pass on device Endpoint
 	//{{url}}/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/gT6zrHkaW
-	router.post(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
-	router.post(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
+	router.post(config.baseUrl + '/:db/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
+	router.post(config.baseUrl + '/v1/:db/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
 
 	//Unregister Pass on device
 	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);

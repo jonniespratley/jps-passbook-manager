@@ -89,18 +89,33 @@ app.listen(config.server.port, function () {
 
 
 describe('rest-resource-routes', function () {
-	it('POST - /:db/:col', function (done) {
+
+	it('POST - /:db/:col - should create object in collection', function (done) {
 		request(app)
 			.post('/api/v1/passbookmanager/passes')
 			.send(testPass)
 			.expect(201, done);
 
 	});
-	it('GET - /:db/:col - should return array', function (done) {
+
+	it('GET - /:db/:col - should return array of collection objects', function (done) {
 		request(app)
-			.get('/api/v1/passbookmanager/devices')
+			.get('/api/v1/passbookmanager/passes')
 			.set('Accept', 'application/json')
 			.expect(200, done);
+	});
+	it('GET - /:db/:col?limit=1 - should return array of 1 object', function (done) {
+		request(app)
+			.get('/api/v1/passbookmanager/devices?limit=1')
+			.set('Accept', 'application/json')
+			.end(function(err, res){
+				if(err){
+					assert.fail();
+					done();
+				}
+				assert.ok(res.body, 'returns object');
+				done();
+			});
 	});
 
 	it('GET - /:db/:col/:id - should return object', function (done) {

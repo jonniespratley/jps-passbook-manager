@@ -98,25 +98,25 @@ module.exports = function (options, app) {
 		 * @param options
 		 * @returns {*}
 		 */
-		fetch: function (col, query, options) {
+		fetch: function (col, _query, _options) {
 			var self = this;
 			var test = ['limit', 'sort', 'fields', 'skip', 'hint', 'explain', 'snapshot', 'timeout'];
 			var defer = q.defer();
 			var db = self.databaseName;
 
-			options = options || {};
-
+			var options = {} || _options;
+			var query = {};
 
 			//loop and test
-			for (var s in query) {
+			for (var s in _options) {
 				if (test.indexOf(s) >= 0) {
-					options[s] = query[s];
+					options[s] = _options[s];
 				}
 			}
 
 
 			//Log for interal usage
-			console.log('db', db, 'collection', col, 'query', query, 'options', options);
+			console.log('\ndb:', db, '\ncollection:', col, '\nquery:', query, '\noptions:', options);
 
 			//open database
 			MongoClient.connect(config.db.url, function (err, db) {
