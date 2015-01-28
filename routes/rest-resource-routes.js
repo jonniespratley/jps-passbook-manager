@@ -1,5 +1,6 @@
 var express = require('express'),
 	bodyParser = require('body-parser'),
+	chalk = require('chalk'),
 	jsonParser = bodyParser.json();
 
 
@@ -49,11 +50,12 @@ module.exports = function (config, app) {
 		}, function (err) {
 			res.status(400).send(err);
 		});
+		next();
 	});
 
 	//GET - Get all records
-	router.get(config.baseUrl +  '/:db/:col', function (req, res, next) {
-		var db = req.params.db;
+	router.get(config.baseUrl +  '/:col', function (req, res, next) {
+
 		var col = req.params.col;
 		var query = null;
 		var options = req.query;
@@ -63,11 +65,12 @@ module.exports = function (config, app) {
 		}, function (err) {
 			res.status(400).send(err);
 		});
+		next();
 	});
 
 	//GET - Get 1 record
-	router.get(config.baseUrl +  '/:db/:col/:id?', function (req, res, next) {
-		var db = req.params.db;
+	router.get(config.baseUrl +  '/:col/:id?', function (req, res, next) {
+
 		var col = req.params.col;
 		var id = req.params.id;
 
@@ -76,36 +79,40 @@ module.exports = function (config, app) {
 		}, function (err) {
 			res.status(400).send(err);
 		});
+		next();
 	});
 
 	//POST - Create 1 record
-	router.post('/api/' + config.version + '/:db/:col', bodyParser.json(), function(req, res, next){
-		var db = req.params.db, col = req.params.col, data = req.body;
+	router.post('/api/' + config.version + '/:col', bodyParser.json(), function(req, res, next){
+		var col = req.params.col, data = req.body;
 		rest.add(col, data).then(function(msg){
 			res.status(201).send(msg);
 		}, function (err) {
 			res.status(400).send(err);
 		});
+		next();
 	});
 
 	//PUT - Update 1 record
-	router.put(config.baseUrl +  '/:db/:col/:id', bodyParser.json(), function(req, res, next){
-		var db = req.params.db, col = req.params.col, data = req.body, id = req.params.id;
+	router.put(config.baseUrl +  '/:col/:id', bodyParser.json(), function(req, res, next){
+		var col = req.params.col, data = req.body, id = req.params.id;
 		rest.edit(col, id, data).then(function(msg){
 			res.status(200).send(msg);
 		}, function (err) {
 			res.status(404).send(err);
 		});
+		next();
 	});
 
 	//DELETE - Remove 1 record
-	router.delete(config.baseUrl +  '/:db/:col/:id', function(req, res, next){
-		var db = req.params.db, col = req.params.col, id = req.params.id;
+	router.delete(config.baseUrl +  '/:col/:id', function(req, res, next){
+		var col = req.params.col, id = req.params.id;
 		rest.destroy(col, id).then(function(msg){
 			res.status(200).send(msg);
 		}, function (err) {
 			res.status(400).send(err);
 		});
+		next();
 	});
 
 
@@ -122,7 +129,9 @@ module.exports = function (config, app) {
 		res.header('Cache-Control', 'no-cache');
 		res.header('Content-Type', 'application/json');
 
-		console.warn('jps-passbook-routes', req.method, req.url, req.query, req.get('Authorization'), JSON.stringify(req.body));
+		console.log(
+			chalk.green('[rest-routes] -', req.method, req.url, req.query, req.get('Authorization'), JSON.stringify(req.body))
+		);
 		next();
 	});
 

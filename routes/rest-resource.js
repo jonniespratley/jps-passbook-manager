@@ -302,13 +302,20 @@ module.exports = function (options, app) {
 			var defer = q.defer();
 
 			console.warn(col, ':findById - ', id);
+
+			try {
+				id = new BSON.ObjectID(id);
+			} catch (err) {
+				defer.reject({error: err});
+			}
+
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					if (err) {
 						defer.reject({error: err});
 					}
 					collection.findOne({
-						'_id': new BSON.ObjectID(id)
+						'_id': id
 					}, function (err, item) {
 						if (err) {
 							defer.reject({error: err});

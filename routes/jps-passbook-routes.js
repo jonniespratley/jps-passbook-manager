@@ -57,21 +57,28 @@ module.exports = function (config, app) {
 			device.authToken);
 
 		//Check if device and pass already exist, if so, return passes
-		rest.fetch('registrations', null, {serialNumber: device.serialNumber, deviceLibraryIdentifier: device.deviceLibraryIdentifier}).then(function(o){
+		rest.fetch('registrations', null, {
+			serialNumber: device.serialNumber,
+			deviceLibraryIdentifier: device.deviceLibraryIdentifier
+		}).then(function(o){
 
 			console.warn('found registration', o);
-			res.status(200).send(o);
-
+			res.status(200).send({message: 'Device ' + device.deviceLibraryIdentifier + ' already registered to ' + device.serialNumber});
 		}, function(e){
-			rest.add('registrations', device).then(function(data){
-				res.status(200).send({
-					message: 'Registered device ' + device.deviceLibraryIdentifier,
-					data: device
-				});
-			}, function(err){
-				res.status(400).send(err);
+
+		console.warn('Did not find device and pass in registrations table, add new entry ');
+
+		rest.add('registrations', device).then(function(data){
+			res.status(200).send({
+				message: 'Registered device ' + device.deviceLibraryIdentifier,
+				data: device
 			});
+		}, function(err){
+			res.status(400).send(err);
 		});
+
+		});
+
 	};
 
 
