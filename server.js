@@ -48,10 +48,7 @@ var config = {
 
 
 //Initialize the REST resource server with our configuration object.
-
 var app = express();
-
-
 
 if(process.env.MONGODB_URL){
 	config.db.url = process.env.MONGODB_URL;
@@ -59,7 +56,7 @@ if(process.env.MONGODB_URL){
 }
 
 require(__dirname + path.sep + 'routes/jps-passbook-routes')(config, app);
-//require(__dirname + path.sep + 'routes/rest-resource-routes')(config, app);
+require(__dirname + path.sep + 'routes/rest-resource-routes')(config, app);
 
 //Start the server
 app.listen(config.server.port, function () {
