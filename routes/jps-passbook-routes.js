@@ -223,18 +223,21 @@ module.exports = function (config, app) {
 	});
 
 	//Get latest version of pass
-	router.get(config.baseUrl + '/:col?', function (req, res, next) {
+	router.get(config.baseUrl + '/db/:col', function (req, res, next) {
 		var col = req.params.col;
 		rest.fetch(col).then(function (data) {
 			res.status(200).send(data);
+			
 		}, function (err) {
 			res.status(400).send(err);
 		});
+		next();
 	});
 
 	//Send push to device
 	router.get(config.baseUrl + '/push/:token', function (req, res, rext) {
 		console.log('Push to device ' + req.param('token'));
+		next();
 	});
 
 	//I am the signpass route

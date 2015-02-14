@@ -18,13 +18,15 @@ module.exports = function (config, app) {
 	var rest = require('./rest-resource')(config);
 	var router = express.Router();
 
-
+	config.baseUrl = '/api/v2';
+	
 	router.get(config.baseUrl, function(req, res, next){
-		res.status(200).send({message: 'Get collections'});
+		res.status(200).send({message: 'RESTful API v2'});
 	});
 
-	router.get(config.baseUrl + '/stats', function(req, res, next){
+	router.get(config.baseUrl + '/:db/stats', function(req, res, next){
 		console.log('stats');
+		rest.databaseName = req.params.db;
 		rest.stats().then(function(data){
 			res.status(200).send(data);
 		}, function (err) {
@@ -32,8 +34,9 @@ module.exports = function (config, app) {
 		});
 	});
 
-	router.get(config.baseUrl + '/collections', function(req, res, next){
+	router.get(config.baseUrl + '/:db/collections', function(req, res, next){
 		console.log('getCollections');
+		rest.databaseName = req.params.db;
 		rest.getCollections().then(function(data){
 			res.status(200).send(data);
 		}, function (err) {
@@ -42,7 +45,7 @@ module.exports = function (config, app) {
 	});
 
 	//GET - Get collection status
-	router.get(config.baseUrl + '/collections/:name', function(req, res, next){
+	router.get(config.baseUrl + '/:db/status/:name', function(req, res, next){
 		console.log('getCollectionStatus');
 		rest.getCollectionStatus(req.params.name).then(function(data){
 			res.status(200).send(data);
@@ -53,7 +56,7 @@ module.exports = function (config, app) {
 	});
 
 	//GET - Get all records
-	router.get(config.baseUrl +  '/collections/:col', function (req, res, next) {
+	router.get(config.baseUrl +  '/:db/:col', function (req, res, next) {
 
 		var col = req.params.col;
 		var query = null;
@@ -69,22 +72,9 @@ module.exports = function (config, app) {
 		next();
 	});
 
-	//GET - Get 1 record
-	router.get(config.baseUrl +  '/collections/:col/:id?', function (req, res, next) {
-
-		var col = req.params.col;
-		var id = req.params.id;
-
-		rest.findById(col, id).then(function (data) {
-			res.status(200).send(data);
-		}, function (err) {
-			res.status(400).send(err);
-		});
-		next();
-	});
-
+	
 	//POST - Create 1 record
-	router.post(config.baseUrl + '/collections/:col', bodyParser.json(), function(req, res, next){
+	router.post(config.baseUrl + '/:db/:col', bodyParser.json(), function(req, res, next){
 		var col = req.params.col, data = req.body;
 		rest.add(col, data).then(function(msg){
 			res.status(201).send(msg);
@@ -95,7 +85,7 @@ module.exports = function (config, app) {
 	});
 
 	//PUT - Update 1 record
-	router.put(config.baseUrl +  '/collections/:col/:id', bodyParser.json(), function(req, res, next){
+	router.put(config.baseUrl +  '/:db/:col/:id', bodyParser.json(), function(req, res, next){
 		var col = req.params.col, data = req.body, id = req.params.id;
 		rest.edit(col, id, data).then(function(msg){
 			res.status(200).send(msg);
@@ -106,7 +96,7 @@ module.exports = function (config, app) {
 	});
 
 	//DELETE - Remove 1 record
-	router.delete(config.baseUrl +  '/collections/:col/:id', function(req, res, next){
+	router.delete(config.baseUrl +  '/:db/:col/:id', function(req, res, next){
 		var col = req.params.col, id = req.params.id;
 		rest.destroy(col, id).then(function(msg){
 			res.status(200).send(msg);

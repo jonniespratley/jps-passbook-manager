@@ -3,6 +3,7 @@ var mongo = require('mongodb');
 var BSON = mongo.BSONPure;
 var MongoClient = require('mongodb').MongoClient;
 var q = require('q');
+var util = require('util');
 var assert = require('assert');
 
 
@@ -53,7 +54,9 @@ module.exports = function (options, app) {
 		 */
 		log: function () {
 			if (this.debug) {
-				console.warn(arguments);
+				util.log(
+					util.inspect(arguments, {colors: true})
+				);
 			}
 		},
 		//Init the resource applying the config object
@@ -68,7 +71,7 @@ module.exports = function (options, app) {
 			var config = self.config;
 
 			MongoClient.connect(config.db.url, function (err, db) {
-				console.log('Trying to connect to', self.databaseName);
+				self.log('Trying to connect to', self.databaseName);
 				self.db = db;
 				if (!err) {
 					self.log('Connected to ' + self.databaseName);
@@ -116,26 +119,26 @@ module.exports = function (options, app) {
 
 
 			//Log for interal usage
-			console.log('\ndb:', db, '\ncollection:', col, '\nquery:', query, '\noptions:', options);
+			self.log('\ndb:', db, '\ncollection:', col, '\nquery:', query, '\noptions:', options);
 
 			//open database
 			MongoClient.connect(config.db.url, function (err, db) {
 				if (err) {
-					console.log(err);
+					self.log(err);
 					defer.reject({error: err});
 				} else {
 
 					//prep collection
 					db.collection(col, function (err, collection) {
 						if (err) {
-							console.log(err);
+							self.log(err);
 							defer.reject({error: err});
 						}
 						//query
 						collection.find(query, options, function (err, cursor) {
 							cursor.toArray(function (err, docs) {
 								if (err) {
-									console.log(err);
+									self.log(err);
 									defer.reject({error: err});
 								} else {
 									var results = [];
@@ -163,19 +166,20 @@ module.exports = function (options, app) {
 		 * @depricated
 		 */
 		add: function (col, data) {
+			var self = this;
 			var defer = q.defer();
 			var results = [];
 
 			//TODO - add created_at and updated_at
 			data.created_at = new Date();
 			data.updated_at = new Date();
-			console.log('add() - trying to add document to ', col, data);
+			self.log('add() - trying to add document to ', col, data);
 
 			if (data) {
 				MongoClient.connect(this.config.db.url, function (err, db) {
 
 					if (err) {
-						console.error('add() - Error trying to add document');
+						self.log('add() - Error trying to add document');
 						defer.reject({error: err});
 					} else {
 
@@ -183,7 +187,7 @@ module.exports = function (options, app) {
 							if (data.length) {
 								for (var i = 0; i < data.length; i++) {
 									var obj = data[i];
-									console.warn('added document', i, obj);
+									self.log('added document', i, obj);
 									collection.insert(obj, function (err, docs) {
 										results.push(obj);
 									});
@@ -191,7 +195,7 @@ module.exports = function (options, app) {
 
 								db.close();
 
-								console.warn('Done adding ', data.length, 'records');
+								self.log('Done adding ', data.length, 'records');
 								defer.resolve(results);
 
 							} else {
@@ -226,6 +230,7 @@ module.exports = function (options, app) {
 		//Handle updating a document in the database.
 		edit: function (col, id, data) {
 			var defer = q.defer();
+			var self = this;
 			var spec = {
 				'_id': new BSON.ObjectID(id)
 			};
@@ -242,7 +247,7 @@ module.exports = function (options, app) {
 						if (err) {
 							defer.reject({error: err});
 						} else {
-							console.warn('found document', id, 'updating with ', data);
+							RestResource.log('found document', id, 'updating with ', data);
 							defer.resolve(docs);
 						}
 						db.close();
@@ -279,9 +284,9 @@ module.exports = function (options, app) {
 		 * @param {Object} req
 		 * @param {Object} res
 		 */
-		findAll: function (col, id) {
+		findAll: function (col) {
 			var defer = q.defer();
-			this.log(col, ':findAll - ', id);
+			RestResource.log(':findAll - ', col);
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					collection.find().toArray(function (err, items) {
@@ -305,7 +310,7 @@ module.exports = function (options, app) {
 		findById: function (col, id) {
 			var defer = q.defer();
 
-			console.warn(col, ':findById - ', id);
+			RestResource.log(col, ':findById - ', id);
 
 			try {
 				id = new BSON.ObjectID(id);
@@ -359,7 +364,7 @@ module.exports = function (options, app) {
 			}
 
 
-			console.log('Delete by id ', params, 'from', col);
+			RestResource.log('Delete by id ', params, 'from', col);
 
 			MongoClient.connect(config.db.url, function (err, db) {
 
@@ -370,7 +375,7 @@ module.exports = function (options, app) {
 							error: err
 						});
 					}
-					console.log('found ', collection.collectionName, params);
+					RestResource.log('found ', collection.collectionName, params);
 
 					collection.findAndRemove(params, function (err, doc) {
 						if (err) {
@@ -414,7 +419,7 @@ module.exports = function (options, app) {
 						if (err) {
 							defer.reject({error: err});
 						} else {
-							console.log('There are ' + count + ' records in', name);
+							RestResource.log('There are ' + count + ' records in', name);
 							defer.resolve({
 								name: name,
 								count: count
@@ -423,7 +428,7 @@ module.exports = function (options, app) {
 					});
 				});
 			});
-			console.log('get db status');
+			RestResource.log('get db status');
 			return defer.promise;
 		},
 		stats: function () {
