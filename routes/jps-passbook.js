@@ -1,24 +1,25 @@
 var fs = require('fs'), path = require('path'), fsutils = require('fs-utils'), Q = require('q'), spawn = require('child_process').spawn, fsextra = require('fs-extra');
 'use strict';
-
+var exec = require('child_process').exec;
 /**
  * I handle signing a pass with signpass bin.
  * @param pathToPass
  */
 function signPass(pathToPass, callback) {
+	var defer = Q.defer();
 	var cmd = 'bin/signpass -p ' + pathToPass;
 	//console.warn(cmd);
 
+	exec('bin/signpass -p ' + pathToPass, function (error, stdout, stderr) {
+		if (error !== null) {
+			console.log('exec error: ' + error);
+			throw error;
+			defer.reject(error);
+		}
+		defer.resolve(pathToPass.replace('.raw', '.pkpass'));
+	});
 
-	var exec = require('child_process').exec,
-
-		signpass = exec('bin/signpass -p ' + pathToPass,
-			function (error, stdout, stderr) {
-				if (error !== null) {
-					console.log('exec error: ' + error);
-				}
-				callback(pathToPass.replace('.raw', '.pkpass'));
-			});
+	return defer.promise;
 
 	/*
 	 var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
@@ -166,7 +167,7 @@ function createPass(options) {
 	passFilename = passFilename.replace(/\W/g, '-');
 
 	//pass folder path
-	var passPath = options.path + path.sep + passFilename + '.raw';
+	var passPath = options.path + path.sep + passFilename + '.raw' + path.sep;
 
 	//artifact folder path
 	var artifactPath = path.resolve(__dirname, '..' + path.sep + 'www' + path.sep + 'passes' + path.sep + options.pass.type);
@@ -177,19 +178,22 @@ function createPass(options) {
 			defer.reject({error: err});
 		}
 
+	//	console.log('copy', artifactPath, 'to', passPath);
+	//	console.warn('saving json', JSON.stringify(options.pass));
+		//Create .json
+		fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
+			defer.resolve({
+				directory: path.dirname(passPath),
+				path: passPath,
+				filename: path.basename(passPath)
+			});
+		});
 		//Copy artifacts
 		fsextra.copy(artifactPath, passPath, function (err) {
 			if (err) {
 				defer.reject({error: err});
 			} else {
-				//Create .json
-				fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
-					defer.resolve({
-						directory: path.dirname(passPath),
-						path: passPath,
-						filename: path.basename(passPath)
-					});
-				});
+
 			}
 		});
 

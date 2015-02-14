@@ -54,7 +54,7 @@ var testPass = {
 };
 
 
-
+/*
 	var app = express();
 var RestRoutes = require(path.resolve(__dirname, '../../routes/rest-resource-routes'));
 
@@ -63,25 +63,26 @@ RestRoutes(config, app);
 app.listen(config.server.port, function () {
 	console.log('test server running');
 });
-describe('rest-resource-routes', function () {
 
-	it('POST - /:col - should create object in collection', function (done) {
+xdescribe('rest-resource-routes', function () {
+
+	it('POST - /api/v1/passes - should create pass', function (done) {
 		request(app)
 			.post('/api/v1/passes')
 			.send(testPass)
 			.expect(201, done);
 	});
 
-	it('GET - /:col - should return array of collection objects', function (done) {
+	it('GET - /api/v1/passes - should return array of collection objects', function (done) {
 		request(app)
 			.get('/api/v1/passes')
 			.set('Accept', 'application/json')
 			.expect(200, done);
 	});
-	
-	it('GET - /:col?limit=1 - should return array of 1 object', function (done) {
+
+	it('GET - /api/v1/passes/pass.jsapps.io/123456', function (done) {
 		request(app)
-			.get('/api/v1/passes?limit=1')
+			.get('/api/v1/passes/pass.jsapps.io/123456')
 			.end(function(err, res){
 				if(err){
 					assert.fail();
@@ -98,3 +99,4 @@ describe('rest-resource-routes', function () {
 			.expect(200, done);
 	});
 });
+*/

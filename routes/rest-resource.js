@@ -160,6 +160,7 @@ module.exports = function (options, app) {
 		 * @param req
 		 * @param res
 		 * @param next
+		 * @depricated
 		 */
 		add: function (col, data) {
 			var defer = q.defer();
@@ -220,6 +221,7 @@ module.exports = function (options, app) {
 			return defer.promise;
 		},
 
+
 		//### edit()
 		//Handle updating a document in the database.
 		edit: function (col, id, data) {
@@ -279,7 +281,7 @@ module.exports = function (options, app) {
 		 */
 		findAll: function (col, id) {
 			var defer = q.defer();
-			console.warn(col, ':findAll - ', id);
+			this.log(col, ':findAll - ', id);
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					collection.find().toArray(function (err, items) {
@@ -437,6 +439,8 @@ module.exports = function (options, app) {
 			return defer.promise;
 		}
 	};
+
+	RestResource.create = RestResource.add;
 
 	return RestResource.init(config);
 };

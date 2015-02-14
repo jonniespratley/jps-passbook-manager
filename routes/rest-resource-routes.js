@@ -121,14 +121,14 @@ module.exports = function (config, app) {
 	router.use(express.static(config.staticDir));
 
 	//router.use(serveStatic(config.staticDir, null));
-	app.use(function (req, res, next) {
+	router.use(function (req, res, next) {
 		res.header('Connection', 'keep-alive');
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 		res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, CONNECT');
 		res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
 		res.header('Cache-Control', 'no-cache');
-		res.header('Content-Type', 'application/json');
+		//res.header('Content-Type', 'application/json');
 
 		util.log(util.format('[rest-routes] - %s - %s %s %s', req.method, req.url, JSON.stringify(req.query), JSON.stringify(req.params)));
 

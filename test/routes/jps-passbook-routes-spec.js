@@ -17,10 +17,37 @@ app.listen(config.server.port, function () {
 	console.log('test server running');
 });
 
+var testDevice = {
+	"deviceLibraryIdentifier" : "123456" ,
+	"passTypeIdentifier" : "pass.jsapps.io" ,
+	"serialNumber" : "ABCD-123" ,
+	"pushToken" : "8701addcd7c847b07776c95883b779243527c5b959b12f81658d74fe2c1938fd",
+	"authToken" : "ApplePass vxwxd7J8AlNNFPS8k0a8FfUFtq0ewzFdc"
+};
+
+
 describe('jps-passbook-routes', function () {
-	it('GET - api/v1/devices - should return object with serialNumbers and lastUpdated', function (done) {
+
+	//SELECT * FROM DEVICES WHERE :deviceId
+	//'/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber'
+	it('POST - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
 		request(app)
-			.get('/api/v1/devices/ae08f43d52d750802f4486335ca93857/registrations/pass.jsapps.io/123456')
+			.post('/api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123')
+			.send(testDevice)
+			.expect(201, done);
+	});
+
+	it('GET - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
+		request(app)
+			.get('/api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123')
 			.expect(200, done);
 	});
+
+	it('DELETE - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
+		request(app)
+			.del('/api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123')
+			.expect(200, done);
+	});
+
+
 });

@@ -132,13 +132,13 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		exportPass: function (p) {
 			console.log('exportPass', p);
 			$scope.SmartPass.pass = p;
-			$http.get('/api/v1/passes/' + p._id + '/export').success(function (data) {
+			$http.get('/api/v1/passes/' + p.passTypeIdentifier + '/'+ p.serialNumber + '/export').success(function (data) {
 				console.log('export result', data);
 				$scope.SmartPass.signPass(p, data.path);
 			});
 		},
 		signPass: function (p, path) {
-			var signUrl = '/api/v1/passes/' + p._id + '/sign?path=' + path;
+			var signUrl = '/api/v1/passes/'  + p.passTypeIdentifier + '/'+ p.serialNumber +  '/sign?path=' + path;
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);

@@ -96,7 +96,7 @@ describe('jps-passbook', function() {
 
 
 	it('should sign a pass', function(done) {
-		jpsPassbook.signPass(testPassDir, function(pass) {
+		jpsPassbook.signPass(testPassDir).then(function(pass) {
 			assert.ok(pass, 'returns pass location');
 			done();
 		});

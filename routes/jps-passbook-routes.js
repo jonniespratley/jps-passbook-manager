@@ -48,7 +48,7 @@ module.exports = function (config, app) {
 			authToken: req.get('Authorization')
 		};
 
-		console.log(('[register] - [%s] \n [passTypeId] - [%s], \n [serial] - [%s], \n [pushToken] - [%s], \n [authToken] - [%s]'), device.deviceLibraryIdentifier, device.passTypeIdentifier, device.serialNumber, device.pushToken, device.authToken);
+		console.log(('[register] - [%s] with pass id [%s] and serial [%s]'), device.deviceLibraryIdentifier, device.passTypeIdentifier, device.serialNumber);
 
 		//Check if device and pass already exist, if so, return passes
 		rest.fetch('registrations', null, {
@@ -57,15 +57,17 @@ module.exports = function (config, app) {
 		}).then(function (o) {
 
 			console.warn('found registration', o);
+
 			res.status(200).send({
 				message: 'Device ' + device.deviceLibraryIdentifier + ' already registered to ' + device.serialNumber
 			});
+
 		}, function (e) {
 
 			console.warn('Did not find device and pass in registrations table, add new entry ');
 
 			rest.add('registrations', device).then(function (data) {
-				res.status(200).send({
+				res.status(201).send({
 					message: 'Registered device ' + device.deviceLibraryIdentifier,
 					data: device
 				});
@@ -79,7 +81,8 @@ module.exports = function (config, app) {
 
 	router.route(config.baseUrl + '/passes').all(function (req, res, next) {
 		next();
-	}).get(function (req, res, next) {
+	})
+	.get(function (req, res, next) {
 		var col = 'passes';
 		var id = req.params.id;
 		var query = req.query;
@@ -89,7 +92,9 @@ module.exports = function (config, app) {
 		}, function (err) {
 			res.status(400).send(err);
 		});
-	}).post(jsonParser, function (req, res, next) {
+
+	})
+	.post(jsonParser, function (req, res, next) {
 		var data = req.body;
 		var col = 'passes';
 		rest.add(req.params.col, req.body).then(function (msg) {
@@ -108,7 +113,10 @@ module.exports = function (config, app) {
 
 	//Execute command - http://localhost:4040/api/v1/cmd/ls
 	router.get(config.baseUrl + '/' + 'cmd' + '/' + ':command', function (req, res) {
-		var results = {}, child;
+		var results = {}, child, time = Date.now();
+		if(req.params.command === 'ls /'){
+			res.status(400).send({message: 'Dont lookup disk'});
+		}
 		child = exec(req.params.command, function (error, stdout, stderr) {
 			results.stdout = stdout;
 			sys.print('stdout: ' + stdout);
@@ -118,8 +126,9 @@ module.exports = function (config, app) {
 			}
 
 			res.json({
-				message: config.name,
-				results: results
+				time: Date.now() - time,
+				command: req.params.command,
+				data: results
 			});
 		});
 	});
@@ -127,11 +136,11 @@ module.exports = function (config, app) {
 	//Register Pass on device Endpoint
 	//{{url}}/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/gT6zrHkaW
 	router.post(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
-	router.post(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
+	//router.post(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber?', jsonParser, registerPass);
 
 	//Unregister Pass on device
 	router.delete(config.baseUrl + '/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
-	router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
+	//router.delete(config.baseUrl + '/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber', unregisterPass);
 
 	//Logging Endpoint
 	router.post(config.baseUrl + '/log', jsonParser, function (req, res) {
@@ -249,7 +258,7 @@ module.exports = function (config, app) {
 
 
 				if (passFilename) {
-					jpsPassbook.sign(passPath, function (data) {
+					jpsPassbook.sign(passPath).then(function (data) {
 						res.status(200).send({
 							url: data.replace(path.resolve(__dirname, '../www/public'), ''),
 							raw: passPath,
@@ -275,7 +284,7 @@ module.exports = function (config, app) {
 	});
 
 	//I am the export pass route.
-	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber/export', function (req, res, next) {
+	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber/export?', function (req, res, next) {
 
 		var col = 'passes';
 		var id = req.params.id;
@@ -295,10 +304,11 @@ module.exports = function (config, app) {
 					path: config.publicDir
 				};
 				console.log('Found pass', data);
+				res.status(200).send(data);
 				jpsPassbook.createPass(options).then(function (pass) {
 					console.log('Created pass', pass);
 					res.set('Content-Type', 'application/vnd.apple.pkpass');
-					res.status(200).send(pass);
+
 				}, function (err) {
 					req.status(400).send(err);
 				});
@@ -316,9 +326,7 @@ module.exports = function (config, app) {
 
 	//Global route handler
 	app.use(function (req, res, next) {
-
 		util.log(util.format('[jps-passbook-routes] - %s - %s %s %s', req.method, req.url, JSON.stringify(req.query), JSON.stringify(req.params)));
-
 		next();
 	});
 
