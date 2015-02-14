@@ -28,13 +28,30 @@ var testDevice = {
 
 describe('jps-passbook-routes', function () {
 
+	it('should register a device for updates', function (done) {
+		//
+		done();
+	});
+	it('should get changes for a device', function (done) {
+		//
+		done();
+	});
+	it('should get passes for a device', function (done) {
+		//
+		done();
+	});
+	it('should unregister a device for updates', function (done) {
+		//
+		done();
+	});
+
 	//SELECT * FROM DEVICES WHERE :deviceId
 	//'/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber'
 	it('POST - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
 		request(app)
 			.post('/api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123')
 			.send(testDevice)
-			.expect(201, done);
+			.expect(200, done);
 	});
 
 	it('GET - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {

@@ -284,12 +284,12 @@ module.exports = function (options, app) {
 		 * @param {Object} req
 		 * @param {Object} res
 		 */
-		findAll: function (col) {
+		findAll: function (col, params) {
 			var defer = q.defer();
 			RestResource.log(':findAll - ', col);
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
-					collection.find().toArray(function (err, items) {
+					collection.find(params).toArray(function (err, items) {
 						if (err) {
 							defer.reject({error: err});
 						} else {

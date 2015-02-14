@@ -19,7 +19,7 @@ module.exports = function (config, app) {
 	var router = express.Router();
 
 	config.baseUrl = '/api/v2';
-	
+
 	router.get(config.baseUrl, function(req, res, next){
 		res.status(200).send({message: 'RESTful API v2'});
 	});
@@ -45,14 +45,14 @@ module.exports = function (config, app) {
 	});
 
 	//GET - Get collection status
-	router.get(config.baseUrl + '/:db/status/:name', function(req, res, next){
+	router.get(config.baseUrl + '/:db/collections/:name', function(req, res, next){
 		console.log('getCollectionStatus');
 		rest.getCollectionStatus(req.params.name).then(function(data){
 			res.status(200).send(data);
 		}, function (err) {
 			res.status(400).send(err);
 		});
-		next();
+
 	});
 
 	//GET - Get all records
@@ -69,10 +69,10 @@ module.exports = function (config, app) {
 		}, function (err) {
 			res.status(400).send(err);
 		});
-		next();
+		
 	});
 
-	
+
 	//POST - Create 1 record
 	router.post(config.baseUrl + '/:db/:col', bodyParser.json(), function(req, res, next){
 		var col = req.params.col, data = req.body;
