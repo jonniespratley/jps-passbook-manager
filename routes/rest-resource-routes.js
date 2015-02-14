@@ -1,8 +1,7 @@
 var express = require('express'),
 	bodyParser = require('body-parser'),
-	chalk = require('chalk'),
+	util = require('util'),
 	jsonParser = bodyParser.json();
-
 
 // * REST METHODS:
 // *
@@ -54,11 +53,13 @@ module.exports = function (config, app) {
 	});
 
 	//GET - Get all records
-	router.get(config.baseUrl +  '/:col', function (req, res, next) {
+	router.get(config.baseUrl +  '/collections/:col', function (req, res, next) {
 
 		var col = req.params.col;
 		var query = null;
 		var options = req.query;
+
+		console.warn('collections ', req.params);
 
 		rest.fetch(col, query, options).then(function (data) {
 			res.status(200).send(data);
@@ -69,7 +70,7 @@ module.exports = function (config, app) {
 	});
 
 	//GET - Get 1 record
-	router.get(config.baseUrl +  '/:col/:id?', function (req, res, next) {
+	router.get(config.baseUrl +  '/collections/:col/:id?', function (req, res, next) {
 
 		var col = req.params.col;
 		var id = req.params.id;
@@ -83,18 +84,18 @@ module.exports = function (config, app) {
 	});
 
 	//POST - Create 1 record
-	router.post(config.baseUrl + '/:col*', bodyParser.json(), function(req, res, next){
+	router.post(config.baseUrl + '/collections/:col', bodyParser.json(), function(req, res, next){
 		var col = req.params.col, data = req.body;
 		rest.add(col, data).then(function(msg){
 			res.status(201).send(msg);
 		}, function (err) {
 			res.status(400).send(err);
 		});
-	
+
 	});
 
 	//PUT - Update 1 record
-	router.put(config.baseUrl +  '/:col/:id', bodyParser.json(), function(req, res, next){
+	router.put(config.baseUrl +  '/collections/:col/:id', bodyParser.json(), function(req, res, next){
 		var col = req.params.col, data = req.body, id = req.params.id;
 		rest.edit(col, id, data).then(function(msg){
 			res.status(200).send(msg);
@@ -105,7 +106,7 @@ module.exports = function (config, app) {
 	});
 
 	//DELETE - Remove 1 record
-	router.delete(config.baseUrl +  '/:col/:id', function(req, res, next){
+	router.delete(config.baseUrl +  '/collections/:col/:id', function(req, res, next){
 		var col = req.params.col, id = req.params.id;
 		rest.destroy(col, id).then(function(msg){
 			res.status(200).send(msg);
@@ -120,7 +121,7 @@ module.exports = function (config, app) {
 	router.use(express.static(config.staticDir));
 
 	//router.use(serveStatic(config.staticDir, null));
-	router.use(function (req, res, next) {
+	app.use(function (req, res, next) {
 		res.header('Connection', 'keep-alive');
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
@@ -129,9 +130,8 @@ module.exports = function (config, app) {
 		res.header('Cache-Control', 'no-cache');
 		res.header('Content-Type', 'application/json');
 
-		console.log(
-			chalk.yellow('[rest-routes] -', req.method, req.url, JSON.stringify(req.query), req.get('Authorization'), JSON.stringify(req.body))
-		);
+		util.log(util.format('[rest-routes] - %s - %s %s %s', req.method, req.url, JSON.stringify(req.query), JSON.stringify(req.params)));
+
 		next();
 	});
 

@@ -1,0 +1,16 @@
+temp
+dist
+node_modules/
+app/bower_components
+app/components
+.DS_Store
+docs
+db/*.0
+db/*.ns
+.idea
+.project
+
+.tmp
+www/public
+*.log
+atlassian-ide-plugin.xml

@@ -1,4 +1,7 @@
-/* @override http://localhost:4040/styles/main.css */
+/* @override 
+	http://localhost:4040/styles/main.css
+	http://localhost:1333/styles/main.css
+*/
 
 /* Will be compiled down to a single stylesheet with your sass files
 
@@ -39,17 +42,8 @@ body{
 
 }
 .hero-unit{
-	margin-top: 25px;
-	text-align: center;
-	text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);
-	color: #eee;
-	background: -webkit-linear-gradient(45deg, #111 0%,#444 100%) !important;
-	background: -o-linear-gradient(45deg, #111 0%,#444 100%);
-	background: -ms-linear-gradient(45deg, #111 0%,#444 100%);
-	background: linear-gradient(45deg, #111 0%,#444 100%) !important;
 
-	background: #111;
-	padding: 25px 25px 10px;
+
 }
 .pass-carousel img{
 	width: 100%;
@@ -64,9 +58,7 @@ body{
 }
 
 #iconCarousel {
-overflow: hidden;
-border: 3px solid #000;
-background: #000;
+
 }
 .nav-list li a:hover
 .nav ul li a:hover {

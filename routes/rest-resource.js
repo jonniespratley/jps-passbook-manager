@@ -169,10 +169,10 @@ module.exports = function (options, app) {
 			data.created_at = new Date();
 			data.updated_at = new Date();
 		console.log('add() - trying to add document to ', col, data);
-		
+
 			if (data) {
 				MongoClient.connect(this.config.db.url, function (err, db) {
-					
+
 					if (err) {
 						console.error('add() - Error trying to add document');
 						defer.reject({error: err});
@@ -195,7 +195,7 @@ module.exports = function (options, app) {
 
 							} else {
 								collection.insert(data, function (err, docs) {
-									
+
 									if (err) {
 										defer.reject({
 											error: err
@@ -310,20 +310,29 @@ module.exports = function (options, app) {
 			} catch (err) {
 				defer.reject({error: err});
 			}
+			return this.findBy(col, {
+				'_id': id
+			});
+		},
+		findBy: function (col, params) {
+			var defer = q.defer();
+			console.warn(col, ':findBy - ', params);
 
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					if (err) {
 						defer.reject({error: err});
 					}
-					collection.findOne({
-						'_id': id
-					}, function (err, item) {
+					collection.findOne(params, function (err, item) {
+						console.log(item);
 						if (err) {
 							defer.reject({error: err});
+						} else if(item === null){
+							defer.reject({error: 'No record was found!'});
 						} else {
 							defer.resolve(item);
 						}
+
 					});
 				});
 			});
