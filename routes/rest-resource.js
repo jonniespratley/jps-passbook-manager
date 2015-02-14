@@ -62,7 +62,7 @@ module.exports = function (options, app) {
 
 			return this;
 		},
-		connect: function(){
+		connect: function () {
 			var self = this;
 			var defer = q.defer();
 			var config = self.config;
@@ -168,7 +168,7 @@ module.exports = function (options, app) {
 			//TODO - add created_at and updated_at
 			data.created_at = new Date();
 			data.updated_at = new Date();
-		console.log('add() - trying to add document to ', col, data);
+			console.log('add() - trying to add document to ', col, data);
 
 			if (data) {
 				MongoClient.connect(this.config.db.url, function (err, db) {
@@ -279,7 +279,7 @@ module.exports = function (options, app) {
 		 */
 		findAll: function (col, id) {
 			var defer = q.defer();
-			console.warn( col, ':findAll - ', id);
+			console.warn(col, ':findAll - ', id);
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					collection.find().toArray(function (err, items) {
@@ -322,18 +322,20 @@ module.exports = function (options, app) {
 				db.collection(col, function (err, collection) {
 					if (err) {
 						defer.reject({error: err});
-					}
-					collection.findOne(params, function (err, item) {
-						console.log(item);
-						if (err) {
-							defer.reject({error: err});
-						} else if(item === null){
-							defer.reject({error: 'No record was found!'});
-						} else {
-							defer.resolve(item);
-						}
+					} else {
+						collection.findOne(params, function (err, item) {
+							console.log(item);
+							if (err) {
+								defer.reject({error: err});
+							} else if (item === null) {
+								defer.reject({error: 'No record was found!'});
+							} else {
+								defer.resolve(item);
+							}
 
-					});
+						});
+					}
+
 				});
 			});
 			return defer.promise;
@@ -346,11 +348,11 @@ module.exports = function (options, app) {
 		destroy: function (col, query) {
 			var defer = q.defer();
 			var params = query;
-			if(!query){
+			if (!query) {
 				throw new Error('Must provide query object!');
 			}
 
-			if(query._id){
+			if (query._id) {
 				params._id = new BSON.ObjectID(query._id);
 			}
 
@@ -385,16 +387,16 @@ module.exports = function (options, app) {
 			return defer.promise;
 		},
 		/**
-		* @description I get all of the collection in the database.
-		* @param db
-		* @returns {*}
-		*/
+		 * @description I get all of the collection in the database.
+		 * @param db
+		 * @returns {*}
+		 */
 		getCollections: function () {
 			var defer = q.defer();
 
-			this.connect().then(function(db){
+			this.connect().then(function (db) {
 				// Return the information of a all collections, using the callback format
-				db.collectionNames(function(err, items) {
+				db.collectionNames(function (err, items) {
 					defer.resolve(items);
 					db.close();
 				});
@@ -422,10 +424,10 @@ module.exports = function (options, app) {
 			console.log('get db status');
 			return defer.promise;
 		},
-		stats: function(){
+		stats: function () {
 			var defer = q.defer();
-			this.connect().then(function(db){
-				db.stats(function(err, stats) {
+			this.connect().then(function (db) {
+				db.stats(function (err, stats) {
 					assert.equal(null, err);
 					assert.ok(stats != null);
 					db.close();

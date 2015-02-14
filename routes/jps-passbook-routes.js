@@ -195,10 +195,7 @@ module.exports = function (config, app) {
 				passTypeIdentifier: req.params.passTypeIdentifier,
 				serialNumber: req.params.serialNumber
 			};
-
-			util.log(
-				'Find pass by' + util.inspect(obj, {colors: true})
-			);
+			util.log('Find pass by' + util.inspect(obj, {colors: true}));
 		} else {
 			res.status(404).send({
 				message: 'Must pass passTypeIdentifier and serialNumber in URL'
@@ -232,44 +229,89 @@ module.exports = function (config, app) {
 	});
 
 	//I am the signpass route
-	router.get(config.baseUrl + '/passes/:id/sign', function (req, res, next) {
-		var passFile = req.param('path');
-		if (passFile) {
-			jpsPassbook.sign(passFile, function (data) {
-				res.status(200).send({message: passFile + ' signed.', filename: data});
-				//res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
+	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber/sign?', function (req, res, next) {
+		var passFilename;
+		var obj = {};
+
+		if (req.params.passTypeIdentifier && req.params.serialNumber) {
+			obj = {
+				passTypeIdentifier: req.params.passTypeIdentifier,
+				serialNumber: req.params.serialNumber
+			};
+			rest.findBy('passes', obj).then(function (pass) {
+				passFilename = pass.organizationName + ' ' + pass.description;
+				passFilename = passFilename.replace(/\W/g, '-');
+
+				//pass folder path
+				var passPath = path.resolve(__dirname, '../www/public' + path.sep + passFilename + '.raw');
+
+				console.log(passPath);
+
+
+				if (passFilename) {
+					jpsPassbook.sign(passPath, function (data) {
+						res.status(200).send({
+							url: data.replace(path.resolve(__dirname, '../www/public'), ''),
+							raw: passPath,
+							message: passFilename + ' signed.',
+							filename: data
+						});
+						//res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
+					});
+				} else {
+					res.status(400).send({
+						message: 'Must provide path to .raw folder!'
+					});
+				}
+			}, function (err) {
+				res.status(404).send(err);
 			});
 		} else {
-			res.status(400).send({
-				message: 'Must provide path to .raw folder!'
+			res.status(404).send({
+				message: 'Must pass passTypeIdentifier and serialNumber in URL'
 			});
 		}
+
 	});
 
 	//I am the export pass route.
-	router.get(config.baseUrl + '/passes/:id/export', function (req, res) {
+	router.get(config.baseUrl + '/passes/:passTypeIdentifier/:serialNumber/export', function (req, res, next) {
 
-		var col = req.params.col;
+		var col = 'passes';
 		var id = req.params.id;
 
-		console.warn('route:export', col, id);
+		var obj = {};
 
-		if (id) {
-			rest.findById(col, id).then(function (data) {
+		if (req.params.passTypeIdentifier && req.params.serialNumber) {
+			obj = {
+				passTypeIdentifier: req.params.passTypeIdentifier,
+				serialNumber: req.params.serialNumber
+			};
+			util.log('Export pass by' + util.inspect(obj, {colors: true}));
+
+			rest.findBy(col, obj).then(function (data) {
 				var options = {
 					pass: data,
 					path: config.publicDir
 				};
+				console.log('Found pass', data);
 				jpsPassbook.createPass(options).then(function (pass) {
-					res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).send(pass);
+					console.log('Created pass', pass);
+					res.set('Content-Type', 'application/vnd.apple.pkpass');
+					res.status(200).send(pass);
+				}, function (err) {
+					req.status(400).send(err);
 				});
 			}, function (err) {
 				req.status(400).send(err);
 			});
-
 		} else {
-			res.status(400).send('Must provide _id');
+			res.status(404).send({
+				message: 'Must pass passTypeIdentifier and serialNumber in URL'
+			});
 		}
+		//next();
+
 	});
 
 	//Global route handler

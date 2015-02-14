@@ -13,32 +13,32 @@ function signPass(pathToPass, callback) {
 	var exec = require('child_process').exec,
 
 		signpass = exec('bin/signpass -p ' + pathToPass,
-		function (error, stdout, stderr) {
-			if (error !== null) {
-				console.log('exec error: ' + error);
-			}
-			callback(pathToPass.replace('.raw', '.pkpass'));
-		});
+			function (error, stdout, stderr) {
+				if (error !== null) {
+					console.log('exec error: ' + error);
+				}
+				callback(pathToPass.replace('.raw', '.pkpass'));
+			});
 
 	/*
-	var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
-	console.warn(cmd);
-	signpass.stdout.on('data', function (data) {
-		console.log('stdout: ' + data);
-	});
+	 var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
+	 console.warn(cmd);
+	 signpass.stdout.on('data', function (data) {
+	 console.log('stdout: ' + data);
+	 });
 
-	signpass.on('error', function (err) {
-		console.log('signpass process exited with code ' + code);
-		throw err;
-	});
+	 signpass.on('error', function (err) {
+	 console.log('signpass process exited with code ' + code);
+	 throw err;
+	 });
 
-	signpass.on('close', function (code) {
-		if (code !== 0) {
-			console.log('signpass process exited with code ' + code);
-		}
-		callback(pathToPass.replace('.raw', '.pkpass'));
-	});
-	*/
+	 signpass.on('close', function (code) {
+	 if (code !== 0) {
+	 console.log('signpass process exited with code ' + code);
+	 }
+	 callback(pathToPass.replace('.raw', '.pkpass'));
+	 });
+	 */
 };
 
 /**
@@ -141,10 +141,10 @@ function checkDirectory(localPath, callback) {
 	});
 };
 
-function copyPassArtifacts(passType, dest){
+function copyPassArtifacts(passType, dest) {
 	var defer = Q.defer();
 
-	console.warn('Copying artifacts from', 'www/passes/'+passType, 'to', dest);
+	console.warn('Copying artifacts from', 'www/passes/' + passType, 'to', dest);
 
 	defer.resolve('Done');
 
@@ -158,7 +158,7 @@ function copyPassArtifacts(passType, dest){
  */
 function createPass(options) {
 	var passFilename, defer = Q.defer();
-	if(options.filename){
+	if (options.filename) {
 		passFilename = options.filename;
 	} else {
 		passFilename = options.pass.organizationName + ' ' + options.pass.description;
@@ -172,14 +172,14 @@ function createPass(options) {
 	var artifactPath = path.resolve(__dirname, '..' + path.sep + 'www' + path.sep + 'passes' + path.sep + options.pass.type);
 
 	//Create directory
-	fsextra.ensureDir(passPath, function(err){
-		if(err){
+	fsextra.ensureDir(passPath, function (err) {
+		if (err) {
 			defer.reject({error: err});
 		}
 
 		//Copy artifacts
-		fsextra.copy(artifactPath, passPath, function(err) {
-			if(err){
+		fsextra.copy(artifactPath, passPath, function (err) {
+			if (err) {
 				defer.reject({error: err});
 			} else {
 				//Create .json
