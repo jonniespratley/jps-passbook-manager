@@ -69,7 +69,7 @@ module.exports = function (config, app) {
 		}, function (err) {
 			res.status(400).send(err);
 		});
-		
+
 	});
 
 
@@ -86,9 +86,11 @@ module.exports = function (config, app) {
 
 	//PUT - Update 1 record
 	router.put(config.baseUrl +  '/:db/:col/:id', bodyParser.json(), function(req, res, next){
-		var col = req.params.col, data = req.body, id = req.params.id;
+		var col = req.params.col,
+		data = req.body,
+		id = req.params.id;
 		rest.edit(col, id, data).then(function(msg){
-			res.status(200).send(msg);
+			res.sendStatus(200).send(msg);
 		}, function (err) {
 			res.status(404).send(err);
 		});

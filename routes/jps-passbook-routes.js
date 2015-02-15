@@ -154,7 +154,7 @@ module.exports = function (config, app) {
 			var id = req.params.id;
 			var query = req.query;
 			var params;
-			
+
 			if(req.query.serialNumber){
 				params = {
 					serialNumber: req.query.serialNumber
@@ -354,6 +354,7 @@ module.exports = function (config, app) {
 				passTypeIdentifier: req.params.passTypeIdentifier,
 				serialNumber: req.params.serialNumber
 			};
+
 			rest.findBy('passes', obj).then(function (pass) {
 				passFilename = pass.organizationName + ' ' + pass.description;
 				passFilename = passFilename.replace(/\W/g, '-');
@@ -362,17 +363,27 @@ module.exports = function (config, app) {
 				var passPath = path.resolve(__dirname, '../www/public' + path.sep + passFilename + '.raw');
 
 				if (passFilename) {
+
+					//TODO - Sign the pass
 					jpsPassbook.sign(passPath).then(function (data) {
 
-						res.status(200).send({
-							url: data.replace(path.resolve(__dirname, '../www/public'), ''),
-							raw: passPath,
-							message: passFilename + ' signed.',
-							filename: data
-						});
 
-						//res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
+						//TODO - Check if action === download
+						if(req.query.action !== 'download'){
+							res.status(200).send({
+								url: data.replace(path.resolve(__dirname, '../www/public'), ''),
+								raw: passPath,
+								message: passFilename + ' signed.',
+								filename: data
+							});
+						} else {
+							res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
+						}
+
 					});
+
+
+
 				} else {
 					res.status(400).send({
 						message: 'Must provide path to .raw folder!'

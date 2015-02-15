@@ -4,8 +4,8 @@
 	"serialNumber": "E5982H-I2",
 	"passTypeIdentifier": "pass.jsapps.io",
 	"webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
-	"authenticationToken": "vxwxd7J8AlNNFPS8k0a8FfUFtq0ewzFdc",
 	"teamIdentifier": "USE9YUYDFH",
+	"authenticationToken": "vxwxd7J8AlNNFPS8k0a8FfUFtq0ewzFdc",
 	"barcode": {
 		"message": "123456789",
 		"format": "PKBarcodeFormatPDF417",

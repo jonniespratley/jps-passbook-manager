@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-init="Server.init()">
 	<div class="row">
 		<div class="col-sm-12">
 
@@ -25,6 +25,31 @@
 
 
 			<!-- Table to display collection data -->
+
+			<div class="row">
+				<div class="col-sm-12">
+					<table class="table table-condensed">
+						<tr>
+							<td>
+								Date
+							</td>
+							<td>
+								Log
+							</td>
+						</tr>
+						<tbody>
+							<tr ng-repeat="log in logs" ng-click="selectLog(log)">
+								<td>
+									{{log.created_at | date:'medium'}}
+								</td>
+								<td>
+									{{selectedLog.logs.length}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 
 
 			<!-- Remove / Refresh actions -->

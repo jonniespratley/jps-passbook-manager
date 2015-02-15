@@ -138,7 +138,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			});
 		},
 		signPass: function (p, path) {
-			var signUrl = '/api/v1/passes/'  + p.passTypeIdentifier + '/'+ p.serialNumber +  '/sign?path=' + path;
+			var signUrl = '/api/v1/passes/'  + p.passTypeIdentifier + '/'+ p.serialNumber +  '/sign?action=download';
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);
@@ -155,12 +155,12 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 
 
 	$scope.SmartPass.coupon = {
-		"mode": "edit",
+		"type": "coupon",
 		"formatVersion": 1,
-		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "E5982H-I2",
-		"teamIdentifier": "J62UV6D7WJ",
-		"webServiceURL": 'https://passbook-manager.jsapps.io/api/v1',
+		"passTypeIdentifier": "pass.jsapps.io",
+		"webServiceURL": "https://passbook-manager.jsapps.io/api/v1",
+		"teamIdentifier": "USE9YUYDFH",
 		"authenticationToken": "00000000001234",
 		"barcode": {
 			"message": "123456789",

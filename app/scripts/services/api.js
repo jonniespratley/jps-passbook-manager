@@ -14,7 +14,7 @@ angular.module('jpsPassbookManagerApp')
 		 * http://localhost:8080/api/v2/myappmatrix/coupons?appid=com.appmatrixinc.my
 		 */
 		var Api = $resource('/api/:version/:database/:collection/:id', {
-			version: 'v1',
+			version: 'v2',
 			database: '@database',
 			collection: '@collection',
 			id: '@id'

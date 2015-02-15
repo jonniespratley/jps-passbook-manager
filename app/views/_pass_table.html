@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Table Card Title</h3>
+  </div>
+  <div class="table-responsive">
+
+    <!-- @TODO: [Pass Table] -->
+    <table id="passes-table" class="table table-hover table-condensed">
+      <thead>
+        <tr>
+          <th class="th-type">Type</th>
+          <th>Description</th>
+
+          <th>Last Updated</th>
+          <th class="td-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
+          <td class="pass-icon"><a> <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/> </a></td>
+
+          <td><a href="" ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
+            <br/>
+          {{pass.description}} <br/>
+          {{pass.passTypeIdentifier}} <br/>
+          {{pass.serialNumber}} <br/>
+          </td>
+          <td>{{pass.updated_at}}</td>
+          <td><a ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-primary" data-dismiss="modal"><i
+          class="glyphicon glyphicon-share"></i></a><a ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i
+          class="glyphicon glyphicon-trash"></i></a>
+          <br/>
+          <a href="{{pass.url}}" target="_blank"> <img
+          ng-show="pass.url" class="passbook-badge" src="img/Add_to_Passbook_Badge_US_1014.svg"> </a></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="panel-footer">
+    <small>Built with Bootcards - Table Card</small>
+  </div>
+</div>

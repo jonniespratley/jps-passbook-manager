@@ -31,31 +31,32 @@ module.exports = function(config) {
 
 	/**
 	 * Pusher - I am the pusher object that handles sending a push notification to a iOS device.
-	 * @file /WWW/AppMatrixEngine/ame-angular/routes/api/pusher.js
+
 	 * @object
 	 */
 	var Pusher = {
 		options : {
 			cert : 'cert.pem',
-			certData : null, 
-			key : 'key.pem', 
-			keyData : null, 
-			passphrase : 'fred', 
-			ca : './files/Aps/entrust_ssl_ca.cer', 
-			pfx : null, 
+			certData : null,
+			key : 'key.pem',
+			keyData : null,
+			passphrase : 'fred',
+			ca : './files/Aps/entrust_ssl_ca.cer',
+			pfx : null,
 			pfxData : null,
-			gateway : 'gateway.sandbox.push.apple.com', 
-			port : 2195, 
-			rejectUnauthorized : true, 
-			enhanced : true, 
-			errorCallback : onError, 
-			cacheLength : 100, 
+			gateway : 'gateway.sandbox.push.apple.com',
+			port : 2195,
+			rejectUnauthorized : true,
+			enhanced : true,
+			errorCallback : onError,
+			cacheLength : 100,
 			autoAdjustCache : true, /* Whether the cache should grow in response to messages being lost after errors. */
 			connectionTimeout : 0 /* The duration the socket should stay alive with no activity in milliseconds. 0 = Disabled. */
 		},
 		devices : ['54563ea0fa550571c6ea228880c8c2c1e65914aa67489c38592838b8bfafba2a', 'd46ba7d730f8536209e589a3abe205b055d66d8a52642fd566ee454d0363d3f3'],
 		apnsConnection : null,
 		init : function(options) {
+			//Pusher.options = options;
 			this.apnsConnection = new apns.Connection(Pusher.options);
 		},
 		feedback : {},
@@ -72,7 +73,7 @@ module.exports = function(config) {
 				// address: 'feedback.push.apple.com', /* feedback address */
 				address : 'feedback.push.apple.com',
 				port : 2196, /* feedback port */
-				feedback : this.feedbackHandler, /* enable feedback service, set to callback */
+				feedback : Pusher.feedbackHandler, /* enable feedback service, set to callback */
 				batchFeedback : true, /* if feedback should be called once per connection. */
 				interval : 60,
 				error : function(e) {
@@ -107,14 +108,13 @@ module.exports = function(config) {
 			console.log('-------------Pem', pem);
 
 			//Set the file location for the pem
-			Pusher.options.cert = './files/Aps/' + pem + '_cert.pem';
-			Pusher.options.key = './files/Aps/' + pem + '_key.pem';
+			Pusher.options.cert = './files/Aps/' + pem + '-cert.pem';
+			Pusher.options.key = './files/Aps/' + pem + '-key.pem';
 
 			var pemCheck = php.file_exists(php.realpath(Pusher.options.cert));
 
 			//if the app is live, change the gateway
 			if (live === 'true') {
-
 				Pusher.options.gateway = 'gateway.push.apple.com';
 			}
 
@@ -122,7 +122,7 @@ module.exports = function(config) {
 			Pusher.apnsConnection = new apns.Connection(Pusher.options);
 
 			//start the feedback service
-			//this.initFeedback(pem);
+			Pusher.initFeedback(pem);
 
 			//create a new device
 			var myDevice = new apns.Device(token);
@@ -145,5 +145,23 @@ module.exports = function(config) {
 
 		}
 	};
+
+
+
+
+	
+
+
+
+
+
+
+
+	return Pusher;
+
+
+
+
+
 
 };

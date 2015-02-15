@@ -251,7 +251,15 @@ module.exports = function (grunt) {
 		        create: ['.tmp']
 		      }
 		    }
-		  }
+		},
+
+		'js-test': {
+				'default': {
+						'options': {
+							include: 'test/routes/*-spec.js'
+						}
+				}
+		}
 	});
 
 	grunt.renameTask('regarde', 'watch');
@@ -273,7 +281,8 @@ module.exports = function (grunt) {
 		//'jshint',
 		'mkdir',
 		'karma',
-		'mochaTest'
+		'js-test',
+		//'mochaTest'
 	]);
 
 	grunt.registerTask('build', [

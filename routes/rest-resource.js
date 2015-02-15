@@ -119,7 +119,7 @@ module.exports = function (options, app) {
 
 
 			//Log for interal usage
-			self.log('\ndb:', db, '\ncollection:', col, '\nquery:', query, '\noptions:', options);
+			self.log('db:', db, 'collection:', col, 'query:', query, 'options:', options);
 
 			//open database
 			MongoClient.connect(config.db.url, function (err, db) {
@@ -244,13 +244,14 @@ module.exports = function (options, app) {
 
 
 					collection.update(spec, data, true, function (err, docs) {
-						if (err) {
-							defer.reject({error: err});
-						} else {
-							RestResource.log('found document', id, 'updating with ', data);
-							defer.resolve(docs);
-						}
 						db.close();
+						if (err) {
+						
+							defer.reject({error: err});
+						}
+
+						RestResource.log('found document', id, 'updating with ', data);
+						defer.resolve(data);
 					});
 				});
 			});

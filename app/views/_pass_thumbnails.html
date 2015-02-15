@@ -1,0 +1,24 @@
+<!-- @TODO Thumbnails -->
+<ul class="media-list clearfix ">
+  <li class="media col-sm-3" ng-repeat="pass in SmartPass.passes | orderBy:order:reverse"
+  data-id="pass-{{pass._id}}">
+    <a class="media-left" href="#" ng-click="SmartPass.selectPass(pass);"> <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/> </a>
+
+    <div class="media-body">
+      <h4 class="media-heading">{{pass.organizationName}}</h4>
+
+      <p>
+        {{pass.description}}
+      </p>
+
+      <p class="media-actions">
+        <a href="" ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-default"
+        data-dismiss="modal"><i
+        class="glyphicon glyphicon-share"></i></a>
+        <a href="" ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger"
+        data-dismiss="modal"><i
+        class="glyphicon glyphicon-trash"></i></a>
+      </p>
+    </div>
+  </li>
+</ul>

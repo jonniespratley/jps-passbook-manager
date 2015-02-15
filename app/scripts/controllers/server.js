@@ -1,6 +1,6 @@
 'use strict';
 
-jpsPassbookManagerApp.controller('ServerCtrl', function ($scope) {
+jpsPassbookManagerApp.controller('ServerCtrl', function ($scope, $rootScope, api, $http) {
 	$scope.awesomeThings = [
 		'HTML5 Boilerplate',
 		'AngularJS',
@@ -33,5 +33,21 @@ jpsPassbookManagerApp.controller('ServerCtrl', function ($scope) {
 
 
 	 ]====================== */
-	$scope.Server = {};
+	$scope.logs = [];
+	$scope.selectedLog = null;
+	$scope.selectLog = function(o){
+		$scope.selectedLog = o;
+		console.log(o);
+	};
+
+	$scope.Server = {
+		init: function(){
+			$http.get('/api/v1/log').success(function(data){
+				$scope.logs = data;
+				console.log(data);
+			});
+		}
+	};
+
+
 });
