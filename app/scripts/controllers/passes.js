@@ -22,7 +22,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	};
 	$scope.SmartPass = {
 		api: {
-			url: 'http://' + location.hostname + ':' + location.port + '/smartpass/v1'
+			url: 'http://' + location.hostname + ':' + location.port + '/api/v1'
 		},
 		types: [{
 			name: 'generic',
@@ -67,8 +67,8 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			});
 		},
 		selectPass: function (p) {
-			p.teamIdentifier = 'USE9YUYDFH';
-			p.passTypeIdentifier = 'pass.jsapps.io';
+		//	p.teamIdentifier = 'USE9YUYDFH';
+		//	p.passTypeIdentifier = 'pass.jsapps.io';
 
 			$scope.SmartPass.pass = p;
 
@@ -87,13 +87,13 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			$scope.pass = p;
 			var c = confirm('Are you sure?');
 			if (c) {
-				$http.delete('/api/v1/passes/' + p._id).success(function (data) {
+				$http.delete('/api/v2/passbookmanager/passes/' + p._id).success(function (data) {
 					angular.element('#pass-' + p._id).remove();
 					console.log('deletePass', data);
 					$scope.SmartPass.getPasses();
 				});
 			}
-			;
+
 			console.log('deletePass', p);
 		},
 		getPasses: function () {
@@ -107,7 +107,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		savePass: function (p) {
 			p.updated = new Date().toTimeString();
 			if (p._id) {
-				$http.put('/api/v1/passes/' + p._id, p).success(function (data) {
+				$http.put('/api/v2/passbookmanager/passes/' + p._id, p).success(function (data) {
 					console.log('savePass', data);
 					if (data) {
 						//$scope.SmartPass.pass = null;
@@ -116,7 +116,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 					}
 				});
 			} else {
-				$http.post('/api/v1/passes', p).success(function (data) {
+				$http.post('/api/v2/passbookmanager/passes', p).success(function (data) {
 					//$scope.SmartPass.pass = data;
 					if (data) {
 					//	$scope.SmartPass.pass = null;

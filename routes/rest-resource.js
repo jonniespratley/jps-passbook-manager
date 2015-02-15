@@ -119,7 +119,7 @@ module.exports = function (options, app) {
 
 
 			//Log for interal usage
-			self.log('db:', db, 'collection:', col, 'query:', query, 'options:', options);
+			//self.log('db:', db, 'collection:', col, 'query:', query, 'options:', options);
 
 			//open database
 			MongoClient.connect(config.db.url, function (err, db) {
@@ -361,11 +361,11 @@ module.exports = function (options, app) {
 			}
 
 			if (query._id) {
-				params._id = new BSON.ObjectID(query._id);
+				query._id = new BSON.ObjectID(query._id);
 			}
 
 
-			RestResource.log('Delete by id ', params, 'from', col);
+			RestResource.log('Delete by id ', query, 'from', col);
 
 			MongoClient.connect(config.db.url, function (err, db) {
 
@@ -376,9 +376,9 @@ module.exports = function (options, app) {
 							error: err
 						});
 					}
-					RestResource.log('found ', collection.collectionName, params);
+					RestResource.log('found ', collection.collectionName, query);
 
-					collection.findAndRemove(params, function (err, doc) {
+					collection.findAndRemove(query, function (err, doc) {
 						if (err) {
 							console.error(err);
 							defer.reject({

@@ -52,7 +52,7 @@ function exportPass(passFile, passContent) {
 	var defer = Q.defer();
 
 	var passFilename = path.resolve(passFile);
-	passFilename = passFilename.replace(' ', '');
+	passFilename = passFilename.replace(' ', '-');
 
 	fs.writeFile(passFilename, JSON.stringify(passContent), function (err) {
 		console.log(err);
@@ -178,22 +178,25 @@ function createPass(options) {
 			defer.reject({error: err});
 		}
 
-	//	console.log('copy', artifactPath, 'to', passPath);
-	//	console.warn('saving json', JSON.stringify(options.pass));
-		//Create .json
-		fsextra.outputJson(passPath + '/pass.json', options.pass, function (d) {
-			defer.resolve({
-				directory: path.dirname(passPath),
-				path: passPath,
-				filename: path.basename(passPath)
-			});
-		});
+	console.log('copy', artifactPath, 'to', passPath);
+	console.warn('saving json', JSON.stringify(options.pass));
+
 		//Copy artifacts
 		fsextra.copy(artifactPath, passPath, function (err) {
 			if (err) {
 				defer.reject({error: err});
 			} else {
-
+				//Create .json
+				fsextra.outputJson(passPath + '/pass.json', options.pass, function (err) {
+					if (err) {
+						defer.reject({error: err});
+					}
+					defer.resolve({
+						directory: path.dirname(passPath),
+						path: passPath,
+						filename: path.basename(passPath)
+					});
+				});
 			}
 		});
 

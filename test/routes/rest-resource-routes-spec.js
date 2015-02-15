@@ -54,7 +54,7 @@ var testPass = {
 };
 
 
-/*
+
 	var app = express();
 var RestRoutes = require(path.resolve(__dirname, '../../routes/rest-resource-routes'));
 
@@ -64,18 +64,18 @@ app.listen(config.server.port, function () {
 	console.log('test server running');
 });
 
-xdescribe('rest-resource-routes', function () {
+describe('rest-resource-routes', function () {
 
 	it('POST - /api/v1/passes - should create pass', function (done) {
 		request(app)
-			.post('/api/v1/passes')
+			.post('/api/v2/passbookmanager/passes')
 			.send(testPass)
 			.expect(201, done);
 	});
 
 	it('GET - /api/v1/passes - should return array of collection objects', function (done) {
 		request(app)
-			.get('/api/v1/passes')
+			.get('/api/v2/passbookmanager/passes')
 			.set('Accept', 'application/json')
 			.expect(200, done);
 	});
@@ -95,8 +95,8 @@ xdescribe('rest-resource-routes', function () {
 
 	it('GET - /:col/:id - should return object', function (done) {
 		request(app)
-			.get('/api/v1/devices/512eb5873598dc0000000001')
+			.get('/api/v2/passbookmanager/devices')
 			.expect(200, done);
 	});
 });
-*/
+

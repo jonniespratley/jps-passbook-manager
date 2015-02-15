@@ -421,11 +421,12 @@ module.exports = function (config, app) {
 					path: config.publicDir
 				};
 				console.log('Found pass', data);
-				res.status(200).send(data);
+
 
 				jpsPassbook.createPass(options).then(function (pass) {
 					console.log('Created pass', pass);
 					res.set('Content-Type', 'application/vnd.apple.pkpass');
+					res.status(200).send(data);
 				}, function (err) {
 					req.status(400).send(err);
 				});

@@ -26,9 +26,14 @@
           {{pass.serialNumber}} <br/>
           </td>
           <td>{{pass.updated_at}}</td>
-          <td><a ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-primary" data-dismiss="modal"><i
+          <td>
+				 <a ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-primary" data-dismiss="modal"><i
           class="glyphicon glyphicon-share"></i></a><a ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i
           class="glyphicon glyphicon-trash"></i></a>
+				 <button class="btn btn-default" ng-click="toggleEditMode()" data-target="#pass-modal" data-toggle="modal">
+					 <i class="fa fa-star"></i>
+					 Edit
+				 </button>
           <br/>
           <a href="{{pass.url}}" target="_blank"> <img
           ng-show="pass.url" class="passbook-badge" src="img/Add_to_Passbook_Badge_US_1014.svg"> </a></td>

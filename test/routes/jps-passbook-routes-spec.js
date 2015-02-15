@@ -18,7 +18,7 @@ app.listen(config.server.port, function () {
 });
 
 var testDevice = {
-	"deviceLibraryIdentifier" : "123456" ,
+	"deviceLibraryIdentifier" : "f12b34b237683601016984a239533058" ,
 	"passTypeIdentifier" : "pass.jsapps.io" ,
 	"serialNumber" : "ABCD-123" ,
 	"pushToken" : "8701addcd7c847b07776c95883b779243527c5b959b12f81658d74fe2c1938fd",
@@ -45,18 +45,24 @@ describe('jps-passbook-routes', function () {
 		done();
 	});
 
+	it('should get pass info /passes/pass.jsapps.io/123456?updated=1351981923', function (done) {
+		request(app)
+			.get('/api/v1/passes/pass.jsapps.io/123456?updated=1351981923')
+			.expect(200, done);
+	});
+
 	//SELECT * FROM DEVICES WHERE :deviceId
 	//'/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber'
-	it('POST - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
+	it('POST - /api/v1/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
 		request(app)
-			.post('/api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123')
+			.post('/api/v1/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io/ABCD-123')
 			.send(testDevice)
 			.expect(200, done);
 	});
 
 	it('GET - /api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123 - should return serialNumbers and lastUpdated', function (done) {
 		request(app)
-			.get('/api/v1/devices/123456/registrations/pass.jsapps.io/ABCD-123')
+			.get('/api/v1/devices/f12b34b237683601016984a239533058/registrations/pass.jsapps.io')
 			.expect(200, done);
 	});
 

@@ -100,12 +100,11 @@ module.exports = function (config, app) {
 	//DELETE - Remove 1 record
 	router.delete(config.baseUrl +  '/:db/:col/:id', function(req, res, next){
 		var col = req.params.col, id = req.params.id;
-		rest.destroy(col, id).then(function(msg){
+		rest.destroy(col, {_id: id}).then(function(msg){
 			res.status(200).send(msg);
 		}, function (err) {
 			res.status(400).send(err);
 		});
-		next();
 	});
 
 
