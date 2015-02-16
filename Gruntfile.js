@@ -281,8 +281,7 @@ module.exports = function (grunt) {
 		//'jshint',
 		'mkdir',
 		'karma',
-		'js-test',
-		//'mochaTest'
+		'mochaTest'
 	]);
 
 	grunt.registerTask('build', [

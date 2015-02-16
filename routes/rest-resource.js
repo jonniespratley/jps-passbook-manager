@@ -239,19 +239,22 @@ module.exports = function (options, app) {
 			MongoClient.connect(config.db.url, function (err, db) {
 				db.collection(col, function (err, collection) {
 					if (err) {
+						throw err;
 						defer.reject({error: err});
 					}
 
 
 					collection.update(spec, data, true, function (err, docs) {
-						db.close();
+
 						if (err) {
-						
+							throw err;
 							defer.reject({error: err});
 						}
 
 						RestResource.log('found document', id, 'updating with ', data);
 						defer.resolve(data);
+
+						db.close();
 					});
 				});
 			});

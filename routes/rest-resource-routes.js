@@ -90,11 +90,11 @@ module.exports = function (config, app) {
 		data = req.body,
 		id = req.params.id;
 		rest.edit(col, id, data).then(function(msg){
-			res.sendStatus(200).send(msg);
+			res.sendStatus(200).send({message: msg});
 		}, function (err) {
 			res.status(404).send(err);
 		});
-		next();
+
 	});
 
 	//DELETE - Remove 1 record

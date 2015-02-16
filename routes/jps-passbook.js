@@ -10,14 +10,20 @@ function signPass(pathToPass, callback) {
 	var cmd = 'bin/signpass -p ' + pathToPass;
 	//console.warn(cmd);
 
-	exec('bin/signpass -p ' + pathToPass, function (error, stdout, stderr) {
-		if (error !== null) {
-			console.log('exec error: ' + error);
-			throw error;
-			defer.reject(error);
-		}
-		defer.resolve(pathToPass.replace('.raw', '.pkpass'));
+		exec('bin/signpass -p ' + pathToPass, function (error, stdout, stderr) {
+			console.log('stdout: ' + stdout);
+			console.log('stderr: ' + stderr);
+
+			if (error !== null) {
+				console.log('exec error: ' + error);
+				defer.reject(error);
+			}
+			defer.resolve(pathToPass.replace('.raw', '.pkpass'));
+
+
+
 	});
+
 
 	return defer.promise;
 
@@ -172,33 +178,34 @@ function createPass(options) {
 	//artifact folder path
 	var artifactPath = path.resolve(__dirname, '..' + path.sep + 'www' + path.sep + 'passes' + path.sep + options.pass.type);
 
+		console.log('copy', artifactPath, 'to', passPath);
+		console.warn('saving json', JSON.stringify(options.pass));
+	/*
+			//Copy artifacts
+			fsextra.copy(artifactPath, passPath, function (err) {
+				if (err) {
+					defer.reject({error: err});
+				} else {
+
+				}
+			});*/
 	//Create directory
 	fsextra.ensureDir(passPath, function (err) {
 		if (err) {
 			defer.reject({error: err});
 		}
-
-	console.log('copy', artifactPath, 'to', passPath);
-	console.warn('saving json', JSON.stringify(options.pass));
-
-		//Copy artifacts
-		fsextra.copy(artifactPath, passPath, function (err) {
+		//Create .json
+		fsextra.outputJson(passPath + '/pass.json', options.pass, function (err) {
 			if (err) {
 				defer.reject({error: err});
-			} else {
-				//Create .json
-				fsextra.outputJson(passPath + '/pass.json', options.pass, function (err) {
-					if (err) {
-						defer.reject({error: err});
-					}
-					defer.resolve({
-						directory: path.dirname(passPath),
-						path: passPath,
-						filename: path.basename(passPath)
-					});
-				});
 			}
+			defer.resolve({
+				directory: path.dirname(passPath),
+				path: passPath,
+				filename: path.basename(passPath)
+			});
 		});
+
 
 	});
 
