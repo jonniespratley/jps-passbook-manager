@@ -14,3 +14,4 @@ db/*.ns
 www/public
 *.log
 atlassian-ide-plugin.xml
+coverage
