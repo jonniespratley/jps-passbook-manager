@@ -4,12 +4,14 @@ var mountFolder = function(connect, dir) {
 	return connect.static(require('path').resolve(dir));
 };
 
-	var files = 'routes/**/*.js';
-	var tests = 'test/routes/**/*-spec.js';
+	
 module.exports = function(grunt) {
 
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
+	
+	var files = 'routes/**/*.js';
+	var tests = 'test/routes/**/*.js';
 
 	// configurable paths
 	var yeomanConfig = {
@@ -242,18 +244,17 @@ module.exports = function(grunt) {
 				options : {
 					reporter : 'spec',
 					quiet : false,
-					clearRequireCache : false,
 					require : 'test/blanket'
 				},
-				src : ['test/routes/*-spec.js']
+				src : tests
 			},
 			coverage : {
 				options : {
 					reporter : 'html-cov',
 					quiet : true,
-					captureFile : 'coverage/coverage.html'
+					captureFile : '<%= config.coverage %>/coverage.html'
 				},
-				src : ['test/routes/*-spec.js']
+				src : files
 			}
 		},
 		env : {
