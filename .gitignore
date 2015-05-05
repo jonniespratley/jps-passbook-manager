@@ -15,3 +15,4 @@ www/public
 *.log
 atlassian-ide-plugin.xml
 coverage
+node_modules
