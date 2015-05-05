@@ -1,6 +1,6 @@
 temp
 dist
-node_modules/
+node_modules
 app/bower_components
 app/components
 .DS_Store
@@ -9,7 +9,6 @@ db/*.0
 db/*.ns
 .idea
 .project
-
 .tmp
 www/public
 *.log
