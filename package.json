@@ -2,7 +2,9 @@
   "name": "jps-passbook-manager",
   "version": "0.0.1",
   "scripts": {
+    "postinstall": "bower install",
     "test": "grunt test",
+    "poststart": "grunt dist",
     "start": "node server"
   },
   "dependencies": {
@@ -32,7 +34,7 @@
     "grunt-contrib-cssmin": "^0.11.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-livereload": "^0.1.2",
-   
+
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-google-cdn": "~0.1.0",
     "grunt-karma": "^0.10.1",

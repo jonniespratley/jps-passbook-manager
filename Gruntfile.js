@@ -16,7 +16,7 @@ module.exports = function (grunt) {
 	};
 
 	try {
-		yeomanConfig.app = require('./component.json').appPath || yeomanConfig.app;
+		yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
 	} catch (e) {
 	}
 
@@ -297,12 +297,12 @@ module.exports = function (grunt) {
 		//  'coffee',
 		//'compass:dist',
 		'useminPrepare',
-		'imagemin',
-		'cssmin',
-		'htmlmin',
+		//'imagemin',
+		//'cssmin',
+	//	'htmlmin',
 		'concat',
 		'copy',
-		'cdnify',
+//		'cdnify',
 		'usemin',
 		'ngmin',
 		'uglify'

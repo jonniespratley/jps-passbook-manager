@@ -1,4 +1,4 @@
-var fs = require('fs'), path = require('path'), fsutils = require('fs-utils'), Q = require('q'), spawn = require('child_process').spawn;
+var fs = require('fs-extra'), path = require('path'), fsutils = require('fs-utils'), Q = require('q'), spawn = require('child_process').spawn;
 var fsextra = require('fs-extra');
 /**
  * I handle signing a pass with signpass bin.
@@ -35,7 +35,7 @@ function exportPass(passFile, passContent) {
 
 	var passFilename = path.resolve(passFile);
 	passFilename = passFilename.replace(' ', '');
-
+	fs.ensureFileSync(passFilename);
 	fs.writeFile(passFilename, JSON.stringify(passContent), function(err) {
 		console.log(err);
 		if (err) {

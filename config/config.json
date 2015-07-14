@@ -12,7 +12,7 @@
 		"password": "demopassword",
 		"host": "ds031611.mongolab.com",
 		"port": 31611,
-		"url": "mongodb://localhost:27017"
+		"url": "mongodb://angularcms-dev:angularcms-dev@paulo.mongohq.com:10089/app19632340"
 	},
 	"collections": [
 		"devices",

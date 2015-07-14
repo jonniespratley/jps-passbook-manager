@@ -19,6 +19,6 @@ require(__dirname + path.sep + 'routes'+ path.sep +'jps-passbook-routes')(config
 
 
 //Start the server
-app.listen(config.server.port, function () {
-	console.log(config.message + ' running @: ' + config.server.host + ':' + config.server.port);
+app.listen(port, function () {
+	console.log(config.message + ' running @: ' + host + ':' + port);
 });
