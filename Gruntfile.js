@@ -56,6 +56,17 @@ module.exports = function (grunt) {
 					hostname: 'localhost',
 					middleware: function (connect) {
 						return [
+							require('json-proxy').initialize({
+				           proxy: {
+				             forward: {
+				               '/api/': 'http://localhost:1333',
+									'/socket.io/': 'http://localhost:1333'
+				             },
+				             headers: {
+				               'X-Forwarded-User': 'John Doe'
+				             }
+				           }
+						  }),
 							lrSnippet,
 							mountFolder(connect, '.tmp'),
 							mountFolder(connect, yeomanConfig.app)

@@ -6,6 +6,10 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.$location = $location;
 	$scope.$routeParams = $routeParams;
 	$scope.cdn = 'http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com';
+
+	var db = new PouchDB('http://localhost:5984/passbookmanager');
+
+
 	function s4() {
 		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 	}
@@ -73,7 +77,6 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			value: 'PKBarcodeFormatAztec'
 		}],
 		init: function () {
-
 			//  $('.datepicker').datepicker();
 			//  $('.timepicker').timepicker();
 			//  $('.colorpicker').colorpicker();
@@ -109,17 +112,20 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 					$scope.SmartPass.getPasses();
 				});
 			}
-			;
 			console.log('deletePass', p);
 		},
 		getPasses: function () {
 			var options = {
-				params: {
-					callback: 'JSON_CALLBACK'
-				}
+				include_docs: true
 			};
-			$http.get('api/v1/passbookmanager/passes', options).success(function (data) {
-				$scope.SmartPass.passes = data;
+			var passData = [];
+			db.allDocs(options).then(function (data) {
+				data.rows.forEach(function(row){
+					passData.push(row.doc);
+				});
+				$rootScope.safeApply(function(){
+					$scope.SmartPass.passes = passData;
+				});
 				console.log('getPasses', data);
 			});
 		},
@@ -127,17 +133,16 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			p.updated = new Date();
 			p.serialNumber = guid();
 			if (p._id) {
-				$http.put('/api/v1/passbookmanager/passes/' + p._id, p).success(function (data) {
+				db.put(p).then(function (data) {
 					console.log('savePass', data);
 					if (data) {
 						$scope.SmartPass.pass = null;
 						$scope.SmartPass.getPasses();
 						$scope.SmartPass.clearPass();
-
 					}
 				});
 			} else {
-				$http.post('/api/v1/passbookmanager/passes', p).success(function (data) {
+				db.post(p).then(function (data) {
 					//$scope.SmartPass.pass = data;
 					if (data) {
 						$scope.SmartPass.pass = null;
@@ -163,8 +168,6 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);
-
-
 		},
 		updatedQrcode: function (p) {
 			angular.element('#pass-qrcode')

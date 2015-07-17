@@ -9,7 +9,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 		var routeResolver = {
 			delay: function ($q, $timeout) {
 				var delay = $q.defer();
-				$timeout(delay.resolve, 300);
+				$timeout(delay.resolve, 0);
 				return delay.promise;
 			}
 		};
@@ -54,3 +54,23 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				redirectTo: '/'
 			});
 	}]);
+
+	jpsPassbookManagerApp.config([
+  '$provide', function($provide) {
+    return $provide.decorator('$rootScope', [
+      '$delegate', function($delegate) {
+        $delegate.safeApply = function(fn) {
+          var phase = $delegate.$$phase;
+          if (phase === "$apply" || phase === "$digest") {
+            if (fn && typeof fn === 'function') {
+              fn();
+            }
+          } else {
+            $delegate.$apply(fn);
+          }
+        };
+        return $delegate;
+      }
+    ]);
+  }
+]);

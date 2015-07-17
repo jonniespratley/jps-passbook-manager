@@ -1,29 +1,37 @@
 {
   "name": "jps-passbook-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "postinstall": "bower install",
-    "test": "grunt test",
     "poststart": "grunt dist",
-    "start": "node server"
+    "start": "node server",
+    "test": "grunt test"
   },
   "dependencies": {
+    "better-console": "^0.2.4",
     "body-parser": "^1.10.1",
+    "colors": "^1.1.2",
     "express": "^4.11.0",
+    "express-ws": "^0.2.6",
     "fs-extra": "^0.14.0",
     "fs-utils": "^0.6.0",
     "grunt-saucelabs": "^8.5.0",
+    "intercept-stdout": "^0.1.1",
     "json-parser": "^0.2.4",
+    "log4js": "^0.6.26",
     "method-override": "^2.3.1",
     "mongodb": "^1.4.28",
     "mongoose": "3.3.x",
     "node-gcm": "0.9.x",
+    "pouchdb": "^3.6.0",
     "q": "^1.1.2",
     "request": "2.0.x",
     "restify": "1.4.x",
     "serve-index": "^1.6.0",
     "serve-static": "^1.8.0",
-    "url": "0.7.x"
+    "socket.io": "^1.3.6",
+    "url": "0.7.x",
+    "winston": "^1.0.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -34,7 +42,6 @@
     "grunt-contrib-cssmin": "^0.11.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-livereload": "^0.1.2",
-
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-google-cdn": "~0.1.0",
     "grunt-karma": "^0.10.1",
@@ -44,6 +51,7 @@
     "grunt-open": "~0.1.0",
     "grunt-regarde": "~0.1.1",
     "grunt-usemin": "~0.1.7",
+    "json-proxy": "^0.9.1",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.7",
     "karma-coverage": "^0.2.7",

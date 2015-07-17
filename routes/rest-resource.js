@@ -1,15 +1,12 @@
 //## Dependencies
-var mongo = require('mongodb');
-var BSON = mongo.BSONPure;
 var express = require('express');
-var MongoClient = require('mongodb').MongoClient;
 
 
 
 //## REST Resource
 //This is the resource object that contains all of the REST api methods for a full CRUD on a mongo account document.
 
-module.exports = function (options, app) {
+module.exports = function(options, app) {
 	'use strict';
 
 	var config = options;
@@ -28,9 +25,6 @@ module.exports = function (options, app) {
 		config: null,
 		server: null,
 		db: null,
-		mongoServer: mongo.Server,
-		mongoDb: mongo.Db,
-		bson: mongo.BSONPure,
 		host: null,
 		port: null,
 		/**
@@ -51,19 +45,19 @@ module.exports = function (options, app) {
 		/**
 		 * I am the interal logger.
 		 */
-		log: function (str) {
+		log: function(str) {
 			if (this.debug) {
 				console.warn('[rest-resource] - ', str);
 			}
 		},
 		//Init the resource applying the config object
-		init: function (c) {
+		init: function(c) {
 			var self = this;
 
 			//Set the config
 			RestResource.config = c;
 
-			MongoClient.connect(config.db.url, function (err, db) {
+			MongoClient.connect(config.db.url, function(err, db) {
 				self.log('Trying to connect to ' + self.databaseName);
 
 				RestResource.db = db;
@@ -72,9 +66,10 @@ module.exports = function (options, app) {
 
 					db.collection(self.name, {
 						safe: true
-					}, function (err, collection) {
+					}, function(err, collection) {
 						if (err) {
-							self.log('The collection ' + self.name + ' exist. creating it with sample data...', self.populateDb());
+							self.log('The collection ' + self.name +
+								' exist. creating it with sample data...', self.populateDb());
 							self.populateDb();
 						}
 					});
@@ -89,7 +84,7 @@ module.exports = function (options, app) {
 
 		//### index()
 		//Display default message on index
-		index: function (req, res, next) {
+		index: function(req, res, next) {
 			res.status(200).send({
 				message: RestResource.config.message + ' -  ' + RestResource.config.version
 			});
@@ -98,7 +93,7 @@ module.exports = function (options, app) {
 
 		//### collections()
 		//Display list of default collections
-		collections: function (req, res, next) {
+		collections: function(req, res, next) {
 			res.status(200).send({
 				message: RestResource.config.message + ' -  ' + RestResource.config.version,
 				results: RestResource.config.collections
@@ -108,7 +103,7 @@ module.exports = function (options, app) {
 
 		//### get()
 		//Fetch all records.
-		fetch: function (req, res, next) {
+		fetch: function(req, res, next) {
 			var self = this;
 			var query = req.query.query ? JSON.parse(req.query.query) : {};
 
@@ -125,7 +120,9 @@ module.exports = function (options, app) {
 			var options = req.params.options || {};
 
 			//Test array of legal query params
-			var test = ['limit', 'sort', 'fields', 'skip', 'hint', 'explain', 'snapshot', 'timeout'];
+			var test = ['limit', 'sort', 'fields', 'skip', 'hint', 'explain',
+				'snapshot', 'timeout'
+			];
 
 			//loop and test
 			for (var s in req.query) {
@@ -137,15 +134,15 @@ module.exports = function (options, app) {
 			console.log('query', query, 'options', options);
 
 			//open database
-			MongoClient.connect(config.db.url, function (err, db) {
+			MongoClient.connect(config.db.url, function(err, db) {
 				if (err) {
 					console.error(err);
 				} else {
 					//prep collection
-					db.collection(req.params.collection, function (err, collection) {
+					db.collection(req.params.collection, function(err, collection) {
 						//query
-						collection.find(query, options, function (err, cursor) {
-							cursor.toArray(function (err, docs) {
+						collection.find(query, options, function(err, cursor) {
+							cursor.toArray(function(err, docs) {
 								if (err) {
 									console.log(err);
 								} else {
@@ -156,10 +153,12 @@ module.exports = function (options, app) {
 											res.header('Content-Type', 'application/json');
 											res.status(200).send(result);
 										} else {
-											res.status(404).send({message: 'Not found'});
+											res.status(404).send({
+												message: 'Not found'
+											});
 										}
 									} else {
-										docs.forEach(function (doc) {
+										docs.forEach(function(doc) {
 											result.push(doc);
 										});
 										//res.header('Content-Type', 'application/json');
@@ -181,46 +180,51 @@ module.exports = function (options, app) {
 		 * @param res
 		 * @param next
 		 */
-		add: function (req, res, next) {
+		add: function(req, res, next) {
 			var data = req.body;
 			var results = [];
 			if (data) {
-				MongoClient.connect(config.db.url, function (err, db) {
-					RestResource.log('add() - trying to add document to ', RestResource.name, data);
+				MongoClient.connect(config.db.url, function(err, db) {
+					RestResource.log('add() - trying to add document to ', RestResource.name,
+						data);
 
 					if (err) {
 						console.error('add() - Error trying to add document');
 
 					} else {
 
-						db.collection(req.params.collection, function (err, collection) {
-							collection.count(function (err, count) {
+						db.collection(req.params.collection, function(err, collection) {
+							collection.count(function(err, count) {
 								console.log('There are ' + count + ' records.');
 							});
 						});
 
 
-						db.collection(req.params.collection, function (err, collection) {
+						db.collection(req.params.collection, function(err, collection) {
 							if (data.length) {
 								for (var i = 0; i < data.length; i++) {
 									var obj = data[i];
 
 									console.warn('added document', i, obj);
 
-									collection.insert(obj, function (err, docs) {
+									collection.insert(obj, function(err, docs) {
 										results.push(obj);
 									});
 								}
 								db.close();
-								res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
+								res.header('Location', '/' + req.params.db + '/' + req.params.collection +
+									'/' + docs[0]._id.toHexString());
 								res.header('Content-Type', 'application/json');
 								res.status(200).send(results);
 
 							} else {
-								collection.insert(req.body, function (err, docs) {
-									res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + docs[0]._id.toHexString());
+								collection.insert(req.body, function(err, docs) {
+									res.header('Location', '/' + req.params.db + '/' + req.params
+										.collection + '/' + docs[0]._id.toHexString());
 									res.header('Content-Type', 'application/json');
-									res.status(201).send({message: 'Document created!'});
+									res.status(201).send({
+										message: 'Document created!'
+									});
 									db.close();
 								});
 							}
@@ -229,25 +233,31 @@ module.exports = function (options, app) {
 				});
 			} else {
 
-				res.status(200).send({message: 'Document created!'});
+				res.status(200).send({
+					message: 'Document created!'
+				});
 			}
 		},
 
 		//### edit()
 		//Handle updating a document in the database.
-		edit: function (req, res, next) {
+		edit: function(req, res, next) {
 			var spec = {
 				'_id': new BSON.ObjectID(req.params.id)
 			};
 
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(req.params.collection, function (err, collection) {
-					collection.update(spec, req.body, true, function (err, docs) {
-						res.header('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
+			MongoClient.connect(config.db.url, function(err, db) {
+				db.collection(req.params.collection, function(err, collection) {
+					collection.update(spec, req.body, true, function(err, docs) {
+						res.header('Location', '/' + req.params.db + '/' + req.params.collection +
+							'/' + req.params.id);
 						res.header('Content-Type', 'application/json');
-						res.status(200).send({message: 'Document ' + req.params.id + ' updated!'});
+						res.status(200).send({
+							message: 'Document ' + req.params.id + ' updated!'
+						});
 						db.close();
-						console.log('Location', '/' + req.params.db + '/' + req.params.collection + '/' + req.params.id);
+						console.log('Location', '/' + req.params.db + '/' + req.params.collection +
+							'/' + req.params.id);
 					});
 				});
 			});
@@ -255,18 +265,17 @@ module.exports = function (options, app) {
 
 		//### view()
 		//Handle fetching associated documents for document detail view.
-		view: function (req, res, next) {
-		},
+		view: function(req, res, next) {},
 
 		//### populateDb()
 		//I populate the document db with the schema.
-		populateDb: function () {
+		populateDb: function() {
 			var self = this;
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(self.name, function (err, collection) {
+			MongoClient.connect(config.db.url, function(err, db) {
+				db.collection(self.name, function(err, collection) {
 					collection.insert(self.schema, {
 						safe: true
-					}, function (err, result) {
+					}, function(err, result) {
 						self.log(result);
 					});
 				});
@@ -274,7 +283,7 @@ module.exports = function (options, app) {
 
 		},
 
-		dbStatus: function () {
+		dbStatus: function() {
 			console.log('get db status');
 		},
 		/**
@@ -282,11 +291,12 @@ module.exports = function (options, app) {
 		 * @param {Object} req
 		 * @param {Object} res
 		 */
-		findAll: function (req, res) {
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(req.params.collection, function (err, collection) {
-					collection.find().toArray(function (err, items) {
-						RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(items));
+		findAll: function(req, res) {
+			MongoClient.connect(config.db.url, function(err, db) {
+				db.collection(req.params.collection, function(err, collection) {
+					collection.find().toArray(function(err, items) {
+						RestResource.log(req.params.collection + ':findAll - ' + JSON.stringify(
+							items));
 						res.status(200).send(items);
 					});
 				});
@@ -298,34 +308,36 @@ module.exports = function (options, app) {
 		 * @param {Object} req
 		 * @param {Object} res
 		 */
-		findById: function (req, res) {
+		findById: function(req, res) {
 			var id = req.params.id;
 			this.log(RestResource.name + ':findById - ' + id);
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(RestResource.name, function (err, collection) {
+			MongoClient.connect(config.db.url, function(err, db) {
+				db.collection(RestResource.name, function(err, collection) {
 					collection.findOne({
 						'_id': new BSON.ObjectID(id)
-					}, function (err, item) {
+					}, function(err, item) {
 						res.status(200).send(item);
 					});
 				});
 			});
 
 		},
-		destroy: function (req, res, next) {
+		destroy: function(req, res, next) {
 			var params = {
 				_id: new BSON.ObjectID(req.params.id)
 			};
 			console.log('Delete by id ' + req.params.id);
 
-			MongoClient.connect(config.db.url, function (err, db) {
-				db.collection(req.params.collection, function (err, collection) {
+			MongoClient.connect(config.db.url, function(err, db) {
+				db.collection(req.params.collection, function(err, collection) {
 					console.log('found ', collection.collectionName, params);
 
-					collection.remove(params, function (err, docs) {
+					collection.remove(params, function(err, docs) {
 						if (!err) {
 
-							res.status(200).send({message: 'Document ' + req.params.id + ' was removed!'});
+							res.status(200).send({
+								message: 'Document ' + req.params.id + ' was removed!'
+							});
 							db.close();
 						} else {
 							console.error(err);

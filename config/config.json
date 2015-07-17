@@ -2,7 +2,9 @@
 	"name": "passbookmanager",
 	"message": "Passbook Manager API Server",
 	"version": "v1",
-	"security": {"salt": "a58e325c6df628d07a18b673a3420986"},
+	"security": {
+		"salt": "a58e325c6df628d07a18b673a3420986"
+	},
 	"server": {
 		"host": "",
 		"port": ""
@@ -12,7 +14,9 @@
 		"password": "demopassword",
 		"host": "ds031611.mongolab.com",
 		"port": 31611,
-		"url": "mongodb://angularcms-dev:angularcms-dev@paulo.mongohq.com:10089/app19632340"
+		"url": "mongodb://angularcms-dev:angularcms-dev@paulo.mongohq.com:10089/app19632340",
+		"local": "http://localhost:5984/passbookmanager",
+		"remote": "http://localhost:5984/passbookmanager"
 	},
 	"collections": [
 		"devices",

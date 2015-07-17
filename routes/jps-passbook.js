@@ -1,4 +1,8 @@
-var fs = require('fs-extra'), path = require('path'), fsutils = require('fs-utils'), Q = require('q'), spawn = require('child_process').spawn;
+var fs = require('fs-extra'),
+	path = require('path'),
+	fsutils = require('fs-utils'),
+	Q = require('q'),
+	spawn = require('child_process').spawn;
 var fsextra = require('fs-extra');
 /**
  * I handle signing a pass with signpass bin.
@@ -6,7 +10,7 @@ var fsextra = require('fs-extra');
  */
 function signPass(pathToPass, callback) {
 	var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
-	console.warn('bin/signpass -p '+ pathToPass);
+	console.warn('bin/signpass -p ' + pathToPass);
 	signpass.stdout.on('data', function(data) {
 		console.log('stdout: ' + data);
 	});
@@ -58,8 +62,8 @@ function getFile(localPath, mimeType, res) {
 	fs.readFile(localPath, function(err, contents) {
 		if (!err) {
 			res.writeHead(200, {
-				"Content-Type" : mimeType,
-				"Content-Length" : contents.length
+				"Content-Type": mimeType,
+				"Content-Length": contents.length
 			});
 			res.end(contents);
 		} else {
@@ -83,10 +87,10 @@ function writeFile(localPath, contents, callback) {
 		// write to and close the stream at the same time
 		stream.end(contents, 'utf-8');
 		callback({
-			directory : path.dirname(localPath),
-			filename : path.basename(localPath),
-			name : localPath,
-			contents : contents
+			directory: path.dirname(localPath),
+			filename: path.basename(localPath),
+			name: localPath,
+			contents: contents
 		});
 	});
 };
@@ -106,9 +110,9 @@ function createDirectory(localPath, callback) {
 		callback(localPath);
 	});
 };
+
 function checkDirectory(localPath, callback) {
 	console.log('checking directory', path.normalize(localPath));
-
 	fsutils.rmdir(localPath);
 	fs.mkdir(localPath, function(er) {
 		if (er) {
@@ -125,21 +129,22 @@ function checkDirectory(localPath, callback) {
  */
 function createPass(localPath, pass, callback) {
 	var defer = Q.defer();
-	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') + '.raw';
+	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') +
+		'.raw';
 	fsextra.outputJson(passPath + '/pass.json', pass, function(d) {
-			callback({
-				directory: path.dirname(passPath),
-				filename: passPath
-			});
+		callback({
+			directory: path.dirname(passPath),
+			filename: passPath
 		});
+	});
 };
 
 module.exports = {
-	name : 'jps-passbook',
-	sign : signPass,
-	signPass : signPass,
-	export : exportPass,
-	exportPass : exportPass,
-	createDirectory : createDirectory,
-	createPass : createPass
+	name: 'jps-passbook',
+	sign: signPass,
+	signPass: signPass,
+	export: exportPass,
+	exportPass: exportPass,
+	createDirectory: createDirectory,
+	createPass: createPass
 };

@@ -17,6 +17,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="Jonnie Spratley">
 	<link rel="stylesheet" href="styles/main.css"/>
+	<link rel="stylesheet" href="bower_components/ansi_up/examples/theme.css"/>
 
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
@@ -60,9 +61,11 @@
 
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
 
 <!-- build:js scripts/vendor.js -->
-<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/ansi_up/ansi_up.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -75,6 +78,8 @@
 <script src="bower_components/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
 
 <script src="bower_components/jquery-qrcode/jquery.qrcode.min.js"></script>
+<script src="bower_components/pouchdb/dist/pouchdb.js"></script>
+<script src="bower_components/pouchdb/dist/pouchdb.localstorage.js"></script>
 <script src="bower_components/markdown/lib/markdown.js"></script>
 <!-- endbuild -->
 
@@ -91,7 +96,7 @@
 <script src="scripts/services/api.js"></script>
 <!-- endbuild -->
 
-<!-- TODO - Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<!-- TODO - Google Analytics: change UA-XXXXX-X to be your site's ID.
 <script>
 	var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
 	(function (d, t) {
@@ -99,6 +104,6 @@
 		g.src = ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
 		s.parentNode.insertBefore(g, s)
 	}(document, 'script'));
-</script>
+</script> -->
 </body>
 </html>

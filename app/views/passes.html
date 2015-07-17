@@ -14,6 +14,7 @@
                         <th>Last Updated</th>
                         <th class="td-actions">Actions</th>
                     </tr>
+
                 </thead>
                 <tbody>
                     <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
@@ -46,7 +47,7 @@
                 </tbody>
             </table>
 
-  <div class="row">
+        <div class="row">
             <div class="col-sm-7" ng-include src="'/views/passes_add.html'"></div>
             <div class="col-sm-4" ng-include src="'/views/passes_preview.html'"></div>
         </div>

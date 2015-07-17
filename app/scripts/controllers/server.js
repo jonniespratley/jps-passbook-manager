@@ -32,6 +32,23 @@ jpsPassbookManagerApp.controller('ServerCtrl', function ($scope) {
 	 http://localhost:4040/api/v1/passbookmanager/notifications
 
 
-	 ]====================== */
+
 	$scope.Server = {};
+	var socket = io();
+		socket.on('newlog', function(logs){
+			console.log("logging", logs);
+			var $console = $("#console");
+			var $page = $('html, body');
+			var $document = $(document);
+			var len = logs.length;
+			var log = '';
+			for (var i = 0; i < len; i++) {
+				log = ansi_up.ansi_to_html(logs[i].msg);
+				$console.append(log);
+				console.log('log', log);
+			}
+
+			$page.stop(true, true).animate({ scrollTop: $document.height() }, "slow");
+		});
+		]====================== */
 });
