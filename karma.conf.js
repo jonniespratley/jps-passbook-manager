@@ -11,7 +11,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-		 'app/bower_components/jquery/jquery.js',
+		 'app/bower_components/jquery/dist/jquery.js',
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/bower_components/angular-resource/angular-resource.js',
@@ -26,6 +26,8 @@ module.exports = function(config) {
 		 'app/bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js',
 		 'app/bower_components/jquery-qrcode/jquery.qrcode.min.js',
 		 'app/bower_components/markdown/lib/markdown.js',
+       'app/bower_components/pouchdb/dist/pouchdb.js',
+       'app/bower_components/pouchdb/dist/pouchdb.localstorage.js',
       'app/scripts/*.js',
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
