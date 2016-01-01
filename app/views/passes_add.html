@@ -1,9 +1,9 @@
 <!-- @TODO: [Pass form] -->
 <div class="clearfix row">
     <div class="col-sm-12">
-
+<h3>Pass Form</h3>
         <form class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
-
+<button>Submit</button>
             <!-- @TODO: [Details] -->
             <legend>
                 Details
@@ -175,12 +175,12 @@
                 </formitem>
             </div>
 
-            
+
             <!-- @TODO: [Pass Actions] -->
             <div class="form-actions">
 
-                <a ng-click="SmartPass.clearPass()" class="btn btn"><i class="icon-remove"></i> Cancel</a>
-                <a ng-click="SmartPass.savePass(pass)" class="btn btn-success" data-dismiss="modal"><i class="icon-ok"></i> Save changes</a>
+                <button ng-click="SmartPass.clearPass()" class="btn btn"><i class="icon-remove"></i> Cancel</button>
+                <button ng-click="SmartPass.savePass(pass)" class="btn btn-success" data-dismiss="modal"><i class="icon-ok"></i> Save changes</button>
             </div>
         </form>
     </div>

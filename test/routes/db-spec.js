@@ -21,6 +21,7 @@ var db = new Database(config);
 describe('db', function () {
 	it('should be defined', function () {
 		assert(db);
+		console.log(db);
 	})
 	it('should create doc', function (done) {
 		db.post({

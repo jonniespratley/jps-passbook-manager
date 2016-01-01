@@ -99,7 +99,7 @@ module.exports = function(program, app) {
 		});
 	});
 	app.delete('/api/' + config.version + '/:db/:id', function(req, res, next) {
-		program.db.remove(req.params.id, req.query.rev).then(function(resp) {
+		program.db.remove(req.param.id, req.query.rev).then(function(resp) {
 			res.status(200).json(resp);
 		}).catch(function(err) {
 			res.status(400).json(err);
@@ -165,13 +165,8 @@ module.exports = function(program, app) {
 			});
 		});
 
-	//Logging Endpoint
-	router.get('/api/log', function(req, res) {
-		res.status(200).json({
-			message: 'Drain logs'
-		});
-	});
-	router.post('/api/log', function(req, res) {
+
+	router.all('/api/v1/log', function(req, res) {
 		res.status(200).json({
 			message: 'Drain logs'
 		});
@@ -251,11 +246,14 @@ module.exports = function(program, app) {
 	router.get('/api/export/:id', function(req, res) {
 		var id = req.params.id;
 		if (id) {
+			program.log('id', id);
 			program.db.get(id).then(function(resp) {
-				program.log('found pass', resp._id);
+				program.log('found pass', resp);
 				jpsPassbook.createPass(config.publicDir, resp, function(data) {
 					res.status(200).send(data);
 				});
+			}).catch(function(err){
+				res.status(404).send(err);
 			})
 		} else {
 			res.status(400).send('Must provide file path!');
@@ -263,7 +261,8 @@ module.exports = function(program, app) {
 	});
 
 
-	app.use(serveStatic(config.staticDir, null));
+	app.use(serveStatic('../app', null));
+	app.use(serveStatic('../www', null));
 
 	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');

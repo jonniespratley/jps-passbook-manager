@@ -23,6 +23,7 @@
     "method-override": "^2.3.1",
     "mongodb": "^1.4.28",
     "mongoose": "3.3.x",
+    "morgan": "^1.6.1",
     "node-gcm": "0.9.x",
     "pouchdb": "^3.6.0",
     "q": "^1.1.2",

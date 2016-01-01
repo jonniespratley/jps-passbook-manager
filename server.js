@@ -9,8 +9,7 @@ var express = require('express'),
 
 var port = process.env.PORT || 1333;
 var host = process.env.VCAP_APP_HOST || "127.0.0.1";
-var config = fs.readJsonSync(__dirname + path.sep + 'config' + path.sep +
-	'config.json');
+var config = require(path.resolve(__dirname, './config/config.json'));
 
 if (process.env.MONGODB_URL) {
 	config.db.url = process.env.MONGODB_URL;
@@ -18,6 +17,9 @@ if (process.env.MONGODB_URL) {
 }
 
 var app = express();
+
+var morgan = require('morgan');
+app.use(morgan(':method :url :response-time'))
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
@@ -27,7 +29,7 @@ var io = require('socket.io')(server);
 // TODO: Using pouchdb
 var PouchDB = require('pouchdb');
 PouchDB.debug('*');
-var db = new PouchDB(config.db.local);
+var db = new PouchDB(config.db.local || 'http://localhost:5984/passbookmanager');
 var _ds = {
 	findOne: function(id, params) {
 		return db.get(id, params);
@@ -53,52 +55,11 @@ var _ds = {
 
 
 
-var log4js = require('log4js');
-var logger = log4js.getLogger();
-logger.debug("Some debug messages");
-
-
-
-
-var colors = require('colors/safe');
-
-
-var customLevels = {
-	levels: {
-      info: 0,
-      debug: 1,
-      warn: 2,
-      error: 3
-    },
-	 colors: {
-	   silly: 'rainbow',
-	   input: 'grey',
-	   verbose: 'cyan',
-	   prompt: 'grey',
-	   info: 'green',
-	   data: 'grey',
-	   help: 'cyan',
-	   warn: 'yellow',
-	   debug: 'blue',
-	   error: 'red'
-	 }
-};
-// set theme
-colors.setTheme(customLevels.colors);
-
-logger.log('silly', "127.0.0.1 - there's no place like home");
-logger.log('debug', "127.0.0.1 - there's no place like home");
-logger.log('verbose', "127.0.0.1 - there's no place like home");
-logger.log('info', "127.0.0.1 - there's no place like home");
-logger.log('warn', "127.0.0.1 - there's no place like home");
-logger.log('error', "127.0.0.1 - there's no place like home");
-logger.info("127.0.0.1 - there's no place like home");
-logger.warn("127.0.0.1 - there's no place like home");
-logger.error("127.0.0.1 - there's no place like home");
+var debug = require('debug');
 
 // TODO: Program
 var program = {
-	log: logger,
+	log: debug('passbook'),
 	config: {
 		defaults: config
 	},
@@ -109,7 +70,7 @@ var program = {
 
 
 var middleware = [
-	__dirname + path.sep + 'routes' + path.sep + 'jps-passbook-sockets',
+//	__dirname + path.sep + 'routes' + path.sep + 'jps-passbook-sockets',
 	__dirname + path.sep + 'routes' + path.sep + 'jps-passbook-routes'
 ];
 
@@ -118,11 +79,12 @@ middleware.forEach(function(m) {
 	require(m)(program, app);
 })
 
-
+var logs = [];
 
 //Enable logging before everything
+/*
 var intercept = require("intercept-stdout");
-var logs = [];
+
 var intercept_func = intercept(function(data) {
 	logs.push({
 		msg: data
@@ -132,7 +94,7 @@ var intercept_func = intercept(function(data) {
 			msg: data
 		}]);
 	}
-});
+});*/
 
 io.on('connection', function(socket) {
 	socket.emit('newlog', logs);
@@ -140,5 +102,5 @@ io.on('connection', function(socket) {
 
 //Start the server
 server.listen(port, function() {
-	program.log.debug(config.message + ' running @: ' + host + ':' + port);
+	program.log(config.message + ' running @: ' + host + ':' + port);
 });

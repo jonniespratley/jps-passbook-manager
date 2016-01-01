@@ -6,8 +6,8 @@
 		"salt": "a58e325c6df628d07a18b673a3420986"
 	},
 	"server": {
-		"host": "",
-		"port": ""
+		"host": "localhost",
+		"port": 5001
 	},
 	"db": {
 		"username": "demouser",

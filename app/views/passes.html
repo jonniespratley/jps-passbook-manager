@@ -17,7 +17,7 @@
 
                 </thead>
                 <tbody>
-                    <tr ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" id="pass-{{pass._id}}">
+                    <tr ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse" id="pass-{{pass._id}}">
                         <td class="pass-icon"><a>
                           <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
                           </a>

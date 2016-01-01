@@ -106,7 +106,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			$scope.pass = p;
 			var c = confirm('Are you sure?');
 			if (c) {
-				$http.delete('/api/v1/passbookmanager/passes/' + p._id).success(function (data) {
+				$http.delete('/api/v1/passbookmanager/' + p._id).success(function (data) {
 					angular.element('#pass-' + p._id).remove();
 					console.log('deletePass', data);
 					$scope.SmartPass.getPasses();
@@ -132,6 +132,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		savePass: function (p) {
 			p.updated = new Date();
 			p.serialNumber = guid();
+			console.log('savePass', p);
 			if (p._id) {
 				db.put(p).then(function (data) {
 					console.log('savePass', data);
@@ -158,13 +159,13 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		exportPass: function (p) {
 			console.log('exportPass', p);
 			$scope.SmartPass.pass = p;
-			$http.get('/api/v1/passbookmanager/passes/' + p._id + '/export').success(function (data) {
+			$http.get('/api/export/' + p._id + '').success(function (data) {
 				console.log('export result', data);
 				$scope.SmartPass.signPass(p, data.filename);
 			});
 		},
 		signPass: function (p, path) {
-			var signUrl = '/api/v1/passbookmanager/passes/' + p._id + '/sign?path=' + path;
+			var signUrl = '/api/sign/' + p._id + '?path=' + path;
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);
@@ -273,4 +274,5 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		console.log(event);
 		$(event.target).next().slideToggle();
 	}
+	console.warn(this);
 });
