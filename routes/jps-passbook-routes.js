@@ -33,9 +33,7 @@ var exec = require('child_process').exec;
  * @param app
  */
 module.exports = function(program, app) {
-	if (!program) {
-		throw new Error('Must provide a program as argument 1');
-	}
+
 	if (!app) {
 		throw new Error('Must provide an express app as argument 2');
 	}
@@ -59,7 +57,7 @@ module.exports = function(program, app) {
 		.all(function(req, res, next) {
 			// runs for all HTTP verbs first
 			// think of it as route specific middleware!
-			program.log.log('debug',req.method + ' ' + req.url);
+			program.log('debug',req.method + ' ' + req.url);
 			next();
 		})
 		.get(function(req, res, next) {
@@ -114,8 +112,8 @@ module.exports = function(program, app) {
 	//### onError()
 	//callback handler
 	var onError = function(error, note) {
-		console.log('Error is: %s', error);
-		console.log('Note ' + note);
+		program.log('Error is: %s', error);
+		program.log('Note ' + note);
 	};
 
 	//Test device tokens
@@ -142,7 +140,7 @@ module.exports = function(program, app) {
 				results.stdout = stdout;
 				sys.print('stdout: ' + stdout);
 				if (error !== null) {
-					console.log('exec error: ' + error);
+					program.log('exec error: ' + error);
 				}
 
 				res.status(200).json({
@@ -182,7 +180,7 @@ module.exports = function(program, app) {
 	//Unregister Pass
 	router.delete('/api/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber',
 		function(req, res) {
-			console.log('Register device ' + req.param('token'));
+			program.log('Register device ' + req.param('token'));
 			res.status(200).send({
 				message: config.name + ' - ' + 'Delete device ' + req.param('token')
 			});
@@ -190,7 +188,7 @@ module.exports = function(program, app) {
 
 	//Register device
 	router.get('/api/register/:token', function(req, res) {
-		console.log('Register device ' + req.param('token'));
+		program.log('Register device ' + req.param('token'));
 		res.json({
 			message: config.name + ' - ' + 'Register device ' + req.param('token')
 		});
@@ -199,7 +197,7 @@ module.exports = function(program, app) {
 	//Get serial numbers
 	router.get('/api/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier',
 		function(req, res) {
-			console.log('Push to device ' + req.param('token'));
+			program.log('Push to device ' + req.param('token'));
 			res.status(200).send({
 				message: config.name + ' - ' + 'Push to device ' + req.param('token')
 			});
@@ -207,7 +205,7 @@ module.exports = function(program, app) {
 
 	//Get latest version of pass
 	router.get('/api/passes/:passTypeIdentifier/:serialNumber', function(req, res) {
-		console.log('Push to device ' + req.param('token'));
+		program.log('Push to device ' + req.param('token'));
 		res.status(200).send({
 			message: 'Get latest version of ' + req.params.passTypeIdentifier
 		});
@@ -215,7 +213,7 @@ module.exports = function(program, app) {
 
 	//Send push to device
 	router.get('/api/devices/:deviceLibraryIdentifier/push/:token', function(req, res) {
-		console.log('Push to device ' + req.param('token'));
+		program.log('Push to device ' + req.param('token'));
 		res.status(200).send({
 			message: 'Device push token'
 		});
@@ -254,7 +252,7 @@ module.exports = function(program, app) {
 		var id = req.params.id;
 		if (id) {
 			program.db.get(id).then(function(resp) {
-				console.log('found pass', resp._id);
+				program.log('found pass', resp._id);
 				jpsPassbook.createPass(config.publicDir, resp, function(data) {
 					res.status(200).send(data);
 				});
@@ -276,7 +274,7 @@ module.exports = function(program, app) {
 		res.header('Cache-Control', 'no-cache');
 
 
-		program.log.info('%s %s', req.method, req.url);
+		program.log('%s %s', req.method, req.url);
 		next();
 	});
 
@@ -288,5 +286,5 @@ module.exports = function(program, app) {
 
 	app.use('/', router);
 
-	program.log.log( 'info', 'jps-passbook-routes initialized');
+	program.log( 'info', 'jps-passbook-routes initialized');
 };

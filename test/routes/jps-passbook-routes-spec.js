@@ -7,12 +7,20 @@ var request = require('supertest'), express = require('express');
 var testPassName = 'Test_Pass_';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var config = fs.readJsonSync(path.resolve(__dirname, '../../config/config.json'));
+var app = express();
+
+// TODO: Program
+var program = require(path.resolve(__dirname, '../../lib/program.js'))(config);
 
 //Test Instances
-var app = express();
-var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes'+ path.sep +'jps-passbook-routes'))(config, app);
+
+var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes'+ path.sep +'jps-passbook-routes'))(program, app);
 
 describe('jps-passbook-routes', function () {
+	it('should have config', function(){
+		assert(program.config);
+		console.log(program.config);
+	})
 
 	it('GET - /api/v1 - should return api', function (done) {
 		request(app)
