@@ -1,9 +1,9 @@
 {
 		"type": "eventTicket",
   "formatVersion" : 1,
-"passTypeIdentifier": "pass.jsapps.io",
+	"passTypeIdentifier": "pass.passbookmanager.io",
   "serialNumber" : "nmyuxofgnb",
-  "teamIdentifier" : "A1B2C3D4E5",
+  "teamIdentifier" : "USE9YUYDFH",
   "webServiceURL" : "https://example.com/passes/",
   "authenticationToken" : "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
   "relevantDate" : "2011-12-08T13:00-08:00",

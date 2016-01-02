@@ -12,12 +12,13 @@
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Passbook Manager</title>
-
+ <script>document.write('<base href="' + document.location + '" />');</script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author" content="Jonnie Spratley">
+
 	<link rel="stylesheet" href="styles/main.css"/>
-	<link rel="stylesheet" href="bower_components/ansi_up/examples/theme.css"/>
+
 
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
@@ -39,29 +40,19 @@
 <script src="scripts/vendor/json3.min.js"></script>
 <![endif]-->
 
-<ng-include src="'views/_header.html'"></ng-include>
-<div id="content" class="container">
-	<div id="content-view" ng-view>
 
-	</div>
-	<hr/>
-	<footer id="footer" class="clearfix">
-		<div id="copywrite">
-			<div class="container">
-				<div class="row">
-					<div class="span12">
-						<p>&copy; 2015 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a>
-							<span id="totop" class="pull-right"><a class="scroll">Back to Top </a><i
-								class="icon-arrow-up icon-white"></i></span></p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
 
-</div>
 
-\
+ <!--ng-include src="'./views/_header.html'"></ng-include-->
+
+
+		<div id="content-view" ng-view></div>
+
+
+
+
+
+
 
 <!-- build:js scripts/vendor.js -->
 <script src="bower_components/ansi_up/ansi_up.js"></script>

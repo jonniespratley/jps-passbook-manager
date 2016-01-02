@@ -16,37 +16,37 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 
 		$routeProvider
 			.when('/', {
-				templateUrl: 'views/main.html',
+				templateUrl: './views/main.html',
 				controller: 'MainCtrl',
 				resolve: routeResolver
 			})
 			.when('/manage', {
-				templateUrl: 'views/manage.html',
+				templateUrl: './views/manage.html',
 				controller: 'ManageCtrl',
 				resolve: routeResolver
 			})
 			.when('/passes', {
-				templateUrl: 'views/passes.html',
+				templateUrl: './views/passes.html',
 				controller: 'PassesCtrl',
 				resolve: routeResolver
 			})
 			.when('/passes/add', {
-				templateUrl: 'views/passes_add.html',
+				templateUrl: './views/passes_add.html',
 				controller: 'PassesCtrl',
 				resolve: routeResolver
 			})
 			.when('/passes/edit/:id', {
-				templateUrl: 'views/passes_add.html',
+				templateUrl: './views/passes_add.html',
 				controller: 'PassesCtrl',
 				resolve: routeResolver
 			})
 			.when('/docs', {
-				templateUrl: 'views/docs.html',
+				templateUrl: './views/docs.html',
 				controller: 'DocsCtrl',
 				resolve: routeResolver
 			})
 			.when('/server', {
-				templateUrl: 'views/server.html',
+				templateUrl: './views/server.html',
 				controller: 'ServerCtrl',
 				resolve: routeResolver
 			})

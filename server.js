@@ -7,20 +7,27 @@
 //## Dependencies
 const express = require('express'),
 	path = require('path'),
+  serveStatic = require('serve-static'),
 	fs = require('fs-extra'),
 	morgan = require('morgan'),
 	PouchDB = require('pouchdb');
 
 
+
 const config = require(path.resolve(__dirname, './config/config.json'));
 const port = process.env.PORT || config.server.port || null;
-const host = process.env.VCAP_APP_HOST || config.server.hostname || "127.0.0.1";
-
+const host = process.env.VCAP_APP_HOST || config.server.hostname || null;
 
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);var debug = require('debug');
+//app.use(serveStatic(__dirname + '/dist'));
+app.use('/', serveStatic(__dirname + '/app'));
+app.use('/public', serveStatic( __dirname + '/www'));
 app.use(morgan(':method :url :response-time'))
+
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var debug = require('debug');
+
 
 
 

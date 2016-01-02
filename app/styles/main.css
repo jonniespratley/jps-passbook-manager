@@ -5,17 +5,26 @@
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 */
+/*
+
+
+@import url('../bower_components/bootstrap/dist/css/bootstrap-theme.css');
 
 @import url('../bower_components/bootstrap/dist/css/bootstrap.css');
-@import url('../bower_components/bootstrap/dist/css/bootstrap-theme.css');
+*/
 @import url("../bower_components/bootstrap-colorpicker/css/colorpicker.css");
 @import url("../bower_components/bootstrap-timepicker/css/bootstrap-timepicker.css");
 @import url("../bower_components/bootstrap-datepicker/css/datepicker3.css");
 
 @import url("../bower_components/bootstrap-wysihtml5/src/bootstrap-wysihtml5.css");
 
-@import url("styles.css");
-
+@import url("../bower_components/ansi_up/examples/theme.css");
+@import url("./photon.css");
+@import url("./styles.css");
+img.pass-icon {
+    width: 44px;
+    margin: 2px;
+}
 .passbook-badge{
 	height:35px;
 	margin: 5px auto;

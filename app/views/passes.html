@@ -1,92 +1,131 @@
-<div class="container" ng-init="SmartPass.init()">
+<div class="window">
+
+	<div class="window-content">
+
+		<div class="pane-group" ng-init="SmartPass.init()">
+			<div class="sidebar">
+				<ul class="list-group">
+					<li class="list-group-header">
+						<input class="form-control" type="text" placeholder="Search for pass">
+					</li>
+					<li
+						ng-click="SmartPass.selectPass(pass);"
+						ng-class="{'active': SmartPass.pass === pass}"
+						class="list-group-item"
+						ng-repeat="pass in SmartPass.passes track by $index | orderBy:updated_at:reverse"
+						id="pass-{{pass._id}}">
+
+						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon"
+							  class="pass-icon im media-object pull-left"/>
+						<div class="media-body">
+							<strong>
+								{{pass.organizationName}}
+							</strong>
+             <span>
+               <br/>
+               {{pass.description}}
+               <br/>
+         {{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
+       </span>
+						</div>
+					</li>
+
+
+				</ul>
+
+			</div>
+			<div class="pane">
+				<div class="padded-more">
+					<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
+						<div ng-include src="'./views/passes_add.html'"></div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer class="toolbar toolbar-footer">
+		<div class="toolbar-actions">
+			<button class="btn btn-default">
+				New Pass
+			</button>
+
+			<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);">
+				Save
+			</button>
+
+			<button ng-click="SmartPass.exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i>
+				Export
+			</button>
+			<button ng-click="SmartPass.deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i>
+				Delete</button>
+		</div>
+	</footer>
+</div>
+
+<!-- @TODO: [Pass Table]
+<table id="passes-table" class="table table-hover table-condensed table-bordered table-striped">
+    <thead>
+        <tr>
+            <th class="th-type">Type</th>
+            <th>Description</th>
+
+            <th>Last Updated</th>
+            <th class="td-actions">Actions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        <tr ng-repeat="pass in SmartPass.passes track by $index | orderBy:updated_at:reverse" id="pass-{{pass._id}}">
+            <td class="pass-icon"><a>
+              <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
+              </a>
+            </td>
+
+            <td><a href="" ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
+            <br/>
+            {{pass.description}}
+            <br/>
+      {{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
+    </td>
+
+            <td>{{pass.updated_at | date: 'medium'}}</td>
+            <td>
+
+                  <button ng-click="SmartPass.exportPass(pass)" class="btn btn-default btn-sm btn-primary" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i>
+                    Export
+                  </button>
+                  <button ng-click="SmartPass.deletePass(pass)" class="btn btn-sm btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i>
+                    Delete</button>
+
+
+
+<br/>
+<a href="{{pass.url}}" target="_blank">
+
+<img
+
+class="passbook-badge"
+src="./img/Add_to_Passbook_Badge_US_1014.svg">
+</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+ -->
+
+<!--div class="container" >
 
     <div id="smartpass-row" class="row">
 
-
         <div class="col-sm-12 clearfix content">
 
-            <!-- @TODO: [Pass Table] -->
-            <table id="passes-table" class="table table-hover table-condensed table-bordered">
-                <thead>
-                    <tr>
-                        <th class="th-type">Type</th>
-                        <th>Description</th>
-                        <th>Last Updated</th>
-                        <th class="td-actions">Actions</th>
-                    </tr>
 
-                </thead>
-                <tbody>
-                    <tr ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse" id="pass-{{pass._id}}">
-                        <td class="pass-icon"><a>
-                          <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
-                          </a>
-                        </td>
-
-                        <td><a href="" ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
-                        <br/>
-                        {{pass.description}}</td>
-                        <td>{{pass.updated | date: 'medium'}}</td>
-                        <td>
-
-
-                              <a ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-primary" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
-                              <a ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
-
-
-				<br/>
-        <a href="{{pass.url}}" target="_blank">
-
-				<img
-          ng-show="pass.url"
-          class="passbook-badge"
-          src="img/Add_to_Passbook_Badge_US_1014.svg">
-        </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
         <div class="row">
-            <div class="col-sm-7" ng-include src="'/views/passes_add.html'"></div>
-            <div class="col-sm-4" ng-include src="'/views/passes_preview.html'"></div>
+
+            <div class="col-sm-4" ng-include src="'./views/passes_preview.html'"></div>
         </div>
 
-            <!-- @TODO Thumbnails -->
-            <ul class="media-list clearfix hidden">
-              <li class="media col-sm-3" ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" data-id="pass-{{pass._id}}">
-                <a class="media-left" href="#" ng-click="SmartPass.selectPass(pass);">
-                  <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
-                </a>
-                <div class="media-body">
-                  <h4 class="media-heading">{{pass.organizationName}}</h4>
-                  <p>{{pass.description}}</p>
-                  <p class="media-actions">
-                    <a href="" ng-click="SmartPass.exportPass(pass)" class="btn-sm btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
-                    <a href="" ng-click="SmartPass.deletePass(pass)" class="btn-sm btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
-                  </p>
-                </div>
-              </li>
-            </ul>
-
-            <div class="row hidden">
-              <div class="col-sm-3" ng-repeat="pass in SmartPass.passes | orderBy:order:reverse" data-id="pass-{{pass._id}}">
-                <div class="thumbnail" ng-click="SmartPass.selectPass(pass);">
-                  <img data-src="holder.js/300x300" alt="...">
-
-                  <div class="caption">
-                    <h3>
-                      {{pass.organizationName}}
-                    </h3>
-                    <p>{{pass.description}}</p>
-                    <p>
-                      <a href="" ng-click="SmartPass.exportPass(pass)" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i></a>
-                      <a href="" ng-click="SmartPass.deletePass(pass)" class="btn btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i></a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
         </div>
 
@@ -94,4 +133,4 @@
 
     </div>
 
-</div>
+</div>-->

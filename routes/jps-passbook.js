@@ -1,36 +1,39 @@
+'use strict';
+
+
+
 var fs = require('fs-extra'),
 	path = require('path'),
 	fsutils = require('fs-utils'),
 	debug = require('debug'),
 	Q = require('q'),
+	logger = debug('jps:passbook'),
 	spawn = require('child_process').spawn;
 
-var logger = debug('jps:passbook');
-
-var fsextra = require('fs-extra');
 /**
  * I handle signing a pass with signpass bin.
  * @param pathToPass
  */
 function signPass(pathToPass, callback) {
-	var signpass = spawn('./bin/signpass', ['-p', pathToPass]);
 	logger('bin/signpass -p ' + pathToPass);
-	signpass.stdout.on('data', function (data) {
+	var signpass = spawn(path.resolve(__dirname, '../bin/signpass'), ['-p', pathToPass]);
+
+	signpass.stdout.on('data', function(data) {
 		logger('stdout: ', data);
 	});
 
-	signpass.on('error', function (err) {
+	signpass.on('error', function(err) {
 		logger('signpass process exited with code ', err);
 		//throw err;
 	});
 
-	signpass.on('close', function (code) {
+	signpass.on('close', function(code) {
 		if (code !== 0) {
 			logger('signpass process exited with code ', code);
 		}
 		callback(pathToPass.replace('.raw', '.pkpass'));
 	});
-};
+}
 
 /**
  * I handle exporting a pass from object to a .json file.
@@ -42,14 +45,25 @@ function exportPass(passFile, passContent) {
 	var defer = Q.defer();
 
 	var passFilename = path.resolve(passFile);
-	passFilename = passFilename.replace(' ', '');
+	passFilename = passFilename.replace(/\W/, '');
 	fs.ensureFileSync(passFilename);
-	fs.writeFile(passFilename, JSON.stringify(passContent), function (err) {
-		logger(err);
+
+	//Write icons
+	var icons = [
+
+	];
+
+
+	//Write pass.json
+	fs.writeJsonSync(passFilename, passContent, function(err) {
+
 		if (err) {
+			logger(err);
 			defer.reject(err);
 		} else {
 			var msg = passFilename + ' was exported';
+
+
 			defer.resolve(msg);
 		}
 	});
@@ -63,7 +77,7 @@ function exportPass(passFile, passContent) {
  * @param res
  */
 function getFile(localPath, mimeType, res) {
-	fs.readFile(localPath, function (err, contents) {
+	fs.readFile(localPath, function(err, contents) {
 		if (!err) {
 			res.writeHead(200, {
 				"Content-Type": mimeType,
@@ -75,7 +89,7 @@ function getFile(localPath, mimeType, res) {
 			res.end();
 		}
 	});
-};
+}
 
 /**
  * I handle writing contents to a file
@@ -87,7 +101,7 @@ function writeFile(localPath, contents, callback) {
 	// create a stream, and create the file if it doesn't exist
 	stream = fs.createWriteStream(localPath);
 	logger('writeFile', localPath);
-	stream.on("open", function () {
+	stream.on("open", function() {
 		// write to and close the stream at the same time
 		stream.end(contents, 'utf-8');
 		callback({
@@ -97,7 +111,7 @@ function writeFile(localPath, contents, callback) {
 			contents: contents
 		});
 	});
-};
+}
 
 /**
  * I handle creating a directory.
@@ -107,24 +121,24 @@ function writeFile(localPath, contents, callback) {
 function createDirectory(localPath, callback) {
 	logger('creating directory', path.normalize(localPath));
 
-	fsextra.ensureDir(localPath, function (er) {
+	fs.ensureDir(localPath, function(er) {
 		if (er) {
 			throw new Error(er, 'Problem creating directory:' + localPath);
 		}
 		callback(localPath);
 	});
-};
+}
 
 function checkDirectory(localPath, callback) {
 	logger('checking directory', path.normalize(localPath));
-	fsutils.rmdir(localPath);
-	fs.mkdir(localPath, function (er) {
+	fs.rmdir(localPath);
+	fs.mkdir(localPath, function(er) {
 		if (er) {
 			throw new Error(er, 'Problem creating directory:' + localPath);
 		}
 		callback(localPath);
 	});
-};
+}
 
 /**
  * I handle creating the pass.raw folder and writing the pass.json file into it.
@@ -135,13 +149,13 @@ function createPass(localPath, pass, callback) {
 	var defer = Q.defer();
 	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') +
 		'.raw';
-	fsextra.outputJson(passPath + '/pass.json', pass, function (d) {
+	fs.outputJson(passPath + '/pass.json', pass, function(d) {
 		callback({
 			directory: path.dirname(passPath),
 			filename: passPath
 		});
 	});
-};
+}
 
 module.exports = {
 	name: 'jps-passbook',

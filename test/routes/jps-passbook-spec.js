@@ -72,11 +72,17 @@ describe('jps-passbook', function () {
 		});
 	});
 
+	it('should export a pass', function (done) {
+		var passFile = testPassDir + path.sep  + 'pass.json';
+		jpsPassbook.exportPass(passFile, testPass).then(function (pass) {
+			assert.ok(pass, 'returns pass location');
+			done();
+		});
+	});
 	it('should sign a pass', function (done) {
 		jpsPassbook.signPass(testPassDir, function (pass) {
 			assert.ok(pass, 'returns pass location');
 			done();
 		});
-
 	});
 });

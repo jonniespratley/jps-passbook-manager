@@ -2,18 +2,18 @@
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	Router = express.Router,
+	expressValidator = require('express-validator'),
 	jsonParser = bodyParser.json();
 
 var jpsPassbook = require('./jps-passbook');
 var serveStatic = require('serve-static');
 
+var debug = require('debug');
 var path = require('path');
-var fs = require('fs');
+var fs = require('fs-extra');
 var http = require('http');
 var url = require('url');
-var qs = require('querystring');
 var assert = require('assert');
-var sys = require('sys')
 var exec = require('child_process').exec;
 
 
@@ -43,6 +43,8 @@ module.exports = function (program, app) {
 	var config = program.config.defaults;
 	var router = express.Router();
 	//var RestResource = require('./rest-resource')(config);
+
+
 
 	/**
 	 * RESTful METHODS:
@@ -102,8 +104,9 @@ module.exports = function (program, app) {
 			res.status(400).json(err);
 		});
 	});
-	dbRouter.delete('/:db/:id?', function (req, res, next) {
-		program.db.remove(req.param.id, req.query.rev).then(function (resp) {
+
+	dbRouter.delete('/:db/:id', function (req, res, next) {
+		program.db.remove(req.params.id, req.query.rev).then(function (resp) {
 			res.status(200).json(resp);
 		}).catch(function (err) {
 			res.status(400).json(err);
@@ -179,7 +182,7 @@ module.exports = function (program, app) {
 		}
 	}
 
-	var devicesLog = program.getLogger('devices');
+	var devicesLog = debug('devices');
 
 	var createOrUpdateDevice = function(device){
 		return new Promise(function(resolve, reject){
@@ -192,7 +195,7 @@ module.exports = function (program, app) {
 				devicesLog('not found', err);
 				devicesLog('creating', device);
 
-				program.db.put(device).then(function(resp){
+				program.db.put(device, device._id).then(function(resp){
 					deviceLog('created', resp);
 					resolve(device);
 				}).catch(reject);
@@ -301,19 +304,26 @@ module.exports = function (program, app) {
 	 * I am the signpass route
 	 */
 	router.get('/sign/:id', function (req, res) {
-		var passFile = req.param('path');
-		if (passFile) {
-			jpsPassbook.sign(passFile, function (data) {
-				//res.status(200).send({message: passFile + ' signed.', filename: data});
+		var passFile;
 
-				res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(
-					data);
-			});
-		} else {
-			res.status(400).send({
-				message: 'Must provide path to .raw folder!'
-			});
-		}
+		program.db.get(req.params.id).then(function (resp) {
+			assert(resp.paths.filename, 'has filename');
+		 	passFile = resp.paths.filename;
+			if (passFile) {
+				jpsPassbook.sign(passFile, function (data) {
+					//res.status(200).send({message: passFile + ' signed.', filename: data});
+					res.set('Content-Type', 'application/vnd.apple.pkpass')
+					.status(200)
+					.download(data);
+				});
+			} else {
+				res.status(400).send({
+					message: 'Must provide path to .raw folder!'
+				});
+			}
+		}).catch(function (err) {
+			res.status(404).send(err);
+		});
 	});
 
 	/**
@@ -329,9 +339,15 @@ module.exports = function (program, app) {
 		if (id) {
 			program.log('id', id);
 			program.db.get(id).then(function (resp) {
+
 				program.log('found pass', resp);
-				jpsPassbook.createPass(config.publicDir, resp, function (data) {
-					res.status(200).send(data);
+				resp.passTypeIdentifier = config.passkit.passTypeIdentifier;
+				jpsPassbook.createPass(path.resolve(__dirname, config.publicDir), resp, function (data) {
+					program.log('createPass', data);
+					resp.paths = data;
+					program.db.put(resp).then(function(out){
+						res.status(200).send(resp);
+					});
 				});
 			}).catch(function (err) {
 				res.status(404).send(err);
@@ -363,6 +379,8 @@ module.exports = function (program, app) {
 		res.status(500).send('Something broke!');
 	});
 
+	app.use(bodyParser.json());
+	//app.use(expressValidator);
 
 	app.use('/api/' + config.version + '/db', dbRouter);
 	app.use('/api/' + config.version, router);

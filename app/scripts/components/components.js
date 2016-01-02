@@ -1,9 +1,12 @@
+'use strict';
 /* ======================[ @TODO: Inline Editable ]====================== */
 jpsPassbookManagerApp.directive('ngEnter', function () {
 	return function (scope, elm, attrs) {
 		elm.bind('keypress', function (e) {
-			if (e.charCode === 13)
+			if (e.charCode === 13) {
 				scope.$apply(attrs.ngEnter);
+			}
+
 		});
 	};
 });
@@ -156,13 +159,13 @@ jpsPassbookManagerApp.directive('tabs', function () {
 					pane.selected = false;
 				});
 				pane.selected = true;
-			}
+			};
 
 			this.addPane = function (pane) {
 				if (panes.length == 0)
 					$scope.select(pane);
 				panes.push(pane);
-			}
+			};
 		},
 		template: '<div class="tabbable">' + '<ul class="nav nav-tabs">' + '<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">' + '<a href="" ng-click="select(pane)"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' + '</li>' + '</ul>' + '<div class="tab-content" ng-transclude></div>' + '</div>',
 		replace: true
@@ -340,12 +343,13 @@ jpsPassbookManagerApp.directive('formitem', function () {
 				post: function postLink(scope, iElement, iAttrs, controller) {
 					//	console.log('post', scope, iElement, iAttrs);
 				}
-			}
+			};
 		},
-		link: function postLink(scope, iElement, iAttrs) {
+		link: function postLink(scope, el, attrs) {
+			el.find('input').addClass('form-control')
 			//console.log('postLink', scope, iElement, iAttrs);
 		},
-		template: '<div class="form-group">' + '<div class="control-label col-sm-2"><label for="{{name}}">{{title}} </label></div>' + '<div class="col-sm-10" ng-transclude>' + '</div>' + '</div>'
+		template: '<div class="form-group">' + '<label for="{{name}}">{{title}} </label>' + '<div ng-transclude>' + '</div>' + '</div>'
 	};
 });
 

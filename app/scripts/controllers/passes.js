@@ -84,14 +84,20 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		},
 		loadSchema: function () {
 			console.log($scope.pass.type);
-			$http.get('passes/' + $scope.pass.type + '.json').success(function (data) {
+
+			$http.get('/passes/' + $scope.pass.type + '.json').success(function (data) {
+				data._id = 'pass-'+ guid();
 				$scope.pass = data;
+
 				console.log('loadSchema', $scope.pass.type, data);
 			});
 		},
 		selectPass: function (p) {
+
 			$scope.SmartPass.pass = p;
+
 			$scope.pass = p;
+
 			console.log('selectPass', p);
 		},
 		clearPass: function () {
@@ -104,15 +110,14 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		deletePass: function (p) {
 			//$scope.SmartPass.pass = p;
 			$scope.pass = p;
-			var c = confirm('Are you sure?');
-			if (c) {
-				$http.delete('/api/v1/passbookmanager/' + p._id).success(function (data) {
-					angular.element('#pass-' + p._id).remove();
-					console.log('deletePass', data);
-					$scope.SmartPass.getPasses();
-				});
-			}
 			console.log('deletePass', p);
+			$http.delete('/api/v1/db/passbookmanager/' + p._id, {params: {rev: p._rev}}).success(function (data) {
+				angular.element('#pass-' + p._id).remove();
+				console.log('deletePass', data);
+			}).catch(function(err){
+				console.error(err);
+			});
+
 		},
 		getPasses: function () {
 			var options = {
@@ -130,18 +135,27 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 			});
 		},
 		savePass: function (p) {
-			p.updated = new Date();
-			p.serialNumber = guid();
+			p = p || {};
+			p.lastUpdated = Date.now().toString();
+			p.updated_at = Date.now();
+			p._id = p._id || 'pass-'+ guid();
+			p.serialNumber = p.serialNumber || guid();
 			console.log('savePass', p);
+
 			if (p._id) {
 				db.put(p).then(function (data) {
-					console.log('savePass', data);
+					console.log('response', data);
 					if (data) {
 						$scope.SmartPass.pass = null;
 						$scope.SmartPass.getPasses();
-						$scope.SmartPass.clearPass();
+						//$scope.SmartPass.clearPass();
 					}
+				}).catch(function(err){
+					console.error('savePass', err);
 				});
+
+
+
 			} else {
 				db.post(p).then(function (data) {
 					//$scope.SmartPass.pass = data;
@@ -159,13 +173,13 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		exportPass: function (p) {
 			console.log('exportPass', p);
 			$scope.SmartPass.pass = p;
-			$http.get('/api/export/' + p._id + '').success(function (data) {
+			$http.get('/api/v1/export/' + p._id + '').success(function (data) {
 				console.log('export result', data);
 				$scope.SmartPass.signPass(p, data.filename);
 			});
 		},
 		signPass: function (p, path) {
-			var signUrl = '/api/sign/' + p._id + '?path=' + path;
+			var signUrl = '/api/v1/sign/' + p._id + '?path=' + path;
 			$scope.SmartPass.pass.url = signUrl;
 			window.open(signUrl);
 			console.log('signPass', path);
@@ -223,7 +237,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.SmartPass.coupon = {
 		"mode": "edit",
 		"formatVersion": 1,
-		"passTypeIdentifier": "pass.jsapps.io",
+		"passTypeIdentifier": "pass.passbookmanager.io",
 		"serialNumber": "E5982H-I2",
 		"teamIdentifier": "USE9YUYDFH",
 		"webServiceURL": 'http://' + location.hostname + ':' + location.port + '/smartpass/v1',

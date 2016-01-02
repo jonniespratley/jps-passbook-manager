@@ -2,7 +2,12 @@
 	"name": "passbookmanager",
 	"message": "Passbook Manager API Server",
 	"version": "v1",
-	"webServiceURL": "http://localhost:4999/api/v1",
+
+	"passkit": {
+		"teamIdentifier": "USE9YUYDFH",
+		"passTypeIdentifier": "pass.passbookmanager.io",
+		"webServiceURL": "http://localhost:4999/api/v1"
+	},
 	"security": {
 		"salt": "a58e325c6df628d07a18b673a3420986"
 	},
@@ -11,11 +16,6 @@
 		"port": 5001
 	},
 	"db": {
-		"username": "demouser",
-		"password": "demopassword",
-		"host": "ds031611.mongolab.com",
-		"port": 31611,
-		"url": "mongodb://angularcms-dev:angularcms-dev@paulo.mongohq.com:10089/app19632340",
 		"local": "http://localhost:5984/passbookmanager",
 		"remote": "http://localhost:5984/passbookmanager"
 	},
@@ -25,8 +25,8 @@
 		"notifications",
 		"settings"
 	],
-	"staticDir": "app",
-	"publicDir": "www",
-	"uploadsTmpDir": ".tmp",
-	"uploadsDestDir": "www"
+	"staticDir": "../app",
+	"publicDir": "../www",
+	"uploadsTmpDir": "../.tmp",
+	"uploadsDestDir": "../www"
 }

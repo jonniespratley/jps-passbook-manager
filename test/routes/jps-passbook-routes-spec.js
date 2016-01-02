@@ -8,7 +8,7 @@ var testPassName = 'Test_Pass_';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var config = fs.readJsonSync(path.resolve(__dirname, '../../config/config.json'));
 var app = express();
-
+var passes;
 // TODO: Program
 var program = require(path.resolve(__dirname, '../../lib/program.js'))(config);
 
@@ -18,7 +18,7 @@ var mockDevice = {
 	token: '12345'
 };
 var mockPass = {
-	"mode": "edit",
+	_id: "pass-E5982H-"+ Date.now(),
 	"formatVersion": 1,
 	"passTypeIdentifier": "pass.passbookmanager.io",
 	"serialNumber": "E5982H-I2",
@@ -80,9 +80,9 @@ describe('jps-passbook-routes', function () {
 
 	describe('DB Routes', function(){
 
-		it('GET - /api/v1/db/passbookmanager - should return db info', function (done) {
+		it('GET - /api/v1/db/passbookmanager/_changes - should return db info', function (done) {
 			request(app)
-				.get('/api/v1/db/passbookmanager')
+				.get('/api/v1/db/passbookmanager/_changes')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
@@ -91,12 +91,17 @@ describe('jps-passbook-routes', function () {
 			request(app)
 				.get('/api/v1/db/passbookmanager/_all_docs')
 				.expect('Content-Type', /json/)
+				.expect(function(res) {
+
+					passes = res.body.rows;
+					console.log(passes)
+				})
 				.expect(200, done);
 		});
 
 		it('PUT - /api/v1/db/passbookmanager/:id - should create doc', function (done) {
 			request(app)
-				.put('/api/v1/db/passbookmanager/pass-'+ mockPass.serialNumber)
+				.put('/api/v1/db/passbookmanager/'+ mockPass._id)
 				.send(mockPass)
 				.expect('Content-Type', /json/)
 				.expect(201, done);
@@ -104,7 +109,18 @@ describe('jps-passbook-routes', function () {
 
 		it('GET - /api/v1/db/passbookmanager/:id - should get doc', function (done) {
 			request(app)
-				.get('/api/v1/db/passbookmanager/pass-'+ mockPass.serialNumber)
+				.get('/api/v1/db/passbookmanager/'+ mockPass._id)
+				.expect('Content-Type', /json/)
+				.expect(function(res) {
+					assert(res.body._id === mockPass._id);
+					mockPass = res.body;
+				})
+				.expect(200, done);
+		});
+
+		it('DELETE - /api/v1/db/passbookmanager/:id - should remove doc', function (done) {
+			request(app)
+				.delete('/api/v1/db/passbookmanager/'+ mockPass._id +'?rev='+mockPass._rev)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
@@ -114,27 +130,27 @@ describe('jps-passbook-routes', function () {
 
 	it('GET - /api/v1/sign/:id - should sign pass', function (done) {
 		request(app)
-			.get('/api/v1/sign/12345')
+			.get('/api/v1/sign/' + mockPass._id)
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
 	it('GET - /api/v1/export/:id - should export pass', function (done) {
 		request(app)
-			.get('/api/v1/export/1234')
+			.get('/api/v1/export/' + mockPass._id)
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
 
 	it('GET - /api/v1/register/:token - add device to db', function (done) {
 		request(app)
-			.get('/api/v1/register/12345678')
+			.get('/api/v1/register/' + mockDevice.deviceLibraryIdentifier)
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
 
 	it('GET - /api/v1/push/:token - send push to device', function (done) {
 		request(app)
-			.get('/api/v1/push/12345678')
+			.get('/api/v1/push/' + mockDevice.token)
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});

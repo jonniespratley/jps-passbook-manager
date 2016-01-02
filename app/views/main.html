@@ -1,76 +1,21 @@
+<header class="toolbar toolbar-header">
+  <h1 class="title">Header the tabs</h1>
+</header>
 
-	<div class="hero-unit">
-		<div class="row-fluid feature-row">
-		    <div class="span8">
-		        <h1 class="ng-binding">{{App.hero.title}}</h1>
-		        <p class="ng-binding">
-		            {{App.hero.body}}
-		        </p>
-				<p>
-					<a class="btn btn-large btn-inverse" data-toggle="modal" ng-click="SmartPass.clearPass();" href="#/manage" ><i class="icon-pencil icon-2x pull-left"></i>Start using<br/> Manager</a>
-					<a class="btn btn-large btn-github" href="https://github.com/jonniespratley/jps-passbook-manager" target="_blank" onclick="_gaq.push(['_trackEvent', 'Outbound Link', 'View Project on GitHub']);">
-					            <i class="icon-github icon-2x pull-left"></i>
-					            View Project<br>on GitHub</a>
-				</p>
-		    </div>
-		    <div class="span4">
-				<div id="iconCarousel" class="carousel slide">
-
-
-				      </div>
-
-		    </div>
-		</div>
-	</div>
-<div id="main">
-	<div id="main-row" class="row-fluid">
-		<div class="span12">
-
-
-			<ul class="nav nav-tabs hidden" id="main_tabs">
-			  <li class="active"><a href="#main_pane">Main</a></li>
-			  <li><a href="#passes_pane" data-toggle="tab">Passes</a></li>
-			  <li><a href="#server_pane" data-toggle="tab">Server</a></li>
-			  <li><a href="#docs_pane" data-toggle="tab">Docs</a></li>
-			</ul><!--/tabs-->
-
-			<div class="tab-content">
-			  <div class="tab-pane active" id="main_pane">
-					<div id="info-row" class="row-fluid">
-						<div class="span6">
-								<h4 class="title">What is Passbook?</h4>
-								<p>Passbook is Apple's new feature for iPhone and iPod touch on iOS 6. Passbook lets you store your digital tickets, boarding passes, and coupons. You can find more recommended Passbook Apps <a href="#other-pass-apps">here</a>.</p>
-						</div>
-						<div class="span6">
-							<h4>Developer API</h4>
-							<p>For more information about developing for Passbook please refer to the
-					            <a href="http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/PassKit_PG/Chapters/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW55" target="_blank">Passbook Programming Guide</a>.
-						   </p>
-						</div>
-					</div>
-
-
-			  </div>
-			<!--
-
-			 <div class="tab-pane" id="passes_pane" ng-controller="PassesCtrl">
-				<ng-include src="'/views/passes.html'" scope="" onload=""></ng-include>
-			  </div>
-			  <div class="tab-pane" id="server_pane">
-
-                <ng-include src="'/views/server.html'" scope="" onload=""></ng-include>
-
-			  </div>
-			  <div class="tab-pane" id="docs_pane">
-	                <div id="docs"></div>
-			  </div>
-						-->
-			</div><!--/tabcontent-->
-
-
-
-
-
-		</div>
-	</div>
+<div class="tab-group">
+  <div class="tab-item">
+    <span class="icon icon-cancel icon-close-tab"></span>
+    Tab
+  </div>
+  <div class="tab-item active">
+    <span class="icon icon-cancel icon-close-tab"></span>
+    Tab active
+  </div>
+  <div class="tab-item">
+    <span class="icon icon-cancel icon-close-tab"></span>
+    Tab
+  </div>
+  <div class="tab-item tab-item-fixed">
+    <span class="icon icon-plus"></span>
+  </div>
 </div>
