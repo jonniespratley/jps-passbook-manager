@@ -1,5 +1,7 @@
+'use strict';
 var express = require('express'),
 	bodyParser = require('body-parser'),
+	Router = express.Router,
 	jsonParser = bodyParser.json();
 
 var jpsPassbook = require('./jps-passbook');
@@ -53,7 +55,8 @@ module.exports = function (program, app) {
 	 * PUT      update          http://localhost:4040/passbookmanager/passes/:id
 	 * DELETE   destroy         http://localhost:4040/passbookmanager/passes/:id
 	 */
-	app.route('/:db/:id?', bodyParser.json())
+	var dbRouter = new Router();
+	dbRouter.route('/:db/:id?', bodyParser.json())
 		.all(function (req, res, next) {
 			// runs for all HTTP verbs first
 			// think of it as route specific middleware!
@@ -61,8 +64,11 @@ module.exports = function (program, app) {
 			next();
 		})
 		.get(function (req, res, next) {
-			//res.json(...);
-			next();
+			program.db.get(req.params.id, req.params).then(function (resp) {
+				res.status(200).json(resp);
+			}).catch(function (err) {
+				res.status(400).json(err);
+			});
 		})
 		.post(function (req, res, next) {
 			// maybe add a new event...
@@ -70,40 +76,40 @@ module.exports = function (program, app) {
 		});
 
 
-	app.get('/' + config.name, function (req, res, next) {
-		res.status(200).json(config);
-	});
-	app.get('/:db/:id?', function (req, res, next) {
-		program.db.get(req.params.id, req.params).then(function (resp) {
+	dbRouter.get('/' + config.name, function (req, res, next) {
+	//	res.status(200).json(config);
+		program.db.info().then(function (resp) {
 			res.status(200).json(resp);
 		}).catch(function (err) {
 			res.status(400).json(err);
 		});
 	});
-	app.get('/:db?', function (req, res, next) {
+
+	dbRouter.get('/:db?', function (req, res, next) {
 		program.db.allDocs(req.query).then(function (resp) {
 			res.status(200).json(resp);
 		}).catch(function (err) {
 			res.status(400).json(err);
 		});
 	});
-	app.post('/:db', bodyParser.json(), function (req, res, next) {
+	dbRouter.post('/:db', bodyParser.json(), function (req, res, next) {
 
 	});
-	app.put('/:db/:id', bodyParser.json(), function (req, res, next) {
+	dbRouter.put('/:db/:id', bodyParser.json(), function (req, res, next) {
 		program.db.put(req.body, req.params.id, req.query.rev).then(function (resp) {
-			res.status(200).json(resp);
+			res.status(201).json(resp);
 		}).catch(function (err) {
 			res.status(400).json(err);
 		});
 	});
-	app.delete('/:db/:id', function (req, res, next) {
+	dbRouter.delete('/:db/:id?', function (req, res, next) {
 		program.db.remove(req.param.id, req.query.rev).then(function (resp) {
 			res.status(200).json(resp);
 		}).catch(function (err) {
 			res.status(400).json(err);
 		});
 	});
+	//app.use('/db', dbRouter);
 
 
 	/* ======================[ @TODO: Listen for Device registration token ]====================== */
@@ -166,10 +172,55 @@ module.exports = function (program, app) {
 	 If the request is not authorized, returns HTTP status 401.
 	 Otherwise, returns the appropriate standard HTTP status.
 	* */
+
+	function Device(obj){
+		return {
+
+		}
+	}
+
+	var devicesLog = program.getLogger('devices');
+
+	var createOrUpdateDevice = function(device){
+		return new Promise(function(resolve, reject){
+			program.db.get(device._id).then(function(resp){
+				if(resp){
+					devicesLog('found device', resp);
+					resolve(resp);
+				}
+			}).catch(function(err){
+				devicesLog('not found', err);
+				devicesLog('creating', device);
+
+				program.db.put(device).then(function(resp){
+					deviceLog('created', resp);
+					resolve(device);
+				}).catch(reject);
+			});
+		});
+	}
+
 	router.post('/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber',
+		bodyParser.json(),
 		function (req, res) {
-			res.status(200).json({
-				message: 'Register pass on device'
+			var device = {
+				_id: 'device-' + req.params.deviceLibraryIdentifier,
+				passTypeIdentifier: req.params.passTypeIdentifier,
+				//pushToken: req.body.pushToken,
+				serialNumber: req.params.serialNumber,
+				data: req.body,
+				type: 'device',
+				created_at: new Date()
+			};
+
+			devicesLog('saveDevice', device);
+			createOrUpdateDevice(device).then(function(resp){
+				res.status(200).json({
+					data: resp,
+					message: 'Register pass on device'
+				});
+			}).catch(function(err){
+				res.status(400).json(err);
 			});
 		});
 
@@ -196,6 +247,8 @@ module.exports = function (program, app) {
 			message: config.name + ' - ' + 'Register device ' + req.param('token')
 		});
 	});
+
+	// TODO: Get tokens
 	router.get('/push/:token', function (req, res) {
 		program.log('Register device ' + req.param('token'));
 		res.json({
@@ -218,6 +271,7 @@ module.exports = function (program, app) {
 	router.get('/passes/:passTypeIdentifier/:serialNumber', function (req, res) {
 		program.log('Push to device ' + req.param('token'));
 		res.status(200).send({
+			data: reg.params,
 			message: 'Get latest version of ' + req.params.passTypeIdentifier
 		});
 	});
@@ -229,6 +283,18 @@ module.exports = function (program, app) {
 			message: 'Device push token'
 		});
 	});
+
+	router.get('/devices', function(req, res){
+		program.db.allDocs({
+			startkey: 'device-1',
+			endkey: 'device-z',
+			include_docs: true
+		}).then(function(resp){
+			res.status(200).json(resp);
+		}).catch(function(err){
+			res.status(400).json(err);
+		});
+	})
 
 
 	/**
@@ -298,6 +364,7 @@ module.exports = function (program, app) {
 	});
 
 
+	app.use('/api/' + config.version + '/db', dbRouter);
 	app.use('/api/' + config.version, router);
 
 	program.log('info', 'jps-passbook-routes initialized');

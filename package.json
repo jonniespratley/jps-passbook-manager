@@ -4,8 +4,8 @@
   "scripts": {
     "postinstall": "bower install",
     "poststart": "grunt dist",
-    "serve": "node server",
-    "start": "electron .",
+    "start": "node server",
+    "desktop": "electron .",
   "build": "electron-packager . $npm_package_productName --prune --asar --all --version=0.36.0",
     "test": "mocha test/routes"
   },

@@ -2,34 +2,32 @@
  * @author Jonnie Spratley, AppMatrix
  * @created 02/26/13
  */
+ 'use strict';
+
 //## Dependencies
-var express = require('express'),
+const express = require('express'),
 	path = require('path'),
-	fs = require('fs-extra');
+	fs = require('fs-extra'),
+	morgan = require('morgan'),
+	PouchDB = require('pouchdb');
 
-var port = process.env.PORT || 1333;
-var host = process.env.VCAP_APP_HOST || "127.0.0.1";
-var config = require(path.resolve(__dirname, './config/config.json'));
 
-if (process.env.MONGODB_URL) {
-	config.db.url = process.env.MONGODB_URL;
-	console.warn('changing mongodb url', process.env.MONGODB_URL);
-}
+const config = require(path.resolve(__dirname, './config/config.json'));
+const port = process.env.PORT || config.server.port || null;
+const host = process.env.VCAP_APP_HOST || config.server.hostname || "127.0.0.1";
+
 
 var app = express();
-
-var morgan = require('morgan');
-app.use(morgan(':method :url :response-time'))
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var io = require('socket.io')(server);var debug = require('debug');
+app.use(morgan(':method :url :response-time'))
+
 
 
 // TODO: database
-
-// TODO: Using pouchdb
-var PouchDB = require('pouchdb');
 PouchDB.debug('*');
 var db = new PouchDB(config.db.local || 'http://localhost:5984/passbookmanager');
+
 var _ds = {
 	findOne: function(id, params) {
 		return db.get(id, params);
@@ -54,12 +52,12 @@ var _ds = {
 };
 
 
-
-var debug = require('debug');
-
 // TODO: Program
 var program = {
-	log: debug('passbook'),
+	log: debug('jps:passbook'),
+	getLogger: function(name){
+		return debug('jps:passbook:' + name);
+	},
 	config: {
 		defaults: config
 	},
@@ -74,10 +72,13 @@ var middleware = [
 	__dirname + path.sep + 'routes' + path.sep + 'jps-passbook-routes'
 ];
 
+
+console.log('\n\n');
+
 // TODO: Load routes
 middleware.forEach(function(m) {
 	require(m)(program, app);
-})
+});
 
 var logs = [];
 
@@ -102,5 +103,7 @@ io.on('connection', function(socket) {
 
 //Start the server
 server.listen(port, function() {
+
+	program.log('listen', port);
 	program.log(config.message + ' running @: ' + host + ':' + port);
 });

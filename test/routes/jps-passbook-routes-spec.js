@@ -70,7 +70,7 @@ describe('jps-passbook-routes', function () {
 		console.log(program.config);
 	})
 
-	xit('GET - /api/v1 - should return api', function (done) {
+	it('GET - /api/v1 - should return api', function (done) {
 		request(app)
 			.get('/api/v1')
 			.expect('Content-Type', /json/)
@@ -78,13 +78,47 @@ describe('jps-passbook-routes', function () {
 	});
 
 
-	xit('GET - /api/v1/sign/:id - should sign pass', function (done) {
+	describe('DB Routes', function(){
+
+		it('GET - /api/v1/db/passbookmanager - should return db info', function (done) {
+			request(app)
+				.get('/api/v1/db/passbookmanager')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/db/passbookmanager/_all_docs - should return all docs', function (done) {
+			request(app)
+				.get('/api/v1/db/passbookmanager/_all_docs')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('PUT - /api/v1/db/passbookmanager/:id - should create doc', function (done) {
+			request(app)
+				.put('/api/v1/db/passbookmanager/pass-'+ mockPass.serialNumber)
+				.send(mockPass)
+				.expect('Content-Type', /json/)
+				.expect(201, done);
+		});
+
+		it('GET - /api/v1/db/passbookmanager/:id - should get doc', function (done) {
+			request(app)
+				.get('/api/v1/db/passbookmanager/pass-'+ mockPass.serialNumber)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+
+	});
+
+	it('GET - /api/v1/sign/:id - should sign pass', function (done) {
 		request(app)
 			.get('/api/v1/sign/12345')
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
-	xit('GET - /api/v1/export/:id - should export pass', function (done) {
+	it('GET - /api/v1/export/:id - should export pass', function (done) {
 		request(app)
 			.get('/api/v1/export/1234')
 			.expect('Content-Type', /json/)
