@@ -184,7 +184,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		"formatVersion": 1,
 		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "SMS001",
-		"teamIdentifier": "J62UV6D7WJ",
+		"teamIdentifier": "USE9YUYDFH",
 		"webServiceURL": "https://www.test.com/smartpasses/",
 		"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
 		"organizationName": "Apple Retail: Arden Fair",
@@ -225,7 +225,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		"formatVersion": 1,
 		"passTypeIdentifier": "pass.jsapps.io",
 		"serialNumber": "E5982H-I2",
-		"teamIdentifier": "J62UV6D7WJ",
+		"teamIdentifier": "USE9YUYDFH",
 		"webServiceURL": 'http://' + location.hostname + ':' + location.port + '/smartpass/v1',
 		"authenticationToken": "000000000012341234",
 		"barcode": {

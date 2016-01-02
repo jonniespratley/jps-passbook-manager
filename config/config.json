@@ -2,6 +2,7 @@
 	"name": "passbookmanager",
 	"message": "Passbook Manager API Server",
 	"version": "v1",
+	"webServiceURL": "http://localhost:4999/api/v1",
 	"security": {
 		"salt": "a58e325c6df628d07a18b673a3420986"
 	},
