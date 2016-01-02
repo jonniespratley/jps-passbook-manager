@@ -2,38 +2,25 @@
  * @author Jonnie Spratley, AppMatrix
  * @created 02/26/13
  */
- 'use strict';
+'use strict';
+const express = require('express');
+const path = require('path');
+const serveStatic = require('serve-static');
+const PouchDB = require('pouchdb');
+const debug = require('debug');
 
-//## Dependencies
-const express = require('express'),
-	path = require('path'),
-  serveStatic = require('serve-static'),
-	fs = require('fs-extra'),
-	morgan = require('morgan'),
-	PouchDB = require('pouchdb');
-
-
+const fs = require('fs-extra');
 
 const config = require(path.resolve(__dirname, './config/config.json'));
 const port = process.env.PORT || config.server.port || null;
 const host = process.env.VCAP_APP_HOST || config.server.hostname || null;
 
 var app = express();
-//app.use(serveStatic(__dirname + '/dist'));
-app.use('/', serveStatic(__dirname + '/app'));
-app.use('/public', serveStatic( __dirname + '/www'));
-app.use(morgan(':method :url :response-time'))
+app.use('/', serveStatic(path.resolve(__dirname, './app')));
+app.use('/public', serveStatic(path.resolve(__dirname, './www')));
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var debug = require('debug');
-
-
-
-
-// TODO: database
 PouchDB.debug('*');
-var db = new PouchDB(config.db.local || 'http://localhost:5984/passbookmanager');
+var db = new PouchDB(config.db.local || 'passbookmanager', {db : require('memdown')});
 
 var _ds = {
 	findOne: function(id, params) {
@@ -58,11 +45,9 @@ var _ds = {
 	}
 };
 
-
-// TODO: Program
 var program = {
 	log: debug('jps:passbook'),
-	getLogger: function(name){
+	getLogger: function(name) {
 		return debug('jps:passbook:' + name);
 	},
 	config: {
@@ -73,44 +58,14 @@ var program = {
 	app: app
 };
 
-
 var middleware = [
-//	__dirname + path.sep + 'routes' + path.sep + 'jps-passbook-sockets',
-	__dirname + path.sep + 'routes' + path.sep + 'jps-passbook-routes'
+	path.resolve(__dirname, './routes/jps-passbook-routes')
 ];
-
-
-console.log('\n\n');
-
-// TODO: Load routes
 middleware.forEach(function(m) {
 	require(m)(program, app);
 });
 
-var logs = [];
 
-//Enable logging before everything
-/*
-var intercept = require("intercept-stdout");
-
-var intercept_func = intercept(function(data) {
-	logs.push({
-		msg: data
-	});
-	if (io) {
-		io.emit('newlog', [{
-			msg: data
-		}]);
-	}
-});*/
-
-io.on('connection', function(socket) {
-	socket.emit('newlog', logs);
-});
-
-//Start the server
-server.listen(port, function() {
-
-	program.log('listen', port);
-	program.log(config.message + ' running @: ' + host + ':' + port);
+app.listen(port, host, function() {
+	program.log('listen', host, port);
 });

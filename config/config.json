@@ -16,7 +16,7 @@
 		"port": 5001
 	},
 	"db": {
-		"local": "http://localhost:5984/passbookmanager",
+		"local": "passbookmanager",
 		"remote": "http://localhost:5984/passbookmanager"
 	},
 	"collections": [

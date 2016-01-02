@@ -7,7 +7,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 	$scope.$routeParams = $routeParams;
 	$scope.cdn = 'http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com';
 
-	var db = new PouchDB('http://localhost:5984/passbookmanager');
+	var db = new PouchDB('/api/v1/db/passbookmanager');
 
 
 	function s4() {
@@ -85,7 +85,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function ($scop
 		loadSchema: function () {
 			console.log($scope.pass.type);
 
-			$http.get('/passes/' + $scope.pass.type + '.json').success(function (data) {
+			$http.get('/passes/schemas/' + $scope.pass.type + '.json').success(function (data) {
 				data._id = 'pass-'+ guid();
 				$scope.pass = data;
 

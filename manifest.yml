@@ -6,8 +6,8 @@
 #  Step 2 - After you have your application running you can bind to the services below as described on predix.io
 applications:
   - name: passbook-manager # Step 1: Change your application name
-    #buildpack: https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
-    buildpack: predix_openresty_buildpack
+    buildpack: https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
+    #buildpack: predix_openresty_buildpack
     memory: 64M
     stack: cflinuxfs2
     path: .
@@ -15,7 +15,7 @@ applications:
     # Step 2: Bind services and configure environment variables as described on predix.io
     services:
       - my_logstash_instance
-      - my_predix_mobile_instance
+      #- my_predix_mobile_instance
       - my_uaa_instance # change this to your redis service instance name
       #- my_viewsvc_instance # change this to your view service instance name
     env:
