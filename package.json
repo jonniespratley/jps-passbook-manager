@@ -7,7 +7,7 @@
     "serve": "node server",
     "start": "electron .",
   "build": "electron-packager . $npm_package_productName --prune --asar --all --version=0.36.0",
-    "test": "grunt test"
+    "test": "mocha test/routes"
   },
   "dependencies": {
     "body-parser": "^1.10.1",
