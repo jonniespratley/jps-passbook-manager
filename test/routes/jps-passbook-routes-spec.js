@@ -6,7 +6,7 @@ var request = require('supertest'), express = require('express');
 //Test vars
 var testPassName = 'Test_Pass_';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
-var config = fs.readJsonSync(path.resolve(__dirname, '../../config/config.json'));
+var config = fs.readJsonSync(path.resolve(__dirname, '../../config.json'));
 var app = express();
 var passes;
 // TODO: Program
@@ -24,7 +24,7 @@ var mockPass = {
 	"serialNumber": "E5982H-I2",
 	"teamIdentifier": "USE9YUYDFH",
 	"webServiceURL": config.webServiceURL,
-	"authenticationToken": "000000000012341234",
+	"authenticationToken": "00000000001234",
 	"barcode": {
 		"message": "123456789",
 		"format": "PKBarcodeFormatQR",
@@ -199,6 +199,42 @@ describe('jps-passbook-routes', function () {
 			request(app)
 				.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier + '?passesUpdatedSince=')
 				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+
+		it('401 - GET request to webServiceURL/version/passes/passTypeIdentifier/serialNumber', function (done) {
+			request(app)
+				.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
+				//.expect('Content-Type', /json/)
+				.expect(401, done);
+		});
+
+		it('200 - GET request to webServiceURL/version/passes/passTypeIdentifier/serialNumber', function (done) {
+			request(app)
+				.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber + '?passesUpdatedSince=')
+				.set('Accept', 'application/json')
+				.set('Authorization', 'QXBwbGVQYXNzIDAwMDAwMDAwMDAxMjM0')
+				.expect('Content-Type', /application\/vnd.apple.pkpass/)
+				.expect(200)
+				.end(function(err, res){
+					if (err){
+						return done(err)
+					}
+					done();
+				});
+		});
+
+
+		it('GET request to webServiceURL/version/devices/deviceLibraryIdentifier/registrations/passTypeIdentifier?passesUpdatedSince=tag', function (done) {
+			request(app)
+				.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier + '?passesUpdatedSince=')
+				.expect('Content-Type', /json/)
+				.expect(function(res) {
+					assert.ok(res.body.lastUpdated);
+					assert.ok(res.body.serialNumbers);
+
+				})
 				.expect(200, done);
 		});
 	});

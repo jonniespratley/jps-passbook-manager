@@ -4,6 +4,7 @@
 
 var fs = require('fs-extra'),
 	path = require('path'),
+	assert = require('assert'),
 	fsutils = require('fs-utils'),
 	debug = require('debug'),
 	Q = require('q'),
@@ -44,7 +45,7 @@ function signPass(pathToPass, callback) {
 function exportPass(passFile, passContent) {
 	var defer = Q.defer();
 
-	var passFilename = path.resolve(passFile);
+	var passFilename = path.resolve(__dirname, passFile);
 	passFilename = passFilename.replace(/\W/, '');
 	fs.ensureFileSync(passFilename);
 
@@ -53,10 +54,13 @@ function exportPass(passFile, passContent) {
 
 	];
 
+	assert(passFile, 'has passFile');
+	assert(passContent, 'has conent');
+	assert(passFilename, 'has filename');
+
 
 	//Write pass.json
-	fs.writeJsonSync(passFilename, passContent, function(err) {
-
+	fs.writeFileSync(passFilename, JSON.stringify(passContent), function(err) {
 		if (err) {
 			logger(err);
 			defer.reject(err);
@@ -99,7 +103,7 @@ function getFile(localPath, mimeType, res) {
  */
 function writeFile(localPath, contents, callback) {
 	// create a stream, and create the file if it doesn't exist
-	stream = fs.createWriteStream(localPath);
+	var stream = fs.createWriteStream(localPath);
 	logger('writeFile', localPath);
 	stream.on("open", function() {
 		// write to and close the stream at the same time
@@ -131,7 +135,7 @@ function createDirectory(localPath, callback) {
 
 function checkDirectory(localPath, callback) {
 	logger('checking directory', path.normalize(localPath));
-	fs.rmdir(localPath);
+	//fs.rmdir(localPath);
 	fs.mkdir(localPath, function(er) {
 		if (er) {
 			throw new Error(er, 'Problem creating directory:' + localPath);
@@ -149,6 +153,9 @@ function createPass(localPath, pass, callback) {
 	var defer = Q.defer();
 	var passPath = localPath + path.sep + pass.description.replace(/\W/g, '_') +
 		'.raw';
+	console.log(passPath);
+	assert(passPath, 'has path');
+
 	fs.outputJson(passPath + '/pass.json', pass, function(d) {
 		callback({
 			directory: path.dirname(passPath),
