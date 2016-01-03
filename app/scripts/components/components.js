@@ -63,7 +63,7 @@ jpsPassbookManagerApp.directive('myTable', function () {
 			options["aoColumns"] = scope.$eval(attrs.aoColumns);
 		}
 
-		// aoColumnDefs is dataTables way of providing fine control over column config
+		// aoColumnDefs is dataTables way of providing fine control over column templates
 		if (attrs.aoColumnDefs) {
 			options["aoColumnDefs"] = scope.$eval(attrs.aoColumnDefs);
 		}
@@ -429,7 +429,7 @@ jpsPassbookManagerApp.directive('portlet', function () {
 		locals: {
 			title: 'bind'
 		},
-		template: '<div class="box" id="box-">' + '<h4 class="box-header round-top">{{title}}' + '<a class="box-btn" title="close"><i class="icon-remove"></i></a>' + '<a class="box-btn" title="toggle"><i class="icon-minus"></i></a>' + '<a class="box-btn" title="config" data-toggle="modal" href="#box-config-modal"><i class="icon-cog"></i></a>' + '</h4>' + '<div class="box-container-toggle"><div class="box-content" ng-transclude></div></div>' + '</div>'
+		template: '<div class="box" id="box-">' + '<h4 class="box-header round-top">{{title}}' + '<a class="box-btn" title="close"><i class="icon-remove"></i></a>' + '<a class="box-btn" title="toggle"><i class="icon-minus"></i></a>' + '<a class="box-btn" title="templates" data-toggle="modal" href="#box-templates-modal"><i class="icon-cog"></i></a>' + '</h4>' + '<div class="box-container-toggle"><div class="box-content" ng-transclude></div></div>' + '</div>'
 	};
 });
 

@@ -5,7 +5,7 @@ SmartPassModule.directive('ngEnter', function() {
             if (e.charCode === 13) scope.$apply(attrs.ngEnter);
         });
     };
-});    
+});
 
 SmartPassModule.directive('inlineEdit', function() {
     return {
@@ -13,7 +13,7 @@ SmartPassModule.directive('inlineEdit', function() {
         // or inlined as JS string (using template property)
         templateUrl: 'componentTpl.html',
         scope: {
-            model: 'accessor' 
+            model: 'accessor'
         }
     };
 });
@@ -46,7 +46,7 @@ return {
                     console.log("esc");
                     ctrl.$setViewValue(elm.html());
                     el.blur();
-                    event.preventDefault();                        
+                    event.preventDefault();
                 }
 
         });
@@ -110,12 +110,12 @@ SmartPassModule.directive('tabs', function() {
 });
 
 /**
- * 
- * @name - Box  
+ *
+ * @name - Box
  * @comment - This creates a generic box for a directive example.
- * @usage 
+ * @usage
  * <box title="Name">[Contents]</box>
- * 
+ *
  */
 SmartPassModule.directive('box', function() {
     return {
@@ -130,12 +130,12 @@ SmartPassModule.directive('box', function() {
 });
 
 /**
- * 
- * @name - FormItem  
+ *
+ * @name - FormItem
  * @comment - This creates a form control group.
- * @usage 
+ * @usage
  * <formitem title="Label:" type="text">[Contents]</box>
- * 
+ *
  */
 SmartPassModule.directive('formitem', function() {
     return {
@@ -162,7 +162,7 @@ SmartPassModule.directive('portlet', function() {
         locals : {
             title : 'bind'
         },
-        template : '<div class="box" id="box-">' + '<h4 class="box-header round-top">{{title}}' + '<a class="box-btn" title="close"><i class="icon-remove"></i></a>' + '<a class="box-btn" title="toggle"><i class="icon-minus"></i></a>' + '<a class="box-btn" title="config" data-toggle="modal" href="#box-config-modal"><i class="icon-cog"></i></a>' + '</h4>' + '<div class="box-container-toggle"><div class="box-content" ng-transclude></div></div>' + '</div>'
+        template : '<div class="box" id="box-">' + '<h4 class="box-header round-top">{{title}}' + '<a class="box-btn" title="close"><i class="icon-remove"></i></a>' + '<a class="box-btn" title="toggle"><i class="icon-minus"></i></a>' + '<a class="box-btn" title="templates" data-toggle="modal" href="#box-templates-modal"><i class="icon-cog"></i></a>' + '</h4>' + '<div class="box-container-toggle"><div class="box-content" ng-transclude></div></div>' + '</div>'
     };
 });
 

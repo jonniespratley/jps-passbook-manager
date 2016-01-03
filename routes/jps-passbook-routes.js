@@ -23,15 +23,15 @@ var exec = require('child_process').exec;
  *
 
  var app = express();
- require(__dirname + path.sep + 'routes'+ path.sep +'jps-passbook-routes')(config, app);
+ require(__dirname + path.sep + 'routes'+ path.sep +'jps-passbook-routes')(templates, app);
 
 
  //Start the server
- app.listen(config.server.port, function () {
-	console.log(config.message + ' running @: ' + config.server.host + ':' + config.server.port);
+ app.listen(templates.server.port, function () {
+	console.log(templates.message + ' running @: ' + templates.server.host + ':' + templates.server.port);
  });
 
- * @param config
+ * @param templates
  * @param app
  */
 module.exports = function (program, app) {
@@ -42,7 +42,7 @@ module.exports = function (program, app) {
 
 	var config = program.config.defaults;
 	var router = express.Router();
-	//var RestResource = require('./rest-resource')(config);
+	//var RestResource = require('./rest-resource')(templates);
 
 
 

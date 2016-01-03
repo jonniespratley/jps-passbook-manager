@@ -10,7 +10,7 @@ module.exports = function (program, app) {
 	}
 
 	var config = program.config.defaults;
-
+	var logger = program.getLogger('middleware-db')
 	var dbRouter = new Router();
 
 
@@ -31,6 +31,7 @@ module.exports = function (program, app) {
 			// runs for all HTTP verbs first
 			// think of it as route specific middleware!
 			program.log('debug', req.method + ' ' + req.url);
+			logger('all route', req.method, req.url, req.params)
 			next();
 		})
 		.get(function (req, res, next) {
@@ -45,15 +46,6 @@ module.exports = function (program, app) {
 			next();
 		});
 
-
-	dbRouter.get('/' + config.name, function (req, res, next) {
-		//	res.status(200).json(config);
-		program.db.info().then(function (resp) {
-			res.status(200).json(resp);
-		}).catch(function (err) {
-			res.status(400).json(err);
-		});
-	});
 
 	dbRouter.get('/:db?', function (req, res, next) {
 		program.db.allDocs(req.query).then(function (resp) {

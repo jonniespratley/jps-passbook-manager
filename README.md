@@ -85,9 +85,29 @@ _(Nothing yet)_
 
 
 
+## Example Commands
 
+```
+jps in ~/Github/jps-passbook-manager on develop*
+⚡ bin/signpass -p /Users/jps/Github/jps-passbook-manager/.tmp/pass-1451800252971/Test_Pass_.raw
+2016-01-02 21:51:50.126 signpass[26636:472827] {
+    "icon.png" = f8a2bb1b52c426275312c98c626d5be92758170e;
+    "icon@2x.png" = 4204eafa4ac2df2339cf3308a2b0ecd228732589;
+    "logo.png" = 0a790897e6b8040fe73baa99053b706939f65d07;
+    "logo@2x.png" = b98b0504f4f067de4f7a6c1e95df8a78024dc3bb;
+    "pass.json" = e7d4183137d35a48019f8ecb4eaed3e457482d32;
+}
+jps in ~/Github/jps-passbook-manager on develop*
+⚡ bin/signpass -v /Users/jps/Github/jps-passbook-manager/.tmp/pass-1451800252971/Test_Pass_.pkpass
+Signature valid.
+Certificates: (
+	0: Apple Worldwide Developer Relations Certification Authority
+	1: Pass Type ID: pass.passbookmanager.io
+)
+Trust chain is valid.
 
-
+*** SUCCEEDED ***
+```
 
 
 

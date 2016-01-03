@@ -50,11 +50,11 @@ module.exports = function(options, app) {
 				console.warn('[rest-resource] - ', str);
 			}
 		},
-		//Init the resource applying the config object
+		//Init the resource applying the templates object
 		init: function(c) {
 			var self = this;
 
-			//Set the config
+			//Set the templates
 			RestResource.config = c;
 
 			MongoClient.connect(config.db.url, function(err, db) {
