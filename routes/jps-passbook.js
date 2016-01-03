@@ -9,45 +9,33 @@ var fs = require('fs-extra'),
  * I handle signing a pass with signpass bin.
  * @param pathToPass
  */
-function signPass(pathToPass, callback) {
+function signPass(pathToPass, mode) {
 	return new Promise(function (resolve, reject) {
-		var cmd = [path.resolve(__dirname, '../bin/signpass'), '-p', pathToPass].join(' ');
+		var cmd = [
+			path.resolve(__dirname, '../bin/signpass'),
+			mode || '-p',
+			pathToPass
+		].join(' ');
 
-		console.log('signPass - file', pathToPass);
-		console.log('signPass - cmd', cmd);
-		/*
-		 var signpass = spawn(cmd);
+		logger('signPass - file', pathToPass);
+		logger('signPass - cmd', cmd);
 
-		 signpass.stdout.on('data', function (data) {
-		 logger('stdout: ', data);
-		 });
-
-		 signpass.on('error', function (err) {
-		 logger('signpass process exited with code ', err);
-		 //throw err;
-		 });
-
-		 signpass.on('close', function (code) {
-		 if (code !== 0) {
-		 logger('signpass process exited with code ', code);
-		 }
-		 callback(pathToPass.replace('.raw', '.pkpass'));
-		 });*/
-
-		var exec = require('child_process').exec,
-			child;
+		var exec = require('child_process').exec, child;
 
 		child = exec(cmd, function (error, stdout, stderr) {
-			console.log('stdout: ', error, stdout, stderr);
+
 			logger('stdout: ' + stdout);
-			//	logger('stderr: ' + stderr);
+			logger('stderr: ' + stderr);
 			if (error !== null) {
 				logger('exec error: ' + error);
 				reject(error);
+			} else {
+				resolve(stdout || stderr);
 			}
-			resolve(stdout);
-
 		});
+		child.on('disconnect', function () {
+			logger('disconnected');
+		})
 	});
 }
 
@@ -62,7 +50,7 @@ function exportPass(passFile, passContent) {
 		var passFilename = path.resolve(__dirname, passFile);
 		passFilename = passFilename.replace(/\W/, '');
 
-		console.log('exportPass', passFilename);
+		logger('exportPass', passFilename);
 
 		assert(passFile, 'has passFile');
 		assert(passContent, 'has conent');
@@ -79,11 +67,17 @@ function exportPass(passFile, passContent) {
 			} else {
 				var msg = passFilename + ' was exported';
 				logger('exportPass - success', passFilename);
+
 				resolve(passFilename);
 			}
 		});
 	});
 
+}
+
+function validatePass(pathToPass){
+	logger('validatePass', pathToPass);
+	return exportPass(pathToPass, '-v');
 }
 
 /**
@@ -114,11 +108,10 @@ function getFile(localPath, mimeType, res) {
  * @param callback
  */
 function writeFile(localPath, contents, callback) {
-	// create a stream, and create the file if it doesn't exist
 	var stream = fs.createWriteStream(localPath);
 	logger('writeFile', localPath);
 	stream.on("open", function () {
-		// write to and close the stream at the same time
+
 		stream.end(contents, 'utf-8');
 		callback({
 			directory: path.dirname(localPath),
@@ -135,7 +128,7 @@ function writeFile(localPath, contents, callback) {
  * @returns {*}
  */
 function createDirectory(localPath, callback) {
-	logger('creating directory', path.normalize(localPath));
+	logger('creating directory', path.resolve(localPath));
 
 	fs.ensureDir(localPath, function (er) {
 		if (er) {
@@ -146,7 +139,7 @@ function createDirectory(localPath, callback) {
 }
 
 function checkDirectory(localPath, callback) {
-	logger('checking directory', path.normalize(localPath));
+	logger('checking directory', path.resolve(localPath));
 	//fs.rmdir(localPath);
 	fs.mkdir(localPath, function (er) {
 		if (er) {
@@ -180,12 +173,13 @@ function createPass(localPath, pass) {
 	return new Promise(function (resolve, reject) {
 		var passPath = path.resolve(localPath + path.sep + pass.description + '.raw');
 
-		logger('createPass', pass);
+		//logger('createPass', pass);
 		logger('createPass - path', passPath);
 
 		assert(passPath, 'has path');
 
-		copyAssets('Coupon', passPath);
+
+		copyAssets(pass.type || 'Coupon', passPath);
 
 		fs.writeFile(path.resolve(passPath, './pass.json'), JSON.stringify(pass), function (err) {
 			if (err) {
@@ -255,6 +249,7 @@ module.exports = {
 	signPass: signPass,
 	export: exportPass,
 	exportPass: exportPass,
+	validatePass: validatePass,
 	createDirectory: createDirectory,
 	createPass: createPass
 };

@@ -59,4 +59,14 @@ describe('jps-passbook', function () {
 			done();
 		});
 	});
+	it('should validate a pass', function (done) {
+		jpsPassbook.validatePass(mockPass.filename).then(function (pass) {
+			assert.ok(pass, 'returns pass');
+			console.log('valid response', pass);
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
+			done();
+		});
+	});
 });

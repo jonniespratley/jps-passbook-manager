@@ -45,7 +45,6 @@ module.exports = function (program, app) {
 	//var RestResource = require('./rest-resource')(templates);
 
 
-
 	/* ======================[ @TODO: Listen for Device registration token ]====================== */
 
 	//### onError()
@@ -68,7 +67,6 @@ module.exports = function (program, app) {
 			message: config.name
 		});
 	});
-
 
 
 	router.post('/log', bodyParser.json(), function (req, res) {
@@ -94,23 +92,32 @@ module.exports = function (program, app) {
 		});
 	});
 
-
+	var PassController = require('./controllers/passes-controller');
+	var passController = new PassController(program.db);
 
 	//Get latest version of pass
 	router.get('/passes/:passTypeIdentifier/:serialNumber?', function (req, res) {
 		//program.log('Push to device ' + req.param('token'));
 		var auth = req.get('Authorization');
+		console.warn('latest versino for pass', req.url);
+		console.log('Auth header', auth);
 
-		if(!auth){
+		if (!auth) {
 			res.status(401).json({error: 'No header'})
+
 		} else {
-			res.status(200).send({
-				message: 'Get latest version of ' + req.params.passTypeIdentifier
+
+
+			passController.findPassBySerial(req.params.serialNumber).then(function (resp) {
+				res.send(resp);
+			}).catch(function (err) {
+				res.status(404).json(err);
 			});
+
+
 		}
 
 	});
-
 
 
 	/**
@@ -121,13 +128,13 @@ module.exports = function (program, app) {
 
 		program.db.get(req.params.id).then(function (resp) {
 			assert(resp.paths.filename, 'has filename');
-		 	passFile = resp.paths.filename;
+			passFile = resp.paths.filename;
 			if (passFile) {
-				jpsPassbook.sign(passFile, function (data) {
-					//res.status(200).send({message: passFile + ' signed.', filename: data});
-					res.set('Content-Type', 'application/vnd.apple.pkpass')
-					.status(200)
-					.download(data);
+				jpsPassbook.sign(passFile).then( function (data) {
+					res.status(200).send({message: passFile + ' signed.', filename: data});
+					//res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
+				}).catch(function (err) {
+					res.status(404).send(err);
 				});
 			} else {
 				res.status(400).send({
@@ -155,12 +162,14 @@ module.exports = function (program, app) {
 
 				program.log('found pass', resp);
 				resp.passTypeIdentifier = config.passkit.passTypeIdentifier;
-				jpsPassbook.createPass(path.resolve(__dirname, config.publicDir), resp, function (data) {
+				jpsPassbook.createPass(path.resolve(__dirname, config.publicDir), resp).then(function (data) {
 					program.log('createPass', data);
 					resp.paths = data;
-					program.db.put(resp).then(function(out){
+					program.db.put(resp).then(function (out) {
 						res.status(200).send(resp);
 					});
+				}).catch(function (err) {
+					res.status(404).send(err);
 				});
 			}).catch(function (err) {
 				res.status(404).send(err);
@@ -170,6 +179,29 @@ module.exports = function (program, app) {
 		}
 	});
 
+
+	router.get('/devices', function (req, res) {
+		program.db.allDocs({
+			startkey: 'device-1',
+			endkey: 'device-z',
+			include_docs: true
+		}).then(function (resp) {
+			res.status(200).json(resp);
+		}).catch(function (err) {
+			res.status(400).json(err);
+		});
+	});
+	router.get('/passes', function (req, res) {
+		program.db.allDocs({
+			startkey: 'device-1',
+			endkey: 'device-z',
+			include_docs: true
+		}).then(function (resp) {
+			res.status(200).json(resp);
+		}).catch(function (err) {
+			res.status(400).json(err);
+		});
+	});
 
 	app.use(serveStatic('../app', null));
 	app.use(serveStatic('../www', null));
@@ -201,7 +233,7 @@ module.exports = function (program, app) {
 		path.resolve(__dirname, './jps-middleware-db'),
 		path.resolve(__dirname, './jps-middleware-devices')
 	];
-	middleware.forEach(function(m) {
+	middleware.forEach(function (m) {
 		require(m)(program, app);
 	});
 

@@ -89,17 +89,7 @@ module.exports = function (program, app) {
 		});
 
 
-	router.get('/devices', function (req, res) {
-		program.db.allDocs({
-			startkey: 'device-1',
-			endkey: 'device-z',
-			include_docs: true
-		}).then(function (resp) {
-			res.status(200).json(resp);
-		}).catch(function (err) {
-			res.status(400).json(err);
-		});
-	});
+
 	app.use('/api/' + config.version + '/devices', router);
 
 };
