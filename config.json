@@ -2,7 +2,7 @@
 	"name": "passbookmanager",
 	"message": "Passbook Manager API Server",
 	"version": "v1",
-	"dataPath": "./db",
+	"dataPath": "./data",
 	"passkit": {
 		"teamIdentifier": "USE9YUYDFH",
 		"passTypeIdentifier": "pass.passbookmanager.io",

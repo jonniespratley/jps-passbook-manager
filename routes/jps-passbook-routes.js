@@ -79,13 +79,7 @@ module.exports = function (program, app) {
 	});
 
 
-	//Register device
-	router.get('/register/:token', function (req, res) {
-		program.log('Register device ' + req.param('token'));
-		res.json({
-			message: config.name + ' - ' + 'Register device ' + req.param('token')
-		});
-	});
+
 
 	// TODO: Get tokens
 	router.get('/push/:token', function (req, res) {
@@ -98,28 +92,18 @@ module.exports = function (program, app) {
 	var PassController = require('./controllers/passes-controller');
 	var passController = new PassController(program.db);
 
-	//Get latest version of pass
-	router.get('/passes/:passTypeIdentifier/:serialNumber?', function (req, res) {
-		var auth = req.get('Authorization');
-
-		console.log('Pass ID', req.params.passTypeIdentifier)
-		console.log('Pass serialNumber', req.params.serialNumber)
-
-		console.log('Auth header', auth);
-		//program.log('Push to device ' + req.param('token'));
-
-		if (!auth) {
-			res.status(401).json({error: 'No header'});
-		} else {
-
-			passController.findPassBySerial(req.params.serialNumber).then(function (resp) {
-				res.send(resp);
-			}).catch(function (err) {
-				res.status(404).json(err);
-			});
-		}
-
-	});
+	/*
+	  # Pass delivery
+	  #
+	  # GET /v1/passes/<pass_type_id>/<serial_number#>
+	  # Header: Authorization: ApplePass <authenticationToken>
+	  #
+	  # server response:
+	  # --> if auth token is correct: 200, with pass data payload
+	  # --> if auth token is incorrect: 401
+	  #
+	*/
+	router.get('/passes/:pass_type_id/:serial_number?', passController.get_passes);
 
 
 	/**

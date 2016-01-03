@@ -25,9 +25,7 @@ describe('jps-passbook', function() {
 	it('should create a pass file with .raw appended', function(done) {
 		mockPass.description = testPassName;
 		jpsPassbook.createPass(testPassDir, mockPass).then(function(data) {
-			console.log('new pass', data);
-			console.log('new pass', data.filename);
-
+		
 			mockPass = data;
 			rawPassFolder = data.filename;
 			assert.equal(data.filename, testPassDir + path.sep + testPass.description + '.raw');
@@ -43,7 +41,7 @@ describe('jps-passbook', function() {
 	it('should export a pass', function(done) {
 		jpsPassbook.exportPass(mockPass.filename, mockPass).then(function(pass) {
 			assert.ok(pass, 'returns pass location');
-			console.log('export', pass);
+		
 			done();
 		}).catch(function(err) {
 			assert.fail(err);
@@ -54,7 +52,7 @@ describe('jps-passbook', function() {
 	it('should sign a pass', function(done) {
 		jpsPassbook.signPass(mockPass.filename).then(function(pass) {
 			assert.ok(pass, 'returns pass location');
-			console.log('signed', pass);
+		
 			done();
 		}).catch(function(err) {
 			assert.fail(err);
@@ -65,7 +63,7 @@ describe('jps-passbook', function() {
 	it('should validate a pass', function(done) {
 		jpsPassbook.validatePass(mockPass.filename).then(function(pass) {
 			assert.ok(pass, 'returns pass');
-			console.log('valid response', pass);
+		
 			done();
 		}).catch(function(err) {
 			assert.fail(err);

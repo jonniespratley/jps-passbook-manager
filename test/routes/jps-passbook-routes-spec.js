@@ -147,21 +147,21 @@ describe('jps-passbook-routes', function() {
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/passes/:passTypeId/:serial - get latest version of pass', function(done) {
+		it('GET - /api/v1/passes/:pass_type_id/:serial - get latest version of pass', function(done) {
 			request(app)
 				.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
 				//.expect('Content-Type', /application\/vnd.apple.pkpass/)
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/devices/:deviceLibraryIdentifier/push/:token - send push to device', function(done) {
+		it('GET - /api/v1/devices/:device_id/push/:token - send push to device', function(done) {
 			request(app)
 				.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/push/' + mockDevice.token)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		it('DELETE - /api/v1/devices/:deviceLibraryIdentifier/:passTypeIdentifier/:serialNumber - unregister device',
+		it('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
 			function(done) {
 				request(app)
 					.delete('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/' + mockPass.passTypeIdentifier + '/' +
@@ -170,18 +170,26 @@ describe('jps-passbook-routes', function() {
 					.expect(200, done);
 			});
 
-		it(
-			'POST - /api/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber - register pass',
+		it(	'POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register a device to receive push notifications for a pass',
 			function(done) {
 				request(app)
-					.post('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +
-						'/' + mockPass.serialNumber)
+					.post(
+						[
+							'api', 
+							'v1', 
+							'devices', 
+							mockDevice._id, 
+							'registrations', 
+							mockPass.passTypeIdentifier,
+							mockPass.serialNumber
+						].join('/')
+					)
 					.send(mockDevice)
 					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
 
-		it('GET - /api/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier - get serial numbers',
+		it('GET - /api/v1/devices/:device_id/registrations/:pass_type_id/ - get serial numbers',
 			function(done) {
 				request(app)
 					.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +
