@@ -39,6 +39,11 @@ module.exports = function (db) {
 					resolve(pass);
 				});
 			});
+		},
+
+		///passes/:passTypeIdentifier/:serialNumber?
+		get_passes: function(req, res, next){
+
 		}
 	};
 };

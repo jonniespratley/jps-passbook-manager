@@ -70,9 +70,12 @@ module.exports = function (program, app) {
 
 
 	router.post('/log', bodyParser.json(), function (req, res) {
-		res.status(200).json({
-			message: 'save logs'
-		});
+		program.db.put(req.body, 'logs').then(function(resp){
+			res.status(200).json(resp);
+		}).catch(function(err){
+			res.status(400).json(err);
+		})
+
 	});
 
 
@@ -97,24 +100,23 @@ module.exports = function (program, app) {
 
 	//Get latest version of pass
 	router.get('/passes/:passTypeIdentifier/:serialNumber?', function (req, res) {
-		//program.log('Push to device ' + req.param('token'));
 		var auth = req.get('Authorization');
-		console.warn('latest versino for pass', req.url);
+
+		console.log('Pass ID', req.params.passTypeIdentifier)
+		console.log('Pass serialNumber', req.params.serialNumber)
+
 		console.log('Auth header', auth);
+		//program.log('Push to device ' + req.param('token'));
 
 		if (!auth) {
-			res.status(401).json({error: 'No header'})
-
+			res.status(401).json({error: 'No header'});
 		} else {
-
 
 			passController.findPassBySerial(req.params.serialNumber).then(function (resp) {
 				res.send(resp);
 			}).catch(function (err) {
 				res.status(404).json(err);
 			});
-
-
 		}
 
 	});

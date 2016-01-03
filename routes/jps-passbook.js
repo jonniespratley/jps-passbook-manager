@@ -188,7 +188,7 @@ function createPass(localPath, pass) {
 
 			logger('writeFile', passPath);
 			pass.directory = path.dirname(passPath);
-			pass.filename = path.normalize(passPath);
+			pass.filename = path.resolve(passPath);
 			resolve(pass);
 		});
 	});
