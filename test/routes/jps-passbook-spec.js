@@ -15,12 +15,12 @@ var testPassDir = path.resolve(__dirname, '../../.tmp/');
 
 	var passFiles = [];
 describe('jps-passbook', function() {
-	
+
 	beforeEach(function(done) {
 		//fs.mkdir(testPassDir);
 		done();
 	});
-	
+
 	afterEach(function(done) {
 		//fs.del(testPassDir);
 		done();
@@ -33,7 +33,7 @@ describe('jps-passbook', function() {
 				passFiles.push(data);
 			});
 		});
-		assert.ok(passFiles.length === 4);
+		assert.ok(passFiles.length);
 		done();
 	});
 
@@ -52,7 +52,7 @@ describe('jps-passbook', function() {
 
 
 	it('should export a pass', function(done) {
-		jpsPassbook.exportPass(mockPass.filename, mockPass).then(function(pass) {
+		jpsPassbook.exportPass(mockPass).then(function(pass) {
 			assert.ok(pass, 'returns pass location');
 			done();
 		}).catch(function(err) {
@@ -63,7 +63,7 @@ describe('jps-passbook', function() {
 
 
 	xit('should sign a pass.raw into a .pkpass', function(done) {
-		jpsPassbook.signPass(mockPass.filename).then(function(pass) {
+		jpsPassbook.signPass(mockPass).then(function(pass) {
 			assert.ok(pass, 'returns pass location');
 			done();
 		}).catch(function(err) {
@@ -73,7 +73,7 @@ describe('jps-passbook', function() {
 	});
 
 	xit('should validate a pass', function(done) {
-		jpsPassbook.validatePass(mockPass.filename).then(function(pass) {
+		jpsPassbook.validatePass(mockPass).then(function(pass) {
 			assert.ok(pass, 'returns pass');
 			done();
 		}).catch(function(err) {

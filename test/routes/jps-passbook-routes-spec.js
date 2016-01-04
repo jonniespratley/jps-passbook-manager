@@ -184,7 +184,7 @@ describe('jps-passbook-routes', function () {
 					.expect('Content-Type', /json/)
 					.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
 					.expect(function (res) {
-						assert.ok(res.body.ç);
+					//	assert.ok(res.body.ç);
 						assert.ok(res.body.serialNumbers);
 
 					})
@@ -202,7 +202,7 @@ describe('jps-passbook-routes', function () {
 		});
 
 		describe('Passes', function () {
-			it('GET - /api/v1/passes/:pass_type_id/:serial_number', function (done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function (done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
 					//.expect('Content-Type', /json/)
