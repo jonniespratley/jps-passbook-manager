@@ -1,21 +1,37 @@
 var path = require('path');
 var config = require(path.resolve(__dirname, '../../config.json'));
+
+
+
+exports.mockPasses = [
+	require(path.resolve(__dirname, '../../templates/schemas/boardingPass.json')),
+	require(path.resolve(__dirname, '../../templates/schemas/coupon.json')),
+	require(path.resolve(__dirname, '../../templates/schemas/eventTicket.json')),
+	require(path.resolve(__dirname, '../../templates/schemas/generic.json')),
+	require(path.resolve(__dirname, '../../templates/schemas/storeCard.json'))
+];
+
+
+
 exports.mockDevice = {
 	_id: "device-" + Date.now(),
 	deviceLibraryIdentifier: 'jps',
 	token: '12345'
 };
+
 var uuid = require('node-uuid').v4();
+
+
 exports.mockPass = {
 	_id: "pass-" + uuid,
 	"docType": "pass",
-	"type" : "Coupon",
+	"type" : "coupon",
 	"lastUpdated": new Date().toString(),
 	"formatVersion": 1,
-	"passTypeIdentifier": "pass.passbookmanager.io",
+	" ": "pass.passbookmanager.io",
 	"serialNumber": uuid,
-	"teamIdentifier": "USE9YUYDFH",
-	"webServiceURL": config.webServiceURL,
+	"teamIdentifier": config.passkit.teamIdentifier,
+	"webServiceURL": config.passkit.webServiceURL,
 	"authenticationToken": "QXBwbGVQYXNzIDAwMDAwMDAwMDAxMjM0",
 	"barcode": {
 		"message": "123456789",

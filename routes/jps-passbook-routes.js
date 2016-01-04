@@ -5,7 +5,7 @@ var express = require('express'),
 	expressValidator = require('express-validator'),
 	jsonParser = bodyParser.json();
 
-var jpsPassbook = require('./jps-passbook');
+var jpsPassbook = require('./../lib/jps-passbook');
 var serveStatic = require('serve-static');
 
 var debug = require('debug');
