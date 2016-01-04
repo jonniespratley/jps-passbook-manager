@@ -52,6 +52,7 @@
     "grunt-open": "~0.1.0",
     "grunt-regarde": "~0.1.1",
     "grunt-usemin": "~0.1.7",
+    "istanbul": "^0.4.1",
     "json-proxy": "^0.9.1",
     "load-grunt-tasks": "^2.0.0",
     "matchdep": "~0.1.1",

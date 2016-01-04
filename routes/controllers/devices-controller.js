@@ -163,6 +163,8 @@ module.exports = function(program) {
 				//Pass and authentication token match.
 
 				program.db.get(uuid).then(function(pass) {
+					logger('found pass', pass);
+					
 					if (pass.authenticationToken === authentication_token) {
 						logger('Pass and authentication token match.');
 						program.db.remove(uuid).then(function(resp) {
@@ -181,7 +183,20 @@ module.exports = function(program) {
 			}
 		},
 		get_device_passes: function(req, res, next) {
+			let authentication_token = req.get('Authorization');
+			let device_id = req.params.device_id;
+			let pass_type_id = req.params.pass_type_id;
+			let serial_number = req.params.serial_number;
 			logger('get_device_passes');
+				if (!authentication_token) {
+				res.status(401).json({
+					error: 'Unauthorized'
+				});
+			} else {
+					res.status(200).json({
+					serialNumbers: ['']
+				});
+			}
 		}
 	};
 };

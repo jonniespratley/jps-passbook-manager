@@ -13,3 +13,6 @@ db
 www
 *.log
 atlassian-ide-plugin.xml
+data
+.c9
+.git

@@ -92,7 +92,9 @@ module.exports = function (grunt) {
 			}
 		},
 		clean: {
-			dist: ['.tmp', '<%= yeoman.dist %>/*'],
+			dist: [
+				'.tmp', 
+				'<%= yeoman.dist %>/*'],
 			server: '.tmp'
 		},
 		jshint: {
@@ -105,12 +107,7 @@ module.exports = function (grunt) {
 				'!<%= yeoman.app %>/scripts/vendor/{,*/}*.js'
 			]
 		},
-		testacular: {
-			unit: {
-				configFile: 'testacular.conf.js',
-				singleRun: true
-			}
-		},
+
 		coffee: {
 			dist: {
 				files: {
@@ -270,22 +267,6 @@ module.exports = function (grunt) {
 				options: {
 					mode: '0777',
 					create: ['.tmp']
-				}
-			}
-		},
-		'saucelabs-mocha': {
-			all: {
-				options: {
-					urls: ['passbook-manager.jsapps.io'],
-					build: process.env.CI_BUILD_NUMBER,
-					testname: 'Sauce Unit Test for passbook-manager.jsapps.io',
-					browsers: [
-						{
-							browserName: 'chrome',
-							version: '31',
-							platform: 'XP'
-						}
-					]
 				}
 			}
 		}
