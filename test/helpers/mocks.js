@@ -11,16 +11,15 @@ exports.mockPasses = [
 	require(path.resolve(__dirname, '../../templates/schemas/storeCard.json'))
 ];
 
-
-
 exports.mockDevice = {
-	_id: "device-" + Date.now(),
-	deviceLibraryIdentifier: 'jps',
-	token: '12345'
+	_id: "device-" + require('node-uuid').v4(),
+	deviceLibraryIdentifier: 'device-lib-123456789',
+	token: '12345',
+	"docType": "device",
+	"type" : "device",
 };
 
 var uuid = require('node-uuid').v4();
-
 
 exports.mockPass = {
 	_id: "pass-" + uuid,
@@ -28,7 +27,7 @@ exports.mockPass = {
 	"type" : "coupon",
 	"lastUpdated": new Date().toString(),
 	"formatVersion": 1,
-	" ": "pass.passbookmanager.io",
+	"passTypeIdentifier": "pass.passbookmanager.io",
 	"serialNumber": uuid,
 	"teamIdentifier": config.passkit.teamIdentifier,
 	"webServiceURL": config.passkit.webServiceURL,

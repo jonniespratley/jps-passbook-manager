@@ -12,7 +12,7 @@ module.exports = function(program, app) {
 
 	var config = program.config.defaults;
 	var router = new Router();
-	var DevicesController = require('./controllers/devices-controller');
+	var DevicesController = require('../lib/controllers/devices-controller');
 	var devicesController = new DevicesController(program);
 
 	var devicesLog = program.getLogger('devices');
@@ -45,10 +45,10 @@ module.exports = function(program, app) {
 	});
 
 	//Register Pass
-	router.post('/:device_id/registrations/:device_id/:serial_number', bodyParser.json(), devicesController.post_device_registration);
+	router.post('/:device_id/registrations/:pass_type_id/:serial_number', bodyParser.json(), devicesController.post_device_registration);
 
 	//Get passes for device
-	router.get('/:device_id/registrations/:pass_type_id', devicesController.get_device_passes);
+	router.get('/:device_id/registrations/:pass_type_id?', devicesController.get_device_passes);
 
 	/*
 	# unregister a device to receive push notifications for a pass

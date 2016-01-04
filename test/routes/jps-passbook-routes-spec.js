@@ -44,6 +44,13 @@ describe('jps-passbook-routes', function () {
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
+	it('POST - /api/v1/passes - should create passes', function (done) {
+		request(app)
+			.post('/api/v1/passes')
+			.send(mocks.mockPasses[1])
+			.expect('Content-Type', /json/)
+			.expect(201, done);
+	});
 
 	it('GET - /api/v1/devices - should return devices', function (done) {
 		request(app)
@@ -124,7 +131,7 @@ describe('jps-passbook-routes', function () {
 
 	it('GET - /api/v1/register/:token - add device to db', function (done) {
 		request(app)
-			.get('/api/v1/register/' + mockDevice.deviceLibraryIdentifier)
+			.get('/api/v1/register/' + mockDevice.token)
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
@@ -139,14 +146,13 @@ describe('jps-passbook-routes', function () {
 	describe('PassKit Web Service', function () {
 
 		describe('Devices', function () {
-			it(
-				'POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register a device to receive push notifications for a pass',
+			it('POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register device for pass',
 				function (done) {
 					request(app)
 						.post(
 							`/api/v1/devices/${mockDevice._id}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`)
 						.send({
-							pushToken: '123456789'
+							pushToken: mockDevice.pushToken
 						})
 						.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
 						.expect('Content-Type', /json/)
@@ -165,31 +171,25 @@ describe('jps-passbook-routes', function () {
 			it('GET - /api/v1/devices/:device_id/registrations/:pass_type_id - get serial numbers',
 				function (done) {
 					request(app)
-						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +
-							'?passesUpdatedSince=')
+						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier)
 						.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
 						.expect('Content-Type', /json/)
 						.expect(200, done);
 				});
 
 
+			it('GET - /api/v1/devices/:device_id/:registrations/:pass_type_id', function (done) {
+				request(app)
+					.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier)
+					.expect('Content-Type', /json/)
+					.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
+					.expect(function (res) {
+						assert.ok(res.body.ç);
+						assert.ok(res.body.serialNumbers);
 
-			it(
-				'GET - /api/v1/devices/:device_id/:registrations/:pass_type_id?passesUpdatedSince=' +
-				Date.now(),
-				function (done) {
-					request(app)
-						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +
-							'?passesUpdatedSince=')
-						.expect('Content-Type', /json/)
-						.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
-						.expect(function (res) {
-							assert.ok(res.body.lastUpdated);
-							assert.ok(res.body.serialNumbers);
-
-						})
-						.expect(200, done);
-				});
+					})
+					.expect(200, done);
+			});
 			it('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
 				function (done) {
 					request(app)
@@ -200,6 +200,7 @@ describe('jps-passbook-routes', function () {
 						.expect(200, done);
 				});
 		});
+
 		describe('Passes', function () {
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number', function (done) {
 				request(app)
@@ -214,13 +215,8 @@ describe('jps-passbook-routes', function () {
 					//.set('Accept', 'application/json')
 					.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) {
-							return done(err)
-						}
-						done();
-					});
+					.expect(200, done);
+
 			});
 		});
 
@@ -233,7 +229,6 @@ describe('jps-passbook-routes', function () {
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
-
 
 
 	});
