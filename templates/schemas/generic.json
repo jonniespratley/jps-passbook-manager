@@ -4,14 +4,14 @@
 		"primaryFields": [
 			{
 				"key": "member",
-				"value": "Johnny Appleseed"
+				"value": "Jonnie Spratley"
 			}
 		],
 		"secondaryFields": [
 			{
 				"key": "subtitle",
 				"label": "MEMBER SINCE",
-				"value": "2012"
+				"value": "2016"
 			}
 		],
 		"auxiliaryFields": [
@@ -22,8 +22,8 @@
 			},
 			{
 				"key": "favorite",
-				"label": "FAVORITE TOY",
-				"value": "Trucks",
+				"label": "FAVORITE LANG",
+				"value": "JavaScript",
 				"textAlignment": "PKTextAlignmentRight"
 			}
 		],
@@ -51,19 +51,7 @@
 				"key": "dateFull",
 				"value": "1980-05-07T10:00-05:00"
 			},
-			{
-				"label": "time full",
-				"key": "timeFull",
-				"value": "1980-05-07T10:00-05:00",
-				"timeStyle": "PKDateStyleFull"
-			},
-			{
-				"dateStyle": "PKDateStyleShort",
-				"label": "dateTime",
-				"key": "dateTime",
-				"value": "1980-05-07T10:00-05:00",
-				"timeStyle": "PKDateStyleShort"
-			},
+			
 			{
 				"dateStyle": "PKDateStyleShort",
 				"label": "rel style",

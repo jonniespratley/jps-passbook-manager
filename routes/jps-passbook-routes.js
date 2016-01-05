@@ -87,23 +87,18 @@ module.exports = function (program, app) {
 	 * I am the signpass route
 	 */
 	router.get('/sign/:id', function (req, res) {
-		var passFile;
+
 		program.db.get(req.params.id).then(function (resp) {
-			assert(resp.paths.filename, 'has filename');
-			passFile = resp.paths.filename;
-			if (passFile) {
-				jpsPassbook.sign(passFile).then(function (data) {
-					res.status(200).send({
-						message: passFile + ' signed.',
-						filename: data
-					});
-					//res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
+			if (resp) {
+				jpsPassbook.signPass(resp.filename).then(function (filename) {
+					//res.status(200).send(data);
+					res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(filename);
 				}).catch(function (err) {
 					res.status(404).send(err);
 				});
 			} else {
 				res.status(400).send({
-					message: 'Must provide path to .raw folder!'
+					message: 'Must id!'
 				});
 			}
 		}).catch(function (err) {
@@ -123,18 +118,21 @@ module.exports = function (program, app) {
 		var id = req.params.id;
 		if (id) {
 			logger('id', id);
+
 			program.db.get(id).then(function (resp) {
 				logger('found pass', resp);
-				resp.passTypeIdentifier = config.passkit.passTypeIdentifier;
-				jpsPassbook.createPass(resp, true).then(function (data) {
+
+				jpsPassbook.createPass(resp, false).then(function (data) {
 					logger('createPass', data);
 					res.status(200).send(data);
 				}).catch(function (err) {
 					res.status(404).send(err);
 				});
+
 			}).catch(function (err) {
 				res.status(404).send(err);
 			});
+
 		} else {
 			res.status(400).send('Must provide file path!');
 		}

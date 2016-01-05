@@ -65,6 +65,34 @@ describe('jps-passbook-routes', function () {
 				.expect(200, done);
 		});
 
+		it('GET - /api/v1/export/:id - should export pass', function (done) {
+			request(app)
+				.get('/api/v1/export/' + mocks.mockPasses[0]._id)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/sign/:id - should sign pass', function (done) {
+			request(app)
+				.get('/api/v1/sign/' + mocks.mockPasses[0]._id)
+				.expect('Content-Type', /application\/vnd.apple.pkpass/)
+				.expect(200, done);
+		});
+
+		xit('GET - /api/v1/register/:token - add device to db', function (done) {
+			request(app)
+				.get('/api/v1/register/' + mockDevice.token)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/push/:token - send push to device', function (done) {
+			request(app)
+				.get('/api/v1/push/' + mockDevice.token)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
 		it('DELETE - /api/v1/passes/:id - should remove pass', function (done) {
 			request(app)
 				.delete('/api/v1/passes/' + mocks.mockPasses[0]._id)
@@ -137,32 +165,7 @@ describe('jps-passbook-routes', function () {
 
 	});
 
-	xit('GET - /api/v1/export/:id - should export pass', function (done) {
-		request(app)
-			.get('/api/v1/export/' + mockPass._id)
-			.expect('Content-Type', /json/)
-			.expect(200, done);
-	});
-	xit('GET - /api/v1/sign/:id - should sign pass', function (done) {
-		request(app)
-			.get('/api/v1/sign/' + mockPass._id)
-			.expect('Content-Type', /json/)
-			.expect(200, done);
-	});
 
-	xit('GET - /api/v1/register/:token - add device to db', function (done) {
-		request(app)
-			.get('/api/v1/register/' + mockDevice.token)
-			.expect('Content-Type', /json/)
-			.expect(200, done);
-	});
-
-	it('GET - /api/v1/push/:token - send push to device', function (done) {
-		request(app)
-			.get('/api/v1/push/' + mockDevice.token)
-			.expect('Content-Type', /json/)
-			.expect(200, done);
-	});
 
 	describe('PassKit Web Service', function () {
 
