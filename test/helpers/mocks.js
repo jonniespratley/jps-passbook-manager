@@ -1,5 +1,5 @@
 var path = require('path');
-var config = require(path.resolve(__dirname, '../../config.json'));
+var config = require(path.resolve(__dirname, '../../config.js'));
 
 
 var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));

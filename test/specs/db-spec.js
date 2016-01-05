@@ -10,8 +10,9 @@ var assert = require('assert'),
 //Test vars
 var testPassName = 'Test_Pass_';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
-var config = fs.readJsonSync(path.resolve(__dirname, '../../config.json'));
-var program = require(path.resolve(__dirname, '../../lib/program.js'))(config);
+
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
 var db = program.db;
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var mockDevice = mocks.mockDevice;

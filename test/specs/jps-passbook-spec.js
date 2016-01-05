@@ -4,8 +4,8 @@ var assert = require('assert'),
 	os = require('os'),
 	Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'));
 
-var config = require(path.resolve(__dirname, '../../config.json'));
-var program = require(path.resolve(__dirname, '../../lib/program.js'))(config);
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
 var jpsPassbook = new Passbook(program);
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var mockDevice = mocks.mockDevice;

@@ -1,8 +1,7 @@
 var path = require('path');
 var assert = require('assert');
-var config = require(path.resolve(__dirname, '../../config.json'));
-var program = require(path.resolve(__dirname, '../../lib/program.js'))(config);
-
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
 describe('Program', function() {
 	it('should defined', function(done) {
 		assert(program);

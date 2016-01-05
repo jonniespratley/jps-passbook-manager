@@ -9,7 +9,7 @@ const serveStatic = require('serve-static');
 const debug = require('debug');
 const fs = require('fs-extra');
 
-const config = require(path.resolve(__dirname, './config.json'));
+const config = require(path.resolve(__dirname, './config.js'));
 const port = process.env.PORT || config.server.port || null;
 const host = process.env.VCAP_APP_HOST || process.env.IP || config.server.hostname || null;
 
@@ -19,11 +19,6 @@ app.use('/public', serveStatic(path.resolve(__dirname, './www')));
 
 var program = require('./lib/program')(config);
 program.app = app;
-
-
-
-
-
 
 var middleware = [
 	path.resolve(__dirname, './routes/jps-passbook-routes')

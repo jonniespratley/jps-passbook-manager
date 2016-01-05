@@ -15,8 +15,9 @@ var app = express();
 var passes;
 
 // TODO: Program
-var config = fs.readJsonSync(path.resolve(__dirname, '../../config.json'));
-var program = require(path.resolve(__dirname, '../../lib/program.js'))(config);
+
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
 
 //Test Instances
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));

@@ -1,12 +1,21 @@
-{
+'use strict';
+
+//TODO - Change to your values
+const APPLE_TEAM_IDENTIFIER = 'USE9YUYDFH';
+const APPLE_PASS_TYPE_IDENTIFIER = 'pass.passbookmanager.io';
+const APPLE_WEB_SERVICE_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1';
+
+
+
+var config = {
 	"name": "passbookmanager",
 	"message": "Passbook Manager API Server",
 	"version": "v1",
 	"dataPath": "./data",
 	"passkit": {
-		"teamIdentifier": "USE9YUYDFH",
-		"passTypeIdentifier": "pass.passbookmanager.io",
-		"webServiceURL": "http://localhost:4999/api/v1"
+		"teamIdentifier": APPLE_TEAM_IDENTIFIER,
+		"passTypeIdentifier": APPLE_PASS_TYPE_IDENTIFIER,
+		"webServiceURL": APPLE_WEB_SERVICE_URL
 	},
 	"security": {
 		"salt": "a58e325c6df628d07a18b673a3420986"
@@ -16,7 +25,7 @@
 		"port": 5001
 	},
 	"db": {
-		"local": "http://localhost:5984/passbookmanager",
+		"local": "passbookmanager",
 		"remote": "http://localhost:5984/passbookmanager"
 	},
 	"collections": [
@@ -29,4 +38,6 @@
 	"publicDir": "../www",
 	"uploadsTmpDir": "../.tmp",
 	"uploadsDestDir": "../www"
-}
+};
+
+module.exports = config;

@@ -2,7 +2,8 @@ var path = require('path');
 var assert = require('assert');
 var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 var p;
-var config = require(path.resolve(__dirname, '../../config.json'));
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
 
 
 describe('Pass Model', function () {
