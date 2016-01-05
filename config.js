@@ -34,10 +34,10 @@ var config = {
 		"notifications",
 		"settings"
 	],
-	"staticDir": "../app",
-	"publicDir": "../www",
-	"uploadsTmpDir": "../.tmp",
-	"uploadsDestDir": "../www"
+	"staticDir": "./app",
+	"publicDir": "./www",
+	"uploadsTmpDir": "./.tmp",
+	"uploadsDestDir": "./www"
 };
 
 module.exports = config;

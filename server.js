@@ -6,29 +6,36 @@
 const express = require('express');
 const path = require('path');
 const serveStatic = require('serve-static');
-const debug = require('debug');
-const fs = require('fs-extra');
 
 const config = require(path.resolve(__dirname, './config.js'));
 const port = process.env.PORT || config.server.port || null;
-const host = process.env.VCAP_APP_HOST || process.env.IP || config.server.hostname || null;
+const host = process.env.VCAP_APP_HOST || process.env.IP || config.server.hostname || '127.0.0.1';
 
-var app = express();
-app.use('/', serveStatic(path.resolve(__dirname, './app')));
-app.use('/public', serveStatic(path.resolve(__dirname, './www')));
 
 var program = require('./lib/program')(config);
+var logger = program.getLogger('server');
+logger('starting...');
+
+
+program.log('env', process.env);
+
+
+var app = express();
+logger('created app');
+
+app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
+app.use('/public', serveStatic(path.resolve(__dirname, config.publicDir)));
+logger('serveStatic', config.staticDir, config.publicDir);
 program.app = app;
 
 var middleware = [
 	path.resolve(__dirname, './routes/jps-passbook-routes')
 ];
-middleware.forEach(function(m) {
+middleware.forEach(function (m) {
+	logger('add middleware', m);
 	require(m)(program, app);
 });
 
-app.listen(port, host, function() {
-	program.log('server started');
-	program.log('host', host);
-	program.log('port', port);
+app.listen(port, host, function () {
+	logger('listening on', host + ':' + port);
 });
