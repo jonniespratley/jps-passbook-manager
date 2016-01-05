@@ -5,7 +5,7 @@ var express = require('express'),
 	expressValidator = require('express-validator'),
 	jsonParser = bodyParser.json();
 
-var jpsPassbook = require('./../lib/jps-passbook');
+var Passbook = require('./../lib/jps-passbook');
 var serveStatic = require('serve-static');
 
 var debug = require('debug');
@@ -34,7 +34,9 @@ var exec = require('child_process').exec;
  * @param templates
  * @param app
  */
-module.exports = function (program, app) {
+module.exports = function(program, app) {
+
+	var jpsPassbook = new Passbook(program);
 
 	if (!app) {
 		throw new Error('Must provide an express app as argument 2');
@@ -49,7 +51,7 @@ module.exports = function (program, app) {
 
 	//### onError()
 	//callback handler
-	var onError = function (error, note) {
+	var onError = function(error, note) {
 		program.log('Error is: %s', error);
 		program.log('Note ' + note);
 	};
@@ -62,17 +64,17 @@ module.exports = function (program, app) {
 
 
 	//API Version Endpoint - http://localhost:3535/smartpass/v1
-	router.get('/', function (req, res) {
+	router.get('/', function(req, res) {
 		res.status(200).json({
 			message: config.name
 		});
 	});
 
 
-	router.post('/log', bodyParser.json(), function (req, res) {
-		program.db.put(req.body, 'logs').then(function (resp) {
+	router.post('/log', bodyParser.json(), function(req, res) {
+		program.db.put(req.body, 'logs').then(function(resp) {
 			res.status(200).json(resp);
-		}).catch(function (err) {
+		}).catch(function(err) {
 			res.status(400).json(err);
 		})
 
@@ -80,7 +82,7 @@ module.exports = function (program, app) {
 
 
 	// TODO: Get tokens
-	router.get('/push/:token', function (req, res) {
+	router.get('/push/:token', function(req, res) {
 		program.log('Register device ' + req.param('token'));
 		res.json({
 			message: config.name + ' - ' + 'Register device ' + req.param('token')
@@ -91,20 +93,20 @@ module.exports = function (program, app) {
 	/**
 	 * I am the signpass route
 	 */
-	router.get('/sign/:id', function (req, res) {
+	router.get('/sign/:id', function(req, res) {
 		var passFile;
 
-		program.db.get(req.params.id).then(function (resp) {
+		program.db.get(req.params.id).then(function(resp) {
 			assert(resp.paths.filename, 'has filename');
 			passFile = resp.paths.filename;
 			if (passFile) {
-				jpsPassbook.sign(passFile).then(function (data) {
+				jpsPassbook.sign(passFile).then(function(data) {
 					res.status(200).send({
 						message: passFile + ' signed.',
 						filename: data
 					});
 					//res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(data);
-				}).catch(function (err) {
+				}).catch(function(err) {
 					res.status(404).send(err);
 				});
 			} else {
@@ -112,7 +114,7 @@ module.exports = function (program, app) {
 					message: 'Must provide path to .raw folder!'
 				});
 			}
-		}).catch(function (err) {
+		}).catch(function(err) {
 			res.status(404).send(err);
 		});
 	});
@@ -125,24 +127,24 @@ module.exports = function (program, app) {
 	 * creates a .raw folder containing a pass.json file and then invokes the
 	 * signpass binary.
 	 */
-	router.get('/export/:id', function (req, res) {
+	router.get('/export/:id', function(req, res) {
 		var id = req.params.id;
 		if (id) {
 			program.log('id', id);
-			program.db.get(id).then(function (resp) {
+			program.db.get(id).then(function(resp) {
 
 				program.log('found pass', resp);
 				resp.passTypeIdentifier = config.passkit.passTypeIdentifier;
-				jpsPassbook.createPass(path.resolve(__dirname, config.publicDir), resp).then(function (data) {
+				jpsPassbook.createPass(path.resolve(__dirname, config.publicDir), resp).then(function(data) {
 					program.log('createPass', data);
 					resp.paths = data;
-					program.db.put(resp).then(function (out) {
+					program.db.put(resp).then(function(out) {
 						res.status(200).send(resp);
 					});
-				}).catch(function (err) {
+				}).catch(function(err) {
 					res.status(404).send(err);
 				});
-			}).catch(function (err) {
+			}).catch(function(err) {
 				res.status(404).send(err);
 			});
 		} else {
@@ -151,25 +153,25 @@ module.exports = function (program, app) {
 	});
 
 
-	router.get('/devices', function (req, res) {
+	router.get('/devices', function(req, res) {
 		program.db.allDocs({
 			startkey: 'device-1',
 			endkey: 'device-z',
 			include_docs: true
-		}).then(function (resp) {
+		}).then(function(resp) {
 			res.status(200).json(resp);
-		}).catch(function (err) {
+		}).catch(function(err) {
 			res.status(400).json(err);
 		});
 	});
-	router.get('/passes', function (req, res) {
+	router.get('/passes', function(req, res) {
 		program.db.allDocs({
 			startkey: 'device-1',
 			endkey: 'device-z',
 			include_docs: true
-		}).then(function (resp) {
+		}).then(function(resp) {
 			res.status(200).json(resp);
-		}).catch(function (err) {
+		}).catch(function(err) {
 			res.status(400).json(err);
 		});
 	});
@@ -177,7 +179,7 @@ module.exports = function (program, app) {
 	app.use(serveStatic('../app', null));
 	app.use(serveStatic('../www', null));
 
-	app.use(function (req, res, next) {
+	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 		res.header('Access-Control-Allow-Methods',
@@ -190,7 +192,7 @@ module.exports = function (program, app) {
 		next();
 	});
 
-	app.use(function (err, req, res, next) {
+	app.use(function(err, req, res, next) {
 		console.error(err.stack);
 		res.status(500).send('Something broke!');
 	});
@@ -206,7 +208,7 @@ module.exports = function (program, app) {
 		path.resolve(__dirname, './jps-middleware-devices')
 	];
 
-	middleware.forEach(function (m) {
+	middleware.forEach(function(m) {
 		require(m)(program, app);
 	});
 

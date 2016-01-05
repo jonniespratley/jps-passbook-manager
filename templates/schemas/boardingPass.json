@@ -1,4 +1,9 @@
 {
+	"organizationName" : "Jonnie Airways",
+	"description" : "SFO to JFK",
+	"logoText" : "Jonnie Airways",
+	"foregroundColor" : "rgb(22, 55, 110)",
+	"backgroundColor" : "rgb(50, 91, 185)",
 	"relevantDate": "2012-07-22T14:25-08:00",
 	"boardingPass": {
 		"transitType": "PKTransitTypeAir",

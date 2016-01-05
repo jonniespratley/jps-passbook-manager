@@ -14,7 +14,7 @@ module.exports = function(program, app) {
 	var router = new Router();
 
 	var PassController = require('../lib/controllers/passes-controller');
-	var passController = new PassController(program.db);
+	var passController = new PassController(program);
 
 	/*
 	 # Pass delivery
