@@ -60,7 +60,7 @@ describe('jps-passbook-routes', function() {
 				.expect(200, done);
 		});
 
-		it('DELETE - /api/v1/passes/:id - should remove pass', function(done) {
+		xit('DELETE - /api/v1/passes/:id - should remove pass', function(done) {
 			request(app)
 				.delete('/api/v1/passes/' + mocks.mockPasses[0]._id)
 				.expect('Content-Type', /json/)
@@ -165,21 +165,23 @@ describe('jps-passbook-routes', function() {
 			it('POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register device for pass',
 				function(done) {
 					request(app)
-						.post(
+
+					.post(
 							`/api/v1/devices/${mockDevice._id}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`
 						)
 						.send({
 							pushToken: mockDevice.pushToken
 						})
-						.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
+						.set('Authorization', mockPass.authenticationToken)
 						.expect('Content-Type', /json/)
 						.expect(201, done);
 				});
 
 			it('GET - /api/v1/devices/:device_id/push/:token - send push to device', function(done) {
 				request(app)
-					.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/push/' + mockDevice.token)
-					.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
+
+				.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/push/' + mockDevice.token)
+					.set('Authorization', mockPass.authenticationToken)
 					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
@@ -189,7 +191,7 @@ describe('jps-passbook-routes', function() {
 				function(done) {
 					request(app)
 						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier)
-						.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
+						.set('Authorization', mockPass.authenticationToken)
 						.expect('Content-Type', /json/)
 						.expect(200, done);
 				});
@@ -198,21 +200,21 @@ describe('jps-passbook-routes', function() {
 			it('GET - /api/v1/devices/:device_id/:registrations/:pass_type_id', function(done) {
 				request(app)
 					.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier)
+					.set('Authorization', mockPass.authenticationToken)
 					.expect('Content-Type', /json/)
-					.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
 					.expect(function(res) {
-						//	assert.ok(res.body.ç);
 						assert.ok(res.body.serialNumbers);
-
 					})
 					.expect(200, done);
 			});
+
 			it('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
 				function(done) {
 					request(app)
-						.delete('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/' + mockPass.passTypeIdentifier + '/' +
+
+					.delete('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/' + mockPass.passTypeIdentifier + '/' +
 							mockPass.serialNumber)
-						.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
+						.set('Authorization', mockPass.authenticationToken)
 						.expect('Content-Type', /json/)
 						.expect(200, done);
 				});
@@ -222,15 +224,14 @@ describe('jps-passbook-routes', function() {
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function(done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
-					//.expect('Content-Type', /json/)
 					.expect(401, done);
 			});
 
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number', function(done) {
 				request(app)
-					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber + '')
-					//.set('Accept', 'application/json')
-					.set('Authorization', 'ApplePass ' + mockPass.authenticationToken)
+
+				.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber + '')
+					.set('Authorization', mockPass.authenticationToken)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
 					.expect(200, done);
 
