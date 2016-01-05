@@ -16,8 +16,10 @@ var rawPassFolder = '';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
 
 var passFiles = [];
-describe('Passbook', function() {
 
+
+
+describe('PassKit', function() {
 	it('createPass() - should create each pass type', function(done) {
 		mocks.mockPasses.forEach(function(pass) {
 			jpsPassbook.createPass(pass, false).then(function(data) {
@@ -39,7 +41,6 @@ describe('Passbook', function() {
 			done();
 		});
 	});
-
 
 	it('signPass() - should sign .raw package into a .pkpass', function(done) {
 		jpsPassbook.signPass(mockPass).then(function(pass) {

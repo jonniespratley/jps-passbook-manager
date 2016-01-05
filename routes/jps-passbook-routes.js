@@ -83,11 +83,13 @@ module.exports = function(program, app) {
 
 	// TODO: Get tokens
 	router.get('/push/:token', function(req, res) {
-		program.log('Register device ' + req.param('token'));
+		var token = req.params.token;
+		program.log('Register device ', token);
 		res.json({
-			message: config.name + ' - ' + 'Register device ' + req.param('token')
+			message: config.name + ' - ' + 'Register device ' + token
 		});
 	});
+
 
 
 	/**
@@ -95,7 +97,6 @@ module.exports = function(program, app) {
 	 */
 	router.get('/sign/:id', function(req, res) {
 		var passFile;
-
 		program.db.get(req.params.id).then(function(resp) {
 			assert(resp.paths.filename, 'has filename');
 			passFile = resp.paths.filename;

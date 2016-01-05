@@ -18,10 +18,19 @@ var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
 describe('db', function() {
-	it('should be defined', function() {
+	it('should be defined', function(done) {
 		assert(db);
-		console.log(db);
+		done();
 	});
+
+	it('should have allDocs, get, remove, put methods', function(done) {
+		assert(db.allDocs);
+		assert(db.remove);
+		assert(db.put);
+		assert(db.get);
+		done();
+	});
+
 
 	it('should create file with id', function(done) {
 		db.put(mockPass).then(function(resp) {
