@@ -12,14 +12,13 @@
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Passbook Manager</title>
- <script>document.write('<base href="' + document.location + '" />');</script>
+	<script>document.write('<base href="' + document.location + '" />');</script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author" content="Jonnie Spratley">
-
+	<!-- build:css styles/app.css -->
 	<link rel="stylesheet" href="styles/main.css"/>
-
-
+	<!-- endbuild-->
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
@@ -35,23 +34,15 @@
 <![endif]-->
 
 <!--[if lt IE 9]>
-
 <script src="scripts/vendor/es5-shim.min.js"></script>
 <script src="scripts/vendor/json3.min.js"></script>
 <![endif]-->
 
 
+<!--ng-include src="'./views/_header.html'"></ng-include-->
 
 
- <!--ng-include src="'./views/_header.html'"></ng-include-->
-
-
-		<div id="content-view" ng-view></div>
-
-
-
-
-
+<div id="content-view" ng-view></div>
 
 
 <!-- build:js scripts/vendor.js -->
