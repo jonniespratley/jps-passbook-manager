@@ -4,15 +4,19 @@ var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 var p;
 
 
-describe('Pass Model', function(){
-	it('should create default model',function(){
+describe('Pass Model', function () {
+	it('should create default pass', function (done) {
 		assert(Pass);
 		p = new Pass();
 		assert.ok(p._id);
+		assert.equal(p.type, 'generic');
+		done()
 	});
 
-	it('should create model with passes params', function(){
-		p = new Pass({type: 'generic'});
-		assert.equal(p.type, 'generic');
-	})
+	it('should create pass with storeCard type', function (done) {
+		p = new Pass({type: 'storeCard'});
+		assert.ok(p.storeCard);
+		assert.equal(p.type, 'storeCard');
+		done();
+	});
 });

@@ -11,7 +11,7 @@ const debug = require('debug');
 
 const fs = require('fs-extra');
 
-const config = require(path.resolve(__dirname, './templates.json'));
+const config = require(path.resolve(__dirname, './config.json'));
 const port = process.env.PORT || config.server.port || null;
 const host = process.env.VCAP_APP_HOST || config.server.hostname || null;
 

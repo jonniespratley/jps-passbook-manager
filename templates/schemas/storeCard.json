@@ -1,16 +1,4 @@
 {
-	"type": "storeCard",
-	"formatVersion": 1,
-	"passTypeIdentifier": "pass.passbookmanager.io",
-	"serialNumber": "SMS001",
-	"teamIdentifier": "USE9YUYDFH",
-	"webServiceURL": "https://www.myappmatrix.com/smartpasses/",
-	"authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
-	"organizationName": "Apple Retail: Arden Fair",
-	"description": "Apple Retail Store Credio",
-	"logoText": "Apple Retail",
-	"foregroundColor": "rgb(255, 255, 255)",
-	"backgroundColor": "rgb(171, 181, 191)",
 	"storeCard": {
 		"primaryFields": [
 			{

@@ -5,11 +5,12 @@ var config = require(path.resolve(__dirname, '../../config.json'));
 var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 
 exports.mockPasses = [
-	require(path.resolve(__dirname, '../../templates/schemas/boardingPass.json')),
-	require(path.resolve(__dirname, '../../templates/schemas/coupon.json')),
-	require(path.resolve(__dirname, '../../templates/schemas/eventTicket.json')),
-	require(path.resolve(__dirname, '../../templates/schemas/generic.json')),
-	require(path.resolve(__dirname, '../../templates/schemas/storeCard.json'))
+	new Pass({type: 'boardingPass'}),
+	new Pass({type: 'coupon'}),
+	new Pass({type: 'eventTicket'}),
+	new Pass({type: 'generic'}),
+	new Pass({type: 'storeCard'})
+
 ];
 
 exports.mockDevice = {

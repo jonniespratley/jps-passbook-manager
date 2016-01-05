@@ -32,6 +32,9 @@ module.exports = function(program, app) {
 
 	//Handle saving new passes
 	router.post('/', jsonParser, passController.post_pass)
+	router.put('/:id', jsonParser, passController.put_pass)
+	router.delete('/:id', passController.delete_pass)
+	router.get('/:id', passController.get_pass)
 
 	app.use('/api/' + config.version + '/passes', router);
 	return router;

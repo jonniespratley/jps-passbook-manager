@@ -38,18 +38,36 @@ describe('jps-passbook-routes', function () {
 			.expect(200, done);
 	});
 
-	it('GET - /api/v1/passes - should return passes', function (done) {
-		request(app)
-			.get('/api/v1/passes')
-			.expect('Content-Type', /json/)
-			.expect(200, done);
-	});
-	it('POST - /api/v1/passes - should create passes', function (done) {
-		request(app)
-			.post('/api/v1/passes')
-			.send(mocks.mockPasses[1])
-			.expect('Content-Type', /json/)
-			.expect(201, done);
+	describe('Passes', function(){
+		it('GET - /api/v1/passes - should return all passes', function (done) {
+			request(app)
+				.get('/api/v1/passes')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('POST - /api/v1/passes - should create pass', function (done) {
+			request(app)
+				.post('/api/v1/passes')
+				.send(mocks.mockPasses[0])
+				.expect('Content-Type', /json/)
+				.expect(201, done);
+		});
+
+		xit('GET - /api/v1/passes/:id - should return 1 pass', function (done) {
+			request(app)
+				.get('/api/v1/passes/'+mocks.mockPasses[0]._id)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('DELETE - /api/v1/passes - should remove pass', function (done) {
+			request(app)
+				.delete('/api/v1/passes/'+mocks.mockPasses[0]._id)
+				.send(mocks.mockPasses[1])
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
 	});
 
 	it('GET - /api/v1/devices - should return devices', function (done) {
