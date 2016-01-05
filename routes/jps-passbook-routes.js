@@ -165,7 +165,8 @@ module.exports = function(program, app) {
 			res.status(400).json(err);
 		});
 	});
-	router.get('/passes', function(req, res) {
+
+	router.get('/passes?', function(req, res) {
 		program.db.allDocs({
 			startkey: 'device-1',
 			endkey: 'device-z',

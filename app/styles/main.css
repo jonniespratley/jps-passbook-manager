@@ -21,6 +21,11 @@
 @import url("../bower_components/ansi_up/examples/theme.css");
 @import url("./photon.css");
 @import url("./styles.css");
+
+.table-striped tr.active {
+    color: #fff;
+    background-color: #116cd6;
+  }
 img.pass-icon {
     width: 44px;
     margin: 2px;

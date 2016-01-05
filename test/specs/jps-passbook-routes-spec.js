@@ -37,6 +37,7 @@ describe('jps-passbook-routes', function () {
 	});
 
 	describe('Passes', function () {
+
 		it('GET - /api/v1/passes - should return all passes', function (done) {
 			request(app)
 				.get('/api/v1/passes')
@@ -48,18 +49,22 @@ describe('jps-passbook-routes', function () {
 			request(app)
 				.post('/api/v1/passes')
 				.send(mocks.mockPasses[0])
+				.expect(function (res) {
+					mocks.mockPasses[0]._id = res.body._id;
+					console.log(res)
+				})
 				.expect('Content-Type', /json/)
 				.expect(201, done);
 		});
 
-		xit('GET - /api/v1/passes/:id - should return 1 pass', function (done) {
+		it('GET - /api/v1/passes/:id - should return 1 pass', function (done) {
 			request(app)
 				.get('/api/v1/passes/' + mocks.mockPasses[0]._id)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		xit('DELETE - /api/v1/passes/:id - should remove pass', function (done) {
+		it('DELETE - /api/v1/passes/:id - should remove pass', function (done) {
 			request(app)
 				.delete('/api/v1/passes/' + mocks.mockPasses[0]._id)
 				.expect('Content-Type', /json/)

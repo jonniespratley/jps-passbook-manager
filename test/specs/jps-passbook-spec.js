@@ -43,8 +43,10 @@ describe('PassKit', function() {
 	});
 
 	it('signPass() - should sign .raw package into a .pkpass', function(done) {
-		jpsPassbook.signPass(mockPass).then(function(pass) {
-			assert.ok(pass, 'returns pass location');
+		this.timeout(5000);
+		jpsPassbook.signPass(mockPass).then(function(p) {
+			assert.ok(p, 'returns pass location');
+		//	assert(fs.existsSync(p));
 			done();
 		}).catch(function(err) {
 			assert.fail(err);

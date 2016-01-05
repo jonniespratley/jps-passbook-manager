@@ -1,13 +1,13 @@
 'use strict';
 
 var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
-	'ngRoute',
-	'ngResource',
-	'mgcrea.ngStrap'
-])
-	.config(['$routeProvider', function ($routeProvider) {
+		'ngRoute',
+		'ngResource',
+		'mgcrea.ngStrap'
+	])
+	.config(['$routeProvider', function($routeProvider) {
 		var routeResolver = {
-			delay: function ($q, $timeout) {
+			delay: function($q, $timeout) {
 				var delay = $q.defer();
 				$timeout(delay.resolve, 0);
 				return delay.promise;
@@ -55,22 +55,24 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			});
 	}]);
 
-	jpsPassbookManagerApp.config([
-  '$provide', function($provide) {
-    return $provide.decorator('$rootScope', [
-      '$delegate', function($delegate) {
-        $delegate.safeApply = function(fn) {
-          var phase = $delegate.$$phase;
-          if (phase === "$apply" || phase === "$digest") {
-            if (fn && typeof fn === 'function') {
-              fn();
-            }
-          } else {
-            $delegate.$apply(fn);
-          }
-        };
-        return $delegate;
-      }
-    ]);
-  }
+jpsPassbookManagerApp.config([
+	'$provide',
+	function($provide) {
+		return $provide.decorator('$rootScope', [
+			'$delegate',
+			function($delegate) {
+				$delegate.safeApply = function(fn) {
+					var phase = $delegate.$$phase;
+					if (phase === "$apply" || phase === "$digest") {
+						if (fn && typeof fn === 'function') {
+							fn();
+						}
+					} else {
+						$delegate.$apply(fn);
+					}
+				};
+				return $delegate;
+			}
+		]);
+	}
 ]);

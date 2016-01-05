@@ -20,6 +20,11 @@ app.use('/public', serveStatic(path.resolve(__dirname, './www')));
 var program = require('./lib/program')(config);
 program.app = app;
 
+
+
+
+
+
 var middleware = [
 	path.resolve(__dirname, './routes/jps-passbook-routes')
 ];
@@ -28,5 +33,7 @@ middleware.forEach(function(m) {
 });
 
 app.listen(port, host, function() {
-	program.log('listen', host, port);
+	program.log('server started');
+	program.log('host', host);
+	program.log('port', port);
 });

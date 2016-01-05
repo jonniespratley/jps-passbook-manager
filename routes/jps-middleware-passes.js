@@ -27,15 +27,15 @@ module.exports = function(program, app) {
 	 # --> if auth token is incorrect: 401
 	 #
 	 */
-	router.get('/:pass_type_id/:serial_number?', passController.get_passes);
+
 
 
 	//Handle saving new passes
-	router.post('/', jsonParser, passController.post_pass)
-	router.put('/:id', jsonParser, passController.put_pass)
-	router.delete('/:id', passController.delete_pass)
-	router.get('/:id', passController.get_pass)
-
+	router.post('/', jsonParser, passController.post_pass);
+	router.put('/:id', jsonParser, passController.put_pass);
+	router.delete('/:id', passController.delete_pass);
+	router.get('/:id?', passController.get_pass);
+	router.get('/:pass_type_id/:serial_number?', passController.get_passes);
 	app.use('/api/' + config.version + '/passes', router);
 	return router;
 };
