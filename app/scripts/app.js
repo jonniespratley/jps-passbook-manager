@@ -78,6 +78,19 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			controller: 'PassesCtrl',
 			resolve: routeResolver
 		})
+		.when('/passes/:id', {
+			templateUrl: './views/pass_details.html',
+			controller: 'DetailCtrl',
+			resolve: {
+				pass: function($route, Api) {
+					if ($route.current.params) {
+						return Api.get($route.current.params.id).then(function(resp) {
+							return resp.data;
+						});
+					}
+				}
+			}
+		})
 		.when('/passes/add', {
 			templateUrl: './views/passes_add.html',
 			controller: 'PassesCtrl',

@@ -1,0 +1,31 @@
+<table id="passes-table" class="table table-hover table-condensed table-bordered table-striped"
+		 ng-hide="pass._id">
+	<thead>
+	<tr>
+		<th class="th-type">Type</th>
+		<th>Description</th>
+		<th>Last Updated</th>
+		<th class="td-actions">Actions</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-class="{'active': SmartPass.pass === pass}" ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
+		<td class="pass-icon">
+			<a>
+				<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon" />
+			</a>
+		</td>
+		<td>
+			<a href="#/passes/{{pass._id}}"> {{pass.organizationName}} </a>
+			<br/> {{pass.description}}
+			<br/> {{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
+		</td>
+		<td>{{pass.lastUpdated | date: 'medium'}}</td>
+		<td>
+			<a ng-click="SmartPass.exportPass(pass)" href="" target="_blank">
+				<img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
+			</a>
+		</td>
+	</tr>
+	</tbody>
+</table>

@@ -7,9 +7,10 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 	$scope.$location = $location;
 	$scope.$routeParams = $routeParams;
 	$scope.cdn = 'http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com';
+	$scope.searchFilter = '';
 
 	//var db = new PouchDB('/api/v1/db/passbookmanager');
-	var db = new Api();
+	var db = Api;
 
 	function s4() {
 		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -36,7 +37,22 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 		})
 		t.active = !t.active;
 	}
-
+	$scope.passTypes = [{
+		name: 'generic',
+		title: 'Generic'
+	}, {
+		name: 'boardingPass',
+		title: 'Boarding Pass'
+	}, {
+		name: 'coupon',
+		title: 'Coupon'
+	}, {
+		name: 'eventTicket',
+		title: 'Event Ticket'
+	}, {
+		name: 'storeCard',
+		title: 'Store Card'
+	}];
 	$scope.SmartPass = {
 		api: {
 			url: location.protocol + '//' + location.hostname + ':' + location.port + '/api/v1'
@@ -218,10 +234,10 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 		}
 	};
 
-	$scope.pass = angular.copy($scope.SmartPass.coupon);
+	$scope.pass = {};
 	$scope.order = 'lastUpdated';
 	$scope.reverse = false;
-	$scope.pass.type = 'coupon';
+
 
 	$scope.toggle = function(event) {
 		console.log(event);

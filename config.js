@@ -3,7 +3,7 @@
 //TODO - Change to your values
 const APPLE_TEAM_IDENTIFIER = 'USE9YUYDFH';
 const APPLE_PASS_TYPE_IDENTIFIER = 'pass.passbookmanager.io';
-const APPLE_WEB_SERVICE_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1';
+const APPLE_WEB_SERVICE_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api';
 
 var VCAP_SERVICES = {
 	"logstash-4": [{
