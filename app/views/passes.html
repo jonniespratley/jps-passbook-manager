@@ -1,58 +1,32 @@
 <div class="window">
-
 	<header class="toolbar toolbar-header">
-	  <h1 class="title">Manage Passes</h1>
+		<h2 class="title">Manage Passes</h2>
 	</header>
 
 	<div class="tab-group">
-		<div class="tab-item"
-		id="{{tab.id}}"
-		ng-repeat="tab in tabs"
-		ng-class="{'active': tab.active}"
-			ng-click="selectTab(tab)">
-			<span class="icon icon-cancel icon-close-tab"></span>
-			{{tab.title}}
+		<div class="tab-item" id="{{tab.id}}" ng-repeat="tab in tabs" ng-class="{'active': tab.active}" ng-click="selectTab(tab)">
+			<span class="icon icon-cancel icon-close-tab"></span> {{tab.title}}
 		</div>
-<!--
-		<div class="tab-item">
-	    <span class="icon icon-cancel icon-close-tab"></span>
-	    Registrations
-	  </div>
-
-	  <div class="tab-item">
-	    <span class="icon icon-cancel icon-close-tab"></span>
-	    Logs
-	  </div>
--->
-	  <div class="tab-item tab-item-fixed">
-	    <span class="icon icon-plus"></span>
-	  </div>
+		<div class="tab-item tab-item-fixed">
+			<span class="icon icon-plus"></span>
+		</div>
 	</div>
 
 	<div class="window-content">
-
-
 		<div class="pane-group" ng-init="SmartPass.init()">
-			<!--
 			<div class="sidebar">
 				<ul class="list-group">
 					<li class="list-group-header">
 						<input class="form-control" type="text" placeholder="Search for pass">
 					</li>
-					<li
-						ng-click="SmartPass.selectPass(pass);"
-						ng-class="{'active': SmartPass.pass === pass}"
-						class="list-group-item"
-						ng-repeat="pass in SmartPass.passes track by $index | orderBy:updated_at:reverse"
-						id="pass-{{pass._id}}">
+					<li ng-click="SmartPass.selectPass(pass);" ng-class="{'active': SmartPass.pass === pass}" class="list-group-item" ng-repeat="pass in SmartPass.passes track by $index | orderBy:updated_at:reverse" id="pass-{{pass._id}}">
 
-						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon"
-							  class="pass-icon im media-object pull-left"/>
+						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon im media-object pull-left" />
 						<div class="media-body">
 							<strong>
 								{{pass.organizationName}}
 							</strong>
-             <span>
+							<span>
                <br/>
                {{pass.description}}
                <br/>
@@ -62,93 +36,77 @@
 					</li>
 				</ul>
 			</div>
-		-->
+			<!---->
 			<div class="pane">
 				<div class="padded-mor">
 
 					<!-- @TODO: [Pass Table]-->
 					<table id="passes-table" class="table table-hover table-condensed table-bordered table-striped" ng-hide="pass._id">
-					    <thead>
-					        <tr>
-					            <th class="th-type">Type</th>
-					            <th>Description</th>
-					            <th>Last Updated</th>
-					            <th class="td-actions">Actions</th>
-					        </tr>
+						<thead>
+							<tr>
+								<th class="th-type">Type</th>
+								<th>Description</th>
+								<th>Last Updated</th>
+								<th class="td-actions">Actions</th>
+							</tr>
 
-					    </thead>
-					    <tbody>
-					        <tr
-									ng-click="SmartPass.selectPass(pass);"
-									ng-class="{'active': SmartPass.pass === pass}"
-									ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse"
-									id="{{pass._id}}">
-					            <td class="pass-icon"><a>
-					              <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
-					              </a>
-					            </td>
-					            <td>
-												<a href="" ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
-					            	<br/>
-					            	{{pass.description}}
-					            	<br/>
-												{{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
-											</td>
-					            <td>{{pass.lastUpdated | date: 'medium'}}</td>
-					            <td>
+						</thead>
+						<tbody>
+							<tr ng-click="SmartPass.selectPass(pass);" ng-class="{'active': SmartPass.pass === pass}" ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
+								<td class="pass-icon">
+									<a>
+										<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon" />
+									</a>
+								</td>
+								<td>
+									<a href="" ng-click="SmartPass.selectPass(pass);"> {{pass.organizationName}} </a>
+									<br/> {{pass.description}}
+									<br/> {{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
+								</td>
+								<td>{{pass.lastUpdated | date: 'medium'}}</td>
+								<td>
 									<a ng-click="SmartPass.exportPass(pass)" href="" target="_blank">
 										<img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
 									</a>
-					            </td>
-					        </tr>
-					    </tbody>
+								</td>
+							</tr>
+						</tbody>
 					</table>
-					<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
-						<div ng-include src="'./views/passes_add.html'"></div>
-					</form>
+
+
+
+
+					<div class="row">
+						<div class="col-sm-8">
+							<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
+								<div ng-include src="'./views/passes_add.html'"></div>
+							</form>
+						</div>
+						<div class="col-sm-4" ng-include src="'./views/passes_preview.html'"></div>
+					</div>
+
 				</div>
 			</div>
 		</div>
 	</div>
-	<footer class="toolbar toolbar-footer">
-		<div class="toolbar-actions">
-			<button class="btn btn-default">
-				New Pass
-			</button>
+	<footer class="navbar toolbar toolbar-footer navbar-fixed-bottom navbar-default">
+		<div class="container-fluid">
+			<div class="toolbar-actions row">
+				<div class="col-sm-12">
+					<button class="btn btn-default">
+						New Pass
+					</button>
 
-			<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);" ng-disabled="!pass">
-				Save
-			</button>
+					<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);" ng-disabled="!pass">
+						Save
+					</button>
 
-			<button ng-click="SmartPass.exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i>
-				Export
-			</button>
-			<button ng-click="SmartPass.deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i>
-				Delete</button>
+					<button ng-click="SmartPass.exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i> Export
+					</button>
+					<button ng-click="SmartPass.deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i> Delete
+					</button>
+				</div>
+			</div>
 		</div>
 	</footer>
 </div>
-
-
-
-<!--div class="container" >
-
-    <div id="smartpass-row" class="row">
-
-        <div class="col-sm-12 clearfix content">
-
-
-
-        <div class="row">
-
-            <div class="col-sm-4" ng-include src="'./views/passes_preview.html'"></div>
-        </div>
-
-
-        </div>
-
-
-
-    </div>
-
-</div>-->
