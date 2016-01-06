@@ -9,7 +9,7 @@ module.exports = function(program, app) {
 	if (!app) {
 		throw new Error('Must provide an express app as argument 2');
 	}
-
+	var logger = program.getLogger('router:devices');
 	var config = program.config.defaults;
 	var router = new Router();
 	var DevicesController = require('../lib/controllers/devices-controller');
@@ -21,15 +21,15 @@ module.exports = function(program, app) {
 		return new Promise(function(resolve, reject) {
 			program.db.get(device._id).then(function(resp) {
 				if (resp) {
-					devicesLog('found device', resp);
+					logger('found device', resp);
 					resolve(resp);
 				}
 			}).catch(function(err) {
-				devicesLog('not found', err);
-				devicesLog('creating', device);
+				logger('not found', err);
+				logger('creating', device);
 
 				program.db.put(device).then(function(resp) {
-					deviceLog('created', resp);
+					logger('created', resp);
 					resolve(device);
 				}).catch(reject);
 			});
@@ -38,14 +38,14 @@ module.exports = function(program, app) {
 
 	//Send push to device
 	router.get('/:device_id/push/:token', function(req, res) {
-		program.log('Push to device ' + req.params.token);
+		logger('Push to device ' + req.params.token);
 		res.status(200).send({
 			message: 'Device push token'
 		});
 	});
 
 	//Register Pass
-	router.post('/:device_id/registrations/:pass_type_id/:serial_number', bodyParser.json(), devicesController.post_device_registration);
+	router.post('/:device_id/registrations/:pass_type_id/:serial_number?', bodyParser.json(), devicesController.post_device_registration);
 
 	//Get passes for device
 	router.get('/:device_id/registrations/:pass_type_id?', devicesController.get_device_passes);
@@ -53,8 +53,11 @@ module.exports = function(program, app) {
 	/*
 	# unregister a device to receive push notifications for a pass
 	*/
-	router.delete('/:device_id/registrations/:pass_type_id/:serial_number', devicesController.delete_device_registration);
+	router.delete('/:device_id/registrations/:pass_type_id/:serial_number?', devicesController.delete_device_registration);
 
 	app.use('/api/' + config.version + '/devices', router);
-
+	app.all('/api/' + config.version + '/devices/*', function(req, res, next) {
+		logger(req.method, req.url);
+		next();
+	});
 };
