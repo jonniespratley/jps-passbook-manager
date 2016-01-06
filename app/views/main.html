@@ -1,29 +1,32 @@
 
-<div id="main-row" class="row-fluid">
-	<div class="span12">
+<div id="main-row" class="row">
+	<div class="col-sm-12">
+		
 		<div class="hero-unit">
-			<div class="row-fluid feature-row">
-				<div class="span8">
-					<h1 class="ng-binding">Passbook Manager</h1>
+			<div class="row feature-row">
+
+				<div class="col-sm-8">
+					<h2 class="ng-binding">
+					{{App.title}}</h2>
 					<p class="ng-binding">
-						With this interface you can easily create Apple iOS Passbook Passes.
+						{{App.description}}
 					</p>
 					<p>
 						<a class="btn btn-large btn-primary" data-toggle="modal" ng-click="SmartPass.clearPass();" href="#smartpass-modal" ><i class="icon-pencil"></i> Create New Pass</a>
 					</p>
 				</div>
-				<div class="span4">
+				<div class="col-sm-4">
 					<a href="#" class=""> <img ng-src="http://1ff1217913c5a6afc4c8-79dc9bd5ca0b6e6cb6f16ffd7b1e05e2.r26.cf1.rackcdn.com/img/passbook-hero.png"/> </a>
 				</div>
 			</div>
 		</div>
 
-		<div id="info-row" class="row-fluid">
-			<div class="span6">
+		<div id="info-row" class="row">
+			<div class="col-sm-6">
 				<h4 class="title">What is Passbook?</h4>
 				<p>Passbook is Apple's new feature for iPhone and iPod touch on iOS 6. Passbook lets you store your digital tickets, boarding passes, and coupons. You can find more recommended Passbook Apps <a href="#other-pass-apps">here</a>.</p>
 			</div>
-			<div class="span6">
+			<div class="col-sm-6">
 				<h4>Developer API</h4>
 				<p>For more information about developing for Passbook please refer to the
 					<a href="http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/PassKit_PG/Chapters/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW55" target="_blank">Passbook Programming Guide</a>.

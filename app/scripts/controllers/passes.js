@@ -96,11 +96,11 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 		},
 
 		deletePass: function(p) {
-			//$scope.SmartPass.pass = p;
+			$scope.SmartPass.pass = p;
 			$scope.pass = p;
 			console.log('deletePass', p);
 			db.remove(p._id).then(function(data) {
-				//angular.element(p._id).remove();
+				angular.element(p._id).remove();
 				$scope.SmartPass.getPasses();
 				console.log('deletePass', data);
 			}).catch(function(err) {
@@ -115,7 +115,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 				console.log('getPasses', resp);
 				if (resp && resp.data) {
 					$rootScope.safeApply(function() {
-						$scope.SmartPass.passes = resp.data.rows;
+						$scope.SmartPass.passes = resp.data.rows || resp.data;
 					});
 				}
 			});
