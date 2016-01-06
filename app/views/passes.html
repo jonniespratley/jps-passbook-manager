@@ -96,10 +96,9 @@
 											</td>
 					            <td>{{pass.lastUpdated | date: 'medium'}}</td>
 					            <td>
-												<a href="{{pass.url}}" target="_blank">
-													<img class="passbook-badge"
-														src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
-												</a>
+									<a ng-click="SmartPass.exportPass(pass)" href="" target="_blank">
+										<img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
+									</a>
 					            </td>
 					        </tr>
 					    </tbody>
@@ -117,7 +116,7 @@
 				New Pass
 			</button>
 
-			<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);">
+			<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);" ng-disabled="!pass">
 				Save
 			</button>
 
