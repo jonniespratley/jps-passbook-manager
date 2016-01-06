@@ -62,14 +62,29 @@ module.exports = function(program, app) {
 	//   and deserialized.
 	passport.serializeUser(function(user, done) {
 		authLogger('serializeUser', user);
-		User.saveOrCreate(user, done);
+
+		db.put(user).then(function(u) {
+			done(null, u);
+		}).catch(function(err) {
+			done(err, null);
+		});
 	});
 
-	passport.deserializeUser(function(obj, done) {
-		authLogger('deserializeUser', obj);
-		done(null, obj);
+	passport.deserializeUser(function(id, done) {
+		authLogger('deserializeUser', id);
+		db.get(id).then(function(u) {
+			done(null, u);
+		}).catch(function(err) {
+			done(err, null);
+		});
+		//	done(null, obj);
 	});
 
+
+	function findOrCreate(profile, done) {
+		console.warn('findOrCreate', profile);
+		done(null, profile);
+	}
 
 
 	// Use the GitHubStrategy within Passport.
@@ -88,30 +103,18 @@ module.exports = function(program, app) {
 				authLogger('accessToken', accessToken);
 				authLogger('refreshToken', refreshToken);
 				authLogger('profile', profile);
+				return findOrCreate(profile, done);
 
 				// To keep the example simple, the user's GitHub profile is returned to
 				// represent the logged-in user.  In a typical application, you would want
 				// to associate the GitHub account with a user record in your database,
 				// and return that user instead.
-				return done(null, profile);
+				//	return done(null, profile);
 			});
 		}
 	));
 
 
-	router.get('/auth/github',
-		passport.authenticate('github', {
-			scope: ['user:email']
-		}));
-
-	router.get('/auth/github/callback',
-		passport.authenticate('github', {
-			failureRedirect: '/login'
-		}),
-		function(req, res) {
-			// Successful authentication, redirect home.
-			res.redirect('/');
-		});
 
 	//app.use(express.static(__dirname + '/public'));
 	router.get('/admin', function(req, res) {
