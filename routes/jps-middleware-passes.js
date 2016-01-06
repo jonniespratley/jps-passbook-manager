@@ -18,7 +18,7 @@ module.exports = function(program, app) {
 
 	// TODO: Admin Routes
 	var adminRouter = new Router();
-	adminRouter.get('/', passController.get_passes);
+	adminRouter.get('/?', passController.get_passes);
 	adminRouter.post('/', jsonParser, passController.post_pass);
 	adminRouter.put('/:id', jsonParser, passController.put_pass);
 	adminRouter.delete('/:id', passController.delete_pass);

@@ -19,6 +19,7 @@
     "fs-extra": "^0.14.0",
     "jfs": "^0.2.6",
     "lodash": "^3.10.1",
+    "method-override": "^2.3.5",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-github2": "^0.1.9",

@@ -8,13 +8,14 @@ var express = require('express'),
 var Passbook = require('./../lib/jps-passbook');
 var serveStatic = require('serve-static');
 
-var debug = require('debug');
-var path = require('path');
-var fs = require('fs-extra');
-var http = require('http');
-var url = require('url');
-var assert = require('assert');
-var exec = require('child_process').exec;
+
+const path = require('path');
+const fs = require('fs-extra');
+const _ = require('lodash');
+const http = require('http');
+const url = require('url');
+const assert = require('assert');
+const exec = require('child_process').exec;
 
 
 /**
@@ -35,12 +36,15 @@ var exec = require('child_process').exec;
  * @param app
  */
 module.exports = function(program, app) {
-	var logger = program.getLogger('router');
-	var jpsPassbook = new Passbook(program);
 
-	if (!app) {
+
+	if (!program || !app) {
 		throw new Error('Must provide an express app as argument 2');
 	}
+
+	var logger = program.getLogger('router');
+	var jpsPassbook = new Passbook(program);
+	logger('initialized');
 
 	var config = program.config.defaults;
 	var router = express.Router();
@@ -64,11 +68,18 @@ module.exports = function(program, app) {
 
 
 	router.post('/log', bodyParser.json(), function(req, res) {
-		program.db.put(req.body, 'logs').then(function(resp) {
-			res.status(200).json(resp);
-		}).catch(function(err) {
-			res.status(400).json(err);
-		})
+		var dataLog = {};
+		dataLog._id = _.uniqueId('log-');
+		dataLog.url = req.url;
+		dataLog.params = req.params;
+		dataLog.body = req.body;
+		dataLog.created_at =
+
+			program.db.put(dataLog).then(function(resp) {
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(400).json(err);
+			})
 
 	});
 
@@ -195,5 +206,5 @@ module.exports = function(program, app) {
 		require(m)(program, app);
 	});
 
-	logger('initialized');
+
 };

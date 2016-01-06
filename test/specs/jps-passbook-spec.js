@@ -22,7 +22,7 @@ var passFiles = [];
 describe('PassKit', function() {
 	it('createPass() - should create each pass type', function(done) {
 		mocks.mockPasses.forEach(function(pass) {
-			jpsPassbook.createPass(pass, false).then(function(data) {
+			jpsPassbook.createPass(pass, true).then(function(data) {
 				console.log('pass created', data);
 				passFiles.push(data);
 				assert.ok(data._id);
@@ -46,7 +46,7 @@ describe('PassKit', function() {
 		this.timeout(5000);
 		jpsPassbook.signPass(mockPass).then(function(p) {
 			assert.ok(p, 'returns pass location');
-		//	assert(fs.existsSync(p));
+			//	assert(fs.existsSync(p));
 			done();
 		}).catch(function(err) {
 			assert.fail(err);
