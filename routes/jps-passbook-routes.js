@@ -150,32 +150,6 @@ module.exports = function(program, app) {
 	});
 
 
-	router.get('/devices', function(req, res) {
-		program.db.allDocs({
-			startkey: 'device-1',
-			endkey: 'device-z',
-			include_docs: true
-		}).then(function(resp) {
-			res.status(200).json(resp);
-		}).catch(function(err) {
-			res.status(400).json(err);
-		});
-	});
-
-	router.get('/passes?', function(req, res) {
-		program.db.allDocs({
-			startkey: 'device-1',
-			endkey: 'device-z',
-			include_docs: true
-		}).then(function(resp) {
-			var passes = resp.rows.map(function(row) {
-				return row.docType === 'pass';
-			});
-			res.status(200).json(passes);
-		}).catch(function(err) {
-			res.status(400).json(err);
-		});
-	});
 
 	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');

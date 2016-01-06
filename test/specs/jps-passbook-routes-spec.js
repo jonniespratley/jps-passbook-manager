@@ -103,7 +103,7 @@ describe('jps-passbook-routes', function() {
 
 	});
 
-	it('GET - /api/v1/devices - should return devices', function(done) {
+	xit('GET - /api/v1/devices - should return devices', function(done) {
 		request(app)
 			.get('/api/v1/devices')
 			.expect('Content-Type', /json/)

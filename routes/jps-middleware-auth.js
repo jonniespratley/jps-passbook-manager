@@ -62,7 +62,6 @@ module.exports = function(program, app) {
 	//   and deserialized.
 	passport.serializeUser(function(user, done) {
 		authLogger('serializeUser', user);
-
 		db.put(user).then(function(u) {
 			done(null, u);
 		}).catch(function(err) {
@@ -82,8 +81,24 @@ module.exports = function(program, app) {
 
 
 	function findOrCreate(profile, done) {
-		console.warn('findOrCreate', profile);
-		done(null, profile);
+		var id = 'user-' + profile.id;
+		var user = {
+			_id: id,
+			data: profile
+		};
+
+		console.warn('findOrCreate', id);
+
+		db.get(id).then(function(u) {
+			done(null, u);
+		}).catch(function(err) {
+			db.put(user).then(function(u) {
+				done(null, u);
+			}).catch(function(err) {
+				done(err, null);
+			});
+		});
+		//	done(null, profile);
 	}
 
 

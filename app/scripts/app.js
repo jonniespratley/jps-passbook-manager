@@ -20,7 +20,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				controller: 'MainCtrl',
 				resolve: routeResolver
 			})
-			.when('/manage', {
+			.when('/admin', {
 				templateUrl: './views/manage.html',
 				controller: 'ManageCtrl',
 				resolve: routeResolver

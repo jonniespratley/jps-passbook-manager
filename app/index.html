@@ -39,10 +39,16 @@
 <![endif]-->
 
 
-<!--ng-include src="'./views/_header.html'"></ng-include-->
+<ng-include src="'./views/_header.html'"></ng-include>
 
 
-<div id="content-view" ng-view></div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div id="content-view" ng-view></div>
+		</div>
+	</div>
+</div>
 
 
 <!-- build:js scripts/vendor.js -->

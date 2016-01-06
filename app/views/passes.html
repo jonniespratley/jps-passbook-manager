@@ -67,7 +67,7 @@
 				<div class="padded-mor">
 
 					<!-- @TODO: [Pass Table]-->
-					<table id="passes-table" class="table table-hover table-condensed table-bordered table-striped">
+					<table id="passes-table" class="table table-hover table-condensed table-bordered table-striped" ng-hide="pass._id">
 					    <thead>
 					        <tr>
 					            <th class="th-type">Type</th>
@@ -103,7 +103,7 @@
 					        </tr>
 					    </tbody>
 					</table>
-					<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);">
+					<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
 						<div ng-include src="'./views/passes_add.html'"></div>
 					</form>
 				</div>

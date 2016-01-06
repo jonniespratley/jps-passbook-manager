@@ -18,16 +18,15 @@ module.exports = function(program, app) {
 
 	// TODO: Admin Routes
 	var adminRouter = new Router();
-	adminRouter.get('/?', passController.get_all_passes);
+	adminRouter.get('/', passController.get_all_passes);
 	adminRouter.post('/', jsonParser, passController.post_pass);
 	adminRouter.put('/:id', jsonParser, passController.put_pass);
 	adminRouter.delete('/:id', passController.delete_pass);
-	adminRouter.get('/:id?', passController.get_pass);
+	adminRouter.get('/:id', passController.get_pass);
 
 	app.use('/api/' + config.version + '/admin/passes', adminRouter);
 
-
-	router.get('/:pass_type_id/:serial_number?', passController.get_passes);
+	router.get('/:pass_type_id/:serial_number', passController.get_passes);
 	app.use('/api/' + config.version + '/passes', router);
 	app.all('/api/' + config.version + '/passes/*', function(req, res, next) {
 		logger(req.method, req.url);
