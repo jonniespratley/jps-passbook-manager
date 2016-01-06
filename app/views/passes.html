@@ -1,4 +1,6 @@
 <div class="window">
+	<!--
+	
 	<header class="toolbar toolbar-header">
 		<h2 class="title">Manage Passes</h2>
 	</header>
@@ -10,11 +12,11 @@
 		<div class="tab-item tab-item-fixed">
 			<span class="icon icon-plus"></span>
 		</div>
-	</div>
+	</div-->
 
 	<div class="window-content">
-		<div class="pane-group" ng-init="SmartPass.init()">
-			<div class="sidebar">
+		<div class="pane-group row" ng-init="SmartPass.init()">
+			<div class="sidebar col-sm-4">
 				<ul class="list-group">
 					<li class="list-group-header">
 						<input class="form-control" type="text" placeholder="Search for pass">
@@ -37,7 +39,7 @@
 				</ul>
 			</div>
 			<!---->
-			<div class="pane">
+			<div class="pane col-sm-8">
 				<div class="padded-mor">
 
 					<!-- @TODO: [Pass Table]-->
@@ -89,6 +91,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<footer class="navbar toolbar toolbar-footer navbar-fixed-bottom navbar-default">
 		<div class="container-fluid">
 			<div class="toolbar-actions row">
