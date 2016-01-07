@@ -18,7 +18,7 @@ var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
-describe('program data store', function() {
+describe('db', function() {
 	it('should be defined', function(done) {
 		assert(db);
 		done();

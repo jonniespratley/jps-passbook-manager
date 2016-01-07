@@ -5,24 +5,54 @@
 		  <li class="active">Server</li>
 		</ol>
 
-		<legend>Logs</legend>
-		<table id="logs-table" class="table table-condensed table-bordered">
-			<thead>
-			<tr>
 
-				<th>Log</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr ng-repeat="item in logs track by $index | orderBy:order:reverse"
-			id="{{item._id}}">
+		<tabs>
+			<pane title="Logs">
 
-				<td>
-					<code class="code">{{item.data.logs.join('\n')}}</code>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+
+
+
+						<!-- TODO: logs -->
+						<table id="logs-table" class="table table-condensed table-bordered">
+							<tbody>
+								<tr ng-repeat="item in logs track by $index | orderBy:created_at:true"
+									id="{{item._id}}">
+									<td>
+										<code class="code">{{item.data.logs.join('\n')}}</code>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+			</pane>
+
+
+			<!-- TODO: Devices -->
+			<pane title="Devices">
+				<table id="devices-table" class="table table-condensed table-bordered">
+					<tbody>
+						<tr ng-repeat="item in devices track by $index | orderBy:created_at:true"
+							id="{{item._id}}">
+							<td>
+								<code class="code">{{item._id}}</code>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</pane>
+
+			<!-- TODO: registrations -->
+			<pane title="Registrations">
+
+			</pane>
+
+
+
+		</tabs>
+
+
+
+
 
 	</div>
 </div>

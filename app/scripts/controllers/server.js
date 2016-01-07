@@ -1,7 +1,8 @@
 'use strict';
-jpsPassbookManagerApp.controller('ServerCtrl', function($scope, logs, Api) {
+jpsPassbookManagerApp.controller('ServerCtrl', function($scope, logs, devices, Api) {
 
 	$scope.logs = logs;
+	$scope.devices = devices;
 
 	/* ======================[ @TODO:
 	 I hold methods for checking the api and testing if its alive

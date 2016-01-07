@@ -75,3 +75,42 @@ exports.github = {
 	"created_at": "2010-07-01T20:42:16Z",
 	"updated_at": "2016-01-01T18:31:44Z"
 };
+
+
+/**
+ * I take a github username and fetch the user info
+ * and return a pss object.
+ * @param username
+ */
+exports.githubToPass = function (username) {
+	let github = {};
+	let pass = new Pass({
+		description: null
+	});
+
+	var http = require("https");
+
+	var options = {
+		"method": "GET",
+		"hostname": "api.github.com",
+		"path": "/users/" + username,
+		"headers": {
+			"content-type": "application/json"
+		}
+	};
+
+	var req = http.request(options, function (res) {
+		var chunks = [];
+
+		res.on("data", function (chunk) {
+			chunks.push(chunk);
+		});
+
+		res.on("end", function () {
+			var body = Buffer.concat(chunks);
+			console.log(body.toString());
+		});
+	});
+
+	req.end();
+};

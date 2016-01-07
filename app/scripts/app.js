@@ -132,6 +132,14 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 					}).then(function(resp) {
 						return resp.data;
 					});
+				},
+				devices: function(Api) {
+					return Api.request({
+						method: 'GET',
+						url: '/api/v1/admin/devices'
+					}).then(function(resp) {
+						return resp.data;
+					});
 				}
 			}
 		})

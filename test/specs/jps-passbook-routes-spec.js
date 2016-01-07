@@ -26,7 +26,7 @@ var mockPass = mocks.mockPass;
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
 	'jps-passbook-routes'))(program, app);
 
-describe('program routes', function() {
+describe('routes', function() {
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
@@ -226,7 +226,7 @@ describe('program routes', function() {
 					.expect(200, done);
 			});
 
-			xit('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
+			it('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
 				function(done) {
 					request(app)
 						.delete('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/' + mockPass.passTypeIdentifier + '/' +
@@ -254,7 +254,7 @@ describe('program routes', function() {
 
 			});
 
-			xit('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/test?passesUpdatedSince=now')
 					.set('Authorization', mockPass.authenticationToken)

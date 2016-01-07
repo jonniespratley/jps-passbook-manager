@@ -26,7 +26,7 @@
     "passport": "^0.3.2",
     "passport-github2": "^0.1.9",
     "redis": "^2.4.2",
-    "request": "2.0.x",
+    "request": "^2.0.5",
     "serve-index": "^1.6.0",
     "serve-static": "^1.8.0",
     "socketio": "^1.0.0"
