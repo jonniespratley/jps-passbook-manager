@@ -1,9 +1,12 @@
 # Passbook Manager
 This is a simple interface for creating iOS Passbook passes from content.
 
+[![Build Status](https://drone.io/github.com/jonniespratley/jps-passbook-manager/status.png)](https://drone.io/github.com/jonniespratley/jps-passbook-manager/latest)
 
-There are three major parts to the pass life cycle: creation, management, and redemption. 
-Passbook handles the middle; it lets users view and manage their passes and provides lock screen integration. 
+[![Build Status](https://travis-ci.org/jonniespratley/jps-passbook-manager.svg?branch=develop)](https://travis-ci.org/jonniespratley/jps-passbook-manager)
+
+There are three major parts to the pass life cycle: creation, management, and redemption.
+Passbook handles the middle; it lets users view and manage their passes and provides lock screen integration.
 
 > You are responsible for the two ends: creating passes and redeeming passes.
 
@@ -15,7 +18,7 @@ This is a simple web app interface for creating iOS Passbook passes from content
 
 
 ### 1. Fork It
-Clone or fork this repo. 
+Clone or fork this repo.
 
 Execute command:
 
@@ -108,6 +111,3 @@ Trust chain is valid.
 
 *** SUCCEEDED ***
 ```
-
-
-

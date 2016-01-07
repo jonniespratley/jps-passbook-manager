@@ -8,7 +8,7 @@ const config = {
   specs: 'test/specs/*.js'
 };
 
-gulp.task('pre-test', () => {
+gulp.task('pre-test', function() {
   return gulp.src(config.src)
     .pipe(istanbul({
       includeUntested: true,
@@ -16,10 +16,12 @@ gulp.task('pre-test', () => {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], () => {
+gulp.task('test', ['pre-test'], function() {
   return gulp.src(config.specs)
     .pipe(mocha({
       read: false
     }))
     .pipe(istanbul.writeReports());
 });
+
+gulp.task('default', ['test']);

@@ -19,11 +19,11 @@ var passFiles = [];
 
 
 
-xdescribe('PassKit', function() {
+xdescribe('jps-passbook', function() {
 	it('createPass() - should create each pass type', function(done) {
 		mocks.mockPasses.forEach(function(pass) {
 			jpsPassbook.createPass(pass, true).then(function(data) {
-				console.log('pass created', data);
+				//	console.log('pass created', data);
 				passFiles.push(data);
 				assert.ok(data._id);
 			});
