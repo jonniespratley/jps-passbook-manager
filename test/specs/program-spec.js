@@ -2,7 +2,8 @@ var path = require('path');
 var assert = require('assert');
 var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
-describe('Program', function() {
+
+describe('program', function() {
 	it('should defined', function(done) {
 		assert(program);
 		done();

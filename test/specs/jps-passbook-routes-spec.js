@@ -15,7 +15,6 @@ var app = express();
 var passes;
 
 // TODO: Program
-
 var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
 
@@ -27,8 +26,7 @@ var mockPass = mocks.mockPass;
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
 	'jps-passbook-routes'))(program, app);
 
-
-describe('jps-passbook-routes', function() {
+describe('program routes', function() {
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
@@ -52,7 +50,7 @@ describe('jps-passbook-routes', function() {
 				.send(mocks.mockPasses[0])
 				.expect(function(res) {
 					mocks.mockPasses[0]._id = res.body._id;
-					console.log(res)
+					//	console.log(res)
 				})
 				.expect('Content-Type', /json/)
 				.expect(201, done);
@@ -169,7 +167,7 @@ describe('jps-passbook-routes', function() {
 
 
 
-	describe('PassKit Web Service - https://developer.apple.com/library/ios/documentation/PassKit/Reference/PassKit_WebService/WebService.html', function() {
+	describe('PassKit Web Service', function() {
 
 		describe('Devices', function() {
 			it('POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register device for pass',
@@ -205,7 +203,8 @@ describe('jps-passbook-routes', function() {
 			it('GET - /api/v1/devices/:device_id/registrations/:pass_type_id?passesUpdatedSince=tag - get serial numbers',
 				function(done) {
 					request(app)
-						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +'?tag=now')
+						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +
+							'?tag=now')
 						.set('Authorization', mockPass.authenticationToken)
 						.expect('Content-Type', /json/)
 						.expect(200, done);

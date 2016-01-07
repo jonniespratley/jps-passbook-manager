@@ -6,8 +6,8 @@ var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
 
 
-describe('Pass Model', function () {
-	it('should create default pass', function (done) {
+describe('Pass', function() {
+	it('should create default pass', function(done) {
 		assert(Pass);
 		p = new Pass();
 		assert.ok(p._id);
@@ -15,15 +15,20 @@ describe('Pass Model', function () {
 		done()
 	});
 
-	it('should create pass with storeCard type', function (done) {
-		p = new Pass({type: 'storeCard'});
+	it('should create pass model with [storeCard] type', function(done) {
+		p = new Pass({
+			type: 'storeCard'
+		});
 		assert.ok(p.storeCard);
 		assert.equal(p.type, 'storeCard');
 		done();
 	});
-	it('should create pass with teamIdentifier, from config', function(done){
-		p = new Pass({type: 'generic'});
-	//	assert.ok(p.storeCard);
+
+	it('should create pass model with teamIdentifier, passTypeIdentifier, and webServiceURL from config', function(done) {
+		p = new Pass({
+			type: 'generic'
+		});
+		//	assert.ok(p.storeCard);
 		assert.equal(p.teamIdentifier, config.passkit.teamIdentifier);
 		assert.equal(p.passTypeIdentifier, config.passkit.passTypeIdentifier);
 		assert.equal(p.webServiceURL, config.passkit.webServiceURL);
