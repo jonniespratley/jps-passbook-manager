@@ -3,4 +3,4 @@ node_js:
   - 'iojs'
 before_script:
   - 'npm -v'
-  - 'npm install -g bower grunt-cli'
+  - 'npm install -g gulp'
