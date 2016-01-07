@@ -11,17 +11,27 @@ var mockPass = new Pass({
 });
 exports.mockPass = mockPass;
 exports.mockPasses = [
-	new Pass({type: 'boardingPass'}),
-	new Pass({type: 'coupon'}),
-	new Pass({type: 'eventTicket'}),
-	new Pass({type: 'generic'}),
-	new Pass({type: 'storeCard'})
+	new Pass({
+		type: 'boardingPass'
+	}),
+	new Pass({
+		type: 'coupon'
+	}),
+	new Pass({
+		type: 'eventTicket'
+	}),
+	new Pass({
+		type: 'generic'
+	}),
+	new Pass({
+		type: 'storeCard'
+	})
 
 ];
-
+///api/v1/v1/devices/a53ae770f6bd12d04c572e653888c6c6/registrations/pass.passbookmanager.io/25df3392-f37d-48c3-a0a1-20e9edc95f8b
 exports.mockDevice = new Device({
-	deviceLibraryIdentifier: '1234567890',
+	pushToken: 'ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2',
+	deviceLibraryIdentifier: '5efdb85752e84fc4236a22802aca5cdc',
 	serialNumber: mockPass.serialNumber,
 	passTypeIdentifier: mockPass.passTypeIdentifier
 });
-

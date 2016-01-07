@@ -70,18 +70,33 @@ module.exports = function(program, app) {
 	router.post('/log', bodyParser.json(), function(req, res) {
 		var dataLog = {};
 		dataLog._id = _.uniqueId('log-');
+		dataLog.docType = 'log';
 		dataLog.url = req.url;
 		dataLog.params = req.params;
-		dataLog.body = req.body;
+		dataLog.data = req.body;
 		dataLog.created_at =
 
 			program.db.put(dataLog).then(function(resp) {
 				res.status(200).json(resp);
 			}).catch(function(err) {
 				res.status(400).json(err);
-			})
+			});
 
 	});
+
+	router.get('/admin/logs', function(req, res) {
+		let _logs = [];
+		program.db.allDocs({
+			docType: 'log'
+		}).then(function(resp) {
+			_logs = resp.rows.filter(function(row) {
+				return row.docType === 'log';
+			});
+			res.status(200).json(_logs);
+		}).catch(function(err) {
+			res.status(400).json(err);
+		})
+	})
 
 
 	// TODO: Get tokens
@@ -133,7 +148,7 @@ module.exports = function(program, app) {
 			program.db.get(id).then(function(resp) {
 				logger('found pass', resp);
 
-				jpsPassbook.createPass(resp, false).then(function(data) {
+				jpsPassbook.createPass(resp, true).then(function(data) {
 					logger('createPass', data);
 					res.status(200).send(data);
 				}).catch(function(err) {
