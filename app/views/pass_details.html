@@ -1,7 +1,38 @@
 <div class="row">
   <div class="col-sm-12">
-    <pre>
-      {{pass | json}}
-    </pre>
+    <ol class="breadcrumb">
+      <li><a href="#/">Home</a></li>
+      <li><a href="#/passes">Passes</a></li>
+      <li class="active">Details</li>
+    </ol>
+
+
+    <div class="row">
+      <div class="col-xs-9">
+        <form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
+          <div ng-include src="'./views/passes_add.html'"></div>
+        </form>
+      </div>
+      <div class="col-xs-3">
+
+        <div class="scan-pass text-center">
+          <a href="/api/v1/export/{{pass._id}}" target="_blank">
+            <img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
+          </a>
+          <div id="pass-qrcode"></div>
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    <pre>{{pass | json}}</pre>
   </div>
 </div>

@@ -1,7 +1,7 @@
 /* ======================[ @TODO: Inline Editable ]====================== */
-jpsPassbookManagerApp.directive('ngEnter', function () {
-	return function (scope, elm, attrs) {
-		elm.bind('keypress', function (e) {
+jpsPassbookManagerApp.directive('ngEnter', function() {
+	return function(scope, elm, attrs) {
+		elm.bind('keypress', function(e) {
 			if (e.charCode === 13)
 				scope.$apply(attrs.ngEnter);
 		});
@@ -9,7 +9,7 @@ jpsPassbookManagerApp.directive('ngEnter', function () {
 });
 
 
-jpsPassbookManagerApp.directive('ngColorpicker', function () {
+jpsPassbookManagerApp.directive('ngColorpicker', function() {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -28,8 +28,8 @@ jpsPassbookManagerApp.directive('ngColorpicker', function () {
 	};
 });
 
-jpsPassbookManagerApp.directive('myTable', function () {
-	return function (scope, element, attrs) {
+jpsPassbookManagerApp.directive('myTable', function() {
+	return function(scope, element, attrs) {
 
 		// apply DataTable options, use defaults if none specified by user
 		var options = {};
@@ -38,7 +38,8 @@ jpsPassbookManagerApp.directive('myTable', function () {
 		} else {
 			options = {
 				"bStateSave": true,
-				"iCookieDuration": 2419200, /* 1 month */
+				"iCookieDuration": 2419200,
+				/* 1 month */
 				"bJQueryUI": true,
 				"bPaginate": false,
 				"bLengthChange": false,
@@ -51,7 +52,7 @@ jpsPassbookManagerApp.directive('myTable', function () {
 		// Tell the dataTables plugin what columns to use
 		// We can either derive them from the dom, or use setup from the controller
 		var explicitColumns = [];
-		element.find('th').each(function (index, elem) {
+		element.find('th').each(function(index, elem) {
 			explicitColumns.push($(elem).text());
 		});
 		if (explicitColumns.length > 0) {
@@ -73,7 +74,7 @@ jpsPassbookManagerApp.directive('myTable', function () {
 		var dataTable = element.dataTable(options);
 
 		// watch for any changes to our data, rebuild the DataTable
-		scope.$watch(attrs.aaData, function (value) {
+		scope.$watch(attrs.aaData, function(value) {
 			var val = value || null;
 			if (val) {
 				dataTable.fnClearTable();
@@ -82,7 +83,7 @@ jpsPassbookManagerApp.directive('myTable', function () {
 		});
 	};
 });
-jpsPassbookManagerApp.directive('inlineEdit', function () {
+jpsPassbookManagerApp.directive('inlineEdit', function() {
 	return {
 		// can be in-lined or async loaded by xhr
 		// or inlined as JS string (using template property)
@@ -93,28 +94,29 @@ jpsPassbookManagerApp.directive('inlineEdit', function () {
 	};
 });
 
-jpsPassbookManagerApp.directive('contenteditable', function () {
+jpsPassbookManagerApp.directive('contenteditable', function() {
 	return {
 		require: 'ngModel',
-		link: function (scope, elm, attrs, ctrl) {
+		link: function(scope, elm, attrs, ctrl) {
 			// view -> model
-			elm.bind('blur', function () {
-				scope.$apply(function () {
+			elm.bind('blur', function() {
+				scope.$apply(function() {
 					ctrl.$setViewValue(elm.html());
 				});
 			});
 
 			// model -> view
-			ctrl.render = function (value) {
+			ctrl.render = function(value) {
 				elm.html(value);
 			};
 
 			// load init value from DOM
 			ctrl.$setViewValue(elm.html());
 
-			elm.bind('keydown', function (event) {
+			elm.bind('keydown', function(event) {
 				console.log("keydown " + event.which);
-				var esc = event.which == 27, el = event.target;
+				var esc = event.which == 27,
+					el = event.target;
 
 				if (esc) {
 					console.log("esc");
@@ -143,31 +145,34 @@ jpsPassbookManagerApp.directive('contenteditable', function () {
 	 </pane>
  </tabs>
  */
-jpsPassbookManagerApp.directive('tabs', function () {
+jpsPassbookManagerApp.directive('tabs', function() {
 	return {
 		restrict: 'E',
 		transclude: true,
 		scope: {},
-		controller: function ($scope, $element) {
+		controller: function($scope, $element) {
 			var panes = $scope.panes = [];
 
-			$scope.select = function (pane) {
-				angular.forEach(panes, function (pane) {
+			$scope.select = function(pane) {
+				angular.forEach(panes, function(pane) {
 					pane.selected = false;
 				});
 				pane.selected = true;
 			}
 
-			this.addPane = function (pane) {
+			this.addPane = function(pane) {
 				if (panes.length == 0)
 					$scope.select(pane);
 				panes.push(pane);
 			}
 		},
-		template: '<div class="tabbable">' + '<ul class="nav nav-tabs">' + '<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">' + '<a href="" ng-click="select(pane)"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' + '</li>' + '</ul>' + '<div class="tab-content" ng-transclude></div>' + '</div>',
+		template: '<div class="tabbable">' + '<ul class="nav nav-tabs">' +
+			'<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">' +
+			'<a href="" ng-click="select(pane)"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' + '</li>' + '</ul>' +
+			'<div class="tab-content" ng-transclude></div>' + '</div>',
 		replace: true
 	};
-}).directive('pane', function () {
+}).directive('pane', function() {
 	return {
 		require: '^tabs',
 		restrict: 'E',
@@ -176,13 +181,13 @@ jpsPassbookManagerApp.directive('tabs', function () {
 			title: '@',
 			icon: '@'
 		},
-		link: function (scope, element, attrs, tabsCtrl) {
+		link: function(scope, element, attrs, tabsCtrl) {
 			tabsCtrl.addPane(scope);
 		},
 		template: '<div class="tab-pane" ng-class="{active: selected}" ng-transclude>' + '</div>',
 		replace: true
 	};
-}).directive('box', function () {
+}).directive('box', function() {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -190,9 +195,10 @@ jpsPassbookManagerApp.directive('tabs', function () {
 		locals: {
 			title: 'bind'
 		},
-		template: '<div style="border: 1px solid black;">' + '<div style="background-color: gray">{{title}}</div>' + '<div ng-transclude></div>' + '</div>'
+		template: '<div style="border: 1px solid black;">' + '<div style="background-color: gray">{{title}}</div>' +
+			'<div ng-transclude></div>' + '</div>'
 	};
-}).directive('mediaobject', function () {
+}).directive('mediaobject', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -205,10 +211,13 @@ jpsPassbookManagerApp.directive('tabs', function () {
 			icon: '@',
 			body: '@'
 		},
-		template: '<div class="media">' + '<a class="pull-left" href="{{href}}">' + '<span class="icon" ng-show="{{showicon}}"><i class="feature-icon icon-{{icon}}"></i></span>' + '<img class="media-object" ng-hide="{{showicon}}" src="{{image}}"/>' + '</a><div class="media-body"><h4 class="media-heading">{{title}}</h4><p>{{body}}</p><div ng-transclude></div></div></div>'
+		template: '<div class="media">' + '<a class="pull-left" href="{{href}}">' +
+			'<span class="icon" ng-show="{{showicon}}"><i class="feature-icon icon-{{icon}}"></i></span>' +
+			'<img class="media-object" ng-hide="{{showicon}}" src="{{image}}"/>' +
+			'</a><div class="media-body"><h4 class="media-heading">{{title}}</h4><p>{{body}}</p><div ng-transclude></div></div></div>'
 
 	};
-}).directive('iconObject', function () {
+}).directive('iconObject', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -221,7 +230,9 @@ jpsPassbookManagerApp.directive('tabs', function () {
 			icon: '@',
 			body: '@'
 		},
-		template: '<div class="media">' + '<a class="pull-left" href="{{href}}">' + '<span class="icon"><i class="feature-icon icon-{{icon}}"></i></span>' + '</a><div class="media-body"><h4 class="media-heading">{{title}}</h4><p>{{body}}</p><div ng-transclude></div></div></div>'
+		template: '<div class="media">' + '<a class="pull-left" href="{{href}}">' +
+			'<span class="icon"><i class="feature-icon icon-{{icon}}"></i></span>' +
+			'</a><div class="media-body"><h4 class="media-heading">{{title}}</h4><p>{{body}}</p><div ng-transclude></div></div></div>'
 
 	};
 });
@@ -232,7 +243,7 @@ jpsPassbookManagerApp.directive('tabs', function () {
  *
  * Feature Item
  */
-jpsPassbookManagerApp.directive('featureitem', function () {
+jpsPassbookManagerApp.directive('featureitem', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -254,7 +265,7 @@ jpsPassbookManagerApp.directive('featureitem', function () {
  *
  * Feature Item
  */
-jpsPassbookManagerApp.directive('featureObject', function () {
+jpsPassbookManagerApp.directive('featureObject', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -277,7 +288,7 @@ jpsPassbookManagerApp.directive('featureObject', function () {
  * <formitem title="Label:" type="text">[Contents]</box>
  *
  */
-jpsPassbookManagerApp.directive('formitem', function () {
+jpsPassbookManagerApp.directive('formitem', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -305,11 +316,13 @@ jpsPassbookManagerApp.directive('formitem', function () {
 		link: function postLink(scope, iElement, iAttrs) {
 			//console.log('postLink', scope, iElement, iAttrs);
 		},
-		template: '<div class="form-group">' + '<div class="control-label col-sm-2"><label for="{{name}}">{{title}} </label></div>' + '<div class="col-sm-10" ng-transclude>' + '</div>' + '</div>'
+		template: '<div class="form-group">' +
+			'<div class="control-label col-sm-3"><label for="{{name}}">{{title}} </label></div>' +
+			'<div class="col-sm-9" ng-transclude>' + '</div>' + '</div>'
 	};
 });
 
-jpsPassbookManagerApp.directive('moduleForm', function () {
+jpsPassbookManagerApp.directive('moduleForm', function() {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -323,7 +336,9 @@ jpsPassbookManagerApp.directive('moduleForm', function () {
 			help: '@help',
 			placeholder: '@placeholder'
 		},
-		template: '<div class="control-group">' + '<div class="control-label"><label for="{{name}}">{{title}} </label></div>' + '<div class="controls" ng-transclude></div>' + '</div>'
+		template: '<div class="control-group">' +
+			'<div class="control-label"><label for="{{name}}">{{title}} </label></div>' +
+			'<div class="controls" ng-transclude></div>' + '</div>'
 	};
 });
 
@@ -333,7 +348,7 @@ jpsPassbookManagerApp.directive('moduleForm', function () {
  * @usage
  * <featureRow title="Label:" type="text">[Contents]</featureRow>
  */
-jpsPassbookManagerApp.directive('featureRow', function () {
+jpsPassbookManagerApp.directive('featureRow', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -354,7 +369,7 @@ jpsPassbookManagerApp.directive('featureRow', function () {
  * Blank Slate directive for displaying a form for creating a record when no
  * reocrds are found.
  */
-jpsPassbookManagerApp.directive('blankslate', function () {
+jpsPassbookManagerApp.directive('blankslate', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -375,7 +390,7 @@ jpsPassbookManagerApp.directive('blankslate', function () {
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('portlet', function () {
+jpsPassbookManagerApp.directive('portlet', function() {
 	return {
 		restrict: 'E',
 		// This HTML will replace the zippy directive.
@@ -385,14 +400,18 @@ jpsPassbookManagerApp.directive('portlet', function () {
 		locals: {
 			title: 'bind'
 		},
-		template: '<div class="box" id="box-">' + '<h4 class="box-header round-top">{{title}}' + '<a class="box-btn" title="close"><i class="icon-remove"></i></a>' + '<a class="box-btn" title="toggle"><i class="icon-minus"></i></a>' + '<a class="box-btn" title="config" data-toggle="modal" href="#box-config-modal"><i class="icon-cog"></i></a>' + '</h4>' + '<div class="box-container-toggle"><div class="box-content" ng-transclude></div></div>' + '</div>'
+		template: '<div class="box" id="box-">' + '<h4 class="box-header round-top">{{title}}' +
+			'<a class="box-btn" title="close"><i class="icon-remove"></i></a>' +
+			'<a class="box-btn" title="toggle"><i class="icon-minus"></i></a>' +
+			'<a class="box-btn" title="config" data-toggle="modal" href="#box-config-modal"><i class="icon-cog"></i></a>' +
+			'</h4>' + '<div class="box-container-toggle"><div class="box-content" ng-transclude></div></div>' + '</div>'
 	};
 });
 
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('thumbox', function () {
+jpsPassbookManagerApp.directive('thumbox', function() {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -400,14 +419,21 @@ jpsPassbookManagerApp.directive('thumbox', function () {
 		locals: {
 			title: 'bind'
 		},
-		template: ' <ul class="thumbnails wizard-themes">' + '<li id="{{theme.slug}}" class="span3 wizard-theme" ng-model="smartapp.theme" ng-repeat="theme in wizard.themes">' + '<a class="thumbnail" ng-click="themeClick()" ng-model="smartapp.theme"> <img ng-src="{{theme.image}}" alt="{{theme.title}} Image"/>' + '<div class="category">' + '<i class="icon-home icon-white"></i>' + '<span>{{theme.title}}</span>' + '</div>' + '<div class="caption">' + '<div class="title">' + '<p class="banner" style="display: none;"><span>SELECTED</span></p>' + '</div>' + '<p>{{theme.body}}</p>' + '<input type="checkbox" name="data[Smartapp][theme]" value="{{theme.id}}" class="theme-radio" ng-change="themeClick()" ng-model="smartapp.theme"/>' + '</div> </a>' + '</li>' + '</ul>'
+		template: ' <ul class="thumbnails wizard-themes">' +
+			'<li id="{{theme.slug}}" class="span3 wizard-theme" ng-model="smartapp.theme" ng-repeat="theme in wizard.themes">' +
+			'<a class="thumbnail" ng-click="themeClick()" ng-model="smartapp.theme"> <img ng-src="{{theme.image}}" alt="{{theme.title}} Image"/>' +
+			'<div class="category">' + '<i class="icon-home icon-white"></i>' + '<span>{{theme.title}}</span>' + '</div>' +
+			'<div class="caption">' + '<div class="title">' +
+			'<p class="banner" style="display: none;"><span>SELECTED</span></p>' + '</div>' + '<p>{{theme.body}}</p>' +
+			'<input type="checkbox" name="data[Smartapp][theme]" value="{{theme.id}}" class="theme-radio" ng-change="themeClick()" ng-model="smartapp.theme"/>' +
+			'</div> </a>' + '</li>' + '</ul>'
 	};
 });
 
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('widget', function () {
+jpsPassbookManagerApp.directive('widget', function() {
 	return {
 
 		restrict: 'E',
@@ -419,15 +445,18 @@ jpsPassbookManagerApp.directive('widget', function () {
 			icon: '@icon',
 			collapsed: '@collapsed'
 		},
-		template: '<div class="portlet opened">' + '<h4 class="portlet-header ui-widget-header ui-corner-all"><i class="icon-{{icon}}"></i> {{title}}' + '<span class="ui-icon toggle-icon ui-icon-plusthick"></span>' + '</h4>' + '<section class="portlet-container-toggle"><div class="portlet-content" ng-transclude></div></section>' + '</div>',
+		template: '<div class="portlet opened">' +
+			'<h4 class="portlet-header ui-widget-header ui-corner-all"><i class="icon-{{icon}}"></i> {{title}}' +
+			'<span class="ui-icon toggle-icon ui-icon-plusthick"></span>' + '</h4>' +
+			'<section class="portlet-container-toggle"><div class="portlet-content" ng-transclude></div></section>' + '</div>',
 		// The linking function will add behavior to the template
-		link: function (scope, element, attrs) {
+		link: function(scope, element, attrs) {
 
 			// Title element
 			var title = angular.element(element.find('h4')),
 
 
-			// Opened / closed state
+				// Opened / closed state
 				opened = false;
 
 			// Clicking on title should open/close the zippy
@@ -452,7 +481,7 @@ jpsPassbookManagerApp.directive('widget', function () {
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('uploader', function () {
+jpsPassbookManagerApp.directive('uploader', function() {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -462,18 +491,18 @@ jpsPassbookManagerApp.directive('uploader', function () {
 			icon: '@icon',
 			collapsed: '@collapsed'
 		},
-		template: '<div class="ame-uploader">'
-		+ '<div ng-transclude>[AME File Uploader]</div>'
-		+ '<input name="data[image]" id="ame-uploader-input" value="" type="file" class="file-url-input ame-uploader">'
-		+ '<div id="ame-uploader-div" class="upload-image-wrap drop-zone"><img id="ame-uploader-image" alt=" Image" src="http://placehold.it/250x250&text=Drop Image Here" ng-src="file.url"/></div>'
-		+ '</div>',
-		link: function (scope, element, attrs) {
+		template: '<div class="ame-uploader">' + '<div ng-transclude>[AME File Uploader]</div>' +
+			'<input name="data[image]" id="ame-uploader-input" value="" type="file" class="file-url-input ame-uploader">' +
+			'<div id="ame-uploader-div" class="upload-image-wrap drop-zone"><img id="ame-uploader-image" alt=" Image" src="http://placehold.it/250x250&text=Drop Image Here" ng-src="file.url"/></div>' +
+			'</div>',
+		link: function(scope, element, attrs) {
 
-			$('#ame-uploader-input').live('change', function (e) {
+			$('#ame-uploader-input').live('change', function(e) {
 				var files = e.currentTarget.files;
 
-				$rootScope.App.API.uploadFile(files[0], $rootScope.App.session.appid, function (data) {
-					var imageurl = window.location.origin + '/files/uploads/' + $rootScope.App.session.appid + '/' + data.results.file.name;
+				$rootScope.App.API.uploadFile(files[0], $rootScope.App.session.appid, function(data) {
+					var imageurl = window.location.origin + '/files/uploads/' + $rootScope.App.session.appid + '/' + data.results
+						.file.name;
 					$rootScope.Products.selectedProduct.Product.image = imageurl;
 					$('#product_image').attr('src', imageurl);
 				});
@@ -484,10 +513,11 @@ jpsPassbookManagerApp.directive('uploader', function () {
 					}
 
 					var reader = new FileReader();
-					reader.onload = (function (theFile) {
-						return function (e) {
+					reader.onload = (function(theFile) {
+						return function(e) {
 							var span = document.createElement('span');
-							span.innerHTML = ['<img class="thumb" src="', e.target.result, '" title="', escape(theFile.name), '"/>'].join('');
+							span.innerHTML = ['<img class="thumb" src="', e.target.result, '" title="', escape(theFile.name), '"/>']
+								.join('');
 							$('#ame-uploader-div').html(span);
 						};
 					})(f);
@@ -509,7 +539,7 @@ jpsPassbookManagerApp.directive('uploader', function () {
  C - Class: <div class="my-directive: exp;"></div>
  M - Comment: <!-- directive: my-directive exp -->
  */
-jpsPassbookManagerApp.directive('amMobileNavbar', function () {
+jpsPassbookManagerApp.directive('amMobileNavbar', function() {
 	return {
 		restrict: 'A',
 		transclude: true,
@@ -529,8 +559,8 @@ jpsPassbookManagerApp.directive('amMobileNavbar', function () {
  * @Param end, default is "..."
  * @return string
  */
-angular.module('filters', []).filter('truncate', function () {
-	return function (text, length, end) {
+angular.module('filters', []).filter('truncate', function() {
+	return function(text, length, end) {
 		if (!text) {
 			text = '';
 		}
@@ -575,14 +605,14 @@ angular.module('filters', []).filter('truncate', function () {
  * Tree Directive
  */
 
-angular.module('jcfTree.directive', []).directive('treeElement', function ($compile) {
+angular.module('jcfTree.directive', []).directive('treeElement', function($compile) {
 	return {
 		restrict: 'E',
-		link: function (scope, element, attrs) {
+		link: function(scope, element, attrs) {
 
 			scope.tree = scope.node;
 
-			var visibility = (attrs.nodeState != "collapse" ) || 'style="display: none;"';
+			var visibility = (attrs.nodeState != "collapse") || 'style="display: none;"';
 
 			if (scope.tree.children.length) {
 
@@ -599,7 +629,10 @@ angular.module('jcfTree.directive', []).directive('treeElement', function ($comp
 
 				//하위 요소 등록
 				//1단계 : 임의의 HTML 내용을 적용시키기 위해 먼저 HTML을 DOM 요소로 파싱한다.
-				var template = angular.element('<ul ' + visibility + '><li ng-repeat="node in tree.children" node-id={{node.' + attrs.nodeId + '}} ng-class="node.className">{{node.' + attrs.nodeName + '}}<tree-element tree="node" node-id=' + attrs.nodeId + ' node-name=' + attrs.nodeName + ' node-state=' + attrs.nodeState + '></tree-element></li></ul>');
+				var template = angular.element('<ul ' + visibility + '><li ng-repeat="node in tree.children" node-id={{node.' +
+					attrs.nodeId + '}} ng-class="node.className">{{node.' + attrs.nodeName +
+					'}}<tree-element tree="node" node-id=' + attrs.nodeId + ' node-name=' + attrs.nodeName + ' node-state=' +
+					attrs.nodeState + '></tree-element></li></ul>');
 
 				//2단계: 템플릿을 컴파일한다.
 				var linkFunction = $compile(template);
@@ -615,18 +648,25 @@ angular.module('jcfTree.directive', []).directive('treeElement', function ($comp
 			}
 		}
 	};
-}).directive('jcfTree', function ($compile) {
+}).directive('jcfTree', function($compile) {
 	return {
 		restrict: 'E',
-		link: function (scope, element, attrs) {
+		link: function(scope, element, attrs) {
 
 			scope.selectedNode = null;
 
 			var sheet = document.createElement('style')
-			sheet.innerHTML = "jcf-tree ul{margin:0;padding:0;list-style:none;border:none;overflow:hidden;text-decoration:none;color:#555}" + "jcf-tree li{position:relative;padding:0 0 0 20px;font-size:13px;font-weight:initial;line-height:18px;cursor:pointer}" + "jcf-tree .jcf_expand{background:url(" + attrs.expandIcon + ") no-repeat}" + "jcf-tree .jcf_collapse{background:url(" + attrs.collapseIcon + ") no-repeat}" + "jcf-tree .jcf_child{background:url(" + attrs.childIcon + ") no-repeat}" + "jcf-tree .jcf_selected{font-weight:bold;}" + "jcf-tree .hide{display:none;}" + "jcf-tree .jcf_deselected{font-weight:normal;}";
+			sheet.innerHTML =
+				"jcf-tree ul{margin:0;padding:0;list-style:none;border:none;overflow:hidden;text-decoration:none;color:#555}" +
+				"jcf-tree li{position:relative;padding:0 0 0 20px;font-size:13px;font-weight:initial;line-height:18px;cursor:pointer}" +
+				"jcf-tree .jcf_expand{background:url(" + attrs.expandIcon + ") no-repeat}" +
+				"jcf-tree .jcf_collapse{background:url(" + attrs.collapseIcon + ") no-repeat}" +
+				"jcf-tree .jcf_child{background:url(" + attrs.childIcon + ") no-repeat}" +
+				"jcf-tree .jcf_selected{font-weight:bold;}" + "jcf-tree .hide{display:none;}" +
+				"jcf-tree .jcf_deselected{font-weight:normal;}";
 			document.body.appendChild(sheet);
 
-			scope.$watch(attrs.treeData, function (val) {
+			scope.$watch(attrs.treeData, function(val) {
 
 				console.log(scope[attrs.treeData]);
 
@@ -639,7 +679,11 @@ angular.module('jcfTree.directive', []).directive('treeElement', function ($comp
 					}
 				}
 
-				var template = angular.element('<ul id="jcfTreeBrowser" class="filetree treeview-famfamfam treeview"><li ng-repeat="node in ' + attrs.treeData + '" node-id={{node.' + attrs.nodeId + '}} ng-class="node.className">{{node.' + attrs.nodeName + '}}<tree-element tree="node" node-id=' + attrs.nodeId + ' node-name=' + attrs.nodeName + ' node-state=' + attrs.nodeState + '></tree-element></li></ul>');
+				var template = angular.element(
+					'<ul id="jcfTreeBrowser" class="filetree treeview-famfamfam treeview"><li ng-repeat="node in ' + attrs.treeData +
+					'" node-id={{node.' + attrs.nodeId + '}} ng-class="node.className">{{node.' + attrs.nodeName +
+					'}}<tree-element tree="node" node-id=' + attrs.nodeId + ' node-name=' + attrs.nodeName + ' node-state=' +
+					attrs.nodeState + '></tree-element></li></ul>');
 
 				var linkFunction = $compile(template);
 
@@ -647,7 +691,7 @@ angular.module('jcfTree.directive', []).directive('treeElement', function ($comp
 
 				element.html(null).append(template);
 
-				angular.element(document.getElementById('jcfTreeBrowser')).unbind().bind('click', function (e) {
+				angular.element(document.getElementById('jcfTreeBrowser')).unbind().bind('click', function(e) {
 					console.log(e.target);
 
 					if (angular.element(e.target).length) {

@@ -1,8 +1,8 @@
 <div class="window">
 	<ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li><a href="#">Library</a></li>
-  <li class="active">Data</li>
+  <li><a href="#/">Home</a></li>
+
+  <li class="active">Passes</li>
 </ol>
 	<!--
 
@@ -54,14 +54,7 @@
 					<!-- @TODO: [Pass Table]-->
 					<div ng-include="'./views/_pass_table.html'"></div>
 
-					<div class="row">
-						<div class="col-sm-12">
-							<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
-								<div ng-include src="'./views/passes_add.html'"></div>
-							</form>
-						</div>
-
-					</div>
+				
 
 				</div>
 			</div>

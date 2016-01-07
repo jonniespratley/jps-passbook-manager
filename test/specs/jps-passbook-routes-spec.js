@@ -169,7 +169,7 @@ describe('jps-passbook-routes', function() {
 
 
 
-	describe('PassKit Web Service', function() {
+	describe('PassKit Web Service - https://developer.apple.com/library/ios/documentation/PassKit/Reference/PassKit_WebService/WebService.html', function() {
 
 		describe('Devices', function() {
 			it('POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register device for pass',
@@ -202,6 +202,14 @@ describe('jps-passbook-routes', function() {
 						.expect('Content-Type', /json/)
 						.expect(200, done);
 				});
+			it('GET - /api/v1/devices/:device_id/registrations/:pass_type_id?passesUpdatedSince=tag - get serial numbers',
+				function(done) {
+					request(app)
+						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +'?tag=now')
+						.set('Authorization', mockPass.authenticationToken)
+						.expect('Content-Type', /json/)
+						.expect(200, done);
+				});
 
 			it('GET - /api/v1/devices/:device_id/:registrations/:pass_type_id', function(done) {
 				request(app)
@@ -214,7 +222,7 @@ describe('jps-passbook-routes', function() {
 					.expect(200, done);
 			});
 
-			it('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
+			xit('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - unregister device',
 				function(done) {
 					request(app)
 						.delete('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/' + mockPass.passTypeIdentifier + '/' +
@@ -226,6 +234,7 @@ describe('jps-passbook-routes', function() {
 		});
 
 		describe('Passes', function() {
+
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function(done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
@@ -238,6 +247,15 @@ describe('jps-passbook-routes', function() {
 					.set('Authorization', mockPass.authenticationToken)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
 					.expect(200, done);
+
+			});
+
+			xit('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
+				request(app)
+					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/test?passesUpdatedSince=now')
+					.set('Authorization', mockPass.authenticationToken)
+					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
+					.expect(204, done);
 
 			});
 		});

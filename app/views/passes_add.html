@@ -137,14 +137,17 @@
 						Barcode
 					</legend>
 					<div id="pass-barcodeFields" class="well well-sm">
+
 						<formitem title="Format:">
 							<select ng-model="pass.barcode.format" class="form-control" ng-options="format.name for format in SmartPass.barcodes"></select>
 						</formitem>
+
 						<formitem title="Messsage:">
-							<div class="form-group">
+
 								<textarea class="form-control" ng-model="pass.barcode.message"></textarea>
-							</div>
+
 						</formitem>
+
 						<formitem title="Image:">
 							<div class="pass-qrcode-wrap">
 								<div id="pass-qrcode"></div>
@@ -152,6 +155,7 @@
 								</button>
 							</div>
 						</formitem>
+
 						<formitem title="Encoding:">
 							<input type="text" ng-model="pass.barcode.messageEncoding" class="form-control" />
 						</formitem>
@@ -166,23 +170,27 @@
 					<legend>
 						Style
 					</legend>
+
 					<div id="pass-styleFields" class="well well-sm">
 						<formitem title="Label Color:">
-							<input type="color" ng-model="pass.labelColor" class="form-control" />
+							<input type="text" ng-model="pass.labelColor" class="form-control" />
 						</formitem>
 
 						<formitem title="Foreground Color:">
-							<input type="color" ng-model="pass.foregroundColor" class="form-control" />
+							<input type="text" ng-model="pass.foregroundColor" class="form-control" />
 						</formitem>
+
 						<formitem title="Background Color:">
-							<input type="color" ng-model="pass.backgroundColor" class="form-control" />
+							<input type="text" ng-model="pass.backgroundColor" class="form-control" />
 						</formitem>
+
 						<formitem title="Icon:">
 							<div id="PassIconDiv">
 								<img id="pass_icon" alt="Pass Icon" src="http://placehold.it/72x72&text=icon.png" />
 							</div>
 							<input name="data[Pass][icon]" id="PassIcon" value="" type="file" class="form-control file-url-input">
 						</formitem>
+
 						<formitem title="Icon@2x:">
 							<div id="PassIconDiv">
 								<img id="pass_icon2x" alt="Pass Icon" src="http://placehold.it/150x150&text=icon@2x.png" />
