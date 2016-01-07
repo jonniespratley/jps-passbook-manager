@@ -6,6 +6,7 @@ angular.module('jpsPassbookManagerApp').factory('Api', function($http) {
 	};
 
 	return {
+		request: request,
 		allDocs: function(params) {
 			return request({
 				method: 'GET',

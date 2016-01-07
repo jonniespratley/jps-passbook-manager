@@ -19,7 +19,7 @@ var passFiles = [];
 
 
 
-xdescribe('jps-passbook', function() {
+describe('jps-passbook', function() {
 	it('createPass() - should create each pass type', function(done) {
 		mocks.mockPasses.forEach(function(pass) {
 			jpsPassbook.createPass(pass, true).then(function(data) {

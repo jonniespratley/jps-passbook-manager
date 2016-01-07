@@ -4,7 +4,10 @@ const mocha = require('gulp-mocha');
 const istanbul = require('gulp-istanbul');
 
 const config = {
-  src: 'lib/**/*.js',
+  src: [
+    'lib/**/*.js',
+    'routes/**/*.js'
+  ],
   specs: 'test/specs/*.js'
 };
 

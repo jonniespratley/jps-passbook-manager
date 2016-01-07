@@ -16,6 +16,15 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, Api,
       });
   });
 
+  $scope.loadSchema = function() {
+    console.log($scope.pass.type);
+    $http.get('/passes/schemas/' + $scope.pass.type + '.json').success(function(data) {
+      $scope.pass = data;
+
+      console.log('loadSchema', $scope.pass.type, data);
+    });
+  };
+
   $scope.savePass = function(p) {
     p = p || {};
     console.log('savePass', p);

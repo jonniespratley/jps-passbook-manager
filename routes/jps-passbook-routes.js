@@ -68,10 +68,10 @@ module.exports = function (program, app) {
 
 
 	router.post('/log', bodyParser.json(), function (req, res) {
-		var dataLog = req.body;
+		var dataLog = {};
 		dataLog._id = _.uniqueId('log-');
 		dataLog.docType = 'log';
-		//dataLog.data = req.body;
+		dataLog.data = req.body;
 		dataLog.created_at = _.now();
 
 		program.db.put(dataLog).then(function (resp) {
@@ -183,8 +183,9 @@ module.exports = function (program, app) {
 
 	var middleware = [
 		path.resolve(__dirname, './jps-middleware-db'),
+		path.resolve(__dirname, './jps-middleware-devices'),
 		path.resolve(__dirname, './jps-middleware-passes'),
-		path.resolve(__dirname, './jps-middleware-devices')
+		path.resolve(__dirname, './jps-middleware-sockets')
 	];
 
 	middleware.forEach(function (m) {

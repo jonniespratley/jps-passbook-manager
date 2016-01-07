@@ -1,37 +1,28 @@
 <div class="row">
 	<div class="col-sm-12">
-		<table id="logs-table" class="table table-hover table-condensed table-bordered table-striped">
+		<ol class="breadcrumb">
+	  	<li><a href="#/">Home</a></li>
+		  <li class="active">Server</li>
+		</ol>
+
+		<legend>Logs</legend>
+		<table id="logs-table" class="table table-condensed table-bordered">
 			<thead>
 			<tr>
-				<th class="th-type">Type</th>
-				<th>Description</th>
-				<th>Last Updated</th>
+
+				<th>Log</th>
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
-				<td class="pass-icon">
-					<a>
-						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
-					</a>
-				</td>
+			<tr ng-repeat="item in logs track by $index | orderBy:order:reverse"
+			id="{{item._id}}">
+
 				<td>
-					<a href="#/passes/{{pass._id}}"> {{pass.organizationName}} </a>
-					<br/> {{pass.description}}
-					<br/> {{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
+					<code class="code">{{item.data.logs.join('\n')}}</code>
 				</td>
-				<td>{{pass.lastUpdated | date: 'medium'}}</td>
-
-				<!--td>
-                  <a ng-click="SmartPass.exportPass(pass)" href="" target="_blank">
-                      <img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
-                  </a>
-              </td-->
-
 			</tr>
 			</tbody>
 		</table>
 
-		<pre id="console"></pre>
 	</div>
 </div>

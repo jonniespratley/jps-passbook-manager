@@ -16,7 +16,9 @@
     "express-partials": "^0.3.0",
     "express-session": "^1.12.1",
     "express-validator": "^2.18.0",
+    "express-ws": "^0.2.6",
     "fs-extra": "^0.14.0",
+    "intercept-stdout": "^0.1.2",
     "jfs": "^0.2.6",
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
@@ -26,7 +28,8 @@
     "redis": "^2.4.2",
     "request": "2.0.x",
     "serve-index": "^1.6.0",
-    "serve-static": "^1.8.0"
+    "serve-static": "^1.8.0",
+    "socketio": "^1.0.0"
   },
   "devDependencies": {
     "bower": "^1.7.2",

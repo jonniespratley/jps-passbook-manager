@@ -1,7 +1,9 @@
 <div class="row">
 	<div class="col-sm-12">
 		<formitem title="Pass Type:">
-			<select ng-model="pass.type" ng-change="SmartPass.loadSchema(t)" ng-options="t.name as t.title for t in SmartPass.types"></select>
+			<select ng-model="pass.type"
+			ng-change="loadSchema(t)"
+			ng-options="t.name as t.title for t in passTypes"></select>
 		</formitem>
 
 
@@ -9,6 +11,7 @@
 
 			<pane title="Details">
 				<fieldset>
+					<legend>Primary</legend>
 					<formitem title="Organization Name:">
 						<input type="text" ng-model="pass.organizationName" class="form-control" />
 					</formitem>
@@ -24,14 +27,11 @@
 
 			</pane>
 
-			<pane title="Primary Fields">
+			<pane title="Fields">
 				<!-- @TODO: [Primary Fields] -->
 				<fieldset>
-
+					<legend>Primary</legend>
 					<div id="pass-primaryFields" class="well well-sm">
-
-
-
 						<formitem title="Primary Field #{{$index}}:" ng-repeat="a in pass[pass.type].primaryFields">
 							<div class="controls-row meta-row">
 								<input type="text" name="key" ng-model="a.key" class="form-control" placeholder="Key" />
@@ -47,17 +47,15 @@
 								<br/>
 							</div>
 						</formitem>
-							<a class="btn btn-block btn-default" ng-click="pass[pass.type].primaryFields.push({})"> <i class="glyphicon glyphicon-plus"></i> Add</a>
+							<button class="btn btn-block btn-default" ng-click="pass[pass.type].primaryFields.push({})"> <i class="glyphicon glyphicon-plus"></i> Add </button>
 					</div>
 				</fieldset>
-			</pane>
-			<pane title="Extra Fields">
+
 
 				<fieldset>
-					<!-- @TODO: [Extra Fields] -->
-					<legend>
-						Extra Fields
 
+					<legend>
+						Extra fields
 					</legend>
 					<div id="pass-extraFields" class="well well-sm">
 						<formitem title="Extra Field #{{$index}}:" ng-repeat="a in pass[pass.type].auxiliaryFields">
@@ -81,13 +79,11 @@
 						</button>
 					</div>
 				</fieldset>
-
-			</pane>
-			<pane title="Back Fields">
 				<!-- @TODO: [Back Fields] -->
+
 				<fielset>
 					<legend>
-						Back Fields
+						Back fields
 					</legend>
 					<div id="pass-backFields" class="well well-sm">
 						<formitem title="Back Field #{{$index}}:" ng-repeat="a in pass[pass.type].backFields">
@@ -96,8 +92,8 @@
 								<input type="text" name="label" ng-model="a.label" class="form-control" placeholder="Label" />
 								<textarea class="form-control" name="value" ng-model="a.value">{{a.value}}</textarea>
 						<span class="help-inline"> <button class="btn btn-mini btn-default remove-row-btn"
-																	  type="button"
-																	  ng-click="pass[pass.type].backFields.splice($index, 1)"> Remove
+																		type="button"
+																		ng-click="pass[pass.type].backFields.splice($index, 1)"> Remove
 						</button> </span> &nbsp;
 							</div>
 						</formitem>
@@ -105,14 +101,16 @@
 
 					</div>
 				</fielset>
+
 			</pane>
+
+
 			<pane title="Locations">
 
 				<!-- @TODO: [Locations] -->
 				<fieldset>
 					<legend>
 						Locations
-
 					</legend>
 					<div id="pass-locationFields" class="well well-sm">
 						<formitem title="Location #{{$index}}:" ng-repeat="l in pass.locations">
@@ -143,9 +141,7 @@
 						</formitem>
 
 						<formitem title="Messsage:">
-
 								<textarea class="form-control" ng-model="pass.barcode.message"></textarea>
-
 						</formitem>
 
 						<formitem title="Image:">

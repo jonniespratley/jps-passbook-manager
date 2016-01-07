@@ -1,57 +1,72 @@
 'use strict';
 
 var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
-		'ngRoute',
-		'ngResource',
-		'mgcrea.ngStrap'
-	])
-	.controller('AppCtrl', function($rootScope) {
+	'ngRoute',
+	'ngResource',
+	'mgcrea.ngStrap'
+])
 
-	})
-	.controller('AppCtrl', function($scope, $rootScope, $http, $routeParams, $location) {
-		$rootScope.location = $location;
-		$rootScope.App = {
-			title: 'jps-passbook-manager',
-			description: 'With this interface you can easily manage Apple Wallet Passes.',
-			icon: 'edit',
-			hero: {
-				title: 'Easy Passes',
-				body: 'With this interface you can easily create Apple iOS Passbook Passes.'
+.controller('AppCtrl', function($scope, $rootScope, $http, $routeParams, $location) {
+	$rootScope.location = $location;
+	$rootScope.passTypes = [{
+		name: 'generic',
+		title: 'Generic'
+	}, {
+		name: 'boardingPass',
+		title: 'Boarding Pass'
+	}, {
+		name: 'coupon',
+		title: 'Coupon'
+	}, {
+		name: 'eventTicket',
+		title: 'Event Ticket'
+	}, {
+		name: 'storeCard',
+		title: 'Store Card'
+	}];
+	$rootScope.App = {
+		title: 'jps-passbook-manager',
+		description: 'With this interface you can easily manage Apple Wallet Passes.',
+		icon: 'edit',
+		hero: {
+			title: 'Easy Passes',
+			body: 'With this interface you can easily create Apple iOS Passbook Passes.'
+		},
+		menu: [{
+				id: null,
+				slug: 'home',
+				title: 'Home',
+				icon: 'home',
+				href: '#/home'
 			},
-			menu: [{
-					id: null,
-					slug: 'home',
-					title: 'Home',
-					icon: 'home',
-					href: '#/home'
-				},
-				//	{ id: null, slug: 'manage', title: 'Manage', icon: 'edit', href:'#/manage' },
-				{
-					id: null,
-					slug: 'passes',
-					title: 'Passes',
-					icon: 'tags',
-					href: '#/passes'
-				}, {
-					id: null,
-					slug: 'server',
-					title: 'Server',
-					icon: 'cloud',
-					href: '#/server'
-				}, {
-					id: null,
-					slug: 'docs',
-					title: 'Docs',
-					icon: 'book',
-					href: '#/docs'
-				}
-			]
-		};
-		$http.get('/README.md').success(function(data) {
-			angular.element('#docs').html(markdown.toHTML(data));
-		});
+			//	{ id: null, slug: 'manage', title: 'Manage', icon: 'edit', href:'#/manage' },
+			{
+				id: null,
+				slug: 'passes',
+				title: 'Passes',
+				icon: 'tags',
+				href: '#/passes'
+			}, {
+				id: null,
+				slug: 'server',
+				title: 'Server',
+				icon: 'cloud',
+				href: '#/server'
+			}, {
+				id: null,
+				slug: 'docs',
+				title: 'Docs',
+				icon: 'book',
+				href: '#/docs'
+			}
+		]
+	};
 
-	})
+	$http.get('/README.md').success(function(data) {
+		angular.element('#docs').html(markdown.toHTML(data));
+	});
+
+})
 
 .config(['$routeProvider', function($routeProvider) {
 	var routeResolver = {
@@ -109,7 +124,16 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 		.when('/server', {
 			templateUrl: './views/server.html',
 			controller: 'ServerCtrl',
-			resolve: routeResolver
+			resolve: {
+				logs: function(Api) {
+					return Api.request({
+						method: 'GET',
+						url: '/api/v1/admin/logs'
+					}).then(function(resp) {
+						return resp.data;
+					});
+				}
+			}
 		})
 		.otherwise({
 			redirectTo: '/'

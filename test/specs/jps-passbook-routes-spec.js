@@ -35,6 +35,24 @@ describe('program routes', function() {
 			.expect(200, done);
 	});
 
+	describe('Export/Sign', function () {
+		it('GET - /api/v1/export/:id - should export pass', function (done) {
+			request(app)
+				.get('/api/v1/export/' + mocks.mockPasses[0]._id)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/sign/:id - should sign pass', function (done) {
+			request(app)
+				.get('/api/v1/sign/' + mocks.mockPasses[0]._id)
+				.expect('Content-Type', /application\/vnd.apple.pkpass/)
+				.expect(200, done);
+		});
+
+	});
+
+
 	describe('Admin Passes', function() {
 
 		it('GET - /api/v1/admin/passes - should return all passes', function(done) {
@@ -63,19 +81,6 @@ describe('program routes', function() {
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/export/:id - should export pass', function(done) {
-			request(app)
-				.get('/api/v1/export/' + mocks.mockPasses[0]._id)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
-			request(app)
-				.get('/api/v1/sign/' + mocks.mockPasses[0]._id)
-				.expect('Content-Type', /application\/vnd.apple.pkpass/)
-				.expect(200, done);
-		});
 
 		xit('GET - /api/v1/register/:token - add device to db', function(done) {
 			request(app)
