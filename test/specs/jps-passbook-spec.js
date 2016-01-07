@@ -22,7 +22,7 @@ var passFiles = [];
 describe('jps-passbook', function() {
 	it('createPass() - should create each pass type', function(done) {
 		mocks.mockPasses.forEach(function(pass) {
-			jpsPassbook.createPass(pass, true).then(function(data) {
+			jpsPassbook.createPass(pass, true, function(data) {
 				//	console.log('pass created', data);
 				passFiles.push(data);
 				assert.ok(data._id);
@@ -33,7 +33,7 @@ describe('jps-passbook', function() {
 
 	it('createPass() - should create a pass .raw and sign into a .pkpass', function(done) {
 		console.log(passFiles);
-		jpsPassbook.createPass(mockPass, true).then(function(p) {
+		jpsPassbook.createPass(mockPass, true, function(p) {
 			assert(fs.existsSync(p.rawFilename));
 			done();
 		}).catch(function(err) {
@@ -44,7 +44,7 @@ describe('jps-passbook', function() {
 
 	it('signPass() - should sign .raw package into a .pkpass', function(done) {
 		this.timeout(5000);
-		jpsPassbook.signPass(mockPass).then(function(p) {
+		jpsPassbook.signPass(mockPass, function(p) {
 			assert.ok(p, 'returns pass location');
 			//	assert(fs.existsSync(p));
 			done();
@@ -55,7 +55,7 @@ describe('jps-passbook', function() {
 	});
 
 	it('validatePass() - should validate a pass', function(done) {
-		jpsPassbook.validatePass(mockPass).then(function(pass) {
+		jpsPassbook.validatePass(mockPass, function(pass) {
 			assert.ok(pass, 'returns pass');
 			done();
 		}).catch(function(err) {
