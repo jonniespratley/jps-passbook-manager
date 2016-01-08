@@ -53,7 +53,9 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 		name: 'storeCard',
 		title: 'Store Card'
 	}];
-	$scope.SmartPass = {
+
+
+	window.SmartApp = $scope.SmartPass = {
 		api: {
 			url: location.protocol + '//' + location.hostname + ':' + location.port + '/api/v1'
 		},

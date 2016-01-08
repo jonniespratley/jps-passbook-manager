@@ -8,7 +8,9 @@ var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
 
 var mockPass = new Pass({
-	type: 'generic'
+	type: 'generic',
+	serialNumber: '123456789',
+	authenticationToken: '123456789'
 });
 exports.mockPass = mockPass;
 exports.mockPasses = [
@@ -38,8 +40,9 @@ exports.mockPasses = [
 const mockDevice = new Device({
 	//_id: 'device-a53ae770f6bd12d04c572e653888c6c6',
 	pushToken: 'ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2',
-	deviceLibraryIdentifier: 'fbbb0ae201d1378b639f96f9381c3675',
-	serialNumber: mockPass.serialNumber,
+	deviceLibraryIdentifier: '1234567890',
+	serialNumber: '123456789',
+	authorization: 'ApplePass 123456789',
 	passTypeIdentifier: mockPass.passTypeIdentifier
 });
 exports.mockDevice = mockDevice;

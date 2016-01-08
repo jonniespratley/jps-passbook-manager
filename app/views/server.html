@@ -5,25 +5,22 @@
 		  <li class="active">Server</li>
 		</ol>
 
-
 		<tabs>
 			<pane title="Logs">
-
-
-
-
-						<!-- TODO: logs -->
-						<table id="logs-table" class="table table-condensed table-bordered">
-							<tbody>
-								<tr ng-repeat="item in logs track by $index | orderBy:created_at:true"
-									id="{{item._id}}">
-									<td>
-										{{item.data.logs.join('\n')}}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
+					<!-- TODO: logs -->
+					<table id="logs-table" class="table table-condensed table-bordered">
+						<tbody>
+							<tr ng-repeat="item in logs track by $index | orderBy:order:sort"
+								id="{{item._id}}">
+								<td>
+									{{created_at | date:'medium'}}
+								</td>
+								<td>
+									{{item.data.logs.join('\n')}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
 			</pane>
 
 

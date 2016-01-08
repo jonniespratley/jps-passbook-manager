@@ -125,3 +125,11 @@ githubToPass('jonniespratley', function(user) {
 	});
 
 });
+
+
+request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/logs', function(err, resp, body){
+	var _logs = JSON.parse(body);
+	_logs.forEach(function(log){
+		program.db.put(log);
+	})
+})

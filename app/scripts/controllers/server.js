@@ -3,6 +3,8 @@ jpsPassbookManagerApp.controller('ServerCtrl', function($scope, logs, devices, A
 
 	$scope.logs = logs;
 	$scope.devices = devices;
+	$scope.order = 'created_at';
+	$scope.sort = true;
 
 	/* ======================[ @TODO:
 	 I hold methods for checking the api and testing if its alive

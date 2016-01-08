@@ -6,7 +6,7 @@ var p;
 var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
 
-
+var mocks = require('../helpers/mocks');
 describe('Passes', function() {
 	it('should be defined', function(done) {
 		assert(Passes);
@@ -21,9 +21,7 @@ describe('Passes', function() {
 	});
 
 	it('add() - should add pass', function(done) {
-		Passes.add({
-			serialNumber: 'test-serialNumber'
-		}).then(function(resp) {
+		Passes.add(mocks.mockPass).then(function(resp) {
 			assert.ok(resp);
 			done();
 		});
@@ -31,10 +29,13 @@ describe('Passes', function() {
 	});
 
 	it('find(params) - should return pass that meets critera', function(done) {
+
 		Passes.find({
-			serialNumber: 'test-serialNumber'
+			//_id: 'mock-generic'
+			serialNumber: mocks.mockPass.serialNumber
 		}).then(function(resp) {
-			assert.ok(resp.serialNumber === 'test-serialNumber');
+			console.log(resp);
+			assert.ok(resp.serialNumber=== mocks.mockPass.serialNumber);
 			assert.ok(resp);
 			done();
 		});
