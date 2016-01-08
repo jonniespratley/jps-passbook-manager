@@ -25,6 +25,23 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, Api,
     });
   };
 
+  $scope.barcodes = [{
+      name: 'QR Barcode',
+      value: 'PKBarcodeFormatQR'
+    }, {
+      name: 'PDF Barcode',
+      value: 'PKBarcodeFormatPDF417'
+    }, {
+      name: 'Aztec Barcode',
+      value: 'PKBarcodeFormatAztec'
+    }],
+
+    $scope.updateQrcode = function(p) {
+      angular.element('#pass-qrcode')
+        .empty()
+        .qrcode(p.barcode.message);
+    };
+
   $scope.savePass = function(p) {
     p = p || {};
     console.log('savePass', p);

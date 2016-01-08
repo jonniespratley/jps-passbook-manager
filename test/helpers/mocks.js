@@ -1,3 +1,4 @@
+'use strict';
 var path = require('path');
 var config = require(path.resolve(__dirname, '../../config.js'));
 
@@ -82,7 +83,7 @@ exports.github = {
  * and return a pss object.
  * @param username
  */
-exports.githubToPass = function (username) {
+exports.githubToPass = function(username) {
 	let github = {};
 	let pass = new Pass({
 		description: null
@@ -99,14 +100,14 @@ exports.githubToPass = function (username) {
 		}
 	};
 
-	var req = http.request(options, function (res) {
+	var req = http.request(options, function(res) {
 		var chunks = [];
 
-		res.on("data", function (chunk) {
+		res.on("data", function(chunk) {
 			chunks.push(chunk);
 		});
 
-		res.on("end", function () {
+		res.on("end", function() {
 			var body = Buffer.concat(chunks);
 			console.log(body.toString());
 		});

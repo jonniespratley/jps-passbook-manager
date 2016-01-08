@@ -105,7 +105,7 @@
 			</pane>
 
 
-			<pane title="Locations">
+			<pane title="Relevance">
 
 				<!-- @TODO: [Locations] -->
 				<fieldset>
@@ -117,7 +117,8 @@
 
 							<input type="text" name="latitude" ng-model="l.latitude" class="form-control" placeholder="Latitude" />
 							<input type="text" name="longitude" ng-model="l.longitude" class="form-control" placeholder="Longitude" />
-					<span class="help-inline"> <button class="btn btn-mini btn-default remove-row-btn"
+					<span class="help-inline">
+						<button class="btn btn-mini btn-default remove-row-btn"
 																  type="button"
 																  ng-click="pass.locations.splice($index, 1)">Remove
 					</button> </span> &nbsp;
@@ -127,8 +128,6 @@
 						</button>
 					</div>
 				</fieldset>
-			</pane>
-			<pane title="Barcode">
 				<!-- @TODO: [Barcode Fields] -->
 				<fieldset>
 					<legend>
@@ -137,17 +136,21 @@
 					<div id="pass-barcodeFields" class="well well-sm">
 
 						<formitem title="Format:">
-							<select ng-model="pass.barcode.format" class="form-control" ng-options="format.name for format in SmartPass.barcodes"></select>
+							<select ng-model="pass.barcode.format"
+							class="form-control"
+							ng-options="format.name for format in barcodes"></select>
 						</formitem>
 
 						<formitem title="Messsage:">
-								<textarea class="form-control" ng-model="pass.barcode.message"></textarea>
+								<textarea class="form-control"
+								ng-model="pass.barcode.message"></textarea>
 						</formitem>
 
 						<formitem title="Image:">
 							<div class="pass-qrcode-wrap">
 								<div id="pass-qrcode"></div>
-								<button type="button" ng-click="SmartPass.updatedQrcode(pass)" class="btn btn-default"> Refresh
+								<button type="button"
+								ng-click="updateQrcode(pass)" class="btn btn-default"> Refresh
 								</button>
 							</div>
 						</formitem>
@@ -158,9 +161,9 @@
 
 					</div>
 				</fieldset>
-
 			</pane>
-			<pane title="Style">
+
+			<pane title="Visual">
 				<!-- @TODO: [Style Fields] -->
 				<fieldset>
 					<legend>
@@ -203,9 +206,7 @@
 						Identity
 					</legend>
 					<div id="pass-identityFields" class="well well-sm">
-						<p>
-							To change these values, edit config.js
-						</p>
+
 						<formitem title="ID:">
 							<input type="text" ng-model="pass._id" class="form-control" disabled=""/>
 						</formitem>
@@ -236,3 +237,27 @@
 
 	</div>
 </div>
+<footer class="navbar toolbar toolbar-footer navbar-fixed-bottom navbar-default">
+	<div class="container-fluid">
+		<div class="toolbar-actions row">
+			<div class="col-sm-12">
+
+				<button class="btn btn-default"
+				data-animation="am-fade-and-slide-top"
+				data-template-url="_pass_type_modal.html"
+				bs-modal="modal">
+					New Pass
+				</button>
+
+				<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);" ng-disabled="!pass">
+					Save
+				</button>
+
+				<button ng-click="SmartPass.exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i> Export
+				</button>
+				<button ng-click="SmartPass.deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i> Delete
+				</button>
+			</div>
+		</div>
+	</div>
+</footer>

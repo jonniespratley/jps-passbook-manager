@@ -18,7 +18,7 @@
 								<tr ng-repeat="item in logs track by $index | orderBy:created_at:true"
 									id="{{item._id}}">
 									<td>
-										<code class="code">{{item.data.logs.join('\n')}}</code>
+										{{item.data.logs.join('\n')}}
 									</td>
 								</tr>
 							</tbody>
@@ -34,7 +34,9 @@
 						<tr ng-repeat="item in devices track by $index | orderBy:created_at:true"
 							id="{{item._id}}">
 							<td>
-								<code class="code">{{item._id}}</code>
+						<pre>
+							 {{item | json}}
+						</pre>
 							</td>
 						</tr>
 					</tbody>

@@ -25,7 +25,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 		title: 'Store Card'
 	}];
 	$rootScope.App = {
-		title: 'jps-passbook-manager',
+		title: 'Pass Manager',
 		description: 'With this interface you can easily manage Apple Wallet Passes.',
 		icon: 'edit',
 		hero: {
@@ -106,17 +106,8 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				}
 			}
 		})
-		.when('/passes/add', {
-			templateUrl: './views/passes_add.html',
-			controller: 'PassesCtrl',
-			resolve: routeResolver
-		})
-		.when('/passes/edit/:id', {
-			templateUrl: './views/passes_add.html',
-			controller: 'PassesCtrl',
-			resolve: routeResolver
-		})
-		.when('/docs', {
+
+	.when('/docs', {
 			templateUrl: './views/docs.html',
 			controller: 'DocsCtrl',
 			resolve: routeResolver

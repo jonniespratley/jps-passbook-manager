@@ -4,7 +4,7 @@
 	<tr>
 		<th class="th-type">Type</th>
 		<th>Description</th>
-		<th>Last Updated</th>
+		<th>Actions</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -12,20 +12,22 @@
 		<td class="pass-icon">
 			<a>
 				<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
+
 			</a>
 		</td>
 		<td>
 			<a href="#/passes/{{pass._id}}"> {{pass.organizationName}} </a>
 			<br/> {{pass.description}}
-			<br/> {{pass.teamIdentifier}} - {{pass.passTypeIdentifier}}
+			<br/> <small>{{pass.type}}</small>
+			<br/>{{pass.lastUpdated | date: 'medium'}}
 		</td>
-		<td>{{pass.lastUpdated | date: 'medium'}}</td>
 
-		<!--td>
+
+		<td>
 			<a ng-click="SmartPass.exportPass(pass)" href="" target="_blank">
 				<img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
 			</a>
-		</td-->
+		</td>
 
 	</tr>
 	</tbody>

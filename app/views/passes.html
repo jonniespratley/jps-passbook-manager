@@ -54,35 +54,11 @@
 					<!-- @TODO: [Pass Table]-->
 					<div ng-include="'./views/_pass_table.html'"></div>
 
-				
+
 
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<footer class="navbar toolbar toolbar-footer navbar-fixed-bottom navbar-default">
-		<div class="container-fluid">
-			<div class="toolbar-actions row">
-				<div class="col-sm-12">
-
-					<button class="btn btn-default"
-					data-animation="am-fade-and-slide-top"
-					data-template-url="_pass_type_modal.html"
-					bs-modal="modal">
-						New Pass
-					</button>
-
-					<button class="btn btn-primary pull-right" ng-click="SmartPass.savePass(pass);" ng-disabled="!pass">
-						Save
-					</button>
-
-					<button ng-click="SmartPass.exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i> Export
-					</button>
-					<button ng-click="SmartPass.deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i> Delete
-					</button>
-				</div>
-			</div>
-		</div>
-	</footer>
 </div>
