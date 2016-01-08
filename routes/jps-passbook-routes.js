@@ -124,21 +124,29 @@ module.exports = function(program, app) {
 	 * I am the signpass route
 	 */
 	router.get('/sign/:id', function(req, res) {
+		logger('sign', req.params);
 
 		program.db.get(req.params.id).then(function(resp) {
 			if (resp) {
-				jpsPassbook.signPass(resp.filename, true, function(filename) {
+				jpsPassbook.signPass(resp, '-p', function(err, filename) {
+					if (err) {
+						res.status(404).json(err);
+					}
 					//res.status(200).send(data);
-					res.set('Content-Type', 'application/vnd.apple.pkpass').status(200).download(filename);
-				}).catch(function(err) {
-					res.status(404).send(err);
+					res.set('Content-Type', 'application/vnd.apple.pkpass')
+						.status(200)
+						.download(resp.pkpassFilename);
+
 				});
 			} else {
-				res.status(400).send({
+				res.status(400).json({
 					message: 'Must id!'
 				});
 			}
-		});
+		}).catch(function(err) {
+			logger('sign', 'error', err);
+			res.status(400).json(err);
+		})
 	});
 
 	/**
@@ -157,17 +165,20 @@ module.exports = function(program, app) {
 			program.db.get(id).then(function(resp) {
 				logger('found pass', resp);
 
-				jpsPassbook.createPass(resp, true, function(data) {
+				jpsPassbook.createPass(resp, true, function(err, data) {
+					if (err) {
+						res.status(404).json(err);
+					}
 					logger('createPass', data);
-					res.status(200).send(data);
-				})
+					res.status(200).json(data);
+				});
 
 			}).catch(function(err) {
-				res.status(404).send(err);
+				res.status(404).json(err);
 			});
 
 		} else {
-			res.status(400).send('Must provide file path!');
+			res.status(400).json('Must provide file path!');
 		}
 	});
 

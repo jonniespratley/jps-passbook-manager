@@ -1,0 +1,105 @@
+{
+  "_id": "mock-generic",
+  "docType": "pass",
+  "type": "generic",
+  "lastUpdated": 1452272672577,
+  "logoText": "Passbook Manager",
+  "description": "This is the default pass description.",
+  "formatVersion": 1,
+  "organizationName": "Passbook Manager",
+  "passTypeIdentifier": "pass.passbookmanager.io",
+  "serialNumber": "a6879404-181d-401d-9b27-35e45edb8370",
+  "teamIdentifier": "USE9YUYDFH",
+  "authenticationToken": "a6879404-181d-401d-9b27-35e45edb8370",
+  "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
+  "expirationDate": "",
+  "voided": false,
+  "nfc": [],
+  "barcode": {
+    "message": "123456789",
+    "format": "PKBarcodeFormatQR",
+    "messageEncoding": "iso-8859-1"
+  },
+  "beacons": [],
+  "locations": [
+    {
+      "longitude": -122,
+      "latitude": 37,
+      "altitude": null,
+      "relevantText": "Nearby"
+    }
+  ],
+  "maxDistance": 0,
+  "relevantDate": "",
+  "barcodes": [],
+  "groupingIdentifier": "",
+  "labelColor": "rgb(0, 0, 0)",
+  "foregroundColor": "rgb(72, 72, 72)",
+  "backgroundColor": "rgb(183, 180, 183)",
+  "suppressStripShine": false,
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/a6879404-181d-401d-9b27-35e45edb8370.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/a6879404-181d-401d-9b27-35e45edb8370.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/a6879404-181d-401d-9b27-35e45edb8370.raw",
+  "generic": {
+    "primaryFields": [
+      {
+        "key": "member",
+        "value": "Jonnie Spratley"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "subtitle",
+        "label": "MEMBER SINCE",
+        "value": "2016"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "level",
+        "label": "LEVEL",
+        "value": "Platinum"
+      },
+      {
+        "key": "favorite",
+        "label": "FAVORITE LANG",
+        "value": "JavaScript",
+        "textAlignment": "PKTextAlignmentRight"
+      }
+    ],
+    "backFields": [
+      {
+        "numberStyle": "PKNumberStyleSpellOut",
+        "label": "spelled out",
+        "key": "numberStyle",
+        "value": 200
+      },
+      {
+        "key": "loc",
+        "label": "localized to french",
+        "value": "Oh my stars."
+      },
+      {
+        "label": "in reals",
+        "key": "currency",
+        "value": 200,
+        "currencyCode": "BRL"
+      },
+      {
+        "dateStyle": "PKDateStyleFull",
+        "label": "date full",
+        "key": "dateFull",
+        "value": "1980-05-07T10:00-05:00"
+      },
+      {
+        "dateStyle": "PKDateStyleShort",
+        "label": "rel style",
+        "key": "relStyle",
+        "value": "2012-04-24T10:00-05:00",
+        "isRelative": true
+      }
+    ]
+  },
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
+  "_key": "mock-generic"
+}

@@ -5,6 +5,7 @@
     "postinstall": "bower install",
     "poststart": "grunt build",
     "start": "node server",
+    "watch": "nodemon -w routes/ -w lib/ server.js",
     "test": "gulp test"
   },
   "dependencies": {

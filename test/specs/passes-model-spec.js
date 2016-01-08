@@ -16,7 +16,6 @@ describe('Passes', function() {
 	it('getPasses() - should return all passes', function(done) {
 		Passes.getPasses().then(function(resp) {
 			assert.ok(resp);
-
 			done();
 		});
 	});
@@ -31,7 +30,7 @@ describe('Passes', function() {
 
 	});
 
-	xit('find(params) - should return pass that meets critera', function(done) {
+	it('find(params) - should return pass that meets critera', function(done) {
 		Passes.find({
 			serialNumber: 'test-serialNumber'
 		}).then(function(resp) {

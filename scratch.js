@@ -1,4 +1,5 @@
 'use strict';
+var assert = require('assert');
 var path = require('path');
 var request = require("request");
 var program = require(path.resolve(__dirname, './lib/program.js'))();
@@ -7,6 +8,7 @@ var Passbook = require(path.resolve(__dirname, './lib/jps-passbook'))
 var jpsPassbook = new Passbook(program);
 var utils = require(path.resolve(__dirname, './lib/utils.js'));
 var Pass = require(path.resolve(__dirname, './lib/models/pass.js'));
+//var Passes = require(path.resolve(__dirname, './lib/models/passes.js'));
 var Device = require(path.resolve(__dirname, './lib/models/device.js'));
 
 const SignPass = require('./lib/signpass')();
@@ -42,9 +44,11 @@ var githubToPass = function(username, cb) {
 			'content-type': 'application/json'
 		}
 	};
-	logger('request', options);
+
+	logger( 'githubToPass', 'request', options.method, options.url);
 	request(options, function(error, response, body) {
-		logger('response', body);
+
+		logger( 'githubToPass', 'response', body);
 		if (error) {
 			throw new Error(error);
 		}
@@ -89,29 +93,35 @@ githubToPass('jonniespratley', function(user) {
 	}];
 
 	p.generic.backFields = [{
+		key: 'user_following',
 		label: 'Following',
 		value: user.following
 	}, {
 		label: 'Followers',
+		key: 'user_followers',
 		value: user.followers
 	}, {
 		label: 'Repos',
+		key: 'repos',
 		value: user.public_repos
 	}, {
 		label: 'Gists',
+		key: 'gists',
 		value: user.public_gists
 	}, {
 		label: 'Location',
+		key: 'location',
 		value: user.location
 	}, {
 		label: 'Blog',
+		key: 'blog',
 		value: user.blog
 	}];
 
-	console.log(p);
+
 
 	jpsPassbook.createPass(p, true, function(resp) {
-		logger('create pass', resp);
-	})
+		logger('create github pass', resp);
+	});
 
 });
