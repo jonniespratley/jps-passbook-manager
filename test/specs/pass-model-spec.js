@@ -1,10 +1,20 @@
 var path = require('path');
 var assert = require('assert');
+var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 var p;
 var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
 
+var d;
+describe('Device', function (done) {
+	xit('should throw error if no deviceLibraryIdentifier', function (done) {
+		assert.throws(function(){
+			d = new Device({deviceLibraryIdentifier: null});
+			done();
+		}, Error);
+	});
+});
 
 describe('Pass', function() {
 	it('should create default pass', function(done) {

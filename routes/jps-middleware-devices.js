@@ -13,27 +13,6 @@ module.exports = function (program, app) {
 	var DevicesController = require('../lib/controllers/devices-controller');
 	var devicesController = new DevicesController(program);
 
-	var devicesLog = program.getLogger('devices');
-
-	var createOrUpdateDevice = function (device) {
-		return new Promise(function (resolve, reject) {
-			program.db.get(device._id).then(function (resp) {
-				if (resp) {
-					logger('found device', resp);
-					resolve(resp);
-				}
-			}).catch(function (err) {
-				logger('not found', err);
-				logger('creating', device);
-
-				program.db.put(device).then(function (resp) {
-					logger('created', resp);
-					resolve(device);
-				}).catch(reject);
-			});
-		});
-	}
-
 	//Send push to device
 	router.get('/:device_id/push/:token', function (req, res) {
 		logger('Push to device ' + req.params.token);
@@ -42,13 +21,8 @@ module.exports = function (program, app) {
 		});
 	});
 
-
 	router.get('/:device_id/registrations/:pass_type_id?', devicesController.get_device_passes);
 	router.post('/:device_id/registrations/:pass_type_id/:serial_number', bodyParser.json(), devicesController.post_device_registration);
 	router.delete('/:device_id/registrations/:pass_type_id/:serial_number', devicesController.delete_device_registration);
 	app.use('/api/' + config.version + '/devices', router);
-	app.all('/api/' + config.version + '/devices/*', function (req, res, next) {
-		logger(req.method, req.url);
-		next();
-	});
 };

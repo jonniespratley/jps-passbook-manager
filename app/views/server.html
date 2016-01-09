@@ -7,20 +7,34 @@
 
 		<tabs>
 			<pane title="Logs">
-					<!-- TODO: logs -->
-					<table id="logs-table" class="table table-condensed table-bordered">
-						<tbody>
-							<tr ng-repeat="item in logs track by $index | orderBy:order:sort"
-								id="{{item._id}}">
-								<td>
-									{{created_at | date:'medium'}}
-								</td>
-								<td>
-									{{item.data.logs.join('\n')}}
-								</td>
-							</tr>
-						</tbody>
-					</table>
+				<!-- TODO: logs -->
+				<table id="logs-table" class="table table-condensed table-bordered">
+					<thead>
+						<th>
+							ID
+						</th>
+						<th>
+							Date
+						</th>
+						<th>
+							Log
+						</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in logs track by $index | orderBy:_id:sort"
+							id="{{item._id}}">
+							<td>
+								{{item._id}}
+							</td>
+							<td>
+								{{item.created_at | date:'medium'}}
+							</td>
+							<td>
+								<textarea class="form-control">{{item.data.logs.join('\n')}}</textarea>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</pane>
 
 

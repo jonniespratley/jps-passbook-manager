@@ -20,12 +20,16 @@
         </li>
       </ul>
 
-
-      <div class="nav-right">
-        <a class="btn btn-block btn-social btn-github" onclick="_gaq.push(['_trackEvent', 'btn-social', 'click', 'btn-github']);">
-            <span class="fa fa-github"></span> Sign in with GitHub
+      <p class="navbar-text navbar-right">
+        <span ng-show="App.session.user">
+Signed in as <a href="/account" class="navbar-link">{{App.session.user.username}}</a>
+        </span>
+        <a class="navbar-" ng-hide="App.session.user"
+        href="/auth/github">
+            <span class="fa fa-lg fa-github"></span> Sign in with GitHub
           </a>
-      </div>
+      </p>
+
 
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

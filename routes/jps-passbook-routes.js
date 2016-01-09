@@ -35,7 +35,7 @@ const exec = require('child_process').exec;
  * @param templates
  * @param app
  */
-module.exports = function (program, app) {
+module.exports = function(program, app) {
 
 
 	if (!program || !app) {
@@ -55,64 +55,66 @@ module.exports = function (program, app) {
 
 	//### onError()
 	//callback handler
-	var onError = function (error, note) {
+	var onError = function(error, note) {
 		logger('Error is: %s', error);
 	};
 
 	//API Version Endpoint - http://localhost:3535/smartpass/v1
-	router.get('/', function (req, res) {
+	router.get('/', function(req, res) {
 		res.status(200).json({
 			message: config.name
 		});
 	});
 
 
-	router.post('/log', bodyParser.json(), function (req, res) {
+	router.post('/log', bodyParser.json(), function(req, res) {
 		var dataLog = {};
 		dataLog._id = _.uniqueId('log-');
 		dataLog.docType = 'log';
 		dataLog.data = req.body;
 		dataLog.created_at = _.now();
+		_.throttle(function() {
+			program.db.put(dataLog).then(function(resp) {
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(400).json(err);
+			});
+		}, 1000);
 
-		program.db.put(dataLog).then(function (resp) {
-			res.status(200).json(resp);
-		}).catch(function (err) {
-			res.status(400).json(err);
-		});
 
 	});
 
-	router.get('/admin/logs', function (req, res) {
+	router.get('/admin/logs', function(req, res) {
 		let _logs = [];
 		program.db.allDocs({
 			docType: 'log'
-		}).then(function (resp) {
-			_logs = resp.rows.filter(function (row) {
+		}).then(function(resp) {
+			_logs = resp.rows.filter(function(row) {
 				return row.docType === 'log';
 			});
 			res.status(200).json(_logs);
-		}).catch(function (err) {
+		}).catch(function(err) {
 			res.status(400).json(err);
 		});
 	});
 
-	router.get('/admin/devices', function (req, res) {
+	router.get('/admin/devices', function(req, res) {
 		let _logs = [];
 		program.db.allDocs({
-			docType: 'device'
-		}).then(function (resp) {
-			_logs = resp.rows.filter(function (row) {
-				return row.docType === 'device';
+			type: 'device'
+		}).then(function(resp) {
+			_logs = resp.rows.filter(function(row) {
+				return row.type === 'device';
 			});
 			res.status(200).json(_logs);
-		}).catch(function (err) {
+		}).catch(function(err) {
 			res.status(400).json(err);
 		});
 	});
 
 
 	// TODO: Get tokens
-	router.get('/push/:token', function (req, res) {
+	router.get('/push/:token', function(req, res) {
 		var token = req.params.token;
 		logger('Register device ', token);
 		res.json({
@@ -124,12 +126,12 @@ module.exports = function (program, app) {
 	/**
 	 * I am the signpass route
 	 */
-	router.get('/sign/:id', function (req, res) {
+	router.get('/sign/:id', function(req, res) {
 		logger('sign', req.params);
 
-		program.db.get(req.params.id).then(function (resp) {
+		program.db.get(req.params.id).then(function(resp) {
 			if (resp) {
-				jpsPassbook.signPass(resp, '-p', function (err, filename) {
+				jpsPassbook.signPass(resp, '-p', function(err, filename) {
 					if (err) {
 						res.status(404).json(err);
 					}
@@ -144,7 +146,7 @@ module.exports = function (program, app) {
 					message: 'Must id!'
 				});
 			}
-		}).catch(function (err) {
+		}).catch(function(err) {
 			logger('sign', 'error', err);
 			res.status(400).json(err);
 		})
@@ -158,23 +160,26 @@ module.exports = function (program, app) {
 	 * creates a .raw folder containing a pass.json file and then invokes the
 	 * signpass binary.
 	 */
-	router.get('/export/:id', function (req, res) {
+	router.get('/export/:id', function(req, res) {
 		var id = req.params.id;
 		if (id) {
 			logger('id', id);
 
-			program.db.get(id).then(function (resp) {
+			program.db.get(id).then(function(resp) {
 				logger('found pass', resp);
 
-				jpsPassbook.createPass(resp, true, function (err, data) {
+				jpsPassbook.createPass(resp, true, function(err, data) {
 					if (err) {
 						res.status(404).json(err);
 					}
 					logger('createPass', data);
-					res.status(200).json(data);
+					//res.status(200).json(data);
+					res.set('Content-Type', 'application/vnd.apple.pkpass')
+						.status(200)
+						.download(data);
 				});
 
-			}).catch(function (err) {
+			}).catch(function(err) {
 				res.status(404).json(err);
 			});
 
@@ -184,7 +189,7 @@ module.exports = function (program, app) {
 	});
 
 
-	app.use(function (req, res, next) {
+	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 		res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -193,7 +198,7 @@ module.exports = function (program, app) {
 		next();
 	});
 
-	app.use(function (err, req, res, next) {
+	app.use(function(err, req, res, next) {
 		console.error(err.stack);
 		res.status(500).send('Something broke!');
 	});
@@ -209,7 +214,7 @@ module.exports = function (program, app) {
 		path.resolve(__dirname, './jps-middleware-sockets')
 	];
 
-	middleware.forEach(function (m) {
+	middleware.forEach(function(m) {
 		logger('add middleware', m);
 		require(m)(program, app);
 	});

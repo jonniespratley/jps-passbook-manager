@@ -7,38 +7,61 @@ var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
 
 var mocks = require('../helpers/mocks');
-describe('Passes', function() {
-	it('should be defined', function(done) {
+describe('Passes', function () {
+	it('should be defined', function (done) {
 		assert(Passes);
 		done();
 	});
 
-	it('getPasses() - should return all passes', function(done) {
-		Passes.getPasses().then(function(resp) {
+	it('getPasses() - should return all passes', function (done) {
+		Passes.getPasses().then(function (resp) {
 			assert.ok(resp);
 			done();
 		});
 	});
 
-	it('add() - should add pass', function(done) {
-		Passes.add(mocks.mockPass).then(function(resp) {
+	it('add() - should add pass', function (done) {
+		Passes.add(mocks.mockPass).then(function (resp) {
 			assert.ok(resp);
 			done();
 		});
 
 	});
 
-	it('find(params) - should return pass that meets critera', function(done) {
-
+	it('find(params) - should resolve pass that meets params', function (done) {
 		Passes.find({
 			//_id: 'mock-generic'
 			serialNumber: mocks.mockPass.serialNumber
-		}).then(function(resp) {
+		}).then(function (resp) {
 			console.log(resp);
-			assert.ok(resp.serialNumber=== mocks.mockPass.serialNumber);
+			assert.ok(resp.serialNumber === mocks.mockPass.serialNumber);
 			assert.ok(resp);
 			done();
 		});
 
 	});
+
+	it('find(params) - should reject promise pass that meets params', function (done) {
+		Passes.find({
+			//_id: 'mock-generic'
+			serialNumber: 'none'
+		}).then(function (resp) {
+			assert.fail(resp);
+			done();
+		}, function (err) {
+			assert.ok(err);
+			done();
+		});
+
+
+	});
+
+	it('findBySerial(num) - should return pass by serial number', function (done) {
+		Passes.findPassBySerial(mocks.mockPass.serialNumber).then(function(resp){
+			assert.ok(resp);
+			done();
+		});
+
+	});
+
 });

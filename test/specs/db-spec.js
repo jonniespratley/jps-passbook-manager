@@ -35,24 +35,46 @@ describe('db', function() {
 
 
 	it('should create file with id', function(done) {
-		db.put(mockPass).then(function(resp) {
+		db.put({
+			_id: 'test-file',
+			name: 'test'
+		}).then(function(resp) {
+			assert(resp);
+			done();
+		});
+	});
+	it('should create file with generated', function(done) {
+		db.post({
+
+			name: 'test2'
+		}).then(function(resp) {
 			assert(resp);
 			done();
 		});
 	});
 
 	it('should get file with id', function(done) {
-		db.get(mockPass._id).then(function(resp) {
+		db.get('test-file').then(function(resp) {
+			assert(resp);
+			done();
+		});
+	});
+
+	it('should find file', function(done) {
+		db.find({
+			name: 'test-file'
+		}).then(function(resp) {
 			assert(resp);
 			done();
 		});
 	});
 
 	it('should remove file with id', function(done) {
-		db.remove(mockPass._id).then(function(resp) {
+		db.remove('test-file').then(function(resp) {
 			assert(resp);
 			done();
 		});
 	});
+
 
 });

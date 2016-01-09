@@ -5,10 +5,11 @@
     "postinstall": "bower install",
     "poststart": "grunt build",
     "start": "node server",
-    "watch": "nodemon -w routes/ -w lib/ server.js",
-    "test": "gulp test"
+    "test": "gulp test",
+    "watch": "nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "async": "^1.5.1",
     "body-parser": "^1.10.1",
     "debug": "^2.2.0",
@@ -19,6 +20,7 @@
     "express-validator": "^2.18.0",
     "express-ws": "^0.2.6",
     "fs-extra": "^0.14.0",
+    "glob": "^6.0.4",
     "intercept-stdout": "^0.1.2",
     "jfs": "^0.2.6",
     "lodash": "^3.10.1",
@@ -26,6 +28,7 @@
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-github2": "^0.1.9",
+    "pem": "^1.8.1",
     "redis": "^2.4.2",
     "request": "^2.0.5",
     "serve-index": "^1.6.0",

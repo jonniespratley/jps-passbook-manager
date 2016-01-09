@@ -125,3 +125,17 @@ Trust chain is valid.
 
 *** SUCCEEDED ***
 ```
+
+
+
+```
+export CERT=cert.cer
+export KEY=key.p12
+
+$ openssl x509 -in $CERT -inform DER -outform PEM -out cert.pem
+$ openssl pkcs12 -in $KEY -out key.pem -nodes
+
+Test
+$ openssl s_client -connect gateway.sandbox.push.apple.com:2195 -cert cert.pem -key key.pem # sandbox
+$ openssl s_client -connect gateway.push.apple.com:2195 -cert cert.pem -key key.pem # production
+```

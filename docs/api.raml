@@ -1,0 +1,100 @@
+#%RAML 1.0
+title: passbook-manager
+version: v1
+baseUri: https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/{version}
+
+baseUriParameters:
+  version:
+    type:
+      - string
+    default: v1
+protocols:
+  - HTTPS
+mediaType: application/json
+types:
+  Pass:
+    type: object
+    properties:
+      id: number
+      optional?: string
+      expanded:
+        type: object
+        properties:
+          count: number
+  Registration:
+    type: object
+    properties:
+      id: number
+      optional?: string
+      expanded:
+        type: object
+        properties:
+          count: number
+  Device:
+    type: object
+    properties:
+      id: number
+      optional?: string
+      expanded:
+        type: object
+        properties:
+          count: number
+
+/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}:
+  description: |
+    Any time the pass is updated, your server sends a push notification with an empty JSON dictionary as the payload to the device using the given push notification token. This process continues until the device is explicitly unregistered (as described in Unregistering a Device).
+  uriParameters:
+    deviceLibraryIdentifier:
+      type:
+        - string
+      example: fbbb0ae201d1378b639f96f9381c3675
+      description: A unique identifier that is used to identify and authenticate this device in future requests.
+    passTypeIdentifier:
+      type:
+        - string
+      description: The pass’s type, as specified in the pass.
+    serialNumber:
+      type:
+        - string
+      description: The pass’s serial number, as specified in the pass.
+  post:
+    body:
+    responses:
+      200:
+        description: If the serial number is already registered for this device, returns HTTP status 200.
+        displayName: Registration returned
+        body:
+          application/json:
+            example: |
+              {
+                "message": "value"
+              }
+      201:
+        description: If registration succeeds, returns HTTP status 201.
+        displayName: Registration created
+        body:
+          application/json:
+            example: |
+              {
+                "message": "value"
+              }
+      401:
+        description: If the request is not authorized, returns HTTP status 401.
+        displayName: Unauthorized
+        body:
+          application/json:
+            example: |
+              {
+                "message": "value"
+              }
+
+/helloWorld:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "message" : "Hello World"
+              }
