@@ -1,10 +1,5 @@
 <div class="row">
 	<div class="col-sm-12">
-		<formitem title="Pass Type:">
-			<select ng-model="pass.type"
-			ng-change="loadSchema(t)"
-			ng-options="t.name as t.title for t in passTypes"></select>
-		</formitem>
 
 
 		<tabs>
@@ -12,6 +7,12 @@
 			<pane title="Details">
 				<fieldset>
 					<legend>Primary</legend>
+					<formitem title="Pass Type:">
+						<select ng-model="pass.type"
+						ng-change="loadSchema(t)"
+						ng-options="t.name as t.title for t in passTypes"></select>
+					</formitem>
+
 					<formitem title="Organization Name:">
 						<input type="text" ng-model="pass.organizationName" class="form-control" />
 					</formitem>
@@ -40,8 +41,8 @@
 									<p class="help-inline">
 											<button class="btn btn-default btn-mini remove-row-btn" type="button"
 																					  ng-click="pass[pass.type].primaryFields.splice($index, 1)">
-																						Remove
-											<span class="icon icon-minus"></span>
+
+											<i class="fa fa-lg fa-times-circle"></i>
 										</button>
 									</p>
 								<br/>
@@ -67,8 +68,7 @@
 							type="button"
 							class="btn btn-default btn-mini remove-row-btn"
 							ng-click="pass[pass.type].auxiliaryFields.splice($index, 1)">
-									<span
-										class="icon icon-minus"></span>Remove
+									<i class="fa fa-lg fa-times-circle"></i>
 						</button>
 						</span>
 								<br/>
@@ -93,7 +93,8 @@
 								<textarea class="form-control" name="value" ng-model="a.value">{{a.value}}</textarea>
 						<span class="help-inline"> <button class="btn btn-mini btn-default remove-row-btn"
 																		type="button"
-																		ng-click="pass[pass.type].backFields.splice($index, 1)"> Remove
+																		ng-click="pass[pass.type].backFields.splice($index, 1)">
+																		<i class="fa fa-lg fa-times-circle"></i>
 						</button> </span> &nbsp;
 							</div>
 						</formitem>
@@ -115,14 +116,18 @@
 					<div id="pass-locationFields" class="well well-sm">
 						<formitem title="Location #{{$index}}:" ng-repeat="l in pass.locations">
 
+						<div class="controls-row">
 							<input type="text" name="latitude" ng-model="l.latitude" class="form-control" placeholder="Latitude" />
 							<input type="text" name="longitude" ng-model="l.longitude" class="form-control" placeholder="Longitude" />
+							<input type="text" name="relevantText" ng-model="l.relevantText" class="form-control" placeholder="Relevant Text" />
 					<span class="help-inline">
 						<button class="btn btn-mini btn-default remove-row-btn"
-																  type="button"
-																  ng-click="pass.locations.splice($index, 1)">Remove
+																	type="button"
+																	ng-click="pass.locations.splice($index, 1)">
+																	<i class="fa fa-lg fa-times-circle"></i>
 					</button> </span> &nbsp;
 
+						</div>
 						</formitem>
 						<button class="btn btn-block btn-default" type="button" ng-click="pass.locations.push({latitude: '37.6189722', longitude: '-122.3748889'})"> Add
 						</button>
@@ -172,15 +177,15 @@
 
 					<div id="pass-styleFields" class="well well-sm">
 						<formitem title="Label Color:">
-							<input type="text" ng-model="pass.labelColor" class="form-control" />
+							<input type="text" ng-model="pass.labelColor" ng-colorpicker class="form-control" />
 						</formitem>
 
 						<formitem title="Foreground Color:">
-							<input type="text" ng-model="pass.foregroundColor" class="form-control" />
+							<input type="text" ng-model="pass.foregroundColor" ng-colorpicker class="form-control" />
 						</formitem>
 
 						<formitem title="Background Color:">
-							<input type="text" ng-model="pass.backgroundColor" class="form-control" />
+							<input type="text" ng-model="pass.backgroundColor" ng-colorpicker class="form-control" />
 						</formitem>
 
 						<formitem title="Icon:">
@@ -222,6 +227,9 @@
 						<formitem title="Web Service URL:">
 							<input type="text" ng-model="pass.webServiceURL" class="form-control" disabled=""/>
 						</formitem>
+						<formitem title="Version:">
+							<input type="text" ng-model="pass.formatVersion" class="form-control" disabled=""/>
+						</formitem>
 						<formitem title="Authentication Token:">
 							<input type="text" ng-model="pass.authenticationToken" class="form-control" disabled="" />
 						</formitem>
@@ -237,7 +245,7 @@
 
 	</div>
 </div>
-<footer class="navbar toolbar toolbar-footer navbar-fixed-bottom navbar-default">
+<footer class="navbar toolbar toolbar-footer navbar-fixed-bottom navbar-inverse">
 	<div class="container-fluid">
 		<div class="toolbar-actions row">
 			<div class="col-sm-12">
@@ -253,9 +261,9 @@
 					Save
 				</button>
 
-				<button ng-click="SmartPass.exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i> Export
+				<button ng-click="exportPass(pass)" class="btn btn-default pull-right" data-dismiss="modal"><i class="glyphicon glyphicon-share"></i> Export
 				</button>
-				<button ng-click="SmartPass.deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i> Delete
+				<button ng-click="deletePass(pass)" class="btn pull-right btn-negative" data-dismiss="modal"><i class="glyphicon glyphicon-trash"></i> Delete
 				</button>
 			</div>
 		</div>

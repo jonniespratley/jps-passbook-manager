@@ -139,3 +139,55 @@ Test
 $ openssl s_client -connect gateway.sandbox.push.apple.com:2195 -cert cert.pem -key key.pem # sandbox
 $ openssl s_client -connect gateway.push.apple.com:2195 -cert cert.pem -key key.pem # production
 ```
+
+
+You can test the TLS/SSL handshake using the OpenSSL s_client command, like this:
+
+$ openssl s_client -connect gateway.sandbox.push.apple.com:2195 -cert YourSSLCertAndPrivateKey.pem -debug -showcerts -CAfile server-ca-cert.pem
+
+openssl req -noout -text -in server.csr
+Back to Top
+
+
+
+
+```
+/*
+			Passphrase: aminc
+			Import Pass: null
+
+			openssl pkcs12 -clcerts -nokeys -out apns-dev-cert-my.pem -in apns-dev-cert-my.p12
+			openssl pkcs12 -nocerts -out apns-dev-key-my.pem -in apns-dev-key-my.p12
+			cat apns-dev-cert-tsm.pem apns-dev-key-my.pem > apns-dev-my.pem
+
+			openssl x509 -in com.appmatrixinc.my_aps_dev_identity.cer -inform der -out com-appmatrixinc-my-cert.pem
+			*/
+
+		 //1. Dev - Cert
+		 //REA
+
+		 //2. Dev - key
+		 //openssl pkcs12 -nocerts -out aps_dev_nocert_tsa.pem -in aps-key-cert.p12
+
+		 //3. Dev - Cert + Key
+		 //cat apns-dev-cert-my.pem apns-dev-key-my.pem > apns-dev-tsa.pem
+
+		 //openssl s_client -connect gateway.sandbox.push.apple.com:2195
+		 //openssl pkcs12 -clcerts -nokeys -out server_certs_com_appmatrix_my.pem -in server_certs_com_appmatrix_my.p12
+
+
+		 //1. Pro - Cert
+		 //openssl pkcs12 -clcerts -nokeys -out apns-pro-cert-tsm.pem -in apns-pro-cert-tsm.p12
+
+		 //2. Pro - Key
+		 //openssl pkcs12 -nocerts -out apns-pro-key-tsm.pem -in apns-pro-key-tsm.p12
+
+		 //3. Pro - Cert + Key
+		 //cat apns-pro-cert-tsm.pem apns-pro-key-tsm.pem > apns-pro-tsm.pem
+
+		 /* Check connection */
+		 //telnet gateway.sandbox.push.apple.com 2195
+
+		 /* Check SSL connection  */
+		 //openssl s_client -connect gateway.sandbox.push.apple.com:2195 -cert apns-dev-cert-my.pem -key apns-dev-key-my.pem
+```

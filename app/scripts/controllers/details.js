@@ -27,6 +27,8 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, Api,
 
   $scope.barcodes = [{
       name: 'QR Barcode',
+
+      selected: true,
       value: 'PKBarcodeFormatQR'
     }, {
       name: 'PDF Barcode',
@@ -48,20 +50,13 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, Api,
     if (p._id) {
       db.put(p).then(function(data) {
         console.log('response', data);
-        if (data) {
-          $scope.SmartPass.pass = null;
-          $scope.SmartPass.getPasses();
-          $scope.SmartPass.clearPass();
-        }
+
       }).catch(function(err) {
         console.error('savePass', err);
       });
     } else {
       db.post(p).then(function(data) {
-        if (data) {
-          $scope.SmartPass.pass = data;
-          $scope.SmartPass.getPasses();
-        }
+
         console.log('createPass', data);
       });
     }

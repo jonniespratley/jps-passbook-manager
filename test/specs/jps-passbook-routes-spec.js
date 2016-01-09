@@ -44,10 +44,12 @@ describe('routes', function () {
 				.expect('Content-Type', /application\/vnd.apple.pkpass/)
 				.expect(200, done);
 		});
+
 		it('GET - /api/v1/export/:id - should export pass', function (done) {
 			request(app)
 				.get('/api/v1/export/mock-generic')
-				.expect('Content-Type', /json/)
+				//.expect('Content-Type', /json/)
+				.expect('Content-Type', /application\/vnd.apple.pkpass/)
 				.expect(200, done);
 		});
 
@@ -283,6 +285,7 @@ describe('routes', function () {
 		});
 
 		it('POST - /api/v1/log - should store logs', function (done) {
+			this.slow(5000);
 			request(app)
 				.post('/api/v1/log')
 				.send({

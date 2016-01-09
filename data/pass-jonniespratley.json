@@ -1,16 +1,16 @@
 {
   "_id": "pass-jonniespratley",
   "docType": "pass",
-  "type": "generic",
-  "lastUpdated": 1452305071603,
+  "type": "github",
+  "lastUpdated": 1452364514590,
   "logoText": "Github",
   "description": "Jonnie Spratley Github",
   "formatVersion": 1,
   "organizationName": "GE Digital",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "f9034cb6-a6fc-4802-a7d7-25612869fae4",
+  "serialNumber": "20fdf7af-2a1c-4da5-b393-1de53e911d4f",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "f9034cb6-a6fc-4802-a7d7-25612869fae4",
+  "authenticationToken": "20fdf7af-2a1c-4da5-b393-1de53e911d4f",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -39,29 +39,18 @@
   "generic": {
     "primaryFields": [
       {
-        "key": "Name",
+        "key": "name",
+        "label": "Name",
         "value": "Jonnie Spratley"
       }
     ],
     "secondaryFields": [
       {
-        "key": "username"
+        "key": "username",
+        "label": "Username"
       }
     ],
     "auxiliaryFields": [
-      {
-        "key": "level",
-        "label": "LEVEL",
-        "value": "Platinum"
-      },
-      {
-        "key": "favorite",
-        "label": "FAVORITE LANG",
-        "value": "JavaScript",
-        "textAlignment": "PKTextAlignmentRight"
-      }
-    ],
-    "backFields": [
       {
         "key": "user_following",
         "label": "Following",

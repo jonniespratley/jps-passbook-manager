@@ -1,6 +1,35 @@
-<div class="page">
-  <a href="/auth/github" class="btn btn-block btn-social btn-twitter">
-  <span class="fa fa-twitter"></span>
-  Sign in with Github
-</a>
-</div>
+<% include ./partials/head %>
+<body>
+  <header>
+      <% include ./partials/header %>
+  </header>
+  <main>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+
+          <% if (!user) { %>
+          	<div class="jumbotron">
+          	  <h2>Welcome! Please log in.</h2>
+            <p>
+              <a href="/auth/github" class="btn btn-lg btn-social btn-github">
+            	   <span class="fa fa-github"></span>
+            	    Sign in with Github
+              </a>
+              <a href="/auth/provider" class="btn btn-lg btn-primary">Log In with OAuth 2.0 Provider</a>
+            </p>
+          	</div>
+
+
+
+          <% } else { %>
+          	<h2>Hello, <%= user.displayName %>.</h2>
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer><% include ./partials/footer %></footer>
+</body>
+</html>

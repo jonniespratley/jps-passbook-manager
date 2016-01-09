@@ -1,6 +1,17 @@
 'use strict';
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "96943ce4c9b4f09bf98f";
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || "f9809160c20f1f57876924c015aa68283f1c4a4b";
+
+/*
+Client ID
+7171ef010ffc067de767
+Client Secret
+387c9cd85b4c48abcaa7547bf2865aaf922e4ac2
+
+*/
+//const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "96943ce4c9b4f09bf98f";
+//const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || "f9809160c20f1f57876924c015aa68283f1c4a4b";
+
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "7171ef010ffc067de767";
+const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || "387c9cd85b4c48abcaa7547bf2865aaf922e4ac2";
 
 const express = require('express');
 
@@ -10,6 +21,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const passport = require('passport');
+const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 
 
@@ -80,32 +92,65 @@ module.exports = function(program, app) {
 	});
 
 
+
 	function findOrCreate(profile, done) {
+		authLogger('findOrCreate', profile);
 		var id = 'user-' + profile.id;
 		var user = {
 			_id: id,
 			data: profile
 		};
 
-		console.warn('findOrCreate', id);
+
 
 		db.get(id).then(function(u) {
 			done(null, u);
 		}).catch(function(err) {
+
 			db.put(user).then(function(u) {
 				done(null, u);
 			}).catch(function(err) {
 				done(err, null);
 			});
+
 		});
 		//	done(null, profile);
 	}
 
 
+
+	passport.use('oauth2', new OAuth2Strategy({
+			authorizationURL: 'https://github.com/login/oauth/authorize',
+			tokenURL: 'https://github.com/login/oauth/access_token',
+			clientID: GITHUB_CLIENT_ID,
+			clientSecret: GITHUB_CLIENT_SECRET,
+			callbackURL: "http://localhost:5001/auth/provider/callback"
+		},
+		function(accessToken, refreshToken, profile, done) {
+			authLogger('accessToken', accessToken);
+			findOrCreate(profile, function(err, user) {
+				return done(err, user);
+			});
+		}
+	));
+
+
+	router.get('/auth/provider', passport.authenticate('oauth2'));
+
+	router.get('/auth/provider/callback',
+		passport.authenticate('oauth2', {
+			failureRedirect: '/login'
+		}),
+		function(req, res) {
+			// Successful authentication, redirect home.
+			res.redirect('/account');
+		});
+
 	// Use the GitHubStrategy within Passport.
 	//   Strategies in Passport require a `verify` function, which accept
 	//   credentials (in this case, an accessToken, refreshToken, and GitHub
 	//   profile), and invoke a callback with a user object.
+
 	passport.use(new GitHubStrategy({
 			clientID: GITHUB_CLIENT_ID,
 			clientSecret: GITHUB_CLIENT_SECRET,
@@ -178,6 +223,7 @@ module.exports = function(program, app) {
 			res.redirect('/admin');
 		});
 
+
 	//	app.use(partials());
 	app.use(bodyParser.urlencoded({
 		extended: true
@@ -186,11 +232,12 @@ module.exports = function(program, app) {
 	app.use(methodOverride());
 	app.use(session({
 		secret: config.security.salt,
-		resave: false,
-		saveUninitialized: false
+		resave: true,
+		saveUninitialized: true
 	}));
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(router);
-	//authLogger('mounted!');
+
+	authLogger('mounted!');
 };

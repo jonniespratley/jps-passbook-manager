@@ -73,15 +73,13 @@ module.exports = function(program, app) {
 		dataLog.docType = 'log';
 		dataLog.data = req.body;
 		dataLog.created_at = _.now();
-		_.throttle(function() {
+		_.defer(function() {
 			program.db.put(dataLog).then(function(resp) {
 				res.status(200).json(resp);
 			}).catch(function(err) {
 				res.status(400).json(err);
 			});
-		}, 1000);
-
-
+		}, 500);
 	});
 
 	router.get('/admin/logs', function(req, res) {
@@ -99,14 +97,14 @@ module.exports = function(program, app) {
 	});
 
 	router.get('/admin/devices', function(req, res) {
-		let _logs = [];
+		let _devices = [];
 		program.db.allDocs({
 			type: 'device'
 		}).then(function(resp) {
-			_logs = resp.rows.filter(function(row) {
+			_devices = resp.rows.filter(function(row) {
 				return row.type === 'device';
 			});
-			res.status(200).json(_logs);
+			res.status(200).json(_devices);
 		}).catch(function(err) {
 			res.status(400).json(err);
 		});
@@ -199,15 +197,18 @@ module.exports = function(program, app) {
 	});
 
 	app.use(function(err, req, res, next) {
+		logger('error', err);
 		console.error(err.stack);
 		res.status(500).send('Something broke!');
+		next();
 	});
 
-	app.use(bodyParser.json());
+	//app.use(bodyParser.json());
 	//app.use(expressValidator);
-	app.use('/api/' + config.version, router);
+
 
 	var middleware = [
+		path.resolve(__dirname, './jps-middleware-auth'),
 		path.resolve(__dirname, './jps-middleware-db'),
 		path.resolve(__dirname, './jps-middleware-devices'),
 		path.resolve(__dirname, './jps-middleware-passes'),
@@ -219,5 +220,7 @@ module.exports = function(program, app) {
 		require(m)(program, app);
 	});
 
+
+	app.use('/api/' + config.version, router);
 
 };

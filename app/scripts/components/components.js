@@ -27,6 +27,31 @@ jpsPassbookManagerApp.directive('ngColorpicker', function() {
 		}
 	};
 });
+jpsPassbookManagerApp.directive('ngBarcode', function() {
+	return {
+		restrict: 'A',
+		replace: true,
+		transclude: false,
+		scope: {
+			id: '@',
+			ngModel: '@',
+			text: '@',
+			image: '@'
+		},
+		template: '<div class="qrcode"></div>',
+		link: function postLink(scope, element, attrs) {
+
+			$(element)
+
+			.qrcode({
+				width: 100,
+				height: 100,
+				text: scope.text
+			});
+			console.log('function');
+		}
+	};
+});
 
 jpsPassbookManagerApp.directive('myTable', function() {
 	return function(scope, element, attrs) {

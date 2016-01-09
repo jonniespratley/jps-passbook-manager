@@ -28,7 +28,7 @@ app.set('view engine', 'ejs');
 program.app = app;
 
 var middleware = [
-	path.resolve(__dirname, './routes/jps-middleware-auth'),
+	//path.resolve(__dirname, './routes/jps-middleware-auth'),
 	path.resolve(__dirname, './routes/jps-passbook-routes')
 ];
 

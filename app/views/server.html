@@ -1,62 +1,90 @@
 <div class="row">
 	<div class="col-sm-12">
 		<ol class="breadcrumb">
-	  	<li><a href="#/">Home</a></li>
-		  <li class="active">Server</li>
+			<li><a href="#/">Home</a></li>
+			<li class="active">Server</li>
 		</ol>
 
-		<tabs>
+
+		<tabs id="server-tabs">
+
 			<pane title="Logs">
-				<!-- TODO: logs -->
 				<table id="logs-table" class="table table-condensed table-bordered">
 					<thead>
-						<th>
-							ID
-						</th>
-						<th>
-							Date
-						</th>
-						<th>
-							Log
-						</th>
+					<th>
+						ID
+					</th>
+					<th>
+						Date
+					</th>
+					<th>
+						Log
+					</th>
 					</thead>
 					<tbody>
-						<tr ng-repeat="item in logs track by $index | orderBy:_id:sort"
-							id="{{item._id}}">
-							<td>
-								{{item._id}}
-							</td>
-							<td>
-								{{item.created_at | date:'medium'}}
-							</td>
-							<td>
-								<textarea class="form-control">{{item.data.logs.join('\n')}}</textarea>
-							</td>
-						</tr>
+					<tr ng-repeat="item in logs track by $index | orderBy:_id:sort" id="{{item._id}}">
+						<td>
+							{{item._id}}
+						</td>
+						<td>
+							{{item.created_at | date:'medium'}}
+						</td>
+						<td>
+							<textarea class="form-control">{{item.data.logs.join('\n')}}</textarea>
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</pane>
+
 
 
 			<!-- TODO: Devices -->
 			<pane title="Devices">
 				<table id="devices-table" class="table table-condensed table-bordered">
+					<thead>
+					<th>ID</th>
+					<th>Push Token</th>
+					<th>Created</th>
+					<th>Actions</th>
+					</thead>
 					<tbody>
-						<tr ng-repeat="item in devices track by $index | orderBy:created_at:true"
-							id="{{item._id}}">
-							<td>
-						<pre>
-							 {{item | json}}
-						</pre>
-							</td>
-						</tr>
+					<tr
+						ng-repeat="item in devices track by $index | orderBy:created_at:true"
+						id="{{item._id}}">
+						<td>{{item._id}}</td>
+						<td>{{item.device.pushToken}}</td>
+						<td>{{item.created_at}}</td>
+						<td></td>
+					</tr>
 					</tbody>
 				</table>
 			</pane>
 
+
+
 			<!-- TODO: registrations -->
 			<pane title="Registrations">
-
+				<table id="registrations-table" class="table table-condensed table-bordered">
+					<thead>
+					<th>ID</th>
+					<th>Device</th>
+					<th>Pass</th>
+					<th>Created</th>
+					<th>Actions</th>
+					</thead>
+					<tbody>
+					<tr
+						ng-repeat="item in devices track by $index | orderBy:created_at:true"
+						id="{{item._id}}">
+						<td>{{item._id}}</td>
+						<td>{{item.device}}</td>
+						<td>{{item.pass}}</td>
+						<td>{{item.created_at}}</td>
+						<td></td>
+					</tr>
+					</tbody>
+				</table>
 			</pane>
 
 

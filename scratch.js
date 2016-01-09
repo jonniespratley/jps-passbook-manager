@@ -1,5 +1,6 @@
 'use strict';
 var assert = require('assert');
+var _ = require('lodash');
 var path = require('path');
 var request = require("request");
 var program = require(path.resolve(__dirname, './lib/program.js'))();
@@ -27,14 +28,16 @@ var logger = utils.getLogger('scratch');
 
 
 
-var APN_CERT = './certificates/passbookmanager-apns-cert.cer';
-var APN_CERT_PEM = APN_CERT.replace('.cer', '.pem');
+var APN_CERT = './certificates/passbookmanager-apns-cert.p12';
 var APN_KEY = './certificates/passbookmanager-apns-key.p12';
+var APN_CERT_PEM = APN_CERT.replace('.p12', '.pem');
 var APN_KEY_PEM = APN_KEY.replace('.p12', '.pem');
-var APN_KEY_PEM_PASS = '123456789';
+var APN_KEY_PEM_PASS = 'fred';
+
 // TODO: Sign cert_pass
 var exec = child_process.exec;
-var cmd1 = `openssl x509 -in ${APN_CERT} -inform DER -outform PEM -out ${APN_CERT_PEM}`
+//var cmd1 = `openssl x509 -in ${APN_CERT} -inform DER -outform PEM -out ${APN_CERT_PEM}`
+var cmd1 = `openssl pkcs12 -clcerts -nokeys -out ${APN_CERT_PEM} -in ${APN_CERT}`;
 var cmd2 = `openssl pkcs12 -in ${APN_KEY} -out ${APN_KEY_PEM} -nodes`;
 var cmd3 = `openssl s_client -connect gateway.sandbox.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}`;
 var cmd4 = `openssl s_client -connect gateway.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}`
@@ -45,19 +48,44 @@ logger('cmd3', cmd3);
 logger('cmd4', cmd4);
 
 child_process.execSync(cmd1);
-child_process.execSync(cmd2);
-child_process.execSync(cmd3);
+//child_process.execSync(cmd2);
+//child_process.execSync(cmd3);
 child_process.execSync(cmd4);
 
 
+
+var cmds =
+	`
+	openssl pkcs12 -clcerts -nokeys -out ${APN_CERT_PEM} -in ${APN_CERT}
+	openssl pkcs12 -nocerts -out ${APN_KEY_PEM} -in ${APN_KEY}
+	cat ${APN_CERT_PEM} ${APN_KEY_PEM} > ./certificates/apns-production.pem
+	openssl s_client -connect gateway.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}
+`;
+
+console.log(cmds);
+
+
+const GITHUB_USERS = [
+	//'sindresorhus',
+	//'eddiemonge',
+	//'addyosmani',
+	'jonniespratley'
+];
 /*
-	jpsPassbook.createPass(p, true, function(resp) {
-		logger('create github pass', resp);
+_.forEach(GITHUB_USERS, function(n) {
+	utils.githubToPass(n, function(err, user) {
+		logger('github user', user);
+		jpsPassbook.createPass(user, true, function(err, resp) {
+			logger('create github pass', resp);
+		});
 	});
 
+});
+
+
 request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/logs', function(err, resp, body) {
-	var _logs = JSON.parse(body);
-	_logs.forEach(function(log) {
-		program.db.put(log);
-	})
-})*/
+	var docs = JSON.parse(body);
+	docs.forEach(function(doc) {
+		program.db.put(doc);
+	});
+});*/

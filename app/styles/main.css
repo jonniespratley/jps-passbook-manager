@@ -27,6 +27,16 @@
 
 @import url("./styles.css");
 
+
+
+.controls-row{
+  display: flex;
+  flex: 1;
+}
+.controls-row > * {
+  margin: 5px;
+}
+
 .modal-backdrop.am-fade {
   opacity: .5;
   transition: opacity .15s linear;

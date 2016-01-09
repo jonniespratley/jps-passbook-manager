@@ -3,9 +3,9 @@
   "docType": "log",
   "data": {
     "logs": [
-      "[2016-01-08 10:17:24 -0800] Unregister task (for device 4802fec7bcf03585bc29cef5f5293447, pass type pass.passbookmanager.io, serial number ee3061b7-487b-4061-8c8d-1d61c556d7bb; with web service url https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api) encountered error: Unexpected response code 404"
+      "[2016-01-09 03:13:04 -0800] Unregister task (for device 424a390abb7986d292d6030f396fb689, pass type pass.passbookmanager.io, serial number 4d894d80-f418-432c-ba93-0349e1f8c1bd; with web service url https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api) encountered error: Unexpected response code 404"
     ]
   },
-  "created_at": 1452277044632,
+  "created_at": 1452337984071,
   "_key": "log-64"
 }
