@@ -1,7 +1,9 @@
 'use strict';
 
-module.exports = function (program, app) {
+module.exports = function(program, app) {
 	const intercept = require('intercept-stdout');
+	const _ = require('lodash');
+	var logger = program.getLogger('web-sockets');
 
 	if (!program) {
 		throw new Error('Must provide a program as argument 1');
@@ -10,57 +12,61 @@ module.exports = function (program, app) {
 		throw new Error('Must provide an express app as argument 2');
 	}
 
-/*
-	const io = require('socket.io').listen(program.server);
-	var socket = null;
-	io.on('connection', function (_socket) {
-		socket = _socket;
-		socket.emit('newlog', logs);
-	});
-*/
+	/*
+		const io = require('socket.io').listen(program.server);
+		var socket = null;
+		io.on('connection', function (_socket) {
+			socket = _socket;
+			socket.emit('newlog', logs);
+		});
+	*/
+	var expressWs = require('express-ws')(app);
+	var app = expressWs.app;
 
-	app.use(function (req, res, next) {
-		program.log('sockets -', req.method, req.params, req.url);
+	var logs = [];
+	var log = {};
+
+
+	app.use(function(req, res, next) {
+		logger(req.method, req.params, req.url);
 		req.testing = 'testing';
 		return next();
 	});
 
-	var expressWs = require('express-ws')(app);
-	var logs = [];
-	app.ws('/echo', function(ws, req) {
-		ws.on('message', function(msg) {
-			if(ws){
-				ws.send(msg);
-			}
-		});
+
+	app.ws('/a', function(ws, req) {
+		logger('/a');
 	});
 
-	app.ws('/', function(ws, req) {
-		ws.on('message', function(msg) {
-			console.log(msg);
-		});
-		console.log('socket', req.testing);
-	});
-
-
-
-	app.ws('/logs', function (ws, req) {
-
-		//Enable logging before everything
-		var intercept_func = intercept(function (data) {
-			logs.push({
-				msg: data
-			});
+	app.ws('/logs', function(ws, req) {
+		var intercept_func = intercept(function(data) {
+			var logWss = expressWs.getWss('/logs');
+			log = {
+				data: data
+			};
 			if (ws) {
-				ws.send('newlog', [{
-					msg: data
-				}]);
+
+				logWss.clients.forEach(function(client) {
+					client.send(JSON.stringify(log));
+				})
+
 			}
 		});
-		ws.on('message', function (msg) {
-			//console.log(msg);
-		});
 	});
+
+
+
+	var aWss = expressWs.getWss('/a');
+
+
+	app.ws('/b', function(ws, req) {});
+
+	setInterval(function() {
+		aWss.clients.forEach(function(client) {
+			logger('send', client);
+			client.send(JSON.stringify(program.config.defaults));
+		});
+	}, 5000);
 
 
 };

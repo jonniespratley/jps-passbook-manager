@@ -1,5 +1,5 @@
 'use strict';
-
+const path = require('path');
 //TODO - Change to your values
 const APPLE_TEAM_IDENTIFIER = 'USE9YUYDFH';
 const APPLE_PASS_TYPE_IDENTIFIER = 'pass.passbookmanager.io';
@@ -71,7 +71,7 @@ var config = {
 	"name": "passbookmanager",
 	"message": "Passbook Manager API Server",
 	"version": "v1",
-	"dataPath": "./data",
+	"dataPath": path.resolve(__dirname, "./data"),
 	"passkit": {
 		"teamIdentifier": APPLE_TEAM_IDENTIFIER,
 		"passTypeIdentifier": APPLE_PASS_TYPE_IDENTIFIER,

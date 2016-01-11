@@ -21,3 +21,4 @@ atlassian-ide-plugin.xml
 data.json
 
 coverage
+test/temp

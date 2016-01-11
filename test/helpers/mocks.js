@@ -1,7 +1,10 @@
 'use strict';
 var path = require('path');
 var config = require(path.resolve(__dirname, '../../config.js'));
-
+var program = require(path.resolve(__dirname, '../../lib/program.js'))({
+	dataPath: path.resolve(__dirname, '../temp')
+});
+exports.program = program;
 
 var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
@@ -9,12 +12,13 @@ var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
 var mockPass = new Pass({
 	type: 'generic',
-	//serialNumber: '123456789',
-	//authenticationToken: '123456789'
+	serialNumber: '123456789',
+	authenticationToken: '123456789'
 });
 
 exports.mockPass = mockPass;
 exports.mockPasses = [
+	mockPass,
 	new Pass({
 		_id: 'mock-boardingpass',
 		type: 'boardingPass'

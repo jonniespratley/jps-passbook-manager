@@ -21,6 +21,7 @@ logger('env', process.env);
 
 // configure Express
 var app = express();
+app.use('/', serveStatic(path.resolve(__dirname, './app/bower_components')));
 app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
 app.use('/public', serveStatic(path.resolve(__dirname, config.publicDir)));
 app.set('views', __dirname + '/views');
