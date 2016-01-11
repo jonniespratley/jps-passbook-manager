@@ -120,17 +120,25 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				logs: function(Api) {
 					return Api.request({
 						method: 'GET',
-						url: '/api/v1/admin/find?docType=logs'
+						url: '/api/v1/admin/find?docType=log'
 					}).then(function(resp) {
-						return resp.data;
+						return resp.data.rows;
 					});
 				},
 				devices: function(Api) {
 					return Api.request({
 						method: 'GET',
-						url: '/api/v1/admin/find?docType=devices'
+						url: '/api/v1/admin/find?docType=device'
 					}).then(function(resp) {
-						return resp.data;
+						return resp.data.rows;
+					});
+				},
+				registrations: function(Api) {
+					return Api.request({
+						method: 'GET',
+						url: '/api/v1/admin/find?docType=registration'
+					}).then(function(resp) {
+						return resp.data.rows;
 					});
 				}
 			}

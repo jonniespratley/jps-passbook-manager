@@ -5,14 +5,16 @@
       <li><a href="#/passes">Passes</a></li>
       <li class="active">Details</li>
     </ol>
+
     <div class="row">
-      <div class=" col-sm-9">
+      
+      <div class="col-sm-9">
         <form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
           <div ng-include src="'./views/passes_add.html'"></div>
         </form>
       </div>
 
-      <div class=" col-sm-3">
+      <div class="col-sm-3">
         <div class="well well-sm clearfix">
 					<button ng-click="deletePass(pass)" class="btn btn-danger btn-block">
 						Delete
@@ -21,6 +23,7 @@
 						Save
 					</button>
         </div>
+
         <div class="scan-pass text-center well well-sm">
           <a href="/api/v1/export/{{pass._id}}" target="_blank">
             <img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
@@ -31,13 +34,5 @@
       </div>
     </div>
 
-
-
-
-
-
-
-
-    <pre>{{pass | json}}</pre>
   </div>
 </div>

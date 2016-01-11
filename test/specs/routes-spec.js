@@ -15,11 +15,12 @@ var app = express();
 var passes;
 
 // TODO: Program
-var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+var program = mocks.program;
 var config = program.config.defaults;
 
 //Test Instances
-var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
@@ -27,13 +28,11 @@ var mockPass = mocks.mockPass;
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
 	'jps-passbook-routes'))(program, app);
 
-describe('routes', function () {
-	before(function () {
-		program.db.put(mockPass);
-	})
+describe('routes', function() {
 
 
-	it('GET - /api/v1 - should return api', function (done) {
+
+	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
 			.get('/api/v1')
 			.expect('Content-Type', /json/)
@@ -41,8 +40,8 @@ describe('routes', function () {
 	});
 
 
-	describe('Auth Routes', function () {
-		xit('/api/v1/me - should return user info', function (done) {
+	describe('Auth Routes', function() {
+		xit('/api/v1/me - should return user info', function(done) {
 			request(app)
 				.get('/api/v1/me')
 				.expect('Content-Type', /json/)
@@ -51,16 +50,16 @@ describe('routes', function () {
 	});
 
 
-	describe('Export/Sign', function () {
+	describe('Export/Sign', function() {
 
-		it('GET - /api/v1/sign/:id - should sign pass', function (done) {
+		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
 			request(app)
 				.get('/api/v1/sign/mock-generic')
 				.expect('Content-Type', /application\/vnd.apple.pkpass/)
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/export/:id - should export pass', function (done) {
+		it('GET - /api/v1/export/:id - should export pass', function(done) {
 			request(app)
 				.get('/api/v1/export/mock-generic')
 				//.expect('Content-Type', /json/)
@@ -71,20 +70,20 @@ describe('routes', function () {
 	});
 
 
-	describe('Admin Passes', function () {
+	describe('Admin Passes', function() {
 
-		it('GET - /api/v1/admin/passes - should return all passes', function (done) {
+		it('GET - /api/v1/admin/passes - should return all passes', function(done) {
 			request(app)
 				.get('/api/v1/admin/passes')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		it('POST - /api/v1/admin/passes - should create pass', function (done) {
+		it('POST - /api/v1/admin/passes - should create pass', function(done) {
 			request(app)
 				.post('/api/v1/admin/passes')
 				.send(mocks.mockPass)
-				.expect(function (res) {
+				.expect(function(res) {
 					//	mocks.mockPasses[0]._id = res.body._id;
 					//	console.log(res)
 				})
@@ -92,7 +91,7 @@ describe('routes', function () {
 				.expect(201, done);
 		});
 
-		it('GET - /api/v1/admin/passes/:id - should return 1 pass', function (done) {
+		it('GET - /api/v1/admin/passes/:id - should return 1 pass', function(done) {
 			request(app)
 				.get('/api/v1/admin/passes/' + mocks.mockPass._id)
 				.expect('Content-Type', /json/)
@@ -100,14 +99,14 @@ describe('routes', function () {
 		});
 
 
-		xit('GET - /api/v1/register/:token - add device to db', function (done) {
+		xit('GET - /api/v1/register/:token - add device to db', function(done) {
 			request(app)
 				.get('/api/v1/register/' + mockDevice.token)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/push/:token - send push to device', function (done) {
+		it('GET - /api/v1/push/:token - send push to device', function(done) {
 			request(app)
 				.get('/api/v1/push/' + mockDevice.token)
 				.expect('Content-Type', /json/)
@@ -115,7 +114,7 @@ describe('routes', function () {
 		});
 
 
-		it('DELETE - /api/v1/admin/passes/:id - should remove pass', function (done) {
+		it('DELETE - /api/v1/admin/passes/:id - should remove pass', function(done) {
 			request(app)
 				.delete('/api/v1/admin/passes/' + mocks.mockPasses[0]._id)
 				.expect('Content-Type', /json/)
@@ -124,14 +123,14 @@ describe('routes', function () {
 
 	});
 
-	it('GET - /api/v1/admin/devices - should return devices', function (done) {
+	it('GET - /api/v1/admin/devices - should return devices', function(done) {
 		request(app)
 			.get('/api/v1/admin/devices')
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
 
-	xit('GET - /api/v1/admin/registrations - should return registrations', function (done) {
+	xit('GET - /api/v1/admin/registrations - should return registrations', function(done) {
 		request(app)
 			.get('/api/v1/admin/registrations')
 			.expect('Content-Type', /json/)
@@ -139,20 +138,20 @@ describe('routes', function () {
 	});
 
 
-	describe('DB Routes', function () {
+	describe('DB Routes', function() {
 
-		xit('GET - /api/v1/db/passbookmanager/_changes - should return db info', function (done) {
+		xit('GET - /api/v1/db/passbookmanager/_changes - should return db info', function(done) {
 			request(app)
 				.get('/api/v1/db/passbookmanager/_changes')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		xit('GET - /api/v1/db/passbookmanager/_all_docs - should return all docs', function (done) {
+		xit('GET - /api/v1/db/passbookmanager/_all_docs - should return all docs', function(done) {
 			request(app)
 				.get('/api/v1/db/passbookmanager/_all_docs')
 				.expect('Content-Type', /json/)
-				.expect(function (res) {
+				.expect(function(res) {
 
 					passes = res.body.rows;
 					console.log(passes)
@@ -160,7 +159,7 @@ describe('routes', function () {
 				.expect(200, done);
 		});
 
-		it('PUT - /api/v1/db/passbookmanager/:id - should create doc', function (done) {
+		it('PUT - /api/v1/db/passbookmanager/:id - should create doc', function(done) {
 			request(app)
 				.put('/api/v1/db/passbookmanager/' + mockPass._id)
 				.send(mockPass)
@@ -168,18 +167,18 @@ describe('routes', function () {
 				.expect(201, done);
 		});
 
-		it('GET - /api/v1/db/passbookmanager/:id - should get doc', function (done) {
+		it('GET - /api/v1/db/passbookmanager/:id - should get doc', function(done) {
 			request(app)
 				.get('/api/v1/db/passbookmanager/' + mockPass._id)
 				.expect('Content-Type', /json/)
-				.expect(function (res) {
+				.expect(function(res) {
 					assert(res.body._id === mockPass._id);
 					mockPass = res.body;
 				})
 				.expect(200, done);
 		});
 
-		it('DELETE - /api/v1/db/passbookmanager/:id - should remove doc', function (done) {
+		it('DELETE - /api/v1/db/passbookmanager/:id - should remove doc', function(done) {
 			request(app)
 				.delete('/api/v1/db/passbookmanager/' + mockPass._id + '?rev=' + mockPass._rev)
 				.expect('Content-Type', /json/)
@@ -189,17 +188,17 @@ describe('routes', function () {
 	});
 
 
-	describe('PassKit Web Service', function () {
+	describe('PassKit Web Service', function() {
 
-		beforeEach(function(){
-			console.log('Using Device', mockDevice);
-			console.log('Using Pass', mockPass);
+		beforeEach(function() {
+			//console.log('Using Device', mockDevice);
+			//console.log('Using Pass', mockPass);
 
-		})
-		describe('Devices', function () {
+		});
+		describe('Devices', function() {
 			it(
 				'POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register a new device for pass',
-				function (done) {
+				function(done) {
 					request(app)
 						.post(
 							//'/api/v1/devices/123456789/registrations/pass.jsapps.io/123456789'
@@ -215,7 +214,7 @@ describe('routes', function () {
 
 			it(
 				'POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - return existing device for pass',
-				function (done) {
+				function(done) {
 					request(app)
 						.post(
 							//'/api/v1/devices/123456789/registrations/pass.jsapps.io/123456789'
@@ -230,7 +229,7 @@ describe('routes', function () {
 						.expect(200, done);
 				});
 
-			it('GET - /api/v1/devices/:device_id/push/:token - send push to device', function (done) {
+			it('GET - /api/v1/devices/:device_id/push/:token - send push to device', function(done) {
 				request(app)
 					.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/push/' + mockDevice.token)
 					.set('Authorization', mockDevice.authorization)
@@ -239,7 +238,7 @@ describe('routes', function () {
 			});
 
 			it('GET - /api/v1/devices/:device_id/registrations/:pass_type_id - get serial numbers',
-				function (done) {
+				function(done) {
 					request(app)
 						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier)
 						.set('Authorization', mockDevice.authorization)
@@ -248,7 +247,7 @@ describe('routes', function () {
 				});
 
 			it('GET - /api/v1/devices/:device_id/registrations/:pass_type_id?passesUpdatedSince=tag - get serial numbers',
-				function (done) {
+				function(done) {
 					request(app)
 						.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier +
 							'?tag=now')
@@ -257,36 +256,38 @@ describe('routes', function () {
 						.expect(200, done);
 				});
 
-			it('GET - /api/v1/devices/:device_id/:registrations/:pass_type_id', function (done) {
+			it('GET - /api/v1/devices/:device_id/:registrations/:pass_type_id', function(done) {
 				request(app)
 					.get('/api/v1/devices/' + mockDevice.deviceLibraryIdentifier + '/registrations/' + mockPass.passTypeIdentifier)
 					.set('Authorization', mockDevice.authorization)
 					.expect('Content-Type', /json/)
-					.expect(function (res) {
+					.expect(function(res) {
 						assert.ok(res.body.serialNumbers);
 					})
 					.expect(200, done);
 			});
 
 			it('DELETE - /api/v1/devices/:device_id/:pass_type_id/:serial_number - un-register device',
-				function (done) {
+				function(done) {
 					request(app)
-						.delete(`/api/v1/devices/${mockDevice.deviceLibraryIdentifier}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`)
+						.delete(
+							`/api/v1/devices/${mockDevice.deviceLibraryIdentifier}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`
+						)
 						.set('Authorization', mockDevice.authorization)
 						//.expect('Content-Type', /json/)
 						.expect(200, done);
 				});
 		});
 
-		describe('Passes', function () {
+		describe('Passes', function() {
 
-			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function (done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function(done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
 					.expect(401, done);
 			});
 
-			it('GET - /api/v1/passes/:pass_type_id/:serial_number', function (done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number', function(done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber + '')
 					.set('Authorization', mockDevice.authorization)
@@ -295,7 +296,7 @@ describe('routes', function () {
 
 			});
 
-			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function (done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
 				request(app)
 					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/123456789?passesUpdatedSince=' + Date.now())
 					.set('Authorization', mockDevice.authorization)
@@ -305,7 +306,7 @@ describe('routes', function () {
 			});
 		});
 
-		it('POST - /api/v1/log - should store logs', function (done) {
+		it('POST - /api/v1/log - should store logs', function(done) {
 			this.slow(5000);
 			request(app)
 				.post('/api/v1/log')

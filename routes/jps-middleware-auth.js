@@ -1,18 +1,15 @@
 'use strict';
+var GITHUB_PRODUCTION_CLIENT_ID = '96943ce4c9b4f09bf98f';
+var GITHUB_PRODUCTION_CLIENT_SECRET = 'f9809160c20f1f57876924c015aa68283f1c4a4b';
+var GITHUB_DEV_CLIENT_ID = '7171ef010ffc067de767';
+var GITHUB_DEV_CLIENT_SECRET = '387c9cd85b4c48abcaa7547bf2865aaf922e4ac2';
+var GITHUB_CLIENT_ID = GITHUB_DEV_CLIENT_ID;
+var GITHUB_CLIENT_SECRET = GITHUB_DEV_CLIENT_SECRET;
 
-/*
-Client ID
-7171ef010ffc067de767
-Client Secret
-387c9cd85b4c48abcaa7547bf2865aaf922e4ac2
-
-*/
-//const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "96943ce4c9b4f09bf98f";
-//const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || "f9809160c20f1f57876924c015aa68283f1c4a4b";
-
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "7171ef010ffc067de767";
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || "387c9cd85b4c48abcaa7547bf2865aaf922e4ac2";
-
+if (process.env.NODE_ENV === 'production') {
+	GITHUB_CLIENT_ID = GITHUB_PRODUCTION_CLIENT_ID;
+	GITHUB_CLIENT_SECRET = GITHUB_PRODUCTION_CLIENT_SECRET;
+}
 
 const OAUTH_CALLBACK_URL = 'http://localhost:5001/auth/provider/callback';
 const OAUTH_CLIENT_SECRET = GITHUB_CLIENT_SECRET;
@@ -21,12 +18,10 @@ const OAUTH_AUTH_URL = 'https://github.com/login/oauth/authorize';
 const OAUTH_TOKEN_URL = 'https://github.com/login/oauth/access_token';
 
 const express = require('express');
-
 const expressValidator = require('express-validator');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;

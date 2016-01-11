@@ -53,7 +53,7 @@
 						ng-repeat="item in devices track by $index | orderBy:created_at:true"
 						id="{{item._id}}">
 						<td>{{item._id}}</td>
-						<td>{{item.device.pushToken}}</td>
+						<td>{{item}}</td>
 						<td>{{item.created_at}}</td>
 						<td></td>
 					</tr>
@@ -75,7 +75,7 @@
 					</thead>
 					<tbody>
 					<tr
-						ng-repeat="item in devices track by $index | orderBy:created_at:true"
+						ng-repeat="item in registrations track by $index | orderBy:created_at:true"
 						id="{{item._id}}">
 						<td>{{item._id}}</td>
 						<td>{{item.device}}</td>

@@ -3,52 +3,62 @@ var assert = require('assert');
 
 var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
 var p;
-var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+var program = mocks.program;
 var config = program.config.defaults;
 
 var mocks = require('../helpers/mocks');
-describe('Passes', function () {
-	it('should be defined', function (done) {
+describe('Passes', function() {
+	it('should be defined', function(done) {
 		assert(Passes);
 		done();
 	});
 
-	it('getPasses() - should return all passes', function (done) {
-		Passes.getPasses().then(function (resp) {
+	it('getPasses() - should return all passes', function(done) {
+		Passes.getPasses().then(function(resp) {
 			assert.ok(resp);
+			done();
+		}, function(err) {
+			assert.fail(err);
 			done();
 		});
 	});
 
-	it('add() - should add pass', function (done) {
-		Passes.add(mocks.mockPass).then(function (resp) {
+	it('add() - should add pass', function(done) {
+		Passes.add(mocks.mockPass).then(function(resp) {
 			assert.ok(resp);
+			done();
+		}, function(err) {
+			assert.fail(err);
 			done();
 		});
 
 	});
 
-	it('find(params) - should resolve pass that meets params', function (done) {
+	it('find(params) - should resolve pass that meets params', function(done) {
 		Passes.find({
 			//_id: 'mock-generic'
 			serialNumber: mocks.mockPass.serialNumber
-		}).then(function (resp) {
+		}).then(function(resp) {
 			console.log(resp);
 			assert.ok(resp.serialNumber === mocks.mockPass.serialNumber);
 			assert.ok(resp);
 			done();
+		}, function(err) {
+			assert.fail(err);
+			done();
 		});
 
 	});
 
-	it('find(params) - should reject promise pass that meets params', function (done) {
+	it('find(params) - should reject promise pass that meets params', function(done) {
 		Passes.find({
 			//_id: 'mock-generic'
 			serialNumber: 'none'
-		}).then(function (resp) {
+		}).then(function(resp) {
 			assert.fail(resp);
 			done();
-		}, function (err) {
+		}, function(err) {
 			assert.ok(err);
 			done();
 		});
@@ -56,9 +66,12 @@ describe('Passes', function () {
 
 	});
 
-	it('findBySerial(num) - should return pass by serial number', function (done) {
-		Passes.findPassBySerial(mocks.mockPass.serialNumber).then(function(resp){
+	it('findBySerial(num) - should return pass by serial number', function(done) {
+		Passes.findPassBySerial(mocks.mockPass.serialNumber).then(function(resp) {
 			assert.ok(resp);
+			done();
+		}, function(err) {
+			assert.fail(err);
 			done();
 		});
 

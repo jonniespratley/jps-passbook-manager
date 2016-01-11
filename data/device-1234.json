@@ -1,0 +1,13 @@
+{
+  "_id": "device-1234",
+  "pushToken": "8701addcd7c847b07776c95883b79243527c5b959b12f81658d74fe2c1938fd",
+  "deviceLibraryIdentifier": "1234",
+  "docType": "device",
+  "created_at": 1452538067497,
+  "updated_at": 1452538067497,
+  "type": "device",
+  "passTypeIdentifier": "pass.jsapps.io",
+  "authorization": "ApplePass vxwxd7J8AlNNFPS8k0a8FfUFtq0ewzFdc",
+  "serialNumber": "b383a693-7e26-4373-8d37-1c5f8c8e2953",
+  "_key": "device-1234"
+}

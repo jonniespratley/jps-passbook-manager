@@ -8,21 +8,20 @@ var assert = require('assert'),
 	os = require('os');
 
 
-//Test vars
-var testPassName = 'Test_Pass_';
-var testPassDir = path.resolve(__dirname, '../../.tmp/');
-
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
-//var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+
 var config = program.config.defaults;
-var db = program.db;
-var mockDevice = mocks.mockDevice;
-var mockPass = mocks.mockPass;
+var CouchDB = require(path.resolve(__dirname, '../../lib/adapters/db-couchdb.js'));
+
+var db = new CouchDB();
 
 
 
-describe('db', function() {
+describe('couchdb', function() {
+	var mockDevice = mocks.mockDevice;
+	var mockPass = mocks.mockPass;
+
 	it('should be defined', function(done) {
 		assert(db);
 		done();
@@ -36,13 +35,15 @@ describe('db', function() {
 		done();
 	});
 
-
 	it('should create file with id', function(done) {
 		db.put({
 			_id: 'test-file',
 			name: 'test'
 		}).then(function(resp) {
 			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
 			done();
 		});
 	});
@@ -53,6 +54,9 @@ describe('db', function() {
 		}).then(function(resp) {
 			assert(resp);
 			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
 		});
 	});
 
@@ -60,10 +64,13 @@ describe('db', function() {
 		db.get('test-file').then(function(resp) {
 			assert(resp);
 			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
 		});
 	});
 
-	it('should find file', function(done) {
+	xit('should find file', function(done) {
 		db.find({
 			name: 'test-file'
 		}).then(function(resp) {
@@ -79,7 +86,7 @@ describe('db', function() {
 		});
 	});
 
-	it('should save array of docs', function(done) {
+	xit('should save array of docs', function(done) {
 		db.saveAll([
 			mockDevice, mockPass
 		]).then(function(resp) {
@@ -88,7 +95,7 @@ describe('db', function() {
 		});
 	});
 
-	it('should find item by params', function(done) {
+	xit('should find item by params', function(done) {
 		db.find({
 			serialNumber: mockPass.serialNumber
 		}).then(function(resp) {

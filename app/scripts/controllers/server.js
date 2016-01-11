@@ -1,7 +1,8 @@
 'use strict';
-jpsPassbookManagerApp.controller('ServerCtrl', function($scope, logs, devices, Api) {
+jpsPassbookManagerApp.controller('ServerCtrl', function($scope, logs, devices, registrations, Api) {
 
 	$scope.logs = logs;
+	$scope.registrations = registrations;
 	$scope.devices = devices;
 	$scope.order = 'created_at';
 	$scope.sort = true;
