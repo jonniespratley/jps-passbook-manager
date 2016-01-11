@@ -66,6 +66,7 @@
     "load-grunt-tasks": "^2.0.0",
     "matchdep": "~0.1.1",
     "mocha": "^2.1.0",
+    "rimraf": "^2.5.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"
   },

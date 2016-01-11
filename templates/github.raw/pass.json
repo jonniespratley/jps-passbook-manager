@@ -23,7 +23,13 @@
   "logoText": "Toy Town",
   "foregroundColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(197, 31, 31)",
+
   "generic": {
+    "headerFields": [{
+      "key": "headerfield",
+      "label": "Header Field",
+      "value": "Value"
+    }],
     "primaryFields": [{
       "key": "member",
       "value": "Johnny Appleseed"

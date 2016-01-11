@@ -12,16 +12,16 @@ var Pass = require(path.resolve(__dirname, './lib/models/pass.js'));
 //var Passes = require(path.resolve(__dirname, './lib/models/passes.js'));
 var Device = require(path.resolve(__dirname, './lib/models/device.js'));
 var child_process = require('child_process');
-//const SignPass = require('./lib/signpass')();
+const SignPass = require('./lib/signpass');
 
 var output_url = './tmp';
 var wwdr_url = './certificates/wwdr-authority.pem';
-var cert_url = './certificates/passbookmanager-cert.p12';
+var cert_url = './certificates/pass-passbookmanager-cert.p12';
 var cert_pass = 'fred';
-var pass_url = '/Users/jps/Github/jps-passbook-manager/data/passes/1d6d844b-77ea-47b2-9414-2e9d0ea414f5.raw';
+var pass_url = '/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw';
 
-//var signpass = new SignPass(pass_url, cert_url, cert_pass, output_url);
-//signpass.sign_pass();
+var signpass = new SignPass(pass_url, cert_url, cert_pass, output_url);
+signpass.sign_pass();
 
 
 var logger = utils.getLogger('scratch');
@@ -47,10 +47,10 @@ logger('cmd2', cmd2);
 logger('cmd3', cmd3);
 logger('cmd4', cmd4);
 
-child_process.execSync(cmd1);
+//child_process.execSync(cmd1);
 //child_process.execSync(cmd2);
 //child_process.execSync(cmd3);
-child_process.execSync(cmd4);
+//child_process.execSync(cmd4);
 
 
 
@@ -62,7 +62,7 @@ var cmds =
 	openssl s_client -connect gateway.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}
 `;
 
-console.log(cmds);
+//console.log(cmds);
 
 
 const GITHUB_USERS = [

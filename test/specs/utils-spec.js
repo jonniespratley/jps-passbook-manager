@@ -3,17 +3,47 @@ const assert = require('assert');
 const path = require('path');
 const utils = require(path.resolve(__dirname, '../../lib/utils'));
 
+
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
+var Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))
+var jpsPassbook = new Passbook(program);
+
 describe('Utils', function (done) {
 	it('should be defined', function (done) {
 		assert(utils);
 		done();
 	});
-	it('should create Github Pass', function (done) {
+
+	it('should return Github Pass', function (done) {
 		utils.githubToPass('jonniespratley', function (err, user) {
 			assert(user);
 			done();
 		});
 	});
+
+	it('should create Github Pass', function (done) {
+
+		const GITHUB_USERS = [
+			//'sindresorhus',
+			//'eddiemonge',
+			//'addyosmani',
+			'jonniespratley'
+		];
+
+		GITHUB_USERS.forEach(function (n) {
+			utils.githubToPass(n, function (err, user) {
+			assert(user, 'has user');
+				jpsPassbook.createPass(user, true, function (err, resp) {
+					assert(resp, 'has pass');
+					done();
+				});
+			});
+
+		});
+
+	});
+
 	it('checksum() - should create a checksum hash', function (done) {
 		var hash1 = utils.checksum('This is my test text');
 		var hash1_expected = 'e53815e8c095e270c6560be1bb76a65d';

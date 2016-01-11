@@ -109,6 +109,13 @@ module.exports = function(program, app) {
 			res.status(400).json(err);
 		});
 	});
+	router.get('/admin/find?', function(req, res) {
+		program.db.allDocs(req.query).then(function(resp) {
+			res.status(200).json(resp);
+		}).catch(function(err) {
+			res.status(400).json(err);
+		});
+	});
 
 
 	// TODO: Get tokens

@@ -2,6 +2,12 @@
   "_id": "pass-jonniespratley",
   "type": "github",
   "generic": {
+    "headerFields": [{
+      "key": "headerfield",
+      "label": "Header Field",
+      "value": "Value"
+    }],
+
     "primaryFields": [{
       "key": "name",
       "label": "Name",

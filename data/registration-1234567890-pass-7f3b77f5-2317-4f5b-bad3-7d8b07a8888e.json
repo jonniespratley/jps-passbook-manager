@@ -1,0 +1,12 @@
+{
+  "_id": "registration-1234567890-pass-7f3b77f5-2317-4f5b-bad3-7d8b07a8888e",
+  "type": "registration",
+  "docType": "registration",
+  "device_id": "1234567890",
+  "pass_id": "pass-7f3b77f5-2317-4f5b-bad3-7d8b07a8888e",
+  "auth_token": "ApplePass 123456789",
+  "push_token": "ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2",
+  "created_at": 1452470719777,
+  "updated_at": 1452470719777,
+  "_key": "registration-1234567890-pass-7f3b77f5-2317-4f5b-bad3-7d8b07a8888e"
+}

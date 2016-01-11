@@ -116,10 +116,11 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			templateUrl: './views/server.html',
 			controller: 'ServerCtrl',
 			resolve: {
+
 				logs: function(Api) {
 					return Api.request({
 						method: 'GET',
-						url: '/api/v1/admin/logs'
+						url: '/api/v1/admin/find?docType=logs'
 					}).then(function(resp) {
 						return resp.data;
 					});
@@ -127,7 +128,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				devices: function(Api) {
 					return Api.request({
 						method: 'GET',
-						url: '/api/v1/admin/devices'
+						url: '/api/v1/admin/find?docType=devices'
 					}).then(function(resp) {
 						return resp.data;
 					});

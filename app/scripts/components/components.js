@@ -1,160 +1,156 @@
 /* ======================[ @TODO: Inline Editable ]====================== */
 jpsPassbookManagerApp.directive('ngEnter', function() {
-	return function(scope, elm, attrs) {
-		elm.bind('keypress', function(e) {
-			if (e.charCode === 13)
-				scope.$apply(attrs.ngEnter);
-		});
-	};
-});
-
-
-jpsPassbookManagerApp.directive('ngColorpicker', function() {
-	return {
-		restrict: 'A',
-		replace: true,
-		transclude: false,
-		scope: {
-			id: '@',
-			ngModel: '@',
-			title: '@',
-			image: '@'
-		},
-		template: '<input class="colorpicker" type="text" id="{{id}}-colorpicker"/>',
-		link: function postLink(scope, element, attrs) {
-			angular.element('.colorpicker').colorpicker();
-			console.log('function');
-		}
-	};
-});
-jpsPassbookManagerApp.directive('ngBarcode', function() {
-	return {
-		restrict: 'A',
-		replace: true,
-		transclude: false,
-		scope: {
-			id: '@',
-			ngModel: '@',
-			text: '@',
-			image: '@'
-		},
-		template: '<div class="qrcode"></div>',
-		link: function postLink(scope, element, attrs) {
-
-			$(element)
-
-			.qrcode({
-				width: 100,
-				height: 100,
-				text: scope.text
+		return function(scope, elm, attrs) {
+			elm.bind('keypress', function(e) {
+				if (e.charCode === 13)
+					scope.$apply(attrs.ngEnter);
 			});
-			console.log('function');
-		}
-	};
-});
-
-jpsPassbookManagerApp.directive('myTable', function() {
-	return function(scope, element, attrs) {
-
-		// apply DataTable options, use defaults if none specified by user
-		var options = {};
-		if (attrs.myTable.length > 0) {
-			options = scope.$eval(attrs.myTable);
-		} else {
-			options = {
-				"bStateSave": true,
-				"iCookieDuration": 2419200,
-				/* 1 month */
-				"bJQueryUI": true,
-				"bPaginate": false,
-				"bLengthChange": false,
-				"bFilter": false,
-				"bInfo": false,
-				"bDestroy": true
-			};
-		}
-
-		// Tell the dataTables plugin what columns to use
-		// We can either derive them from the dom, or use setup from the controller
-		var explicitColumns = [];
-		element.find('th').each(function(index, elem) {
-			explicitColumns.push($(elem).text());
-		});
-		if (explicitColumns.length > 0) {
-			options["aoColumns"] = explicitColumns;
-		} else if (attrs.aoColumns) {
-			options["aoColumns"] = scope.$eval(attrs.aoColumns);
-		}
-
-		// aoColumnDefs is dataTables way of providing fine control over column config
-		if (attrs.aoColumnDefs) {
-			options["aoColumnDefs"] = scope.$eval(attrs.aoColumnDefs);
-		}
-
-		if (attrs.fnRowCallback) {
-			options["fnRowCallback"] = scope.$eval(attrs.fnRowCallback);
-		}
-
-		// apply the plugin
-		var dataTable = element.dataTable(options);
-
-		// watch for any changes to our data, rebuild the DataTable
-		scope.$watch(attrs.aaData, function(value) {
-			var val = value || null;
-			if (val) {
-				dataTable.fnClearTable();
-				dataTable.fnAddData(scope.$eval(attrs.aaData));
+		};
+	})
+	.directive('ngColorpicker', function() {
+		return {
+			restrict: 'A',
+			replace: true,
+			transclude: false,
+			scope: {
+				id: '@',
+				ngModel: '@',
+				title: '@',
+				image: '@'
+			},
+			template: '<input class="colorpicker" type="text" id="{{id}}-colorpicker"/>',
+			link: function postLink(scope, element, attrs) {
+				angular.element('.colorpicker').colorpicker();
+				console.log('function');
 			}
-		});
-	};
-});
-jpsPassbookManagerApp.directive('inlineEdit', function() {
-	return {
-		// can be in-lined or async loaded by xhr
-		// or inlined as JS string (using template property)
-		templateUrl: 'componentTpl.html',
-		scope: {
-			model: 'accessor'
-		}
-	};
-});
+		};
+	})
+	.directive('ngBarcode', function() {
+		return {
+			restrict: 'A',
+			replace: true,
+			transclude: false,
+			scope: {
+				id: '@',
+				ngModel: '@',
+				text: '@',
+				image: '@'
+			},
+			template: '<div class="qrcode"></div>',
+			link: function postLink(scope, element, attrs) {
 
-jpsPassbookManagerApp.directive('contenteditable', function() {
-	return {
-		require: 'ngModel',
-		link: function(scope, elm, attrs, ctrl) {
-			// view -> model
-			elm.bind('blur', function() {
-				scope.$apply(function() {
-					ctrl.$setViewValue(elm.html());
+				$(element)
+
+				.qrcode({
+					width: 100,
+					height: 100,
+					text: scope.text
 				});
+				console.log('function');
+			}
+		};
+	})
+	.directive('myTable', function() {
+		return function(scope, element, attrs) {
+
+			// apply DataTable options, use defaults if none specified by user
+			var options = {};
+			if (attrs.myTable.length > 0) {
+				options = scope.$eval(attrs.myTable);
+			} else {
+				options = {
+					"bStateSave": true,
+					"iCookieDuration": 2419200,
+					/* 1 month */
+					"bJQueryUI": true,
+					"bPaginate": false,
+					"bLengthChange": false,
+					"bFilter": false,
+					"bInfo": false,
+					"bDestroy": true
+				};
+			}
+
+			// Tell the dataTables plugin what columns to use
+			// We can either derive them from the dom, or use setup from the controller
+			var explicitColumns = [];
+			element.find('th').each(function(index, elem) {
+				explicitColumns.push($(elem).text());
 			});
+			if (explicitColumns.length > 0) {
+				options["aoColumns"] = explicitColumns;
+			} else if (attrs.aoColumns) {
+				options["aoColumns"] = scope.$eval(attrs.aoColumns);
+			}
 
-			// model -> view
-			ctrl.render = function(value) {
-				elm.html(value);
-			};
+			// aoColumnDefs is dataTables way of providing fine control over column config
+			if (attrs.aoColumnDefs) {
+				options["aoColumnDefs"] = scope.$eval(attrs.aoColumnDefs);
+			}
 
-			// load init value from DOM
-			ctrl.$setViewValue(elm.html());
+			if (attrs.fnRowCallback) {
+				options["fnRowCallback"] = scope.$eval(attrs.fnRowCallback);
+			}
 
-			elm.bind('keydown', function(event) {
-				console.log("keydown " + event.which);
-				var esc = event.which == 27,
-					el = event.target;
+			// apply the plugin
+			var dataTable = element.dataTable(options);
 
-				if (esc) {
-					console.log("esc");
-					ctrl.$setViewValue(elm.html());
-					el.blur();
-					event.preventDefault();
+			// watch for any changes to our data, rebuild the DataTable
+			scope.$watch(attrs.aaData, function(value) {
+				var val = value || null;
+				if (val) {
+					dataTable.fnClearTable();
+					dataTable.fnAddData(scope.$eval(attrs.aaData));
 				}
-
 			});
+		};
+	})
+	.directive('inlineEdit', function() {
+		return {
+			// can be in-lined or async loaded by xhr
+			// or inlined as JS string (using template property)
+			templateUrl: 'componentTpl.html',
+			scope: {
+				model: 'accessor'
+			}
+		};
+	})
+	.directive('contenteditable', function() {
+		return {
+			require: 'ngModel',
+			link: function(scope, elm, attrs, ctrl) {
+				// view -> model
+				elm.bind('blur', function() {
+					scope.$apply(function() {
+						ctrl.$setViewValue(elm.html());
+					});
+				});
 
-		}
-	};
-});
+				// model -> view
+				ctrl.render = function(value) {
+					elm.html(value);
+				};
+
+				// load init value from DOM
+				ctrl.$setViewValue(elm.html());
+
+				elm.bind('keydown', function(event) {
+					console.log("keydown " + event.which);
+					var esc = event.which == 27,
+						el = event.target;
+
+					if (esc) {
+						console.log("esc");
+						ctrl.$setViewValue(elm.html());
+						el.blur();
+						event.preventDefault();
+					}
+
+				});
+
+			}
+		};
+	})
 
 /**
  * Custom Tabs directive
@@ -170,7 +166,7 @@ jpsPassbookManagerApp.directive('contenteditable', function() {
 	 </pane>
  </tabs>
  */
-jpsPassbookManagerApp.directive('tabs', function() {
+.directive('tabs', function() {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -192,8 +188,9 @@ jpsPassbookManagerApp.directive('tabs', function() {
 			}
 		},
 		template: '<div class="tabbable">' + '<ul class="nav nav-tabs">' +
-			'<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">' +
-			'<a href="" ng-click="select(pane)"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' + '</li>' + '</ul>' +
+			'<li ng-repeat="pane in panes" class="nav-item" ng-class="{active:pane.selected}">' +
+			'<a href="" ng-click="select(pane)" class="nav-link"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' +
+			'</li>' + '</ul>' +
 			'<div class="tab-content" ng-transclude></div>' + '</div>',
 		replace: true
 	};
@@ -260,7 +257,7 @@ jpsPassbookManagerApp.directive('tabs', function() {
 			'</a><div class="media-body"><h4 class="media-heading">{{title}}</h4><p>{{body}}</p><div ng-transclude></div></div></div>'
 
 	};
-});
+})
 
 /**
  * @file all.js
@@ -268,7 +265,7 @@ jpsPassbookManagerApp.directive('tabs', function() {
  *
  * Feature Item
  */
-jpsPassbookManagerApp.directive('featureitem', function() {
+.directive('featureitem', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -282,7 +279,7 @@ jpsPassbookManagerApp.directive('featureitem', function() {
 		},
 		template: '<div class="feature-item"><div class="feature-thumb pull-left"><img ng-src="{{image}}" class="feature-img" /></div><h3 class="ng-binding"><i class="feature-icon icon-{{icon}}"></i> {{title}}</h3><p class="description" ng-transclude></p></div>'
 	};
-});
+})
 
 /**
  * @file all.js
@@ -290,64 +287,57 @@ jpsPassbookManagerApp.directive('featureitem', function() {
  *
  * Feature Item
  */
-jpsPassbookManagerApp.directive('featureObject', function() {
-	return {
-		restrict: 'E',
-		replace: true,
-		transclude: true,
-		scope: {
-			title: '@',
-			href: '@',
-			image: '@',
-			icon: '@',
-			body: '@'
-		},
-		template: '<div class="feature-item feature-object"><div class="feature-thumb pull-left"><img ng-src="{{image}}" class="feature-img" /></div><h3 class="ng-binding">{{title}}</h3><p class="description" ng-transclude></p></div>'
-	};
-});
-/**
- *
- * @name - FormItem
- * @comment - This creates a form control group.
- * @usage
- * <formitem title="Label:" type="text">[Contents]</box>
- *
- */
-jpsPassbookManagerApp.directive('formitem', function() {
-	return {
-		restrict: 'E',
-		replace: true,
-		transclude: true,
-		scope: {
-			title: '@',
-			name: '@',
-			value: '@',
-			icon: '@',
-			type: '@',
-			model: '@',
-			help: '@',
-			placeholder: '@'
-		},
-		compile: function compile(tElement, tAttrs, transclude) {
-			return {
-				pre: function preLink(scope, iElement, iAttrs, controller) {
-					//	console.log('pre', scope, iElement, iAttrs);
-				},
-				post: function postLink(scope, iElement, iAttrs, controller) {
-					//	console.log('post', scope, iElement, iAttrs);
-				}
-			};
-		},
-		link: function postLink(scope, iElement, iAttrs) {
-			//console.log('postLink', scope, iElement, iAttrs);
-		},
-		template: '<div class="form-group">' +
-			'<div class="control-label col-sm-3"><label for="{{name}}">{{title}} </label></div>' +
-			'<div class="col-sm-9" ng-transclude>' + '</div>' + '</div>'
-	};
-});
+.directive('featureObject', function() {
+		return {
+			restrict: 'E',
+			replace: true,
+			transclude: true,
+			scope: {
+				title: '@',
+				href: '@',
+				image: '@',
+				icon: '@',
+				body: '@'
+			},
+			template: '<div class="feature-item feature-object"><div class="feature-thumb pull-left"><img ng-src="{{image}}" class="feature-img" /></div><h3 class="ng-binding">{{title}}</h3><p class="description" ng-transclude></p></div>'
+		};
+	})
+	/**
+	 *
+	 * @name - FormItem
+	 * @comment - This creates a form control group.
+	 * @usage
+	 * <formitem title="Label:" type="text">[Contents]</box>
+	 *
+	 */
+	.directive('formitem', function() {
+		return {
+			restrict: 'E',
+			replace: true,
+			transclude: true,
+			scope: {
+				title: '@',
+				name: '@',
+				value: '@',
+				icon: '@',
+				type: '@',
+				model: '@',
+				help: '@',
+				placeholder: '@'
+			},
 
-jpsPassbookManagerApp.directive('moduleForm', function() {
+			link: function postLink(scope, element, iAttrs) {
+				//console.log('postLink', scope, iElement, iAttrs);
+				element.find('input').addClass('form-control');
+
+			},
+			template: '<fieldset class="form-group">' +
+				'<div class="control-label col-sm-3"><label for="{{name}}">{{title}} </label></div>' +
+				'<div class="col-sm-9" ng-transclude>' + '</div>' + '</fieldset>'
+		};
+	})
+
+.directive('moduleForm', function() {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -365,7 +355,7 @@ jpsPassbookManagerApp.directive('moduleForm', function() {
 			'<div class="control-label"><label for="{{name}}">{{title}} </label></div>' +
 			'<div class="controls" ng-transclude></div>' + '</div>'
 	};
-});
+})
 
 /**
  * @name - Feature Row
@@ -373,7 +363,7 @@ jpsPassbookManagerApp.directive('moduleForm', function() {
  * @usage
  * <featureRow title="Label:" type="text">[Contents]</featureRow>
  */
-jpsPassbookManagerApp.directive('featureRow', function() {
+.directive('featureRow', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -388,13 +378,13 @@ jpsPassbookManagerApp.directive('featureRow', function() {
 		template: '<div class="masthead  row-fluid feature-row"><div class="span8"><h2>{{title}}</h2><p>{{body}}</p><div class="feature-content" ng-transclude></div></div><div class="span4"><img ng-src="{{image}}" alt="{{title}}" style="height:200px; width:320px;" class="feature-image"/></div></div>'
 
 	};
-});
+})
 
 /**
  * Blank Slate directive for displaying a form for creating a record when no
  * reocrds are found.
  */
-jpsPassbookManagerApp.directive('blankslate', function() {
+.directive('blankslate', function() {
 	return {
 		restrict: 'E',
 		replace: true,
@@ -410,12 +400,12 @@ jpsPassbookManagerApp.directive('blankslate', function() {
 		template: '<div class="well blank-slate"><p>{{body}}</p><a class="btn btn-primary" data-toggle="modal" href="#{{modal}}"><i class="icon-plus icon-white"></i> {{title}}</a></div>'
 
 	};
-});
+})
 
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('portlet', function() {
+.directive('portlet', function() {
 	return {
 		restrict: 'E',
 		// This HTML will replace the zippy directive.
@@ -453,12 +443,12 @@ jpsPassbookManagerApp.directive('thumbox', function() {
 			'<input type="checkbox" name="data[Smartapp][theme]" value="{{theme.id}}" class="theme-radio" ng-change="themeClick()" ng-model="smartapp.theme"/>' +
 			'</div> </a>' + '</li>' + '</ul>'
 	};
-});
+})
 
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('widget', function() {
+.directive('widget', function() {
 	return {
 
 		restrict: 'E',
@@ -501,12 +491,12 @@ jpsPassbookManagerApp.directive('widget', function() {
 			toggle();
 		}
 	};
-});
+})
 
 /**
  * @TODO - Name, docs, usage
  */
-jpsPassbookManagerApp.directive('uploader', function() {
+.directive('uploader', function() {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -553,7 +543,7 @@ jpsPassbookManagerApp.directive('uploader', function() {
 
 		}
 	};
-});
+})
 
 
 /* @TODO: Mobile Directives */
