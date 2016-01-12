@@ -20,7 +20,7 @@ var mockPass = new Pass({
 
 exports.mockPass = mockPass;
 exports.mockPasses = [
-	
+
 	new Pass({
 		_id: 'mock-boardingpass',
 		type: 'boardingPass'

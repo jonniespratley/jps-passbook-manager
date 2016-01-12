@@ -28,12 +28,12 @@ describe('SignPass', function (done) {
 		assert(signpass);
 		done();
 	});
+
 	it('should sign_pass', function (done) {
 		signpass.sign_pass(function(err, file){
 			assert(file);
 			done();
 		});
-
 	});
 
 });

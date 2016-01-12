@@ -116,7 +116,7 @@ describe('routes', function() {
 
 		it('DELETE - /api/v1/admin/passes/:id - should remove pass', function(done) {
 			request(app)
-				.delete('/api/v1/admin/passes/' + mocks.mockPasses[0]._id)
+				.delete('/api/v1/admin/passes/' + mocks.mockPass._id)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
