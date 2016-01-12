@@ -18,8 +18,8 @@ var config = program.config.defaults;
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
-xdescribe('redis', function() {
-	var db = new RedisDB();
+describe('redis', function() {
+  var db = new RedisDB();
 
   it('should be defined', function(done) {
     assert(db);

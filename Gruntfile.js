@@ -96,7 +96,8 @@ module.exports = function(grunt) {
 				'test/temp',
 				'<%= yeoman.dist %>/*'
 			],
-			server: '.tmp'
+			server: '.tmp',
+			data: 'data'
 		},
 		jshint: {
 			options: {

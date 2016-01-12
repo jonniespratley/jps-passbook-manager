@@ -15,30 +15,25 @@ var testPass = mockPass;
 var testPassfile = '';
 var rawPassFolder = '';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
-
 var passFiles = [];
 
-
-
-xdescribe('jps-passbook', function() {
+describe('jps-passbook', function() {
 	it('createPass() - should create each pass type', function(done) {
 		this.timeout(5000);
 		var len = mocks.mockPasses.length;
 		mocks.mockPasses.forEach(function(pass) {
-			jpsPassbook.createPass(pass, true, function(data) {
-				//	console.log('pass created', data);
+			jpsPassbook.createPass(pass, function(data) {
 				passFiles.push(data);
 				assert.ok(data._id);
 				len--;
 			});
 		});
 		done();
-
 	});
 
 	it('createPass() - should create a pass .raw and sign into a .pkpass', function(done) {
 		console.log(passFiles);
-		jpsPassbook.createPass(mockPass, true, function(err, p) {
+		jpsPassbook.createPass(mockPass, function(err, p) {
 			//assert(fs.existsSync(p.rawFilename));
 			assert.ok(p);
 			done();
