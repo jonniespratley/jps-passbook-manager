@@ -1,0 +1,11 @@
+{
+  "_id": "log-2",
+  "docType": "log",
+  "data": {
+    "logs": [
+      "test log"
+    ]
+  },
+  "created_at": 1452190975190,
+  "_key": "log-2"
+}

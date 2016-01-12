@@ -1,0 +1,18 @@
+{
+  "_id": "device-device-fbbb0ae201d1378b639f96f9381c3675-8ca8ff74-267c-470c-b1e1-6f8909606268-8ca8ff74-267c-470c-b1e1-6f8909606268",
+  "pass": null,
+  "deviceLibraryIdentifier": "device-fbbb0ae201d1378b639f96f9381c3675-8ca8ff74-267c-470c-b1e1-6f8909606268",
+  "serialNumber": "8ca8ff74-267c-470c-b1e1-6f8909606268",
+  "docType": "device",
+  "device_id": null,
+  "push_token": null,
+  "pass_type_id": null,
+  "serial_number": null,
+  "created_at": 1452191016664,
+  "updated_at": 1452191016664,
+  "type": "registration",
+  "passTypeIdentifier": "pass.passbookmanager.io",
+  "authorization": "8ca8ff74-267c-470c-b1e1-6f8909606268",
+  "pushToken": "ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2",
+  "_key": "device-device-fbbb0ae201d1378b639f96f9381c3675-8ca8ff74-267c-470c-b1e1-6f8909606268-8ca8ff74-267c-470c-b1e1-6f8909606268"
+}

@@ -19,11 +19,19 @@ var logger = program.getLogger('server');
 logger('initialized');
 logger('env', process.env);
 
+
+
 // configure Express
 var app = express();
-app.use('/', serveStatic(path.resolve(__dirname, './app/bower_components')));
-app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
+
+
+app.use('/public', serveStatic(path.resolve(__dirname, './public')));
+app.use('/public', serveStatic(path.resolve(__dirname, './bower_components')));
 app.use('/public', serveStatic(path.resolve(__dirname, config.publicDir)));
+
+
+app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
+
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 program.app = app;

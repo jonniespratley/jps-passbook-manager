@@ -2,12 +2,12 @@
 <nav class="navbar  navbar-dark bg-inverse navbar-fixed-top">
   <div class="nav navbar-nav">
     <a class="navbar-brand" href="/index">
-      <i class="fa fa-file"></i>
-        pm
+      <i class="fa fa-file-o"></i>
+        Pass Manager
     </a>
   <div class="pull-right">
     <% if (!user) { %>
-      <a class="nav-item nav-link" href="/login">Log In</a>
+      <!--a class="nav-item nav-link" href="/login">Log In</a-->
     <% } else { %>
       <a class="nav-item nav-link" href="/account"><%= user.username %></a>
       <a class="nav-item nav-link" href="/logout">Log Out</a>

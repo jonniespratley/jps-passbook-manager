@@ -1,53 +1,51 @@
-
-
 <% include ./partials/head %>
-<body class="container">
-  <header>
+<body>
+
+  <style media="screen">
+    .card-img{
+      margin-right: 20px;
+      height: 80px;
+    }
+  </style>
+
       <% include ./partials/header %>
-  </header>
+
   <main>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
 
-        <div class="card">
-  <img class="card-img-top" data-src="..." alt="Card image cap">
-  <div class="card-block">
-    <h4 class="card-title">Card title</h4>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">Cras justo odio</li>
-    <li class="list-group-item">Dapibus ac facilisis in</li>
-    <li class="list-group-item">Vestibulum at eros</li>
-  </ul>
-  <div class="card-block">
-    <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
-  </div>
-</div>
+          <div class="card">
+            <div class="card-block">
+              <img class="card-img pull-left"
+                src="<%= user.data.avatar_url %>"
+                alt="<%= user.username %>">
 
-        <div class="media">
-          <div class="media-left">
-            <a href="#">
+                <h4 class="card-title"><%= user.displayName %></h4>
+                <p class="card-text">
+                  <%= user.data.location %><br/>
+                  <a href="<%= user.data.blog %>" title="Blog" target="_blank"><%= user.data.blog %></a>
+                </p>
+            </div>
 
-              <img class="img-thumbnail media-object" src="<%= user.data.avatar_url %>" alt="<%= user.username %>" />
-            </a>
+            <ul class="list-group list-group-flush">
+              
+              <li class="list-group-item"><%= user.data.followers %> Followers</li>
+              <li class="list-group-item"><%= user.data.public_repos %> Repos</li>
+              <li class="list-group-item"><%= user.data.public_gists %> Gists</li>
+            </ul>
+
+            <div class="card-block">
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div>
           </div>
-          <div class="media-body">
-            <h3 class="media-heading"><%= user.displayName %></h3>
-            <p>ID: <%= user.id %></p>
-            <p>Username: <%= user.username %></p>
-            <p>Email: <%= user.emails[0].value %></p>
-          </div>
+
+
         </div>
-
-
-
       </div>
     </div>
-  </div>
   </main>
-  <footer><% include ./partials/footer %></footer>
+
 </body>
 </html>

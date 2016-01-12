@@ -1,0 +1,88 @@
+{
+  "_id": "pass-jonniespratley",
+  "docType": "pass",
+  "type": "github",
+  "lastUpdated": 1452633492564,
+  "logoText": "Github",
+  "description": "Jonnie Spratley Github",
+  "formatVersion": 1,
+  "organizationName": "GE Digital",
+  "passTypeIdentifier": "pass.passbookmanager.io",
+  "serialNumber": "306133ff-8b87-4743-ab92-3dde2c6f0b26",
+  "teamIdentifier": "USE9YUYDFH",
+  "authenticationToken": "306133ff-8b87-4743-ab92-3dde2c6f0b26",
+  "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
+  "voided": false,
+  "barcode": {
+    "message": "123456789",
+    "format": "PKBarcodeFormatQR",
+    "messageEncoding": "iso-8859-1"
+  },
+  "beacons": [],
+  "locations": [
+    {
+      "longitude": -122,
+      "latitude": 37,
+      "relevantText": "Nearby"
+    }
+  ],
+  "maxDistance": 0,
+  "barcodes": [],
+  "groupingIdentifier": "",
+  "labelColor": "rgb(0, 0, 0)",
+  "foregroundColor": "rgb(72, 72, 72)",
+  "backgroundColor": "rgb(183, 180, 183)",
+  "suppressStripShine": false,
+  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
+  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/pass-jonniespratley.pkpass",
+  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
+  "generic": {
+    "primaryFields": [
+      {
+        "key": "name",
+        "label": "Name",
+        "value": "Jonnie Spratley"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "username",
+        "label": "Username"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "user_following",
+        "label": "Following",
+        "value": 5
+      },
+      {
+        "label": "Followers",
+        "key": "user_followers",
+        "value": 32
+      },
+      {
+        "label": "Repos",
+        "key": "repos",
+        "value": 81
+      },
+      {
+        "label": "Gists",
+        "key": "gists",
+        "value": 7
+      },
+      {
+        "label": "Location",
+        "key": "location",
+        "value": "San Ramon, CA"
+      },
+      {
+        "label": "Blog",
+        "key": "blog",
+        "value": "http://jonniespratley.me"
+      }
+    ]
+  },
+  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "_key": "pass-jonniespratley"
+}

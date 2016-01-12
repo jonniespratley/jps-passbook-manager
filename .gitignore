@@ -1,7 +1,9 @@
 temp
 dist
-node_modules/
-app/bower_components
+node_modules
+bower_components
+app/bower_components/
+
 app/components
 .DS_Store
 db
