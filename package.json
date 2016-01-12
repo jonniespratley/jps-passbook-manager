@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "scripts": {
     "postinstall": "bower install",
-    "poststart": "grunt build",
+    "prestart": "grunt",
     "start": "node server",
     "test": "gulp test",
     "watch": "nodemon -w routes/ -w lib/ server.js"
