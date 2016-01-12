@@ -24,7 +24,13 @@ gulp.task('test', ['pre-test'], function() {
     .pipe(mocha({
       read: false
     }))
-    .pipe(istanbul.writeReports());
+    .pipe(istanbul.writeReports())
+    .once('error', function() {
+      process.exit(1);
+    })
+    .once('end', function() {
+      process.exit();
+    });
 });
 
 

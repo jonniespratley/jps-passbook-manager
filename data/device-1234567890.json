@@ -3,11 +3,11 @@
   "pushToken": "ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2",
   "deviceLibraryIdentifier": "1234567890",
   "docType": "device",
-  "created_at": 1452579351101,
-  "updated_at": 1452579351101,
+  "created_at": 1452580347600,
+  "updated_at": 1452580347600,
   "type": "device",
   "passTypeIdentifier": "pass.passbookmanager.io",
   "authorization": "ApplePass 123456789",
-  "serialNumber": "ff701adb-5199-4e40-b716-1097c9ed4d09",
+  "serialNumber": "123456789",
   "_key": "device-1234567890"
 }

@@ -14,13 +14,13 @@ var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
 var mockPass = new Pass({
 	type: 'generic',
-	//serialNumber: '123456789',
+	serialNumber: '123456789',
 	authenticationToken: '123456789'
 });
 
 exports.mockPass = mockPass;
 exports.mockPasses = [
-	mockPass,
+	
 	new Pass({
 		_id: 'mock-boardingpass',
 		type: 'boardingPass'
@@ -35,6 +35,8 @@ exports.mockPasses = [
 	}),
 	new Pass({
 		_id: 'mock-generic',
+		serialNumber: '123456789',
+		authenticationToken: '123456789',
 		type: 'generic'
 	}),
 	new Pass({

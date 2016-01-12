@@ -52,7 +52,7 @@ describe('routes', function() {
 	});
 
 
-	describe('Export/Sign', function() {
+	xdescribe('Export/Sign', function() {
 
 		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
 			request(app)
