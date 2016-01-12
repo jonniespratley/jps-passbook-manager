@@ -25,8 +25,11 @@
 	</div>
 
 	<div class="window-content">
+
 		<div class="pane-group row" ng-init="SmartPass.init()">
-			<div class="sidebar col-sm-4 hidden">
+
+				<!--		-->
+			<div class="sidebar col-sm-12">
 				<ul class="list-group">
 					<li class="list-group-header">
 						<input class="form-control" type="text" placeholder="Search..." ng-model="searchFilter">
@@ -52,8 +55,28 @@
 					</li>
 				</ul>
 			</div>
-			<!---->
+
+
+
+
 			<div class="pane col-sm-12">
+<!--
+				<div class="card-deck-wrapper">
+				  <div class="card-deck">
+				    <div class="card" ng-repeat="pass in passes">
+				      <img class="card-img-top"
+						data-src="..."
+						alt="Card image cap">
+				      <div class="card-block">
+				        <h4 class="card-title">{{pass.organizationName}}</h4>
+				        <p class="card-text">{{pass.description}}</p>
+				        <p class="card-text"><small class="text-muted">Last updated {{pass.lastUpdated}}</small></p>
+				      </div>
+				    </div>
+
+				  </div>
+			  </div>-->
+
 				<div class="padded-mor">
 
 					<!-- @TODO: [Pass Table]-->

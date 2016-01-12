@@ -3,12 +3,13 @@
 	<thead>
 	<tr>
 		<th class="th-type">Type</th>
+
 		<th>Description</th>
 		<th>Actions</th>
 	</tr>
 	</thead>
 	<tbody>
-	<tr ng-repeat="pass in SmartPass.passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
+	<tr ng-repeat="pass in passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
 		<td class="pass-icon">
 			<a>
 				<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
@@ -16,10 +17,7 @@
 			</a>
 		</td>
 		<td>
-			<a href="#/passes/{{pass._id}}"> {{pass.organizationName}} </a>
-			<br/> {{pass.description}}
-			<br/> <small>{{pass.type}}</small>
-			<br/>{{pass.lastUpdated | date: 'medium'}}
+			<a href="#/passes/{{pass._id}}"> {{pass.description}} </a>
 		</td>
 
 
@@ -27,6 +25,7 @@
 			<a ng-click="SmartPass.exportPass(pass)" href="" target="_blank">
 				<img class="passbook-badge" src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
 			</a>
+
 		</td>
 
 	</tr>

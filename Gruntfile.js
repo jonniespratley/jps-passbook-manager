@@ -1,13 +1,13 @@
 'use strict';
-var lrSnippet = require( 'grunt-contrib-livereload/lib/utils' ).livereloadSnippet;
-var mountFolder = function (connect, dir) {
-	return connect.static( require( 'path' ).resolve( dir ) );
+var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+var mountFolder = function(connect, dir) {
+	return connect.static(require('path').resolve(dir));
 };
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
-	require( 'load-grunt-tasks' )( grunt );
-	require( 'time-grunt' )( grunt );
+	require('load-grunt-tasks')(grunt);
+	require('time-grunt')(grunt);
 
 	// configurable paths
 	var yeomanConfig = {
@@ -16,11 +16,10 @@ module.exports = function (grunt) {
 	};
 
 	try {
-		yeomanConfig.app = require( './bower.json' ).appPath || yeomanConfig.app;
-	} catch (e) {
-	}
+		yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+	} catch (e) {}
 
-	grunt.initConfig( {
+	grunt.initConfig({
 		yeoman: yeomanConfig,
 		watch: {
 			coffee: {
@@ -54,9 +53,9 @@ module.exports = function (grunt) {
 					open: true,
 					debug: true,
 					hostname: 'localhost',
-					middleware: function (connect) {
+					middleware: function(connect) {
 						return [
-							require( 'json-proxy' ).initialize( {
+							require('json-proxy').initialize({
 								proxy: {
 									forward: {
 										'/api/': 'http://localhost:1333',
@@ -66,10 +65,10 @@ module.exports = function (grunt) {
 										'X-Forwarded-User': 'John Doe'
 									}
 								}
-							} ),
+							}),
 							lrSnippet,
-							mountFolder( connect, '.tmp' ),
-							mountFolder( connect, yeomanConfig.app )
+							mountFolder(connect, '.tmp'),
+							mountFolder(connect, yeomanConfig.app)
 						];
 					}
 				}
@@ -77,10 +76,10 @@ module.exports = function (grunt) {
 			test: {
 				options: {
 					port: 9000,
-					middleware: function (connect) {
+					middleware: function(connect) {
 						return [
-							mountFolder( connect, '.tmp' ),
-							mountFolder( connect, 'test' )
+							mountFolder(connect, '.tmp'),
+							mountFolder(connect, 'test')
 						];
 					}
 				}
@@ -93,8 +92,10 @@ module.exports = function (grunt) {
 		},
 		clean: {
 			dist: [
-				'.tmp', 
-				'<%= yeoman.dist %>/*'],
+				'.tmp',
+				'test/temp',
+				'<%= yeoman.dist %>/*'
+			],
 			server: '.tmp'
 		},
 		jshint: {
@@ -115,14 +116,12 @@ module.exports = function (grunt) {
 				}
 			},
 			test: {
-				files: [
-					{
-						expand: true,
-						cwd: '.tmp/spec',
-						src: '*.coffee',
-						dest: 'test/spec'
-					}
-				]
+				files: [{
+					expand: true,
+					cwd: '.tmp/spec',
+					src: '*.coffee',
+					dest: 'test/spec'
+				}]
 			}
 		},
 		compass: {
@@ -153,14 +152,12 @@ module.exports = function (grunt) {
 		},
 		imagemin: {
 			dist: {
-				files: [
-					{
-						expand: true,
-						cwd: '<%= yeoman.app %>/images',
-						src: '{,*/}*.{png,jpg,jpeg}',
-						dest: '<%= yeoman.dist %>/images'
-					}
-				]
+				files: [{
+					expand: true,
+					cwd: '<%= yeoman.app %>/images',
+					src: '{,*/}*.{png,jpg,jpeg}',
+					dest: '<%= yeoman.dist %>/images'
+				}]
 			}
 		},
 		cssmin: {
@@ -186,14 +183,12 @@ module.exports = function (grunt) {
 					 removeEmptyAttributes: true,
 					 removeOptionalTags: true*/
 				},
-				files: [
-					{
-						expand: true,
-						cwd: '<%= yeoman.app %>',
-						src: ['*.html', 'views/*.html'],
-						dest: '<%= yeoman.dist %>'
-					}
-				]
+				files: [{
+					expand: true,
+					cwd: '<%= yeoman.app %>',
+					src: ['*.html', 'views/*.html'],
+					dest: '<%= yeoman.dist %>'
+				}]
 			}
 		},
 		cdnify: {
@@ -203,14 +198,12 @@ module.exports = function (grunt) {
 		},
 		ngmin: {
 			dist: {
-				files: [
-					{
-						expand: true,
-						cwd: '<%= yeoman.dist %>/scripts',
-						src: '*.js',
-						dest: '<%= yeoman.dist %>/scripts'
-					}
-				]
+				files: [{
+					expand: true,
+					cwd: '<%= yeoman.dist %>/scripts',
+					src: 'app.js',
+					dest: '<%= yeoman.dist %>/scripts'
+				}]
 			}
 		},
 		uglify: {
@@ -224,19 +217,17 @@ module.exports = function (grunt) {
 		},
 		copy: {
 			dist: {
-				files: [
-					{
-						expand: true,
-						dot: true,
-						cwd: '<%= yeoman.app %>',
-						dest: '<%= yeoman.dist %>',
-						src: [
-							'*.{ico,txt}',
-							'.htaccess',
-							'!bower_components/**/*'
-						]
-					}
-				]
+				files: [{
+					expand: true,
+					dot: true,
+					cwd: '<%= yeoman.app %>',
+					dest: '<%= yeoman.dist %>',
+					src: [
+						'*.{ico,txt}',
+						'.htaccess',
+						'!bower_components/**/*'
+					]
+				}]
 			}
 		},
 		nodeunit: {
@@ -253,7 +244,7 @@ module.exports = function (grunt) {
 					quiet: false,
 					clearRequireCache: false
 				},
-				src: ['test/routes/*-spec.js']
+				src: ['test/specs/*-spec.js']
 			}
 		},
 		karma: {
@@ -270,13 +261,13 @@ module.exports = function (grunt) {
 				}
 			}
 		}
-	} );
+	});
 
-	grunt.renameTask( 'regarde', 'watch' );
+	grunt.renameTask('regarde', 'watch');
 	// remove when mincss task is renamed
 	//grunt.renameTask('mincss', 'cssmin');
 
-	grunt.registerTask( 'server', [
+	grunt.registerTask('server', [
 		'clean:server',
 		//'coffee:dist',
 		// 'compass:server',
@@ -284,20 +275,20 @@ module.exports = function (grunt) {
 		'connect:livereload',
 		'open',
 		'watch'
-	] );
+	]);
 
-	grunt.registerTask( 'test', [
+	grunt.registerTask('test', [
 		'clean:server',
 		//  'jshint',
 		'mkdir',
-		'karma',
-		//'mochaTest'
-	] );
+		//	'karma',
+		'mochaTest'
+	]);
 
-	grunt.registerTask( 'build', [
+	grunt.registerTask('build', [
 		'clean:dist',
 		//  'jshint',
-	//	'test',
+		//	'test',
 		//  'coffee',
 		//'compass:dist',
 		'useminPrepare',
@@ -306,11 +297,11 @@ module.exports = function (grunt) {
 		//	'htmlmin',
 		'concat',
 		'copy',
-//		'cdnify',
+		//		'cdnify',
 		'usemin',
 		'ngmin',
 		'uglify'
-	] );
+	]);
 
-	grunt.registerTask( 'default', ['test', 'build'] );
+	grunt.registerTask('default', ['test', 'build']);
 };

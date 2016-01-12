@@ -1,19 +1,19 @@
 <!-- views/partials/header.ejs -->
 <nav class="navbar  navbar-dark bg-inverse navbar-fixed-top">
   <div class="nav navbar-nav">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/index">
       <i class="fa fa-file"></i>
-        Pass Manager
+        pm
     </a>
-    <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-
+  <div class="pull-right">
     <% if (!user) { %>
       <a class="nav-item nav-link" href="/login">Log In</a>
     <% } else { %>
-    <a class="nav-item nav-link" href="/account"><%= user.username %></a>
-  <a class="nav-item nav-link" href="/logout">Log Out</a>
+      <a class="nav-item nav-link" href="/account"><%= user.username %></a>
+      <a class="nav-item nav-link" href="/logout">Log Out</a>
 
     <% } %>
+  </div>
 
   </div>
 </nav>

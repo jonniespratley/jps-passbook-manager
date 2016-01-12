@@ -57,6 +57,7 @@
     "grunt-usemin": "~0.1.7",
     "gulp": "^3.9.0",
     "gulp-istanbul": "^0.10.3",
+
     "gulp-mocha": "^2.2.0",
     "istanbul": "^0.4.1",
     "json-proxy": "^0.9.1",

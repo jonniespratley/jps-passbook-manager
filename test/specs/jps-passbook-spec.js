@@ -25,15 +25,12 @@ describe('jps-passbook', function() {
 		this.timeout(5000);
 		var len = mocks.mockPasses.length;
 		mocks.mockPasses.forEach(function(pass) {
-
 			jpsPassbook.createPass(pass, true, function(data) {
 				//	console.log('pass created', data);
 				passFiles.push(data);
 				assert.ok(data._id);
-
 				len--;
 			});
-
 		});
 		done();
 

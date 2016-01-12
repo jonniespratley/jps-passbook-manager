@@ -6,7 +6,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'mgcrea.ngStrap'
 ])
 
-.controller('AppCtrl', function($scope, $rootScope, $http, $routeParams, $location) {
+.controller('AppCtrl', function($scope, $rootScope, Api, $http, $routeParams, $location) {
 	$rootScope.location = $location;
 	$rootScope.passTypes = [{
 		name: 'generic',
@@ -24,7 +24,10 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 		name: 'storeCard',
 		title: 'Store Card'
 	}];
-	$rootScope.App = {
+
+	window.App = $rootScope.App = {
+		http: $http,
+		api: Api,
 		title: 'Pass Manager',
 		description: 'With this interface you can easily manage Apple Wallet Passes.',
 		icon: 'edit',
@@ -59,7 +62,16 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				icon: 'book',
 				href: '#/docs'
 			}
-		]
+		],
+		alerts: [],
+		alert: function(type, msg) {
+			$scope.$apply(function() {
+				$rootScope.App.alert = {
+					type: type,
+					body: msg
+				};
+			});
+		}
 	};
 
 	$http.get('/README.md').success(function(data) {
@@ -91,7 +103,16 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 		.when('/passes', {
 			templateUrl: './views/passes.html',
 			controller: 'PassesCtrl',
-			resolve: routeResolver
+			resolve: {
+				passes: function(Api) {
+					return Api.request({
+						method: 'GET',
+						url: '/api/v1/admin/find?docType=pass'
+					}).then(function(resp) {
+						return resp.data.rows;
+					});
+				}
+			}
 		})
 		.when('/passes/:id', {
 			templateUrl: './views/pass_details.html',

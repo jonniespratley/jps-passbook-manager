@@ -2,7 +2,9 @@
 var path = require('path');
 var config = require(path.resolve(__dirname, '../../config.js'));
 var program = require(path.resolve(__dirname, '../../lib/program.js'))({
-	dataPath: path.resolve(__dirname, '../temp')
+	//	dataPath: path.resolve(__dirname, '../temp'),
+	type: 'single',
+	pretty: true
 });
 exports.program = program;
 

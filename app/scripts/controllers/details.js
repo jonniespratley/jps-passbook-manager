@@ -1,6 +1,6 @@
 'use strict';
 
-jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, Api, pass) {
+jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, $http, Api, pass) {
   $scope.pass = pass;
   var db = Api;
   $(document).ready(function() {

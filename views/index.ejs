@@ -1,45 +1,52 @@
 <% include ./partials/head %>
-<body class="container">
-  <header>
-      <% include ./partials/header %>
-  </header>
-  <main>
-    <div class="jumbotron">
-    <h1 class="display-3">Hello, world!</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-  <p class="lead">
-    <a href="/auth/github" class="btn btn-lg btn-social btn-github">
-       <span class="fa fa-github"></span>
-        Sign in with Github
-    </a>
-      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </p>
-  </div>
+<body>
 
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="card card-block">
-        <h3 class="card-title">Special title treatment</h3>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="card card-block">
-        <h3 class="card-title">Special title treatment</h3>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-  </div>
-  <div class="card card-block">
-  <h4 class="card-title">Card title</h4>
-  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  <a href="#" class="card-link">Card link</a>
-  <a href="#" class="card-link">Another link</a>
+<% include ./partials/header %>
+
+<div class="jumbotron jumbotron-">
+	<h2 class="display-3">
+		Pass Manager
+	</h2>
+	<p class="lead">Create and manage Apple Wallet Passes.</p>
+	<p class="lead">
+		<a href="/auth/github" class="btn btn-lg btn-social btn-github">
+			<span class="fa fa-github"></span>
+			Sign in with Github
+		</a>
+		<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+	</p>
 </div>
+<main class="container-fluid">
 
-  </main>
-  <footer><% include ./partials/footer %></footer>
+
+
+
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="card card-block">
+				<h4 class="card-title">Card title</h4>
+				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+					content.</p>
+				<a href="#" class="card-link">Card link</a>
+				<a href="#" class="card-link">Another link</a>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="card card-block">
+				<h4 class="card-title">Card title</h4>
+				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+					content.</p>
+				<a href="#" class="card-link">Card link</a>
+				<a href="#" class="card-link">Another link</a>
+			</div>
+		</div>
+	</div>
+
+
+
+</main>
+
+<% include ./partials/footer %>
+
 </body>
 </html>

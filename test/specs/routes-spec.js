@@ -17,6 +17,7 @@ var passes;
 // TODO: Program
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
+var db = program.db;
 var config = program.config.defaults;
 
 //Test Instances
@@ -29,8 +30,9 @@ var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.
 	'jps-passbook-routes'))(program, app);
 
 describe('routes', function() {
-
-
+	before(function(){
+		//mockPass = db.getSync('mock-generic');
+	});
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
@@ -98,7 +100,6 @@ describe('routes', function() {
 				.expect(200, done);
 		});
 
-
 		xit('GET - /api/v1/register/:token - add device to db', function(done) {
 			request(app)
 				.get('/api/v1/register/' + mockDevice.token)
@@ -112,7 +113,6 @@ describe('routes', function() {
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
-
 
 		it('DELETE - /api/v1/admin/passes/:id - should remove pass', function(done) {
 			request(app)
@@ -283,13 +283,13 @@ describe('routes', function() {
 
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function(done) {
 				request(app)
-					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber)
+					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}111`)
 					.expect(401, done);
 			});
 
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number', function(done) {
 				request(app)
-					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/' + mockPass.serialNumber + '')
+					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`)
 					.set('Authorization', mockDevice.authorization)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
 					.expect(200, done);
@@ -298,7 +298,7 @@ describe('routes', function() {
 
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
 				request(app)
-					.get('/api/v1/passes/' + mockPass.passTypeIdentifier + '/123456789?passesUpdatedSince=' + Date.now())
+					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}?passesUpdatedSince=`)
 					.set('Authorization', mockDevice.authorization)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
 					.expect(200, done);

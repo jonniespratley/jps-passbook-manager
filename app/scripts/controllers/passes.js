@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope, Api, $rootScope, $http, $document,
+angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope, passes, Api, $rootScope, $http,
+	$document,
 	$compile, $route, $routeParams, $location) {
 	$scope.name = "SmartPassCtrl";
+	$scope.passes = passes;
 	$scope.$route = $route;
 	$scope.$location = $location;
 	$scope.$routeParams = $routeParams;
@@ -91,7 +93,7 @@ angular.module('jpsPassbookManagerApp').controller('PassesCtrl', function($scope
 			//  $('.datepicker').datepicker();
 			//  $('.timepicker').timepicker();
 			//  $('.colorpicker').colorpicker();
-			this.getPasses();
+			//	this.getPasses();
 		},
 		loadSchema: function() {
 			console.log($scope.pass.type);

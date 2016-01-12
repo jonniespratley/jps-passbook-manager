@@ -21,81 +21,117 @@ var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
 
-
-describe('db', function() {
-	it('should be defined', function(done) {
+describe('db', function () {
+	it('should be defined', function (done) {
 		assert(db);
 		done();
 	});
 
-	it('should have allDocs, get, remove, put methods', function(done) {
-		assert(db.allDocs);
+	it('should have allDocs, get, remove, put methods', function (done) {
+		assert(db.allDocs, 'should have allDocxs');
 		assert(db.remove);
 		assert(db.put);
 		assert(db.get);
+		assert(db.find, 'should have find');
+		assert(db.post, 'should have post');
+		assert(db.saveAll, 'should have saveAll');
 		done();
 	});
 
 
-	it('should create file with id', function(done) {
+	it('should save array of docs', function (done) {
+		db.saveAll([
+			mockDevice,
+			mockPass
+		]).then(function (resp) {
+			assert(resp);
+			done();
+		});
+	});
+
+	it('should create file with id', function (done) {
 		db.put({
 			_id: 'test-file',
 			name: 'test'
-		}).then(function(resp) {
+		}).then(function (resp) {
 			assert(resp);
 			done();
 		});
 	});
 
-	it('should create file with generated', function(done) {
+	xit('should create file with generated', function (done) {
 		db.post({
 			name: 'test2'
-		}).then(function(resp) {
+		}).then(function (resp) {
 			assert(resp);
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
 			done();
 		});
 	});
 
-	it('should get file with id', function(done) {
-		db.get('test-file').then(function(resp) {
+	it('should get file with id', function (done) {
+		db.get('test-file').then(function (resp) {
 			assert(resp);
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
 			done();
 		});
 	});
 
-	it('should find file', function(done) {
+
+	it('should find device', function (done) {
 		db.find({
-			name: 'test-file'
-		}).then(function(resp) {
+			deviceLibraryIdentifier: mockDevice.deviceLibraryIdentifier
+		}).then(function (resp) {
 			assert(resp);
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
 			done();
 		});
 	});
 
-	it('should remove file with id', function(done) {
-		db.remove('test-file').then(function(resp) {
+	it('findBy() - should find object and return first match', function (done) {
+		db.findBy({
+			serialNumber: mockPass.serialNumber
+		}).then(function (resp) {
 			assert(resp);
+			///assert(resp.name === 'test-file');
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
 			done();
 		});
 	});
 
-	it('should save array of docs', function(done) {
-		db.saveAll([
-			mockDevice, mockPass
-		]).then(function(resp) {
-			assert(resp);
-			done();
-		});
-	});
 
-	it('should find item by params', function(done) {
+	it('should find item by params', function (done) {
 		db.find({
 			serialNumber: mockPass.serialNumber
-		}).then(function(resp) {
+		}).then(function (resp) {
 			assert(resp);
+			resp.forEach(function (row) {
+				assert.equal(row.serialNumber, mockPass.serialNumber, 'passes match');
+			});
+
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
 			done();
 		});
+	});
 
+	it('should remove file with id', function (done) {
+		db.remove('test-file').then(function (resp) {
+			assert(resp);
+			done();
+		}).catch(function (err) {
+			assert.fail(err);
+			done();
+		});
 	});
 
 

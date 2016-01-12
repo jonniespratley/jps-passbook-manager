@@ -188,8 +188,8 @@ jpsPassbookManagerApp.directive('ngEnter', function() {
 			}
 		},
 		template: '<div class="tabbable">' + '<ul class="nav nav-tabs">' +
-			'<li ng-repeat="pane in panes" class="nav-item" ng-class="{active:pane.selected}">' +
-			'<a href="" ng-click="select(pane)" class="nav-link"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' +
+			'<li ng-repeat="pane in panes" class="nav-item">' +
+			'<a href="" ng-click="select(pane)" ng-class="{active:pane.selected}" class="nav-link"> <i class="icon-{{pane.icon}}"></i> {{pane.title}}</a>' +
 			'</li>' + '</ul>' +
 			'<div class="tab-content" ng-transclude></div>' + '</div>',
 		replace: true
@@ -331,7 +331,7 @@ jpsPassbookManagerApp.directive('ngEnter', function() {
 				element.find('input').addClass('form-control');
 
 			},
-			template: '<fieldset class="form-group">' +
+			template: '<fieldset class="form-group row">' +
 				'<div class="control-label col-sm-3"><label for="{{name}}">{{title}} </label></div>' +
 				'<div class="col-sm-9" ng-transclude>' + '</div>' + '</fieldset>'
 		};
