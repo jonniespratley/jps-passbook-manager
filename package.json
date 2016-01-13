@@ -32,7 +32,7 @@
     "passport-github2": "^0.1.9",
     "passport-oauth": "^1.0.0",
     "pem": "git+https://github.com/andris9/pem.git#master",
-    "pouchdb": "^5.1.0",
+
     "redis": "^2.4.2",
     "request": "^2.0.5",
     "serve-index": "^1.6.0",
