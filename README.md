@@ -83,7 +83,23 @@ footer.png - The image displayed on the front of the pass near the barcode.
 
 
 
+```
 
+1. openssl pkcs12 -in cert.p12 -clcerts -nokeys -out certificate.pem
+
+2. openssl pkcs12 -in cert.p12 -nocerts -out key.pem
+
+3. sudo open sslsmime -binary -sign \
+	-certfile ./certificates/wwdr-authority.pem \
+	-signer ./certificates/pass-passbookmanager-cert.pem \
+	-inkey ./certificates/pass-passbookmanager-key.pem \
+	-in manifest.json \
+	-out signature \
+	-outform DER \
+	-passin pass:fred
+
+
+```
 
 
 

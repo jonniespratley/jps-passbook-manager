@@ -1,5 +1,6 @@
 'use strict';
 var assert = require('assert');
+var fs = require('fs-extra');
 var _ = require('lodash');
 var path = require('path');
 var request = require("request");
@@ -14,17 +15,17 @@ var Device = require(path.resolve(__dirname, './lib/models/device.js'));
 var child_process = require('child_process');
 const SignPass = require('./lib/signpass');
 
-var output_url = './tmp';
-var wwdr_url = './certificates/wwdr-authority.pem';
-var cert_url = './certificates/pass-passbookmanager-cert.p12';
+var output_url = path.resolve(__dirname, './tmp');
+var wwdr_url = path.resolve(__dirname, './certificates/wwdr-authority.pem');
+var cert_url = path.resolve(__dirname, './certificates/pass-passbook-manager-cert.pem');
+var key_url = path.resolve(__dirname, './certificates/pass-passbook-manager-key.pem');
 var cert_pass = 'fred';
-var pass_url = '/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw';
+var pass_url = path.resolve(__dirname, './data/passes/pass-jonniespratley.raw');
 
+fs.ensureDirSync(output_url);
 
 
 var logger = utils.getLogger('scratch');
-
-
 
 var APN_CERT = './certificates/passbookmanager-apns-cert.p12';
 var APN_KEY = './certificates/passbookmanager-apns-key.p12';
@@ -34,26 +35,35 @@ var APN_KEY_PEM_PASS = 'fred';
 
 // TODO: Sign cert_pass
 var exec = child_process.exec;
+
 //var cmd1 = `openssl x509 -in ${APN_CERT} -inform DER -outform PEM -out ${APN_CERT_PEM}`
 var cmd1 = `openssl pkcs12 -clcerts -nokeys -out ${APN_CERT_PEM} -in ${APN_CERT}`;
 var cmd2 = `openssl pkcs12 -in ${APN_KEY} -out ${APN_KEY_PEM} -nodes`;
 var cmd3 = `openssl s_client -connect gateway.sandbox.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}`;
 var cmd4 = `openssl s_client -connect gateway.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}`
+var cmd5 =
+	`openssl smime -binary -sign -certfile ${wwdr_url} -signer ${cert_url} -inkey ${key_url} -in manifest.json -out signature -outform DER -passin pass:fred`;
+var cmd6 = `zip -R pass.zip *`
 
+/*
 logger('cmd1', cmd1);
 logger('cmd2', cmd2);
 logger('cmd3', cmd3);
 logger('cmd4', cmd4);
+logger('cmd5', cmd5);
+*/
 
 //child_process.execSync(cmd1);
 //child_process.execSync(cmd2);
 //child_process.execSync(cmd3);
-//child_process.execSync(cmd4);
-
+//
+//child_process.execSync(cmd5);
+//child_process.execSync(cmd6);
 
 
 var cmds =
 	`
+
 	openssl pkcs12 -clcerts -nokeys -out ${APN_CERT_PEM} -in ${APN_CERT}
 	openssl pkcs12 -nocerts -out ${APN_KEY_PEM} -in ${APN_KEY}
 	cat ${APN_CERT_PEM} ${APN_KEY_PEM} > ./certificates/apns-production.pem
@@ -82,12 +92,6 @@ _.forEach(GITHUB_USERS, function(n) {
 
 
 
-*/
-
-var signpass = new SignPass(pass_url, cert_url, cert_pass, output_url);
-//signpass.sign_pass();
-
-
 request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/find?docType=registration', function(err,
 	resp, body) {
 	var docs = JSON.parse(body);
@@ -95,3 +99,8 @@ request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/fi
 		program.db.put(doc);
 	});
 });
+
+*/
+
+var signpass = new SignPass(pass_url, cert_url, cert_pass, key_url, wwdr_url, output_url);
+signpass.sign_pass();

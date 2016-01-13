@@ -2,7 +2,7 @@
   "_id": "mock-generic",
   "docType": "pass",
   "type": "generic",
-  "lastUpdated": 1452646536001,
+  "lastUpdated": 1452715763485,
   "logoText": "Passbook Manager",
   "description": "This is the default pass description.",
   "formatVersion": 1,
