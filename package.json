@@ -26,13 +26,10 @@
     "jfs": "^0.2.6",
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
-    "node-forge": "^0.6.38",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-github2": "^0.1.9",
     "passport-oauth": "^1.0.0",
-    "pem": "git+https://github.com/andris9/pem.git#master",
-
     "redis": "^2.4.2",
     "request": "^2.0.5",
     "serve-index": "^1.6.0",
@@ -73,7 +70,7 @@
     "time-grunt": "^1.0.0"
   },
   "engines": {
-    "node": ">=4.0.0",
-    "npm": ">=3.0.0"
+    "node": ">=5.0.0",
+    "npm": ">=3.1.0"
   }
 }
