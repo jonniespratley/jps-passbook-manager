@@ -2,15 +2,15 @@
   "_id": "mock-storecard",
   "docType": "pass",
   "type": "storeCard",
-  "lastUpdated": 1452633489175,
+  "lastUpdated": 1452646536002,
   "logoText": "Passbook Manager",
   "description": "This is the default pass description.",
   "formatVersion": 1,
   "organizationName": "Passbook Manager",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "dc0355f5-1f38-4a57-83cf-e16623470a96",
+  "serialNumber": "8de1ad3f-d028-4c63-929c-6c4198496dea",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "dc0355f5-1f38-4a57-83cf-e16623470a96",
+  "authenticationToken": "8de1ad3f-d028-4c63-929c-6c4198496dea",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(72, 72, 72)",
   "backgroundColor": "rgb(183, 180, 183)",
   "suppressStripShine": false,
-  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-storecard.raw",
-  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-storecard.pkpass",
-  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-storecard.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-storecard.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-storecard.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-storecard.raw",
   "storeCard": {
     "primaryFields": [
       {
@@ -69,6 +69,6 @@
       }
     ]
   },
-  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
   "_key": "mock-storecard"
 }

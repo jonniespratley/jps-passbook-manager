@@ -2,7 +2,7 @@
   "_id": "mock-generic",
   "docType": "pass",
   "type": "generic",
-  "lastUpdated": 1452633489175,
+  "lastUpdated": 1452646536001,
   "logoText": "Passbook Manager",
   "description": "This is the default pass description.",
   "formatVersion": 1,
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(72, 72, 72)",
   "backgroundColor": "rgb(183, 180, 183)",
   "suppressStripShine": false,
-  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-generic.raw",
-  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-generic.pkpass",
-  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-generic.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-generic.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-generic.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-generic.raw",
   "generic": {
     "primaryFields": [
       {
@@ -96,6 +96,6 @@
       }
     ]
   },
-  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
   "_key": "mock-generic"
 }

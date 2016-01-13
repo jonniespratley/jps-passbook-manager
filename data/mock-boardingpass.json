@@ -2,15 +2,15 @@
   "_id": "mock-boardingpass",
   "docType": "pass",
   "type": "boardingPass",
-  "lastUpdated": 1452633489175,
+  "lastUpdated": 1452646535999,
   "logoText": "Jonnie Airways",
   "description": "SFO to JFK",
   "formatVersion": 1,
   "organizationName": "Jonnie Airways",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "10d8babe-bb93-4819-9b73-1f9810053d49",
+  "serialNumber": "5ab8a9ff-fd03-4cef-a8db-9c99b91dd0b9",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "10d8babe-bb93-4819-9b73-1f9810053d49",
+  "authenticationToken": "5ab8a9ff-fd03-4cef-a8db-9c99b91dd0b9",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(22, 55, 110)",
   "backgroundColor": "rgb(50, 91, 185)",
   "suppressStripShine": false,
-  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-boardingpass.raw",
-  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-boardingpass.pkpass",
-  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-boardingpass.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-boardingpass.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-boardingpass.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-boardingpass.raw",
   "relevantDate": "2012-07-22T14:25-08:00",
   "boardingPass": {
     "transitType": "PKTransitTypeAir",
@@ -108,6 +108,6 @@
       }
     ]
   },
-  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
   "_key": "mock-boardingpass"
 }

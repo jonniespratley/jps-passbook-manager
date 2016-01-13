@@ -1,17 +1,25 @@
 
+
+
 <div id="main-row" class="row">
 	<div class="col-sm-12">
 
-		<div class="hero-unit">
-			<h2 class="ng-binding">
-			{{App.title}}</h2>
-			<p class="ng-binding">
-				{{App.description}}
-			</p>
-			<p>
-				<a class="btn btn-large btn-primary"
-					href="#/passes/add">
-				<i class="icon-pencil"></i> Create New Pass</a>
+		<div class="jumbotron jumbotron- text-center">
+			<h2 class="display-2">
+				Hello, Pass.
+			</h2>
+			<p class="lead">Create and manage Apple Wallet Passes.</p>
+			<p class="lead">
+
+
+				<a href="/auth/github" class="btn btn-primary btn-lg btn-social btn-github">
+					<i class="fa fa-github"></i>
+					Sign in with Github
+				</a>
+
+						<button class="btn btn-primary btn-lg"
+						data-toggle="modal" data-target="#passModal">Create new pass</button>
+
 			</p>
 		</div>
 

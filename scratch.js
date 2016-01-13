@@ -20,8 +20,6 @@ var cert_url = './certificates/pass-passbookmanager-cert.p12';
 var cert_pass = 'fred';
 var pass_url = '/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw';
 
-var signpass = new SignPass(pass_url, cert_url, cert_pass, output_url);
-signpass.sign_pass();
 
 
 var logger = utils.getLogger('scratch');
@@ -83,9 +81,17 @@ _.forEach(GITHUB_USERS, function(n) {
 });
 
 
-request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/logs', function(err, resp, body) {
+
+*/
+
+var signpass = new SignPass(pass_url, cert_url, cert_pass, output_url);
+//signpass.sign_pass();
+
+
+request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/find?docType=registration', function(err,
+	resp, body) {
 	var docs = JSON.parse(body);
 	docs.forEach(function(doc) {
 		program.db.put(doc);
 	});
-});*/
+});

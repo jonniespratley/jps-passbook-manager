@@ -2,15 +2,15 @@
   "_id": "mock-eventticket",
   "docType": "pass",
   "type": "eventTicket",
-  "lastUpdated": 1452633489175,
+  "lastUpdated": 1452646536001,
   "logoText": "Passbook Manager",
   "description": "This is the default pass description.",
   "formatVersion": 1,
   "organizationName": "Passbook Manager",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "840065ad-37d2-4fa8-8fd8-5a50dfd59b7f",
+  "serialNumber": "511b7a60-d2f2-4f63-8645-95b69ce8e629",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "840065ad-37d2-4fa8-8fd8-5a50dfd59b7f",
+  "authenticationToken": "511b7a60-d2f2-4f63-8645-95b69ce8e629",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(72, 72, 72)",
   "backgroundColor": "rgb(183, 180, 183)",
   "suppressStripShine": false,
-  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-eventticket.raw",
-  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-eventticket.pkpass",
-  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-eventticket.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-eventticket.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-eventticket.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-eventticket.raw",
   "relevantDate": "2011-12-08T13:00-08:00",
   "eventTicket": {
     "primaryFields": [
@@ -60,6 +60,6 @@
       }
     ]
   },
-  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
   "_key": "mock-eventticket"
 }

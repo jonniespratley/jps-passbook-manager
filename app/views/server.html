@@ -43,8 +43,9 @@
 			<pane title="Devices">
 				<table id="devices-table" class="table table-condensed table-bordered">
 					<thead>
-					<th>ID</th>
-					<th>Push Token</th>
+
+					<th>deviceLibraryIdentifier</th>
+					<th>Serial #</th>
 					<th>Created</th>
 					<th>Actions</th>
 					</thead>
@@ -52,8 +53,9 @@
 					<tr
 						ng-repeat="item in devices track by $index | orderBy:created_at:true"
 						id="{{item._id}}">
-						<td>{{item._id}}</td>
-						<td>{{item}}</td>
+
+						<td>{{item.deviceLibraryIdentifier}}</td>
+						<td>{{item.serialNumber}}</td>
 						<td>{{item.created_at}}</td>
 						<td></td>
 					</tr>

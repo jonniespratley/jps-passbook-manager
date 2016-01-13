@@ -2,15 +2,15 @@
   "_id": "pass-jonniespratley",
   "docType": "pass",
   "type": "github",
-  "lastUpdated": 1452633492564,
+  "lastUpdated": 1452646540261,
   "logoText": "Github",
   "description": "Jonnie Spratley Github",
   "formatVersion": 1,
   "organizationName": "GE Digital",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "306133ff-8b87-4743-ab92-3dde2c6f0b26",
+  "serialNumber": "0f537b17-9a8e-48a2-baa4-6aaae182e9d3",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "306133ff-8b87-4743-ab92-3dde2c6f0b26",
+  "authenticationToken": "0f537b17-9a8e-48a2-baa4-6aaae182e9d3",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(72, 72, 72)",
   "backgroundColor": "rgb(183, 180, 183)",
   "suppressStripShine": false,
-  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
-  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/pass-jonniespratley.pkpass",
-  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
   "generic": {
     "primaryFields": [
       {
@@ -83,6 +83,6 @@
       }
     ]
   },
-  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
   "_key": "pass-jonniespratley"
 }

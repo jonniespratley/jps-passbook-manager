@@ -2,15 +2,15 @@
   "_id": "mock-coupon",
   "docType": "pass",
   "type": "coupon",
-  "lastUpdated": 1452633489175,
+  "lastUpdated": 1452646536000,
   "logoText": "Passbook Manager",
   "description": "This is the default pass description.",
   "formatVersion": 1,
   "organizationName": "Passbook Manager",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "c9c09092-15c7-40e8-a30c-6c8e4fe61ab8",
+  "serialNumber": "033b14d1-b812-4564-91d7-eab9c0a0ce8b",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "c9c09092-15c7-40e8-a30c-6c8e4fe61ab8",
+  "authenticationToken": "033b14d1-b812-4564-91d7-eab9c0a0ce8b",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(72, 72, 72)",
   "backgroundColor": "rgb(183, 180, 183)",
   "suppressStripShine": false,
-  "filename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-coupon.raw",
-  "pkpassFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-coupon.pkpass",
-  "rawFilename": "/WWW/2016Projects/jps-passbook-manager/data/passes/mock-coupon.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-coupon.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-coupon.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-coupon.raw",
   "coupon": {
     "primaryFields": [
       {
@@ -59,6 +59,6 @@
       }
     ]
   },
-  "directory": "/WWW/2016Projects/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
   "_key": "mock-coupon"
 }
