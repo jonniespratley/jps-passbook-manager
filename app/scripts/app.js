@@ -109,7 +109,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 						method: 'GET',
 						url: '/api/v1/admin/find?docType=pass'
 					}).then(function(resp) {
-						return resp.data.rows;
+						return resp.data;
 					});
 				}
 			}
@@ -143,7 +143,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 						method: 'GET',
 						url: '/api/v1/admin/find?docType=log'
 					}).then(function(resp) {
-						return resp.data.rows;
+						return resp.data;
 					});
 				},
 				devices: function(Api) {
@@ -151,7 +151,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 						method: 'GET',
 						url: '/api/v1/admin/find?docType=device'
 					}).then(function(resp) {
-						return resp.data.rows;
+						return resp.data;
 					});
 				},
 				registrations: function(Api) {
@@ -159,7 +159,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 						method: 'GET',
 						url: '/api/v1/admin/find?docType=registration'
 					}).then(function(resp) {
-						return resp.data.rows;
+						return resp.data;
 					});
 				}
 			}
