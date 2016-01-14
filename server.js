@@ -26,10 +26,8 @@ var app = express();
 
 
 app.use('/public', serveStatic(path.resolve(__dirname, './public')));
-app.use('/public', serveStatic(path.resolve(__dirname, './bower_components')));
+app.use('/public', serveStatic(path.resolve(__dirname, './app/bower_components')));
 app.use('/public', serveStatic(path.resolve(__dirname, config.publicDir)));
-
-
 app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
 
 app.set('views', __dirname + '/views');

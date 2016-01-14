@@ -1,51 +1,75 @@
 <% include ./partials/head %>
 <body>
 
-  <style media="screen">
-    .card-img{
-      margin-right: 20px;
-      height: 80px;
-    }
-  </style>
+<style media="screen">
+	.card-img {
+		margin-right: 20px;
+		height: 80px;
+	}
+</style>
 
-      <% include ./partials/header %>
+<% include ./partials/header %>
 
-  <main>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-12">
+<main>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
 
-          <div class="card">
-            <div class="card-block">
-              <img class="card-img pull-left"
-                src="<%= user.data.avatar_url %>"
-                alt="<%= user.username %>">
+				<div class="card">
+					<div class="card-block">
+						<img class="card-img pull-left"
+							  src="<%= user.data.avatar_url %>"
+							  alt="<%= user.username %>">
 
-                <h4 class="card-title"><%= user.displayName %></h4>
-                <p class="card-text">
-                  <%= user.data.location %><br/>
-                  <a href="<%= user.data.blog %>" title="Blog" target="_blank"><%= user.data.blog %></a>
-                </p>
-            </div>
+						<h4 class="card-title"><%= user.displayName %></h4>
+						<p class="card-text">
+							<%= user.data.location %><br/>
+							<a href="<%= user.data.blog %>" title="Blog" target="_blank"><%= user.data.blog %></a>
+						</p>
+					</div>
 
-            <ul class="list-group list-group-flush">
-              
-              <li class="list-group-item"><%= user.data.followers %> Followers</li>
-              <li class="list-group-item"><%= user.data.public_repos %> Repos</li>
-              <li class="list-group-item"><%= user.data.public_gists %> Gists</li>
-            </ul>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><%= user.data.followers %> Followers</li>
+						<li class="list-group-item"><%= user.data.public_repos %> Repos</li>
+						<li class="list-group-item"><%= user.data.public_gists %> Gists</li>
+					</ul>
 
-            <div class="card-block">
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
-          </div>
+					<div class="card-block">
+						<a href="#" class="card-link">Download Pass</a>
+						<a href="#" class="card-link">Another link</a>
+					</div>
+				</div>
 
 
-        </div>
-      </div>
-    </div>
-  </main>
+
+				<form id="certForm" action="" method="post">
+					<ul class="list-group list-group-">
+						<li class="list-group-item">
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">.p12 cert</label>
+								<div class="col-sm-10">
+									<label class="file">
+										<input id="p12File" type="file" id="file">
+										<span class="file-custom"></span>
+									</label>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<button type="submit" name="uploadBtn">Upload</button>
+				</form>
+
+
+
+			</div>
+		</div>
+	</div>
+</main>
+
+
+<script type="text/javascript">
+	console.warn('Handle cert upload');
+</script>
 
 </body>
 </html>

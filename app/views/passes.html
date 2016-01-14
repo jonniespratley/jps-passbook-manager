@@ -37,7 +37,7 @@
 					<li ng-click="SmartPass.selectPass(pass);"
 						 ng-class="{'active': SmartPass.pass === pass}"
 						 class="list-group-item"
-						 ng-repeat="pass in SmartPass.passes track by $index | orderBy:updated_at:reverse | filter:searchFilter"
+						 ng-repeat="pass in passes track by $index | orderBy:updated_at:reverse | filter:searchFilter"
 						 id="pass-{{pass._id}}">
 
 						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon im media-object pull-left" />

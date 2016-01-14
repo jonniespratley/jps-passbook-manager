@@ -4,3 +4,5 @@ node_js:
 before_script:
   - 'npm -v'
   - 'npm install -g gulp'
+service_name: travis-pro
+repo_token: VvrRjqdZxikZabAx2bBNQ7jmndgX80n79

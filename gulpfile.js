@@ -11,6 +11,14 @@ const config = {
   specs: 'test/specs/*.js'
 };
 
+var coveralls = require('gulp-coveralls');
+
+
+gulp.task('coveralls', function() {
+  return gulp.src('./coverage/lcov.info')
+    .pipe(coveralls());
+});
+
 gulp.task('pre-test', function() {
   return gulp.src(config.src)
     .pipe(istanbul({
@@ -35,4 +43,4 @@ gulp.task('test', ['pre-test'], function() {
 
 
 
-gulp.task('default', ['test']);
+gulp.task('default', ['test', 'coveralls']);

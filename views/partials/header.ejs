@@ -5,14 +5,25 @@
       <i class="fa fa-file-o"></i>
         Pass Manager
     </a>
-  <div class="pull-right">
-    <% if (!user) { %>
-      <!--a class="nav-item nav-link" href="/login">Log In</a-->
-    <% } else { %>
-      <a class="nav-item nav-link" href="/account"><%= user.username %></a>
-      <a class="nav-item nav-link" href="/logout">Log Out</a>
+    <div class="pull-right">
+      <ul class="nav ">
+        <% if (!user) { %>
+          <!--a class="nav-item nav-link" href="/login">Log In</a-->
+        <% } else { %>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+          aria-expanded="false"><%= user.username %></a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/account">Account</a>
 
-    <% } %>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/logout">Logout</a>
+          </div>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+
   </div>
 
   </div>

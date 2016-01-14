@@ -69,10 +69,17 @@ var VCAP_SERVICES = {
 
 var config = {
 	"name": "passbookmanager",
+	debug: true,
+	baseUrl: 'http://localhost:5984/passbookmanager',
 	"message": "Passbook Manager API Server",
-	"version": "v1",
 	"dataPath": path.resolve(__dirname, "./data"),
+	"version": "v1",
+	database: {
+		name: 'passbookmanager',
+		"dataPath": path.resolve(__dirname, "./data")
+	},
 	"passkit": {
+		"version": "v1",
 		"teamIdentifier": APPLE_TEAM_IDENTIFIER,
 		"passTypeIdentifier": APPLE_PASS_TYPE_IDENTIFIER,
 		"webServiceURL": APPLE_WEB_SERVICE_URL

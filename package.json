@@ -2,7 +2,7 @@
   "name": "jps-passbook-manager",
   "version": "0.0.2",
   "scripts": {
-    "postinstall": "bower install",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "prestart": "grunt",
     "start": "node server",
     "test": "gulp test",
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "bower": "^1.7.2",
+    "coveralls": "^2.11.6",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.0",
@@ -55,6 +56,7 @@
     "grunt-open": "~0.1.0",
     "grunt-usemin": "~0.1.7",
     "gulp": "^3.9.0",
+    "gulp-coveralls": "^0.1.4",
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.2.0",
     "istanbul": "^0.4.1",
@@ -65,6 +67,7 @@
     "load-grunt-tasks": "^2.0.0",
     "matchdep": "~0.1.1",
     "mocha": "^2.1.0",
+    "nock": "^5.2.1",
     "rimraf": "^2.5.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"

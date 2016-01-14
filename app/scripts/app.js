@@ -160,6 +160,8 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 						url: '/api/v1/admin/find?docType=registration'
 					}).then(function(resp) {
 						return resp.data;
+					}, function(){
+						return []
 					});
 				}
 			}

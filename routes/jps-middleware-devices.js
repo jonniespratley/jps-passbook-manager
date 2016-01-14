@@ -3,18 +3,14 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	Router = express.Router;
 
-module.exports = function (program, app) {
-	if (!app) {
-		throw new Error('Must provide an express app as argument 2');
-	}
+module.exports = function(program, app) {
 	var logger = program.getLogger('router:devices');
 	var config = program.config.defaults;
 	var router = new Router();
 	var DevicesController = require('../lib/controllers/devices-controller');
 	var devicesController = new DevicesController(program);
 
-	//Send push to device
-	router.get('/:device_id/push/:token', function (req, res) {
+	router.get('/:device_id/push/:token', function(req, res) {
 		logger('Push to device ' + req.params.token);
 		res.status(200).send({
 			message: 'Device push token'

@@ -172,7 +172,12 @@ module.exports = function(program, app) {
 		});
 	});
 
+
+	// TODO: Handle get
 	router.get('/account', ensureAuthenticated, function(req, res) {
+		if (req.isAuthenticated) {
+			console.log('isAuthenticated');
+		}
 		req.session.authenticated = true;
 		req.session.user = req.user;
 		req.session.save(function(err) {
@@ -183,8 +188,18 @@ module.exports = function(program, app) {
 				user: req.user
 			});
 		});
-
 	});
+
+	// TODO: Handle post certs
+	router.post('/account', [bodyParser.urlencoded(), isAuthenticated], function(req, res) {
+		console.log('file', req.body);
+		res.render('account', {
+			message: 'File uploaded!',
+			user: req.user
+		});
+	});
+
+
 
 	router.get('/logout', function(req, res) {
 		req.logout();
@@ -213,15 +228,9 @@ module.exports = function(program, app) {
 	}
 
 
-	app.get('/api/' + config.version + '/me', ensureAuthenticated, function(req, res, next) {
+	app.get('/api/' + config.version + '/me', isAuthenticated, function(req, res, next) {
 		authLogger(req.url, req.session);
-		if (req.session) {
-			res.status(200).json(req.session);
-		} else {
-			res.status(401).json({
-				error: 'Unauthorized'
-			});
-		}
+		res.status(200).json(req.user);
 	});
 
 

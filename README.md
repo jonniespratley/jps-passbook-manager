@@ -1,6 +1,6 @@
 # Passbook Manager
 This is a simple interface for creating iOS Passbook passes from content.
-
+[![Coverage Status](https://coveralls.io/repos/jonniespratley/jps-passbook-manager/badge.svg?branch=develop&service=github)](https://coveralls.io/github/jonniespratley/jps-passbook-manager?branch=develop)
 
 [![Build Status](https://travis-ci.org/jonniespratley/jps-passbook-manager.svg?branch=develop)](https://travis-ci.org/jonniespratley/jps-passbook-manager)
 

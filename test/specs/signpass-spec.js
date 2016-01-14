@@ -5,8 +5,8 @@ const path = require('path');
 const SignPass = require(path.resolve(__dirname, '../../lib/signpass'));
 var signpass;
 
-var certFilename = path.resolve(__dirname, '../../certificates/passbookmanager-cert.p12');
-var keyFilename = path.resolve(__dirname, '../../certificates/passbookmanager-key.p12');
+var certFilename = path.resolve(__dirname, '../../certificates/pass-passbook-manager-cert.pem');
+var keyFilename = path.resolve(__dirname, '../../certificates/pass-passbook-manager-key.pem');
 var wwdrFilename = path.resolve(__dirname, '../../certificates/wwdr-authority.pem');
 var certPass = 'fred';
 var passFilename = path.resolve(__dirname, '../../data/mock-coupon.json');
@@ -24,7 +24,13 @@ describe('SignPass', function (done) {
 	});
 
 	it('should create instance', function (done) {
-		signpass = new SignPass(rawpassFilename, certFilename, certPass, wwdrFilename, outputFilename, true);
+		signpass = new SignPass(
+			rawpassFilename,
+			certFilename,
+			certPass,
+			keyFilename,
+			wwdrFilename,
+			outputFilename, true);
 		assert(signpass);
 		done();
 	});
