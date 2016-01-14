@@ -26,17 +26,19 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, $htt
   };
 
   $scope.barcodes = [{
-      name: 'QR Barcode',
+        name: 'QR Barcode',
 
-      selected: true,
-      value: 'PKBarcodeFormatQR'
-    }, {
-      name: 'PDF Barcode',
-      value: 'PKBarcodeFormatPDF417'
-    }, {
-      name: 'Aztec Barcode',
-      value: 'PKBarcodeFormatAztec'
-    }],
+        selected: true,
+        value: 'PKBarcodeFormatQR'
+      },
+      /*{
+        name: 'PDF Barcode',
+        value: 'PKBarcodeFormatPDF417'
+      }, {
+        name: 'Aztec Barcode',
+        value: 'PKBarcodeFormatAztec'
+      }*/
+    ],
 
     $scope.updateQrcode = function(p) {
       angular.element('#pass-qrcode')

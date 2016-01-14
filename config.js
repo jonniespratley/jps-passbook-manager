@@ -21,39 +21,6 @@ var VCAP_SERVICES = {
 		},
 		"syslog_drain_url": "syslog://10.72.6.64:32786"
 	}],
-	"predix-uaa": [{
-		"name": "my_uaa_instance",
-		"label": "predix-uaa",
-		"tags": [],
-		"plan": "Beta",
-		"credentials": {
-			"issuerId": "https://69687fd0-c926-4e4f-8563-5c88042db69c.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token",
-			"zone": {
-				"http-header-value": "69687fd0-c926-4e4f-8563-5c88042db69c",
-				"http-header-name": "X-Identity-Zone-Id"
-			},
-			"uri": "https://69687fd0-c926-4e4f-8563-5c88042db69c.predix-uaa.run.aws-usw02-pr.ice.predix.io"
-		}
-	}],
-	"predix-mobile": [{
-		"name": "my_predix_mobile_instance",
-		"label": "predix-mobile",
-		"tags": [],
-		"plan": "Beta",
-		"credentials": {
-			"dbname": "pm",
-			"hostname": "204049.run.aws-usw02-pr.ice.predix.io",
-			"port": "443",
-			"ports": {
-				"443/tcp": "443",
-				"80/tcp": "80"
-			},
-			"instance_id": "cf73d03f-1b33-468f-be94-1384be736204",
-			"api_gateway_direct_route": "https://cf73d03f-1b33-468f-be94-1384be736204-pm-gateway.run.aws-usw02-pr.ice.predix.io/",
-			"api_gateway_short_route": "https://204049.run.aws-usw02-pr.ice.predix.io/",
-			"uri": "https://204049.run.aws-usw02-pr.ice.predix.io/"
-		}
-	}],
 	"redis-1": [{
 		"name": "my_redis_instance",
 		"label": "redis-1",

@@ -196,7 +196,7 @@ module.exports = function(program, app) {
 			console.log('isAuthenticated');
 		}
 		req.session.authenticated = true;
-		req.session.user = req.user;
+		//	req.session.user = req.user;
 		req.session.save(function(err) {
 			authLogger('session.save', req.session);
 			if (err) {
@@ -245,18 +245,25 @@ module.exports = function(program, app) {
 		res.status(200).json(req.user);
 	});
 
+	var session = require('express-session');
+	var RedisStore = require('connect-redis')(session);
 
+	app.use(session({
+		store: new RedisStore({
+			host: '127.0.0.1',
+			port: 6379
+		}),
+		secret: config.security.salt,
+		resave: true,
+		saveUninitialized: true
+	}));
 	//	app.use(partials());
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));
 	app.use(bodyParser.json());
 	app.use(methodOverride());
-	app.use(session({
-		secret: config.security.salt,
-		resave: true,
-		saveUninitialized: true
-	}));
+
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(router);

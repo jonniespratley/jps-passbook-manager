@@ -11,36 +11,45 @@ var config = program.config.defaults;
 
 var mockPass = mocks.mockPass;
 
-describe('Adapters', function () {
+describe('Adapters', function() {
 
-	describe('redis', function () {
+	describe('redis', function() {
 		var db = new RedisDB();
 
-		it('should be defined', function (done) {
+		it('should be defined', function(done) {
 			assert(db);
 			done();
 		});
 
-		it('should save object', function (done) {
-			db.put(mockPass).then(function (resp) {
+		it('should save object', function(done) {
+			db.put(mockPass).then(function(resp) {
 				assert(resp);
 				done();
 			});
 		});
 
-		it('should get object', function (done) {
-			db.get(mockPass._id).then(function (resp) {
+		it('should get object', function(done) {
+			db.get(mockPass._id).then(function(resp) {
 				assert(resp._id === mockPass._id);
 				done();
 			});
 		});
 
-		it('should remove object', function (done) {
-			db.remove(mockPass._id).then(function (resp) {
+		it('should remove object', function(done) {
+			db.remove(mockPass._id).then(function(resp) {
 				assert(resp);
 				done();
 			});
 		});
+
+		it('should get all docs', function(done) {
+			db.allDocs().then(function(resp) {
+				assert(resp);
+				done();
+			});
+		});
+
+
 	});
 
 });
