@@ -10,17 +10,14 @@
 
           <% if (!user) { %>
           	<div class="jumbotron">
-          	  <h2>Welcome! Please log in.</h2>
-            <p>
-              <a href="/auth/github" class="btn btn-lg btn-social btn-github">
-            	   <span class="fa fa-github"></span>
-            	    Sign in with Github
-              </a>
-                     </p>
+          	  <h2>Please sign in.</h2>
+              <p>
+                <a href="/auth/github" class="btn btn-lg btn-social btn-github">
+              	   <span class="fa fa-github"></span>
+              	    Sign in with Github
+                </a>
+              </p>
           	</div>
-
-
-
           <% } else { %>
           	<h2>Hello, <%= user.displayName %>.</h2>
           <% } %>

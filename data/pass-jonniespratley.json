@@ -2,15 +2,15 @@
   "_id": "pass-jonniespratley",
   "docType": "pass",
   "type": "github",
-  "lastUpdated": 1452747193895,
+  "lastUpdated": 1452752935451,
   "logoText": "Github",
   "description": "Jonnie Spratley Github",
   "formatVersion": 1,
   "organizationName": "GE Digital",
   "passTypeIdentifier": "pass.passbookmanager.io",
-  "serialNumber": "aea6c4af-ec94-4b67-926e-cdc3fab8794d",
+  "serialNumber": "5210dc25-7989-4e2b-85e2-94fd10d134be",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "aea6c4af-ec94-4b67-926e-cdc3fab8794d",
+  "authenticationToken": "5210dc25-7989-4e2b-85e2-94fd10d134be",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -84,5 +84,6 @@
     ]
   },
   "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
-  "_key": "pass-jonniespratley"
+  "_key": "pass-jonniespratley",
+  "_jps": "pass-jonniespratley"
 }

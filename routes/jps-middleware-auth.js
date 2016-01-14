@@ -53,6 +53,23 @@ module.exports = function(program, app) {
 		res.redirect('/login')
 	}
 
+
+	function isAuthenticated(req, res, next) {
+
+		// do any checks you want to in here
+		authLogger('isAuthenticated', req.session);
+		//authLogger('isAuthenticated-user', req.user);
+		// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
+		// you can do this however you want with whatever variables you set up
+		if (req.session && req.session.authenticated) {
+			return next();
+		}
+
+		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+		res.redirect('/login');
+	}
+
+
 	var User = program.require('models/user');
 	var Users = {
 		find: function(profile, done) {
@@ -68,7 +85,7 @@ module.exports = function(program, app) {
 		},
 		findOrCreate: function(profile, done) {
 			var user = new User(profile);
-			authLogger('findOrCreate', user);
+			authLogger('findOrCreate', user._id);
 			db.get(user._id).then(function(u) {
 				authLogger('findOrCreate', 'found', u._id);
 				done(null, u);
@@ -181,6 +198,7 @@ module.exports = function(program, app) {
 		req.session.authenticated = true;
 		req.session.user = req.user;
 		req.session.save(function(err) {
+			authLogger('session.save', req.session);
 			if (err) {
 				throw err;
 			}
@@ -190,12 +208,20 @@ module.exports = function(program, app) {
 		});
 	});
 
+	// create application/x-www-form-urlencoded parser
+	var urlencodedParser = bodyParser.urlencoded({
+		extended: false
+	})
+
 	// TODO: Handle post certs
-	router.post('/account', [bodyParser.urlencoded(), isAuthenticated], function(req, res) {
-		console.log('file', req.body);
+	router.post('/account', [urlencodedParser, isAuthenticated], function(req, res) {
+
+		console.log('file', req.file);
+
+
+
 		res.render('account', {
-			message: 'File uploaded!',
-			user: req.user
+			message: 'File uploaded!'
 		});
 	});
 
@@ -212,20 +238,6 @@ module.exports = function(program, app) {
 		});
 	});
 
-
-	function isAuthenticated(req, res, next) {
-
-		// do any checks you want to in here
-		authLogger('isAuthenticated', req.session);
-		// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
-		// you can do this however you want with whatever variables you set up
-		if (req.session && req.session.authenticated) {
-			return next();
-		}
-
-		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
-		res.redirect('/login');
-	}
 
 
 	app.get('/api/' + config.version + '/me', isAuthenticated, function(req, res, next) {
