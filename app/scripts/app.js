@@ -27,6 +27,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 
 	window.App = $rootScope.App = {
 		http: $http,
+		debug: true,
 		api: Api,
 		title: 'Pass Manager',
 		description: 'With this interface you can easily manage Apple Wallet Passes.',
@@ -160,7 +161,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 						url: '/api/v1/admin/find?docType=registration'
 					}).then(function(resp) {
 						return resp.data;
-					}, function(){
+					}, function() {
 						return []
 					});
 				}

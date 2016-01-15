@@ -109,5 +109,6 @@
     ]
   },
   "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
-  "_key": "mock-boardingpass"
+  "_key": "mock-boardingpass",
+  "_jps": "mock-boardingpass"
 }

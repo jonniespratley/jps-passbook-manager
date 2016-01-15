@@ -30,8 +30,10 @@ app.use('/public', serveStatic(path.resolve(__dirname, './app/bower_components')
 app.use('/public', serveStatic(path.resolve(__dirname, config.publicDir)));
 app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
 
+app.locals.config = config;
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 program.app = app;
 
 var middleware = [
@@ -45,5 +47,8 @@ middleware.forEach(function(m) {
 });
 
 app.listen(port, host, function() {
+
+	logger('Express Host', app.get('host'));
+	logger('Express Port', app.get('port'));
 	logger('listening on', host + ':' + port);
 });

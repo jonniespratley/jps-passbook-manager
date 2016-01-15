@@ -13,6 +13,6 @@ applications:
       #- my_viewsvc_instance # change this to your view service instance name
     env:
       NODE_ENV: 'production'
-      DEBUG: 'jps-passbook-manager:*'
+      DEBUG: '*'
       UAA_SERVER_URL: https://69687fd0-c926-4e4f-8563-5c88042db69c.predix-uaa.run.aws-usw02-pr.ice.predix.io
       #REDIS: redis-<num>

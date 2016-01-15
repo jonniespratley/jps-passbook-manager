@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path');
+
 //TODO - Change to your values
 const APPLE_TEAM_IDENTIFIER = 'USE9YUYDFH';
 const APPLE_PASS_TYPE_IDENTIFIER = 'pass.passbookmanager.io';
@@ -40,6 +41,10 @@ var config = {
 	baseUrl: 'http://localhost:5984/passbookmanager',
 	"message": "Passbook Manager API Server",
 	"dataPath": path.resolve(__dirname, "./data"),
+	redis: {
+		hostname: '127.0.0.1',
+		port: 6379
+	},
 	"version": "v1",
 	database: {
 		name: 'passbookmanager',
@@ -55,8 +60,8 @@ var config = {
 		"salt": "a58e325c6df628d07a18b673a3420986"
 	},
 	"server": {
-		"host": "localhost",
-		"port": 5001
+		"host": process.env.VCAP_APP_HOST || process.env.IP || "localhost",
+		"port": process.env.PORT || 5001
 	},
 	"db": {
 		"local": "passbookmanager",
@@ -65,13 +70,12 @@ var config = {
 	"collections": [
 		"devices",
 		"passes",
+		"registrations",
 		"notifications",
 		"settings"
 	],
 	"staticDir": "./app",
-	"publicDir": "./www",
-	"uploadsTmpDir": "./.tmp",
-	"uploadsDestDir": "./www"
+	"publicDir": "./public"
 };
 
 module.exports = config;

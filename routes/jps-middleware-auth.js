@@ -1,44 +1,59 @@
 'use strict';
+const url = require('url');
+const express = require('express');
+const expressValidator = require('express-validator');
+const methodOverride = require('method-override');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+
+const passport = require('passport');
+const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
+
+
+
 var GITHUB_PRODUCTION_CLIENT_ID = '96943ce4c9b4f09bf98f';
 var GITHUB_PRODUCTION_CLIENT_SECRET = 'f9809160c20f1f57876924c015aa68283f1c4a4b';
 var GITHUB_DEV_CLIENT_ID = '7171ef010ffc067de767';
 var GITHUB_DEV_CLIENT_SECRET = '387c9cd85b4c48abcaa7547bf2865aaf922e4ac2';
 var GITHUB_CLIENT_ID = GITHUB_DEV_CLIENT_ID;
 var GITHUB_CLIENT_SECRET = GITHUB_DEV_CLIENT_SECRET;
-
 if (process.env.NODE_ENV === 'production') {
 	GITHUB_CLIENT_ID = GITHUB_PRODUCTION_CLIENT_ID;
 	GITHUB_CLIENT_SECRET = GITHUB_PRODUCTION_CLIENT_SECRET;
 }
 
-const OAUTH_CALLBACK_URL = 'http://localhost:5001/auth/provider/callback';
-const OAUTH_CLIENT_SECRET = GITHUB_CLIENT_SECRET;
-const OAUTH_CLIENT_ID = GITHUB_CLIENT_ID;
-const OAUTH_AUTH_URL = 'https://github.com/login/oauth/authorize';
-const OAUTH_TOKEN_URL = 'https://github.com/login/oauth/access_token';
-
-const express = require('express');
-const expressValidator = require('express-validator');
-const methodOverride = require('method-override');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const passport = require('passport');
-const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
-
 
 module.exports = function(program, app) {
-	if (!app) {
-		throw new Error('Must provide an express app as argument 2');
-	}
-	var Router = express.Router;
-	var jsonParser = bodyParser.json();
+
+	const Router = express.Router;
+	const jsonParser = bodyParser.json();
+	const User = program.require('models/user');
 	var config = program.config.defaults;
 	var db = program.db;
+
+	const OAUTH_CALLBACK_URL = url.format({
+		protocol: (process.env.VCAP_APP_HOST ? 'https' : 'http'),
+		hostname: process.env.VCAP_APP_HOST || process.env.IP || config.server.hostname || '127.0.0.1',
+		port: process.env.PORT || config.server.port || 8080,
+		pathname: '/auth/provider/callback'
+	});
+
+
+	const OAUTH_CLIENT_SECRET = GITHUB_CLIENT_SECRET;
+	const OAUTH_CLIENT_ID = GITHUB_CLIENT_ID;
+	const OAUTH_AUTH_URL = 'https://github.com/login/oauth/authorize';
+	const OAUTH_TOKEN_URL = 'https://github.com/login/oauth/access_token';
+
 	var router = new Router();
 	var authLogger = program.getLogger('auth');
 
-	var User = program.require('models/user');
+	authLogger('OAUTH_CLIENT_SECRET', OAUTH_CLIENT_SECRET);
+	authLogger('OAUTH_CLIENT_ID', OAUTH_CLIENT_ID);
+	authLogger('OAUTH_AUTH_URL', OAUTH_AUTH_URL);
+	authLogger('OAUTH_TOKEN_URL', OAUTH_TOKEN_URL);
+	authLogger('OAUTH_CALLBACK_URL', OAUTH_CALLBACK_URL);
 
 	// Simple route middleware to ensure user is authenticated.
 	//   Use this route middleware on any resource that needs to be protected.  If
@@ -53,24 +68,16 @@ module.exports = function(program, app) {
 		res.redirect('/login')
 	}
 
-
+	// TODO: do any checks you want to in here
 	function isAuthenticated(req, res, next) {
-
-		// do any checks you want to in here
 		authLogger('isAuthenticated', req.session);
-		//authLogger('isAuthenticated-user', req.user);
-		// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
-		// you can do this however you want with whatever variables you set up
 		if (req.session && req.session.authenticated) {
 			return next();
 		}
-
-		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 		res.redirect('/login');
 	}
 
 
-	var User = program.require('models/user');
 	var Users = {
 		find: function(profile, done) {
 			var user = new User(profile);
@@ -161,26 +168,21 @@ module.exports = function(program, app) {
 		}
 	));
 
-
-
 	router.get('/auth/github', passport.authenticate('github', {
-			scope: [
-				'user:email',
-				'gist'
-			]
-		}),
-		function(req, res) {});
+		scope: [
+			'user:email',
+			'gist'
+		]
+	}), function(req, res) {});
 
 	router.get('/auth/provider/callback',
 		passport.authenticate('github', {
 			failureRedirect: '/login'
 		}),
 		function(req, res) {
-
 			authLogger('github-callback', req.url);
 			res.redirect('/account');
 		});
-
 
 	//app.use(express.static(__dirname + '/public'));
 	router.get('/index', function(req, res) {
@@ -189,14 +191,13 @@ module.exports = function(program, app) {
 		});
 	});
 
-
 	// TODO: Handle get
 	router.get('/account', ensureAuthenticated, function(req, res) {
-		if (req.isAuthenticated) {
+		if (req.isAuthenticated()) {
 			console.log('isAuthenticated');
 		}
+		req.authenticated = true;
 		req.session.authenticated = true;
-		//	req.session.user = req.user;
 		req.session.save(function(err) {
 			authLogger('session.save', req.session);
 			if (err) {
@@ -208,24 +209,17 @@ module.exports = function(program, app) {
 		});
 	});
 
-	// create application/x-www-form-urlencoded parser
 	var urlencodedParser = bodyParser.urlencoded({
 		extended: false
 	})
 
 	// TODO: Handle post certs
 	router.post('/account', [urlencodedParser, isAuthenticated], function(req, res) {
-
 		console.log('file', req.file);
-
-
-
 		res.render('account', {
 			message: 'File uploaded!'
 		});
 	});
-
-
 
 	router.get('/logout', function(req, res) {
 		req.logout();
@@ -238,26 +232,24 @@ module.exports = function(program, app) {
 		});
 	});
 
-
-
 	app.get('/api/' + config.version + '/me', isAuthenticated, function(req, res, next) {
 		authLogger(req.url, req.session);
 		res.status(200).json(req.user);
 	});
 
-	var session = require('express-session');
-	var RedisStore = require('connect-redis')(session);
+	app.use(function(req, res, next) {
+		res.locals.user = req.user;
+		res.locals.session = req.session;
+		res.locals.authenticated = !req.authenticated;
 
+		next();
+	});
 	app.use(session({
-		store: new RedisStore({
-			host: '127.0.0.1',
-			port: 6379
-		}),
+		store: new RedisStore(config.redis),
 		secret: config.security.salt,
 		resave: true,
 		saveUninitialized: true
 	}));
-	//	app.use(partials());
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));

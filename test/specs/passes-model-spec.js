@@ -1,10 +1,10 @@
 var path = require('path');
 var assert = require('assert');
 
-var User = require(path.resolve(__dirname, '../../lib/models/user.js'));
+
 var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
 var p;
-var u;
+
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
 var config = program.config.defaults;
@@ -12,32 +12,6 @@ var config = program.config.defaults;
 var mocks = require('../helpers/mocks');
 
 
-describe('User Model', function () {
-	before(function(){
-		u = new User({
-			id: 'test',
-			displayName: 'jonnie',
-			_raw: ''
-		});
-	});
-
-	it('should be defined', function (done) {
-		assert(User);
-		done();
-	});
-
-	it('should create instance', function (done) {
-		assert(u);
-		assert(u.displayName === 'jonnie');
-		done();
-	});
-	it('should not have _raw', function (done) {
-		assert(u);
-		assert(!u._raw);
-		done();
-	});
-
-});
 describe('Passes', function() {
 	it('should be defined', function(done) {
 		assert(Passes);

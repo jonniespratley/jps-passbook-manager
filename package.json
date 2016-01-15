@@ -13,6 +13,7 @@
     "apn": "^1.7.5",
     "async": "^1.5.1",
     "body-parser": "^1.10.1",
+    "connect-multiparty": "^2.0.0",
     "connect-redis": "^3.0.2",
     "debug": "^2.2.0",
     "ejs": "^2.3.4",

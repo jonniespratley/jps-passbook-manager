@@ -131,6 +131,46 @@ module.exports = function(program, app) {
 		}
 	});
 
+	const multipart = require('connect-multiparty');
+	var multipartMiddleware = multipart();
+
+	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
+		console.log(req.body, req.files);
+
+		var files = null;
+		var file = null;
+		var toFilename;
+		if (req.method === 'POST') {
+			// parse a file upload
+			files = req.files;
+
+			for (var i = 0; i < files.length; i++) {
+				file = files[i];
+				toFilename = path.resolve(config.dataPath + '/uploads/' + file.originalFilename);
+				fs.writeFileSync(toFilename, fs.readFileSync(file.path));
+				logger('upload', 'file', file);
+				logger('upload', 'to', toFilename);
+			}
+
+			res.end('File uploaded');
+		} else {
+			// show a file upload form
+			res.writeHead(200, {
+				'content-type': 'text/html'
+			});
+			res.end(
+				'<form action="" enctype="multipart/form-data" method="post">' +
+				'<input type="text" name="title"><br>' +
+				'<input type="file" name="upload" multiple="multiple"><br>' +
+				'<input type="submit" value="Upload">' +
+				'</form>'
+			);
+		}
+
+
+		// don't forget to delete all req.files when done
+	});
+
 
 	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');

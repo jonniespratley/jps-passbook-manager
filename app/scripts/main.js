@@ -1,6 +1,7 @@
-$(document).ready(function () {
+$(document).ready(function() {
+	$('.collapse').collapse();
 
-	$('.scroll').click(function (event) {
+	$('.scroll').click(function(event) {
 		event.preventDefault();
 		$('html,body').animate({
 			scrollTop: $(this.hash).offset().top - 50
@@ -8,7 +9,7 @@ $(document).ready(function () {
 	});
 
 
-	$(document).find('.delete-btn').on('click', function (e) {
+	$(document).find('.delete-btn').on('click', function(e) {
 		e.preventDefault();
 		var c = confirm('DELETE: Are you sure?');
 		if (c) {
@@ -21,16 +22,16 @@ $(document).ready(function () {
 
 
 	//Toggle content
-	$('.page-header h1').bind("click", function () {
+	$('.page-header h1').bind("click", function() {
 		$(this).next().slideToggle(200);
 	});
 
-	$('legend').on('click', function (e) {
+	$('legend').on('click', function(e) {
 		console.log(e);
 		$(this).next().slideToggle(200);
 	});
 
-	$('.toggle').bind("click", function () {
+	$('.toggle').bind("click", function() {
 		$(this).next('div').slideToggle(200);
 	});
 
