@@ -245,7 +245,7 @@ module.exports = function(program, app) {
 		next();
 	});
 	app.use(session({
-		store: new RedisStore(config.redis),
+		//	store: new RedisStore(config.redis),
 		secret: config.security.salt,
 		resave: true,
 		saveUninitialized: true

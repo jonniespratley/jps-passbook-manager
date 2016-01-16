@@ -9,15 +9,17 @@
         <div class="col-sm-12">
 
           <% if (!user) { %>
-          	<div class="jumbotron">
-          	  <h2>Please sign in.</h2>
-              <p>
-                <a href="/auth/github" class="btn btn-lg btn-social btn-github">
-              	   <span class="fa fa-github"></span>
-              	    Sign in with Github
-                </a>
+          	<div class="alert alert-info">
+          	  <p>
+                <strong>Hey!</strong> Please sign in.
               </p>
           	</div>
+            <p>
+              <a href="/auth/github" class="btn btn-block btn-lg btn-social btn-github">
+                 <i class="fa fa-github"></i>
+                  Sign in with Github
+              </a>
+            </p>
           <% } else { %>
           	<h2>Hello, <%= user.displayName %>.</h2>
           <% } %>

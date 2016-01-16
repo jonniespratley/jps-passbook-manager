@@ -36,6 +36,7 @@ describe('Utils', function(done) {
 		GITHUB_USERS.forEach(function(n) {
 			utils.githubToPass(n, function(err, user) {
 				assert(user, 'has user');
+				user.serialNumber = '123456789';
 				jpsPassbook.createPass(user, function(err, resp) {
 					assert(resp, 'has pass');
 					done();

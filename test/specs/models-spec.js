@@ -1,14 +1,41 @@
 var path = require('path');
 var assert = require('assert');
+var program = require(path.resolve(__dirname, '../../lib/program.js'))();
+var config = program.config.defaults;
 
+var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+
+var Users = require(path.resolve(__dirname, '../../lib/models/users.js'))(program.db);
 var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
 var d;
-describe('Device', function(done) {
+describe('Users', function() {
+	it('be definded', function() {
+		assert(Users);
+	});
+
+
+
+	it('findOrCreate(profile, done) - should find/create user', function(done) {
+		assert(Users.findOrCreate);
+		done();
+	});
+
+
+	it('find(profile, done) - should find user', function(done) {
+		assert(Users.find);
+
+	});
+});
+
+
+
+describe('Device', function() {
 	it('should throw error if no deviceLibraryIdentifier', function() {
 		assert.throws(function() {
 			d = new Device();
 		}, Error);
+		``
 	});
 });
 

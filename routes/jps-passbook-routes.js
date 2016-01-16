@@ -135,24 +135,38 @@ module.exports = function(program, app) {
 	var multipartMiddleware = multipart();
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
-		console.log(req.body, req.files);
 
+
+		var out = [];
 		var files = null;
 		var file = null;
 		var toFilename;
+
 		if (req.method === 'POST') {
+			logger('upload', req.files);
 			// parse a file upload
-			files = req.files;
+			files = req.files.files;
 
 			for (var i = 0; i < files.length; i++) {
 				file = files[i];
-				toFilename = path.resolve(config.dataPath + '/uploads/' + file.originalFilename);
-				fs.writeFileSync(toFilename, fs.readFileSync(file.path));
 				logger('upload', 'file', file);
-				logger('upload', 'to', toFilename);
+
+				toFilename = path.resolve(config.dataPath, './uploads/' + file.originalFilename);
+
+				//fs.writeFileSync(toFilename, fs.readFileSync(file.path));
+
+				try {
+					fs.copySync(file.path, toFilename);
+					out.push(toFilename);
+
+					logger('upload', 'to', toFilename);
+				} catch (err) {
+					console.error('Oh no, there was an error: ' + err.message)
+				}
+
 			}
 
-			res.end('File uploaded');
+			res.status(200).json(out);
 		} else {
 			// show a file upload form
 			res.writeHead(200, {
@@ -160,8 +174,8 @@ module.exports = function(program, app) {
 			});
 			res.end(
 				'<form action="" enctype="multipart/form-data" method="post">' +
-				'<input type="text" name="title"><br>' +
-				'<input type="file" name="upload" multiple="multiple"><br>' +
+				'<input type="file" name="files" multiple="multiple"><br>' +
+				//		'<input type="file" name="file"><br>' +
 				'<input type="submit" value="Upload">' +
 				'</form>'
 			);

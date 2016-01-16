@@ -27,7 +27,7 @@ jpsPassbookManagerApp
             method: 'POST',
             url: $scope.url || '/api/v1/upload',
             headers: {
-              'Content-Type': 'application/octestream'
+              'Content-Type': 'multipart/form-data'
             },
             data: f
           }).then(function(resp) {

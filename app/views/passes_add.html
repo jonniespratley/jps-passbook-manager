@@ -4,11 +4,8 @@
 	<div class="row">
 		<div class="col-sm-12">
 
-
 				<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
 
-
-			<ta>
 
 				<jps-card title="Details">
 					<fieldset>
@@ -22,7 +19,6 @@
 									  ng-change="loadSchema(t)"
 									  ng-options="t.name as t.title for t in passTypes"></select>
 						</formitem>
-
 						<formitem title="Organization:">
 							<input type="text" ng-model="pass.organizationName" class="form-control"/>
 						</formitem>
@@ -42,6 +38,17 @@
 				</jps-card>
 
 				<jps-card title="Fields">
+					<fieldset>
+						<legend>
+							Header fields
+						</legend>
+						<p>
+							Fields to be displayed in the header on the front of the pass.
+						</p>
+						<div id="pass-headerFields" class="well well-sm">
+							<pass-field-group label="Header Fields" fields="pass[pass.type].headerFields"></pass-field-group>
+						</div>
+					</fieldset>
 
 					<!-- @TODO: [Primary Fields] -->
 					<fieldset>
@@ -54,6 +61,7 @@
 							</pass-field-group>
 						</div>
 					</fieldset>
+
 					<fieldset>
 						<legend>
 							Secondary fields
@@ -65,6 +73,20 @@
 							<pass-field-group label="Secondary Fields" fields="pass[pass.type].secondaryFields"></pass-field-group>
 						</div>
 					</fieldset>
+
+
+					<fieldset>
+						<legend>
+							Auxiliary fields
+						</legend>
+						<p>
+							Additional fields to be displayed on the front of the pass.
+						</p>
+						<div id="pass-auxiliaryFields" class="well well-sm">
+							<pass-field-group label="Header Fields" fields="pass[pass.type].auxiliaryFields"></pass-field-group>
+						</div>
+					</fieldset>
+
 
 					<!-- @TODO: [Back Fields] -->
 					<fielset>
@@ -80,6 +102,8 @@
 					</fielset>
 				</jps-card>
 
+
+
 				<jps-card title="Relevance">
 
 					<!-- @TODO: [Beacons] -->
@@ -87,11 +111,11 @@
 						<legend>
 							Beacons
 						</legend>
-
+						<p>
+							Information about a location beacon.
+						</p>
 						<div id="pass-beaconFields" class="well well-sm">
-							<p>
-								Information about a location beacon.
-							</p>
+
 
 							<formitem title="Beacon #{{$index}}:" ng-repeat="l in pass.beacons">
 								<input type="text" name="proximityUUID" ng-model="l.proximityUUID" class="form-control" placeholder="Proximity UUID"/>
@@ -120,15 +144,15 @@
 							Locations
 						</legend>
 						<p>
-							Information about a location
+							Information about a location.
 						</p>
 						<div id="pass-locationFields" class="well well-sm">
 
 							<formitem title="Location #{{$index}}:" ng-repeat="l in pass.locations">
 								<div class="controls-row">
-									<input type="number" name="altitude" ng-model="l.altitude" class="form-control" placeholder="Altitude"/>
-									<input type="number" name="latitude" ng-model="l.latitude" class="form-control" placeholder="Latitude"/>
-									<input type="number" name="longitude" ng-model="l.longitude" class="form-control" placeholder="Longitude"/>
+									<input type="string" name="altitude" ng-model="l.altitude" class="form-control" placeholder="Altitude"/>
+									<input type="string" name="latitude" ng-model="l.latitude" class="form-control" placeholder="Latitude"/>
+									<input type="string" name="longitude" ng-model="l.longitude" class="form-control" placeholder="Longitude"/>
 									<input type="text" name="relevantText" ng-model="l.relevantText" class="form-control" placeholder="Relevant Text"/>
 									<span class="help-inline">
 										<button class="btn btn-mini btn-default remove-row-btn" type="button" ng-click="pass.locations.splice($index, 1)">
@@ -149,6 +173,9 @@
 						<legend>
 							Barcode
 						</legend>
+						<p>
+							Information about a barcode.
+						</p>
 						<div id="pass-barcodeFields" class="well well-sm">
 
 							<formitem title="Format:">
@@ -162,6 +189,7 @@
 									<textarea class="form-control"
 												ng-change="updateQrcode(pass)"
 												 ng-model="pass.barcode.message"></textarea>
+
 							</formitem>
 
 							<formitem title="Image:">
@@ -215,8 +243,7 @@
 					<fieldset>
 						<legend>Images</legend>
 						<p>
-
-
+							Assets that make up your passes appearance.
 						</p>
 
 						<formitem title="Background.png">
@@ -295,12 +322,10 @@
 						</div>
 					</fieldset>
 				</jps-card>
-			</tabs>
-
-								<button ng-click="savePass(pass)" class="btn btn-primary btn-block">
-									Save
-								</button>
-	</form>
+					<button ng-click="savePass(pass)" class="btn btn-primary btn-block">
+						Save
+					</button>
+				</form>
 		</div>
 	</div>
 
