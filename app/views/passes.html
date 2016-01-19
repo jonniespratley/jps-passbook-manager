@@ -1,7 +1,6 @@
 <div class="window">
 	<ol class="breadcrumb">
   <li><a href="#/">Home</a></li>
-
   <li class="active">Passes</li>
 </ol>
 	<!--
@@ -18,46 +17,9 @@
 			<span class="icon icon-plus"></span>
 		</div>
 	</div-->
-
-
-
-
 	</div>
-
 	<div class="window-content">
-
-		<div class="pane-group row" ng-init="SmartPass.init()">
-
-				<!--		-->
-			<div class="sidebar col-sm-12">
-				<ul class="list-group">
-					<li class="list-group-header">
-						<input class="form-control" type="text" placeholder="Search..." ng-model="searchFilter">
-					</li>
-					<li ng-click="SmartPass.selectPass(pass);"
-						 ng-class="{'active': SmartPass.pass === pass}"
-						 class="list-group-item"
-						 ng-repeat="pass in passes track by $index | orderBy:updated_at:reverse | filter:searchFilter"
-						 id="pass-{{pass._id}}">
-
-						<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon im media-object pull-left" />
-						<div class="media-body">
-							<strong>
-								{{pass.organizationName}}
-							</strong>
-							<span>
-               <br/>
-               {{pass.description}}
-               <br/>
-         {{pass.serialNumber}}
-       </span>
-						</div>
-					</li>
-				</ul>
-			</div>
-
-
-
+		<div class="pane-group row">
 
 			<div class="pane col-sm-12">
 <!--

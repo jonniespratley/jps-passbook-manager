@@ -23,18 +23,31 @@ jpsPassbookManagerApp
 
         function sendUploadRequest(f) {
           console.warn('Sending', f);
-          Api.request({
-            method: 'POST',
-            url: $scope.url || '/api/v1/upload',
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            data: f
-          }).then(function(resp) {
-            console.warn('Upload response', resp);
-          }).catch(function(err) {
-            console.error('Upload error', err);
-          })
+          var data = new FormData();
+          data.append("files", f);
+
+          var xhr = new XMLHttpRequest();
+          xhr.addEventListener("readystatechange", function() {
+            if (this.readyState === 4) {
+              console.log(this.responseText);
+            }
+          });
+
+          xhr.open("POST", "/api/v1/upload");
+          xhr.send(data);
+          /*
+                    Api.request({
+                      method: 'POST',
+                      url: $scope.url || '/api/v1/upload',
+                      headers: {
+                        'Content-Type': 'multipart/form-data'
+                      },
+                      data: f
+                    }).then(function(resp) {
+                      console.warn('Upload response', resp);
+                    }).catch(function(err) {
+                      console.error('Upload error', err);
+                    })*/
 
         }
 

@@ -13,22 +13,16 @@ describe('Users', function() {
 	it('be definded', function() {
 		assert(Users);
 	});
-
-
-
-	it('findOrCreate(profile, done) - should find/create user', function(done) {
+	xit('findOrCreate(profile, done) - should find/create user', function(done) {
 		assert(Users.findOrCreate);
 		done();
 	});
 
-
-	it('find(profile, done) - should find user', function(done) {
+	it('find(profile, done) - should find user', function() {
 		assert(Users.find);
 
 	});
 });
-
-
 
 describe('Device', function() {
 	it('should throw error if no deviceLibraryIdentifier', function() {

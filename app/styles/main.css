@@ -10,7 +10,7 @@
 @import url('../bower_components/bootstrap/dist/css/bootstrap-theme.css');
 */
 
-
+.ace_editor { height: 200px; }
 
 
 @import url('./bootstrap.min.css');

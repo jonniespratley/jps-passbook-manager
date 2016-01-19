@@ -153,9 +153,10 @@ module.exports = function(program, app) {
 
 				toFilename = path.resolve(config.dataPath, './uploads/' + file.originalFilename);
 
-				//fs.writeFileSync(toFilename, fs.readFileSync(file.path));
+
 
 				try {
+					fs.writeFileSync(toFilename, fs.readFileSync(file.path));
 					fs.copySync(file.path, toFilename);
 					out.push(toFilename);
 
@@ -164,9 +165,10 @@ module.exports = function(program, app) {
 					console.error('Oh no, there was an error: ' + err.message)
 				}
 
-			}
 
+			}
 			res.status(200).json(out);
+
 		} else {
 			// show a file upload form
 			res.writeHead(200, {

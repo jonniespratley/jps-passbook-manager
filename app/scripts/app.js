@@ -3,6 +3,7 @@
 var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'ngRoute',
 	'ngResource',
+	'ui.ace',
 	'mgcrea.ngStrap'
 ])
 
