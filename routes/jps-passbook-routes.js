@@ -135,17 +135,18 @@ module.exports = function(program, app) {
 	var multipartMiddleware = multipart();
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
-
-
 		var out = [];
-		var files = null;
+		var files = [];
 		var file = null;
 		var toFilename;
 
 		if (req.method === 'POST') {
 			logger('upload', req.files);
+
 			// parse a file upload
 			files = req.files.files;
+
+
 
 			for (var i = 0; i < files.length; i++) {
 				file = files[i];
@@ -153,16 +154,17 @@ module.exports = function(program, app) {
 
 				toFilename = path.resolve(config.dataPath, './uploads/' + file.originalFilename);
 
-
-
 				try {
 					fs.writeFileSync(toFilename, fs.readFileSync(file.path));
 					fs.copySync(file.path, toFilename);
 					out.push(toFilename);
-
 					logger('upload', 'to', toFilename);
 				} catch (err) {
-					console.error('Oh no, there was an error: ' + err.message)
+					console.error('Oh no, there was an error: ' + err.message);
+
+					res.status(400).json({
+						error: err.message
+					});
 				}
 
 

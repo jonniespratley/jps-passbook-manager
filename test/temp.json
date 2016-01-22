@@ -4,8 +4,8 @@
     "pushToken": "ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2",
     "deviceLibraryIdentifier": "1234567890",
     "docType": "device",
-    "created_at": 1452985916514,
-    "updated_at": 1452985916514,
+    "created_at": 1453503051284,
+    "updated_at": 1453503051284,
     "type": "device",
     "passTypeIdentifier": "pass.passbookmanager.io",
     "authorization": "ApplePass 123456789",
@@ -19,13 +19,13 @@
         "test log"
       ]
     },
-    "created_at": 1452985916487
+    "created_at": 1453503051268
   },
   "pass-jonniespratley": {
     "_id": "pass-jonniespratley",
     "docType": "pass",
     "type": "github",
-    "lastUpdated": 1452985917611,
+    "lastUpdated": 1453503052339,
     "logoText": "Github",
     "description": "Jonnie Spratley Github",
     "formatVersion": 1,
@@ -33,7 +33,7 @@
     "passTypeIdentifier": "pass.passbookmanager.io",
     "serialNumber": "123456789",
     "teamIdentifier": "USE9YUYDFH",
-    "authenticationToken": "ce9c45cf-c246-47f4-8f10-20806300fb27",
+    "authenticationToken": "db133ab3-6975-48b0-a837-9049ad13e6c9",
     "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
     "voided": false,
     "barcode": {
