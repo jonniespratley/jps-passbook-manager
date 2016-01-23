@@ -85,10 +85,11 @@ module.exports = function(program, app) {
 		logger('sign', req.params);
 		program.db.get(req.params.id).then(function(resp) {
 			if (resp) {
-				jpsPassbook.signPass(resp, '-p', function(err, filename) {
+				jpsPassbook.createPass(resp, function(err, filename) {
 					if (err) {
 						res.status(404).json(err);
 					}
+					logger('sign', filename);
 					//res.status(200).send(data);
 					res.set('Content-Type', 'application/vnd.apple.pkpass')
 						.status(200)

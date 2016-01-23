@@ -40,7 +40,7 @@ var config = {
 	debug: true,
 	baseUrl: 'http://localhost:5984/passbookmanager',
 	"message": "Passbook Manager API Server",
-	"dataPath": path.resolve(__dirname, "./data"),
+	"dataPath": path.resolve(__dirname, "./data/"),
 	redis: {
 		hostname: '127.0.0.1',
 		port: 6379

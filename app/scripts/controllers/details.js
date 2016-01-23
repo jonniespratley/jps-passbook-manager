@@ -50,9 +50,9 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, $htt
     p = p || {};
     console.log('savePass', p);
     if (p._id) {
-      db.put(p).then(function(data) {
-        console.log('response', data);
-
+      db.put(p).then(function(resp) {
+        console.log('response', resp);
+        $scope.pass = resp.data;
       }).catch(function(err) {
         console.error('savePass', err);
       });

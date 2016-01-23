@@ -3,7 +3,7 @@ dist
 node_modules
 bower_components
 app/bower_components/
-
+db.json
 app/components
 .DS_Store
 db
@@ -20,6 +20,7 @@ atlassian-ide-plugin.xml
 
 # Data store
 #data
+temp.json
 data.json
 
 coverage

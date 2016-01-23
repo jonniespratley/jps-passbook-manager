@@ -13,8 +13,6 @@
 }
 
 .pass {
-
-
 	margin: 10px auto;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -47,12 +45,12 @@ dt{
 	padding: 5px;
 }
 
-div.pass-header {
+.pass-header {
 	border-bottom: 1px solid #ccc;
 	padding-left: 2px;
 }
 
-div.pass-header i {
+.pass-header i {
 	margin-right: 5px;
 }
 .pass-header h1{
