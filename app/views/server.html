@@ -52,86 +52,19 @@
 
 
 		<tabs id="server-tabs">
-
 			<pane title="Logs">
-				<table id="logs-table" class="table table-condensed table-bordered">
-					<thead>
-					<th>
-						ID
-					</th>
-					<th>
-						Date
-					</th>
-					<th>
-						Log
-					</th>
-					</thead>
-					<tbody>
-					<tr ng-repeat="item in logs track by $index | orderBy:_id:sort" id="{{item._id}}">
-						<td>
-							{{item._id}}
-						</td>
-						<td>
-							{{item.created_at | date:'medium'}}
-						</td>
-						<td>
-							<textarea class="form-control">{{item.data.logs.join('\n')}}</textarea>
-						</td>
-					</tr>
-					</tbody>
-				</table>
+				<div ng-include src="'views/_logs-table.html'"></div>
 			</pane>
-
-
-
 			<!-- TODO: Devices -->
 			<pane title="Devices">
-				<table id="devices-table" class="table table-condensed table-bordered">
-					<thead>
 
-					<th>deviceLibraryIdentifier</th>
-					<th>Serial #</th>
-					<th>Created</th>
-					<th>Actions</th>
-					</thead>
-					<tbody>
-					<tr
-						ng-repeat="item in devices track by $index | orderBy:created_at:true"
-						id="{{item._id}}">
-
-						<td>{{item.deviceLibraryIdentifier}}</td>
-						<td>{{item.serialNumber}}</td>
-						<td>{{item.created_at}}</td>
-						<td></td>
-					</tr>
-					</tbody>
-				</table>
 			</pane>
 
 
 
 			<!-- TODO: registrations -->
 			<pane title="Registrations">
-				<table id="registrations-table" class="table table-condensed table-bordered">
-					<thead>
-					<th>ID</th>
-					<th>Device</th>
-					<th>Pass</th>
-					<th>Created</th>
-					<th>Actions</th>
-					</thead>
-					<tbody>
-					<tr
-						ng-repeat="item in registrations track by $index | orderBy:created_at:true"
-						id="{{item._id}}">
-						<td>{{item._id}}</td>
-						<td>{{item.device}}</td>
-						<td>{{item.pass}}</td>
-						<td>{{item.created_at}}</td>
-						<td></td>
-					</tr>
-					</tbody>
-				</table>
+
 			</pane>
 
 

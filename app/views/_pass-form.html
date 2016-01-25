@@ -1,6 +1,7 @@
 
 
-			<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
+			<form id="passForm" class="form-horizontal"
+			ng-submit="savePass(pass);" ng-show="pass">
 
 
 				<jps-card title="Details">
@@ -121,15 +122,17 @@
 									<input type="text" name="minor" ng-model="l.minor" class="form-control" placeholder="Minor"/>
 
 									<span class="help-inline">
-										<button class="btn btn-mini btn-default remove-row-btn" type="button" ng-click="pass.beacons.splice($index, 1)">
-											<i class="fa fa-lg fa-times-circle"></i>
+										<button class="btn btn-mini btn--outline remove-row-btn" type="button" ng-click="pass.beacons.splice($index, 1)">
+										  <i class="fa fa-lg fa-times"></i>
 										</button>
 									</span>
 								</div>
 							</formitem>
 
-							<button class="btn btn-block btn-default" type="button"
-										ng-click="pass.beacons.push({proximityUUID: '', major: 0, minor: 1, relevantText: 'Nearby'})"> Add
+							<button class="btn btn-block btn-default btn--outline" type="button"
+										ng-click="pass.beacons.push({proximityUUID: '', major: 0, minor: 1, relevantText: 'Nearby'})">
+  <i class="fa fa-lg fa-plus"></i>
+										Add
 							</button>
 						</div>
 					</fieldset>
@@ -157,7 +160,7 @@
 									</span>
 								</div>
 							</formitem>
-							<button class="btn btn-block btn-default" type="button"
+							<button class="btn btn-block btn-default btn--outline" type="button"
 									  ng-click="pass.locations.push({latitude: '37.6189722', longitude: '-122.3748889'})"> Add
 							</button>
 						</div>
@@ -303,7 +306,7 @@
 								<input type="text" ng-model="pass.teamIdentifier" class="form-control"/>
 							</formitem>
 
-							<formitem title="Web Service URL:">
+							<formitem title="Web Service:">
 								<input type="text" ng-model="pass.webServiceURL" class="form-control" disabled=""/>
 							</formitem>
 
@@ -318,7 +321,8 @@
 						</div>
 					</fieldset>
 				</jps-card>
-					<button ng-click="savePass(pass)" class="btn btn-primary btn-block">
+					<button type="submit"
+						class="btn btn-primary btn-block">
 						Save
 					</button>
 				</form>

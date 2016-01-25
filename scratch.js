@@ -17,8 +17,8 @@ const SignPass = require('./lib/signpass');
 
 var output_url = path.resolve(__dirname, './tmp');
 var wwdr_url = path.resolve(__dirname, './certificates/wwdr-authority.pem');
-var cert_url = path.resolve(__dirname, './certificates/pass-passbook-manager-cert.pem');
-var key_url = path.resolve(__dirname, './certificates/pass-passbook-manager-key.pem');
+var cert_url = path.resolve(__dirname, './certificates/pass-passbookmanager-cert.pem');
+var key_url = path.resolve(__dirname, './certificates/pass-passbookmanager-key.pem');
 var cert_pass = 'fred';
 var pass_url = path.resolve(__dirname, './data/passes/pass-jonniespratley.raw');
 
@@ -63,28 +63,49 @@ logger('cmd5', cmd5);
 
 var cmds =
 	`
-
 	openssl pkcs12 -clcerts -nokeys -out ${APN_CERT_PEM} -in ${APN_CERT}
 	openssl pkcs12 -nocerts -out ${APN_KEY_PEM} -in ${APN_KEY}
 	cat ${APN_CERT_PEM} ${APN_KEY_PEM} > ./certificates/apns-production.pem
 	openssl s_client -connect gateway.push.apple.com:2195 -cert ${APN_CERT_PEM} -key ${APN_KEY_PEM}
 `;
-
 //console.log(cmds);
-
-
 const GITHUB_USERS = [
-	//'sindresorhus',
-	//'eddiemonge',
-	//'addyosmani',
+	'sindresorhus',
+	'eddiemonge',
+	'addyosmani',
 	'jonniespratley'
 ];
+
+
+function downloadGithubAvatar(user, output) {
+	if (!user.avatar_url) {
+		return;
+	}
+	let filename = path.resolve(output, './thumbnail@2x.png');
+	logger('downloadGithubAvatar', user.avatar_url);
+
+	request
+		.get(user.avatar_url)
+		.on('error', function(err) {
+			console.log(err)
+		})
+		.pipe(require('fs').createWriteStream(filename))
+
+
+}
 /*
 _.forEach(GITHUB_USERS, function(n) {
-	utils.githubToPass(n, function(err, user) {
-		logger('github user', user);
-		jpsPassbook.createPass(user, true, function(err, resp) {
+
+	utils.githubToPass(n, function(err, resp) {
+		logger('github user', resp);
+
+		//request(user.avatar_url).pipe(fs.createWriteStream(user.name + '@2x.png'))
+		jpsPassbook.createPass(resp.pass, function(err, pass) {
 			logger('create github pass', resp);
+
+			downloadGithubAvatar(resp.user, pass.filename);
+			signPass(pass.filename);
+
 		});
 	});
 
@@ -99,8 +120,53 @@ request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/fi
 		program.db.put(doc);
 	});
 });
+var pem = require('pem');
+pem.readCertificateInfo('./certificates/pass-cert.pem', function(err, data) {
+	logger('data', data);
+});
 
 */
+var pem = require('pem');
+var _cert = fs.readFileSync(path.resolve(__dirname, './certificates/pass.cert'));
+pem.readCertificateInfo(_cert, function(err, data) {
+	logger('readCertificateInfo', err, data);
+});
 
-var signpass = new SignPass(pass_url, cert_url, cert_pass, key_url, wwdr_url, output_url);
-signpass.sign_pass();
+var cert_url = path.resolve(__dirname, './certificates/pass.p12');
+
+
+
+utils.createCerts(cert_url, 'fred').forEach(function(cmd) {
+	//	child_process.execSync(cmd);
+	console.log(cmd);
+});
+
+
+
+function signPass(raw) {
+
+	var options = {
+		passFilename: raw,
+		certFilename: path.resolve(__dirname, './certificates/pass-passbookmanager-cert.pem'),
+		certPassword: cert_pass,
+		keyFilename: path.resolve(__dirname, './certificates/pass-passbookmanager-key.pem'),
+		wwdrFilename: wwdr_url,
+		outputFilename: output_url,
+		compress: true
+	};
+
+	var signpass = new SignPass(options);
+	signpass.sign(function(err, resp) {
+		console.warn('signPass', resp);
+	});
+}
+
+program.db.find({
+	docType: 'pass'
+}).then(function(resp) {
+	resp.forEach(function(pass) {
+		logger('sign ', pass.filename);
+		//	signPass(pass.filename);
+	});
+
+})

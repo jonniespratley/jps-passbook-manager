@@ -1,64 +1,59 @@
 {
-
+	"formatVersion": 1,
+	"organizationName": "Passbook Example Company",
+	"serialNumber": "0000001",
+	"description": "Staff Pass for Employee Number 001",
+	"associatedStoreIdentifiers": [
+		375380948
+	],
+	"locations": [{
+		"latitude": 51.50506,
+		"longitude": -0.01960,
+		"relevantText": "Company Offices"
+	}],
+	"foregroundColor": "rgb(255, 255, 255)",
+	"backgroundColor": "rgb(90, 90, 90)",
+	"labelColor": "rgb(255, 255, 255)",
+	"logoText": "Company Staff ID",
+	"barcode": {
+		"format": "PKBarcodeFormatQR",
+		"message": "0000001",
+		"messageEncoding": "iso-8859-1",
+		"altText": "Staff ID 0000001"
+	},
 	"generic": {
-		"primaryFields": [
-			{
-				"key": "member",
-				"value": "Jonnie Spratley"
-			}
-		],
-		"secondaryFields": [
-			{
-				"key": "subtitle",
-				"label": "MEMBER SINCE",
-				"value": "2016"
-			}
-		],
-		"auxiliaryFields": [
-			{
-				"key": "level",
-				"label": "LEVEL",
-				"value": "Platinum"
-			},
-			{
-				"key": "favorite",
-				"label": "FAVORITE LANG",
-				"value": "JavaScript",
-				"textAlignment": "PKTextAlignmentRight"
-			}
-		],
-		"backFields": [
-			{
-				"numberStyle": "PKNumberStyleSpellOut",
-				"label": "spelled out",
-				"key": "numberStyle",
-				"value": 200
-			},
-			{
-				"key": "loc",
-				"label": "localized to french",
-				"value": "Oh my stars."
-			},
-			{
-				"label": "in reals",
-				"key": "currency",
-				"value": 200,
-				"currencyCode": "BRL"
-			},
-			{
-				"dateStyle": "PKDateStyleFull",
-				"label": "date full",
-				"key": "dateFull",
-				"value": "1980-05-07T10:00-05:00"
-			},
-			
-			{
-				"dateStyle": "PKDateStyleShort",
-				"label": "rel style",
-				"key": "relStyle",
-				"value": "2012-04-24T10:00-05:00",
-				"isRelative": true
-			}
-		]
+		"headerFields": [{
+			"key": "staffNumber",
+			"label": "Staff Number",
+			"value": "001"
+		}],
+		"primaryFields": [{
+			"key": "staffName",
+			"label": "Name",
+			"value": "Jonnie Spratley"
+		}],
+		"secondaryFields": [{
+			"key": "telephoneExt",
+			"label": "Extension",
+			"value": "9779"
+		}, {
+			"key": "jobTitle",
+			"label": "Job Title",
+			"value": "Chief Pass Creator"
+		}],
+		"backFields": [{
+			"key": "managersName",
+			"label": "Manager's Name",
+			"value": "Paul Bailey"
+		}, {
+			"key": "managersExt",
+			"label": "Manager's Extension",
+			"value": "9673"
+		}, {
+			"key": "expiryDate",
+			"dateStyle": "PKDateStyleShort",
+			"label": "Expiry Date",
+			"value": "2013-12-31T00:00-23:59"
+		}]
 	}
 }

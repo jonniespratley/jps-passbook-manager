@@ -1,19 +1,35 @@
 'use strict';
 const assert = require('assert');
+const _ = require('lodash');
+const child_process = require('child_process');
 const path = require('path');
 const utils = require(path.resolve(__dirname, '../../lib/utils'));
-
-
-var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
-var program = mocks.program;
-var config = program.config.defaults;
-var Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))
-var jpsPassbook = new Passbook(program);
+const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+const program = mocks.program;
+const config = program.config.defaults;
+const Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'));
+const cert_url = path.resolve(__dirname, '../../certificates/pass.p12');
+const cert_pass = 'fred';
+const jpsPassbook = new Passbook(program);
 
 describe('Utils', function(done) {
+
 	it('should be defined', function(done) {
 		assert(utils);
 		done();
+	});
+
+	it('should create cert/key files', function(done) {
+		var certs = utils.createCerts(cert_url, cert_pass);
+		var _done = _.after(certs.length, function() {
+			done();
+		});
+
+		_.forEach(certs, function(cmd) {
+			child_process.execSync(cmd);
+			console.log(cmd);
+			_done();
+		});
 	});
 
 	it('should return Github Pass', function(done) {
@@ -34,10 +50,11 @@ describe('Utils', function(done) {
 		];
 
 		GITHUB_USERS.forEach(function(n) {
-			utils.githubToPass(n, function(err, user) {
-				assert(user, 'has user');
-				user.serialNumber = '123456789';
-				jpsPassbook.createPass(user, function(err, resp) {
+			utils.githubToPass(n, function(err, res) {
+				assert(res.pass, 'has pass');
+				assert(res.user, 'has user');
+				res.pass.serialNumber = '123456789';
+				jpsPassbook.createPass(res.pass, function(err, resp) {
 					assert(resp, 'has pass');
 					done();
 				});

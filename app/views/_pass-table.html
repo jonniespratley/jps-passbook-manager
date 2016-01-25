@@ -1,0 +1,48 @@
+<table id="passes-table" class="table table-hover table-condensed table-bordered table-striped"
+		 ng-hide="pass._id">
+	<thead>
+	<tr>
+		<th class="th-type">Type</th>
+
+		<th>Description</th>
+		<th>Actions</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="pass in passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
+		<td class="pass-icon">
+			<a>
+				<img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="pass-icon"/>
+
+			</a>
+		</td>
+		<td>
+			<a href="#/passes/{{pass._id}}"> {{pass.description}} </a>
+			<br/>
+			{{pass.organizationName}}
+			<br/>
+			{{pass.serialNumber}}
+
+		</td>
+
+
+		<td>
+
+			<a ng-href="/api/v1/export/{{pass._id}}" target="_blank">
+				<!--
+				<img class="passbook-badge"
+				src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">-->
+				Export
+			</a>
+			<a ng-href="/api/v1/validate/{{pass._id}}" target="_blank">
+				Validate
+			</a>
+			<a ng-href="/api/v1/sign/{{pass._id}}" target="_blank">
+				Sign
+			</a>
+
+		</td>
+
+	</tr>
+	</tbody>
+</table>
