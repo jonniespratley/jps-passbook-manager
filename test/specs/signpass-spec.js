@@ -51,22 +51,34 @@ describe('SignPass', function(done) {
 		done();
 	});
 
+	it('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {
+		var cert_url = path.resolve(__dirname, '../../certificates/pass.p12');
+		SignPass.createPems(cert_url, 'fred', function(resp) {
+			console.log(resp);
+			done();
+		});
+	});
+
+
+
 	it('should create SignPass instance', function(done) {
 		signpass = new SignPass(options);
 		assert(signpass);
 		done();
 	});
 
-	it('sign all passes - should create .zip and .pkpass for all passes', function(done) {
+	it('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {
 		var _done = _.after(passes.length, function() {
 			done();
 		});
 
 		_.forEach(passes, function(pass) {
-			console.log('creating pass', pass);
+			console.log('creating pass', pass.filename);
 			options.passFilename = pass.filename;
 			signpass = new SignPass(options);
 			signpass.sign(function(err, resp) {
+				assert(fs.existsSync(resp.zip));
+				assert(fs.existsSync(resp.pkpass));
 				_done(resp);
 			});
 		});

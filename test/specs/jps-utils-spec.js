@@ -19,20 +19,7 @@ describe('Utils', function(done) {
 		done();
 	});
 
-	it('should create cert/key files', function(done) {
-		var certs = utils.createCerts(cert_url, cert_pass);
-		var _done = _.after(certs.length, function() {
-			done();
-		});
-
-		_.forEach(certs, function(cmd) {
-			child_process.execSync(cmd);
-			console.log(cmd);
-			_done();
-		});
-	});
-
-	it('should return Github Pass', function(done) {
+	xit('should return Github Pass', function(done) {
 		this.slow(5000);
 		utils.githubToPass('jonniespratley', function(err, user) {
 			assert(user);
@@ -40,28 +27,26 @@ describe('Utils', function(done) {
 		});
 	});
 
-	it('should create Github Pass', function(done) {
-
+	xit('should create Github Pass', function(done) {
 		const GITHUB_USERS = [
-			//'sindresorhus',
-			//'eddiemonge',
-			//'addyosmani',
+			'sindresorhus',
+			'eddiemonge',
+			'addyosmani',
 			'jonniespratley'
 		];
-
-		GITHUB_USERS.forEach(function(n) {
+		var _done = _.after(GITHUB_USERS.length, function() {
+			done();
+		});
+		_.forEach(GITHUB_USERS, function(n) {
 			utils.githubToPass(n, function(err, res) {
 				assert(res.pass, 'has pass');
 				assert(res.user, 'has user');
-				res.pass.serialNumber = '123456789';
 				jpsPassbook.createPass(res.pass, function(err, resp) {
-					assert(resp, 'has pass');
-					done();
+					assert(resp, 'has response');
+					_done();
 				});
 			});
-
 		});
-
 	});
 
 	it('checksum() - should create a checksum hash', function(done) {
@@ -69,7 +54,6 @@ describe('Utils', function(done) {
 		var hash1_expected = 'e53815e8c095e270c6560be1bb76a65d';
 		var hash2_expected = 'cd5855be428295a3cc1793d6e80ce47562d23def';
 		var hash2 = utils.checksum('This is my test text', 'sha1');
-
 		assert(hash1 === hash1_expected);
 		assert(hash2 === hash2_expected);
 		done();

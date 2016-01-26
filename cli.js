@@ -1,9 +1,12 @@
+#!/usr/bin/env node
+
 'use strict';
 var assert = require('assert');
 var fs = require('fs-extra');
 var _ = require('lodash');
 var path = require('path');
 var request = require("request");
+var SignPass = require(path.resolve(__dirname, './lib/SignPass.js'));
 var program = require(path.resolve(__dirname, './lib/program.js'))();
 var logger = program.utils.getLogger('cli');
 var vorpal = require('vorpal')();
@@ -69,31 +72,27 @@ cli
 
 // TODO: Certs command
 cli
-  .command('certs')
-  .option('-c, --cert', 'Path to certificate')
-  .option('-p, --pass', 'Passphrase for the certificate')
-
-.description('Utility to create a cert and key .pem')
+  .command('create-certs')
+  .option('-c, --cert <cert>', 'Path to certificate')
+  .option('-p, --pass <pass>', 'Passphrase for the certificate')
+  .description('Utility to create a cert and key .pem. (ex. create-certs -c certificates/pass/p12 -p fred)')
   .action(function(args, callback) {
-    logger(args.options);
+    logger(args);
 
+    var self = this;
     var cert_url = args.options.cert;
     var cert_pass = args.options.pass;
 
     if (cert_url && cert_pass) {
-
-      utils.createCerts(cert_url, cert_pass).forEach(function(cmd) {
+      SignPass.createPems(cert_url, cert_pass).forEach(function(cmd) {
         require('child_process').execSync(cmd);
-        console.log('run cmd', '$', cmd);
+        self.log('run cmd', '$', cmd);
         callback();
       });
     } else {
-      callback('Must provide cert and passhrase');
+      callback('Must provide path to .p12 and passhrase');
     }
-
   });
-
-
 
 // TODO: Github Pass command
 

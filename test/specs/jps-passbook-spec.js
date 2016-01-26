@@ -18,6 +18,7 @@ var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var passFiles = [];
 
 describe('jps-passbook', function() {
+
 	it('createPass() - should create each pass type', function(done) {
 		this.timeout(5000);
 		var len = mocks.mockPasses.length;

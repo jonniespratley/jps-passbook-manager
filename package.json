@@ -1,6 +1,9 @@
 {
   "name": "jps-passbook-manager",
   "version": "0.0.2",
+  "bin": {
+    "passbook-manager": "./cli.js"
+  },
   "scripts": {
     "cli": "node cli.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
@@ -10,12 +13,13 @@
     "watch": "nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {
-    "adm-zip": "^0.4.7",
+
     "apn": "^1.7.5",
     "async": "^1.5.1",
     "body-parser": "^1.10.1",
     "cli-table": "^0.3.1",
     "cli-tree": "0.0.1",
+    "commander": "^2.9.0",
     "connect-multiparty": "^2.0.0",
     "connect-redis": "^3.0.2",
     "debug": "^2.2.0",
