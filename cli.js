@@ -53,7 +53,9 @@ var tree = require('cli-tree');
 var Table = require('cli-table');
 
 function createTable(data) {
-  var table = new Table();
+  var table = new Table({
+    //  head: _(data).first().keys()
+  });
   if (data && data.length) {
     data.forEach(function(row) {
       table.push(row);

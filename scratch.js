@@ -17,8 +17,8 @@ const SignPass = require('./lib/signpass');
 
 var output_url = path.resolve(__dirname, './tmp');
 var wwdr_url = path.resolve(__dirname, './certificates/wwdr-authority.pem');
-var cert_url = path.resolve(__dirname, './certificates/pass-passbookmanager-cert.pem');
-var key_url = path.resolve(__dirname, './certificates/pass-passbookmanager-key.pem');
+var cert_url = path.resolve(__dirname, './certificates/pass-cert.pem');
+var key_url = path.resolve(__dirname, './certificates/pass-key.pem');
 var cert_pass = 'fred';
 var pass_url = path.resolve(__dirname, './data/passes/pass-jonniespratley.raw');
 
@@ -127,29 +127,36 @@ pem.readCertificateInfo('./certificates/pass-cert.pem', function(err, data) {
 
 */
 var pem = require('pem');
-var _cert = fs.readFileSync(path.resolve(__dirname, './certificates/pass.cert'));
+var _cert = fs.readFileSync(path.resolve(__dirname, './certificates/pass.cer'));
 pem.readCertificateInfo(_cert, function(err, data) {
 	logger('readCertificateInfo', err, data);
 });
 
 var cert_url = path.resolve(__dirname, './certificates/pass.p12');
-
-
-
-utils.createCerts(cert_url, 'fred').forEach(function(cmd) {
-	//	child_process.execSync(cmd);
-	console.log(cmd);
+SignPass.createPems(cert_url, 'fred', function(err, resp) {
+	console.log(resp);
 });
 
+
+function PassTypeId(id, o) {
+	return {
+		_id: '',
+		passTypeIdentifier: id,
+		cert: '',
+		key: '',
+		passpharse: '',
+		wwdr: ''
+	};
+}
 
 
 function signPass(raw) {
 
 	var options = {
 		passFilename: raw,
-		certFilename: path.resolve(__dirname, './certificates/pass-passbookmanager-cert.pem'),
+		certFilename: path.resolve(__dirname, './certificates/pass-cert.pem'),
 		certPassword: cert_pass,
-		keyFilename: path.resolve(__dirname, './certificates/pass-passbookmanager-key.pem'),
+		keyFilename: path.resolve(__dirname, './certificates/pass-key.pem'),
 		wwdrFilename: wwdr_url,
 		outputFilename: output_url,
 		compress: true
@@ -166,7 +173,7 @@ program.db.find({
 }).then(function(resp) {
 	resp.forEach(function(pass) {
 		logger('sign ', pass.filename);
-		//	signPass(pass.filename);
+		signPass(pass.filename);
 	});
 
 })

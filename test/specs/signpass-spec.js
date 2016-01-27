@@ -24,10 +24,10 @@ var files = null;
 
 var options = {
 	passFilename: rawpassFilename,
-	certFilename: certFilename,
-	certPassword: certPass,
-	keyFilename: keyFilename,
-	wwdrFilename: wwdrFilename,
+	cert: certFilename,
+	passphrase: certPass,
+	key: keyFilename,
+	wwdr: wwdrFilename,
 	outputFilename: tmpdir,
 	compress: true
 };
@@ -51,20 +51,18 @@ describe('SignPass', function(done) {
 		done();
 	});
 
+	it('should create SignPass instance', function(done) {
+		signpass = new SignPass(options);
+		assert(signpass);
+		done();
+	});
+
 	it('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {
 		var cert_url = path.resolve(__dirname, '../../certificates/pass.p12');
 		SignPass.createPems(cert_url, 'fred', function(resp) {
 			console.log(resp);
 			done();
 		});
-	});
-
-
-
-	it('should create SignPass instance', function(done) {
-		signpass = new SignPass(options);
-		assert(signpass);
-		done();
 	});
 
 	it('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {

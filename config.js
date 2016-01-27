@@ -4,6 +4,10 @@ const path = require('path');
 //TODO - Change to your values
 const APPLE_TEAM_IDENTIFIER = 'USE9YUYDFH';
 const APPLE_PASS_TYPE_IDENTIFIER = 'pass.passbookmanager.io';
+const APPLE_WWDR = path.resolve(__dirname, './certificates/wwdr-authority.pem');
+const APPLE_PASS_TYPE_IDENTIFIER_CERT = path.resolve(__dirname, './certificates/pass-cert.pem');
+const APPLE_PASS_TYPE_IDENTIFIER_KEY = path.resolve(__dirname, './certificates/pass-key.pem');
+
 const APPLE_WEB_SERVICE_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api';
 
 var VCAP_SERVICES = {
