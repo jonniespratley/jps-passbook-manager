@@ -17,7 +17,7 @@ var rawPassFolder = '';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var passFiles = [];
 
-describe('jps-passbook', function() {
+xdescribe('jps-passbook', function() {
 
 	it('createPass() - should create each pass type', function(done) {
 		this.timeout(5000);
