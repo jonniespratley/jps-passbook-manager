@@ -122,19 +122,6 @@ describe('routes', function() {
 		});
 
 
-		it('GET - /api/v1/admin/find?docType=device - should return devices', function(done) {
-			request(app)
-				.get('/api/v1/admin/find?docType=device')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		it('GET - /api/v1/admin/find?docType=log - should return logs', function(done) {
-			request(app)
-				.get('/api/v1/admin/find?docType=log')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
 
 	});
 
@@ -313,6 +300,22 @@ describe('routes', function() {
 				.send({
 					logs: ['test log']
 				})
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+
+
+		it('GET - /api/v1/admin/find?docType=device - should return devices', function(done) {
+			request(app)
+				.get('/api/v1/admin/find?docType=device')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/admin/find?docType=log - should return logs', function(done) {
+			request(app)
+				.get('/api/v1/admin/find?docType=log')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});

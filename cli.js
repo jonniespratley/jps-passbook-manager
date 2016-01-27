@@ -49,58 +49,160 @@ this app.
 
 =======================================================
 */
-
-
-
 var tree = require('cli-tree');
+var Table = require('cli-table');
 
+function createTable(data) {
+  var table = new Table();
+  if (data && data.length) {
+    data.forEach(function(row) {
+      table.push(row);
+    });
+  }
+  return table.toString();
+}
 
-
-cli
-  .command('passes [optionalArg]')
+cli.command('passes <action>')
   .option('-l, --list', 'List all passes.')
   .option('-e, --export', 'Export all passes. (.raw)')
   .option('-s, --sign', 'Sign all passes. (.pkpass)')
   .option('-v, --verbose', 'Print foobar instead.')
   .description('Various actions to manage passes.')
   .action(function(args, callback) {
+    var self = this;
     tree(args.options);
-    callback();
+
+    return new Promise(function(resolve, reject) {
+      switch (args.action) {
+
+
+        case 'list':
+          self.log('Getting passes');
+          program.models.Passes.getPasses().then(function(resp) {
+            self.log(createTable(resp));
+            resolve(resp);
+          }, reject);
+          break;
+
+
+        case 'export':
+          self.log('Export passes');
+          resolve();
+
+          break;
+
+        default:
+          reject('Pick a action');
+          break;
+      }
+
+
+    });
+
+
+  });
+
+
+// TODO: Devices
+cli.command('devices')
+  //.option('-c, --cert [cert]', 'The path to output the .pems')
+  .description('All devices')
+  .action(function(args, callback) {
+    let self = this;
+    return new Promise(function(resolve, reject) {
+      program.db.find({
+        docType: 'device'
+      }).then(function(resp) {
+        self.log(createTable(resp));
+        resolve(resp);
+      }, reject);
+    });
   });
 
 
 
-// TODO: Certs command
-cli
-  .command('create-certs')
-  .option('-c, --cert <cert>', 'Path to certificate')
+// TODO: Pems command
+cli.command('create-pems <cert>')
+  //.option('-c, --cert <cert>', 'Path to .p12 certificate')
   .option('-p, --pass <pass>', 'Passphrase for the certificate')
-  .description('Utility to create a cert and key .pem. (ex. create-certs -c certificates/pass/p12 -p fred)')
+  .description('Utility to create a cert and key .pem')
   .action(function(args, callback) {
-    logger(args);
-
     var self = this;
-    var cert_url = args.options.cert;
+    var cert_url = args.cert;
     var cert_pass = args.options.pass;
-
     if (cert_url && cert_pass) {
-      SignPass.createPems(cert_url, cert_pass).forEach(function(cmd) {
-        require('child_process').execSync(cmd);
-        self.log('run cmd', '$', cmd);
-        callback();
-      });
+      SignPass.createPems(cert_url, cert_pass, callback);
     } else {
       callback('Must provide path to .p12 and passhrase');
     }
   });
 
+
 // TODO: Github Pass command
+cli.command('create-pass [options]')
+  .option('-o, --output [output]', 'The path to output the .pkpass')
+  .description('Utility to create a Github pass.')
+  .action(function(args, callback) {
+    var self = this;
+    var questions = [{
+      type: "list",
+      name: "type",
+      message: "What type of pass? ",
+      choices: SignPass.passTypes
+    }, {
+      type: 'input',
+      name: 'logoText',
+      message: 'Logo Text: ',
+      default: function() {
+        return 'JPS';
+      }
+    }, {
+      type: 'input',
+      name: 'organizationName',
+      message: 'Organization: ',
+      default: function() {
+        return 'Passbook Manager';
+      }
+    }, {
+      type: 'input',
+      name: 'description',
+      message: 'Description: ',
+      default: function() {
+        return 'This is the default pass description.';
+      }
+    }];
+    this.prompt(questions, function(answers) {
+
+      self.log('Create github pass for', answers);
+    });
+
+  });
+
 
 
 // TODO: Sign pass command.
+cli.command('sign-pass')
+  .option('-o, --output [output]', 'The path to output the .pkpass')
+  .description('Utility to sign .raw into .pkpass')
+  .action(function(args, callback) {
+    var self = this;
+    var output_url = args.output;
 
+    callback('Please select a pass!');
+  });
+
+
+// TODO: Pass Type IDs
+cli.command('pass-type-ids')
+  .option('-c, --cert [cert]', 'The path to output the .pems')
+  .description('Utility to store certs and passpharses')
+  .action(function(args, callback) {
+    var self = this;
+    callback('Pass type ids');
+
+  });
 
 
 cli
-  .delimiter(program.pkg.name + '$')
+  .delimiter(program.pkg.config.delimiter + '$')
   .show();

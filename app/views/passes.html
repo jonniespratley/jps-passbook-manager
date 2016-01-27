@@ -1,55 +1,6 @@
-<div class="window">
-	<ol class="breadcrumb">
-  <li><a href="#/">Home</a></li>
-  <li class="active">Passes</li>
-</ol>
+<div class="clearfix">
 	<!--
-
-	<header class="toolbar toolbar-header">
-		<h2 class="title">Manage Passes</h2>
-	</header>
-
-	<div class="tab-group">
-		<div class="tab-item" id="{{tab.id}}" ng-repeat="tab in tabs" ng-class="{'active': tab.active}" ng-click="selectTab(tab)">
-			<span class="icon icon-cancel icon-close-tab"></span> {{tab.title}}
-		</div>
-		<div class="tab-item tab-item-fixed">
-			<span class="icon icon-plus"></span>
-		</div>
-	</div-->
-	</div>
-	<div class="window-content">
-		<div class="pane-group row">
-
-			<div class="pane col-sm-12">
-<!--
-				<div class="card-deck-wrapper">
-				  <div class="card-deck">
-				    <div class="card" ng-repeat="pass in passes">
-				      <img class="card-img-top"
-						data-src="..."
-						alt="Card image cap">
-				      <div class="card-block">
-				        <h4 class="card-title">{{pass.organizationName}}</h4>
-				        <p class="card-text">{{pass.description}}</p>
-				        <p class="card-text"><small class="text-muted">Last updated {{pass.lastUpdated}}</small></p>
-				      </div>
-				    </div>
-
-				  </div>
-			  </div>-->
-
-				<div class="padded-mor">
-
-					<!-- @TODO: [Pass Table]-->
-					<div ng-include="'./views/_pass-list.html'"></div>
-					<div ng-include="'./views/_pass-table.html'"></div>
-
-
-
-				</div>
-			</div>
-		</div>
-	</div>
-
+	<div ng-include="'./views/_pass-list.html'"></div>
+-->
+	<div ng-include="'./views/_pass-table.html'"></div>
 </div>

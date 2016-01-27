@@ -82,6 +82,8 @@ jpsPassbookManagerApp
       transclude: false,
       scope: {
         label: '@',
+        'add': '&onAdd',
+        'remove': '&onRemove',
         fields: '='
       },
       templateUrl: 'views/_pass-field-group.html',
@@ -90,6 +92,10 @@ jpsPassbookManagerApp
         $scope.removeField = function(index) {
           console.log('removeField', index);
         };
+
+        $scope.$on('$destroy', function() {
+          $element.remove();
+        });
 
         $scope.addField = function(obj) {
           obj = obj || {
@@ -102,7 +108,7 @@ jpsPassbookManagerApp
           console.log('addField', obj);
         };
 
-        console.log('passFieldGroup - linked');
+        console.log('passFieldGroup - linked', $element);
       }
     };
   });

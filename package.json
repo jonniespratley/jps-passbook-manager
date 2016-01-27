@@ -1,6 +1,9 @@
 {
   "name": "jps-passbook-manager",
   "version": "0.0.2",
+  "config": {
+    "delimiter": "wallet-manager"
+  },
   "bin": {
     "passbook-manager": "./cli.js"
   },
@@ -9,6 +12,7 @@
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "prestart": "grunt -v --force",
     "start": "node server.js",
+    "pretest": "rimraf test/temp data",
     "test": "gulp test",
     "watch": "nodemon -w routes/ -w lib/ server.js"
   },

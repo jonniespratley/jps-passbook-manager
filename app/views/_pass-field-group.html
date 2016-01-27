@@ -1,10 +1,13 @@
-<formitem title="{{label}} #{{$index}}:" ng-repeat="a in fields track by $index">
+<formitem title="{{label}} #{{$index}}:"
+  ng-repeat="a in fields track by $index">
   <div class="controls-row meta-row">
     <input type="text" name="key" ng-model="a.key" class="form-control" placeholder="Key"/>
     <input type="text" name="label" ng-model="a.label" class="form-control" placeholder="Label"/>
     <input type="text" name="value" ng-model="a.value" class="form-control" placeholder="Value"/>
     <p class="help-inline">
-      <button class="btn btn--outline btn-mini remove-row-btn" type="button" ng-click="$parent.removeField($index)">
+      <button class="btn btn--outline btn-mini remove-row-btn"
+      type="button"
+      ng-click="$parent.remove($index)">
         <i class="fa fa-lg fa-times-circle"></i>
       </button>
     </p>
@@ -12,8 +15,8 @@
   </div>
   <button class="btn btn-block btn--outline"
       ng-if="$last"
-      ng-click="addField()" type="button">
+      ng-click="add()" type="button">
       <i class="fa fa-lg fa-plus"></i>
-      Add 
+      Add
   </button>
 </formitem>
