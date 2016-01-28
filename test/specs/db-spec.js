@@ -10,6 +10,7 @@ var assert = require('assert'),
 
 //Test vars
 var testPassName = 'Test_Pass_';
+var testId = 'test-doc';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
@@ -60,11 +61,12 @@ describe('db', function() {
 		});
 	});
 
-	xit('should create file with generated', function(done) {
+	it('should create doc with generated', function(done) {
 		db.post({
 			name: 'test2',
 			docType: 'log'
 		}).then(function(resp) {
+			testId = resp._id;
 			assert(resp);
 			done();
 		}).catch(function(err) {
@@ -73,8 +75,17 @@ describe('db', function() {
 		});
 	});
 
-	it('should get file with id', function(done) {
+	it('should get doc with id', function(done) {
 		db.get('test-file').then(function(resp) {
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+	xit('should remove doc with id', function(done) {
+		db.remove(testId).then(function(resp) {
 			assert(resp);
 			done();
 		}).catch(function(err) {

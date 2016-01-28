@@ -50,6 +50,11 @@ var config = {
 		port: 6379
 	},
 	"version": "v1",
+	session: {
+		user: {
+			username: 'jonniespratley'
+		}
+	},
 	database: {
 		name: 'passbookmanager',
 		"dataPath": path.resolve(__dirname, "./data")

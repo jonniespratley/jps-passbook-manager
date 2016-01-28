@@ -2,6 +2,7 @@
 
 var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'ngRoute',
+	'ngAnimate',
 	'ngResource',
 	'ui.ace',
 	'mgcrea.ngStrap'
@@ -9,6 +10,8 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 
 .controller('AppCtrl', function($scope, $rootScope, Api, $http, $routeParams, $location) {
 	$rootScope.location = $location;
+
+	var db = Api;
 	$rootScope.passTypes = [{
 		name: 'generic',
 		title: 'Generic'
@@ -29,6 +32,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	window.App = $rootScope.App = {
 		http: $http,
 		debug: true,
+		db: db,
 		api: Api,
 		title: 'Pass Manager',
 		description: 'With this interface you can easily manage Apple Wallet Passes.',
@@ -51,18 +55,6 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				title: 'Passes',
 				icon: 'tags',
 				href: '#/passes'
-			}, {
-				id: null,
-				slug: 'server',
-				title: 'Server',
-				icon: 'cloud',
-				href: '#/server'
-			}, {
-				id: null,
-				slug: 'docs',
-				title: 'Docs',
-				icon: 'book',
-				href: '#/docs'
 			}
 		],
 		alerts: [],
@@ -73,6 +65,36 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 					body: msg
 				};
 			});
+		},
+		hideModals: function() {
+			$('.modal').modal('hide');
+			$('.modal-backdrop').remove();
+		},
+		savePass: function(p) {
+			var self = this;
+			p = p || {};
+			console.log('savePass', p);
+
+
+			if (p._id) {
+				db.put(p).then(function(resp) {
+					console.log('response', resp);
+					$scope.pass = resp.data;
+					self.hideModals();
+					$location.path('/passes')
+				}).catch(function(err) {
+					console.error('savePass', err);
+				});
+			} else {
+				db.post(p).then(function(resp) {
+					console.log('createPass', resp);
+					self.hideModals();
+					$location.path('/passes/' + resp.data._id);
+				}).catch(function(err) {
+					console.error('db.post', err);
+					alert('Error while creating pass');
+				});
+			}
 		}
 	};
 
@@ -97,7 +119,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			controller: 'MainCtrl',
 			resolve: routeResolver
 		})
-		.when('/admin', {
+		.when('/manage', {
 			templateUrl: './views/manage.html',
 			controller: 'ManageCtrl',
 			resolve: routeResolver

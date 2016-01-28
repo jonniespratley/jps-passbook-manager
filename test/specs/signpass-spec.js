@@ -41,7 +41,6 @@ describe('SignPass', function(done) {
 			docType: 'pass'
 		}).then(function(resp) {
 			passes = resp;
-			console.log('resp', resp);
 			done();
 		});
 	});
@@ -51,19 +50,30 @@ describe('SignPass', function(done) {
 		done();
 	});
 
+	xit('should return PassTypeId object', function(done) {
+		options = SignPass.createPassTypeId('pass.passbook-manager.io', {});
+		assert(options);
+		done();
+	});
+
+	it('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {
+		var cert_url = path.resolve(__dirname, '../../certificates/pass.p12');
+		SignPass.createPems('pass.passbook-manager.io', cert_url, 'fred', function(err, resp) {
+			console.log(resp);
+			options = resp;
+
+			assert(fs.existsSync(options.key));
+			assert(fs.existsSync(options.cert));
+			done();
+		});
+	});
+
 	it('should create SignPass instance', function(done) {
 		signpass = new SignPass(options);
 		assert(signpass);
 		done();
 	});
 
-	it('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {
-		var cert_url = path.resolve(__dirname, '../../certificates/pass.p12');
-		SignPass.createPems(cert_url, 'fred', function(resp) {
-			console.log(resp);
-			done();
-		});
-	});
 
 	it('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {
 		var _done = _.after(passes.length, function() {

@@ -13,7 +13,7 @@ var mockPass = mocks.mockPass;
 
 describe('Adapters', function() {
 
-	xdescribe('redis', function() {
+	describe('redis', function() {
 		var db = new RedisDB();
 
 		it('should be defined', function(done) {

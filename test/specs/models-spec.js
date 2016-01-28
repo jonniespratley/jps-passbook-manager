@@ -9,18 +9,30 @@ var Users = require(path.resolve(__dirname, '../../lib/models/users.js'))(progra
 var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
 var d;
+
 describe('Users', function() {
-	it('be definded', function() {
+	it('be defined', function() {
 		assert(Users);
 	});
-	xit('findOrCreate(profile, done) - should find/create user', function(done) {
-		assert(Users.findOrCreate);
-		done();
+
+	it('findOrCreate(profile, done) - should find/create user', function(done) {
+		assert.ok(Users.findOrCreate);
+		Users.findOrCreate({
+			username: 'jonniespratley'
+		}, function(err, resp) {
+			assert(resp);
+			done();
+		})
 	});
 
-	it('find(profile, done) - should find user', function() {
-		assert(Users.find);
-
+	it('find(profile, done) - should find user', function(done) {
+		assert.ok(Users.find);
+		Users.find({
+			username: 'jonniespratley'
+		}, function(err, resp) {
+			assert(resp);
+			done();
+		});
 	});
 });
 

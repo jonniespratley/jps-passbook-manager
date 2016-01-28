@@ -139,13 +139,15 @@ SignPass.createPems(cert_url, 'fred', function(err, resp) {
 
 
 function PassTypeId(id, o) {
+	let _id = id.replace(/\W/g, '-');
 	return {
-		_id: '',
+		_id: _id,
 		passTypeIdentifier: id,
 		cert: '',
 		key: '',
 		passpharse: '',
-		wwdr: ''
+		wwdr: '',
+		docType: 'pass-type-id'
 	};
 }
 

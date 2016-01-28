@@ -2,7 +2,7 @@
   "name": "jps-passbook-manager",
   "version": "0.0.2",
   "config": {
-    "delimiter": "wallet-manager"
+    "delimiter": "passbook-manager"
   },
   "bin": {
     "passbook-manager": "./cli.js"

@@ -17,7 +17,7 @@ var rawPassFolder = '';
 var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var passFiles = [];
 
-xdescribe('jps-passbook', function() {
+describe('jps-passbook', function() {
 
 	it('createPass() - should create each pass type', function(done) {
 		this.timeout(5000);
@@ -41,9 +41,9 @@ xdescribe('jps-passbook', function() {
 		});
 	});
 
-	it('signPass() - should sign .raw package into a .pkpass', function(done) {
+	xit('signPass() - should sign .raw package into a .pkpass', function(done) {
 		this.timeout(5000);
-		jpsPassbook.signPass(mockPass, '-p', function(err, p) {
+		jpsPassbook.signPass(mockPass, function(err, p) {
 			assert.ok(p, 'returns pass location');
 			//	assert(fs.existsSync(p));
 			done();

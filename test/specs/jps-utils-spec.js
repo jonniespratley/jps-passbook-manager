@@ -19,7 +19,7 @@ describe('Utils', function(done) {
 		done();
 	});
 
-	xit('should return Github Pass', function(done) {
+	it('should return Github Pass', function(done) {
 		this.slow(5000);
 		utils.githubToPass('jonniespratley', function(err, user) {
 			assert(user);

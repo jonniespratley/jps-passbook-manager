@@ -85,15 +85,13 @@ module.exports = function(program, app) {
 		logger('sign', req.params);
 		program.db.get(req.params.id).then(function(resp) {
 			if (resp) {
-				jpsPassbook.createPass(resp, function(err, filename) {
+				jpsPassbook.createPass(resp, function(err, data) {
 					if (err) {
 						res.status(404).json(err);
 					}
-					logger('sign', filename);
-					//res.status(200).send(data);
-					res.set('Content-Type', 'application/vnd.apple.pkpass')
-						.status(200)
-						.download(resp.pkpassFilename);
+					logger('sign', data);
+					res.status(200).send(data);
+
 
 				});
 			} else {
@@ -145,21 +143,19 @@ module.exports = function(program, app) {
 			logger('upload', req.files);
 
 			// parse a file upload
-			files = req.files.files;
-
-
-
-			for (var i = 0; i < files.length; i++) {
-				file = files[i];
+			files = req.files;
+			for (var f in files) {
+				file = files[f];
 				logger('upload', 'file', file);
 
-				toFilename = path.resolve(config.dataPath, './uploads/' + file.originalFilename);
+				toFilename = path.resolve(config.dataPath, './passes/' + req.body._id + '.raw/' + file.originalFilename);
 
 				try {
-					fs.writeFileSync(toFilename, fs.readFileSync(file.path));
+					//	fs.writeFileSync(toFilename, fs.readFileSync(file.path));
 					fs.copySync(file.path, toFilename);
 					out.push(toFilename);
 					logger('upload', 'to', toFilename);
+					fs.removeSync(file.path);
 				} catch (err) {
 					console.error('Oh no, there was an error: ' + err.message);
 

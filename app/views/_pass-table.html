@@ -5,7 +5,7 @@
 		<th class="th-type">Type</th>
 
 		<th>Description</th>
-		<th>Actions</th>
+
 	</tr>
 	</thead>
 	<tbody>
@@ -20,28 +20,19 @@
 			<a href="#/passes/{{pass._id}}"> {{pass.description}} </a>
 			<br/>
 			{{pass.organizationName}}
-			<br/>
-			{{pass.serialNumber}}
+
+<br>
+<a ng-href="/api/v1/export/{{pass._id}}" target="_blank">
+
+	<img class="passbook-badge"
+	src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">
+
+</a>
+
 
 		</td>
 
 
-		<td>
-
-			<a ng-href="/api/v1/export/{{pass._id}}" target="_blank">
-				<!--
-				<img class="passbook-badge"
-				src="./img/Add_to_Apple_Wallet_rgb_US-UK.svg">-->
-				Export
-			</a>
-			<a ng-href="/api/v1/validate/{{pass._id}}" target="_blank">
-				Validate
-			</a>
-			<a ng-href="/api/v1/sign/{{pass._id}}" target="_blank">
-				Sign
-			</a>
-
-		</td>
 
 	</tr>
 	</tbody>

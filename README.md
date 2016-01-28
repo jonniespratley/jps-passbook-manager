@@ -43,7 +43,7 @@ $ npm start
 ## Release History
 _(Nothing yet)_
 
-
+https://developer.apple.com/library/ios/documentation/PassKit/Reference/PassKit_WebService/WebService.html
 
 
 
@@ -66,7 +66,7 @@ Click on the + button to create a new Pass Type ID. You will need to create a Pa
 1. Launch the Keychain Access utility. -From the menu, select Keychain Access | Certificate Assistant | Request a Certificate from a Certificate Authority. In the Certificate Information window, enter the following:
 
 * User Email Address: Enter the e-mail address associated with your iOS developer account.
-* Common Name: Choose a name that relates to the Pass Type ID. 
+* Common Name: Choose a name that relates to the Pass Type ID.
 * CA Email Address: Leave this field blank
 * Request is: Choose Saved to Disk
 
@@ -91,6 +91,8 @@ openssl smime -binary -sign \
 
 Use the following Terminal commands to generate a certificate.pem file and a key.pem file.
 
+https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW55
+
 ```
 openssl pkcs12 -in pass.p12 -clcerts -nokeys -out pass-certificate.pem -password pass:fred
 openssl pkcs12 -in pass.p12 -nocerts -out pass-key.pem
@@ -98,7 +100,7 @@ openssl pkcs12 -in pass.p12 -nocerts -out pass-key.pem
 open sslsmime -binary -sign -certfile wwdr.pem -signer pass-cert.pem -inkey pass-key.pem -in manifest.json -out signature -outform DER -passin pass:fred
 ```
 
-* #### Create Certs 
+* #### Create Certs
 
 ```
 $ openssl pkcs12 -in certificates/pass.p12 -password pass:fred -clcerts -nokeys -out certificates/pass-cert.pem
@@ -122,7 +124,3 @@ $ openssl smime -sign \
               -inkey ./certificates/pass-passbookmanager-key.p12 \
               -signer ./certificates/AppleWWDRCA.cer
 ```
-
-
-
- 

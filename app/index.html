@@ -13,7 +13,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Passbook Manager</title>
 	<script>document.write('<base href="' + document.location + '" />');</script>
-	
+
 	<meta name="description" content="">
 	<meta name="author" content="Jonnie Spratley">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
@@ -28,10 +28,16 @@
 	<link rel="stylesheet" href="styles/bootstrap.min.css">
 	<link rel="stylesheet" href="styles/main.css"/>
 	<!-- endbuild-->
+
+	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 	<link rel="shortcut icon" href="ico/favicon.png">
+	<style media="screen">
+	[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+display: none !important;
+}
+	</style>
 </head>
-<body ng-app="jpsPassbookManagerApp"
-ng-controller="AppCtrl">
+<body ng-app="jpsPassbookManagerApp" ng-controller="AppCtrl" ng-cloak>
 
 <!--[if lt IE 7]>
 <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser
@@ -67,12 +73,13 @@ ng-controller="AppCtrl">
 
 <ng-include src="'./views/_footer.html'"></ng-include>
 
-<!-- build:js scripts/vendor.js -->
 
+<!-- build:js scripts/vendor.js -->
 <script src="bower_components/ansi_up/ansi_up.js"></script>
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/lodash/lodash.js"></script>
 <script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
@@ -86,12 +93,9 @@ ng-controller="AppCtrl">
 <script src="bower_components/markdown/lib/markdown.js"></script>
 <script src="bower_components/pouchdb/dist/pouchdb.js"></script>
 <script src="bower_components/pouchdb/dist/pouchdb.localstorage.js"></script>
-
 <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
 <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
 <!-- endbuild -->
-
-
 
 
 

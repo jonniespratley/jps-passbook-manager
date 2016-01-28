@@ -232,9 +232,9 @@ module.exports = function(program, app) {
 		});
 	});
 
-	app.get('/api/' + config.version + '/me', isAuthenticated, function(req, res, next) {
+	app.get('/api/' + config.version + '/me', function(req, res, next) {
 		authLogger(req.url, req.session);
-		res.status(200).json(req.user);
+		res.status(200).json(req.session);
 	});
 
 	app.use(function(req, res, next) {
