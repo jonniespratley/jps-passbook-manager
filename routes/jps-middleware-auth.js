@@ -1,4 +1,5 @@
 'use strict';
+const path = require('path');
 const url = require('url');
 const express = require('express');
 const expressValidator = require('express-validator');
@@ -6,7 +7,8 @@ const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-
+const Router = express.Router;
+const jsonParser = bodyParser.json();
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
@@ -25,11 +27,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-module.exports = function(program, app) {
 
-	const Router = express.Router;
-	const jsonParser = bodyParser.json();
-	const User = program.require('models/user');
+module.exports = function(program, app) {
+	var User = require(path.resolve(__dirname, '../lib/models/user.js'));
+	var Users = require(path.resolve(__dirname, '../lib/models/users.js'))(program.db);
+
 	var config = program.config.defaults;
 	var db = program.db;
 
@@ -78,36 +80,6 @@ module.exports = function(program, app) {
 	}
 
 
-	var Users = {
-		find: function(profile, done) {
-			var user = new User(profile);
-			authLogger('find', user._id);
-			db.get(user._id).then(function(u) {
-				authLogger('find', 'found', u._id);
-				done(null, u);
-			}).catch(function(err) {
-				authLogger('find', 'error', err);
-				done(err, null);
-			});
-		},
-		findOrCreate: function(profile, done) {
-			var user = new User(profile);
-			authLogger('findOrCreate', user._id);
-			db.get(user._id).then(function(u) {
-				authLogger('findOrCreate', 'found', u._id);
-				done(null, u);
-			}).catch(function(err) {
-				authLogger('findOrCreate', 'error', err);
-				db.put(user).then(function(u) {
-					done(null, u);
-				}).catch(function(err) {
-					done(err, null);
-				});
-
-			});
-		}
-	};
-
 
 	// Passport session setup.
 	//   To support persistent login sessions, Passport needs to be able to
@@ -125,6 +97,30 @@ module.exports = function(program, app) {
 		authLogger('deserializeUser', id);
 		Users.find(id, done);
 	});
+
+	const LocalStrategy = require('passport-local').Strategy;
+
+	passport.use(new LocalStrategy(function(username, password, done) {
+		Users.findOne({
+			username: username
+		}, function(err, user) {
+			if (err) {
+				return done(err);
+			}
+			if (!user) {
+				return done(null, false, {
+					message: 'Incorrect username.'
+				});
+			}
+			/*
+						if (!user.validPassword(password)) {
+							return done(null, false, {
+								message: 'Incorrect password.'
+							});
+						}*/
+			return done(null, user);
+		});
+	}));
 
 	passport.use('oauth2', new OAuth2Strategy({
 			authorizationURL: OAUTH_AUTH_URL,
@@ -232,9 +228,62 @@ module.exports = function(program, app) {
 		});
 	});
 
-	app.get('/api/' + config.version + '/me', isAuthenticated, function(req, res, next) {
+	router.get('/register', function(req, res) {
+		res.render('register', {
+			user: req.user
+		});
+	});
+
+	router.post('/register', function(req, res) {
+		console.log('register', req.body);
+		Users.findOrCreate(req.body, function(err, u) {
+			if (err) {
+				res.send(err);
+			}
+			res.status(200).send(u);
+		})
+	});
+
+	router.get('/login', function(req, res, next) {
+		passport.authenticate('local', function(err, user, info) {
+			if (err) {
+				return next(err);
+			}
+			if (!user) {
+				return res.redirect('/login');
+			}
+			req.logIn(user, function(err) {
+				if (err) {
+					return next(err);
+				}
+				return res.redirect('/users/' + user.username);
+			});
+		})(req, res, next);
+	});
+
+	router.get('/api/users/me',
+		passport.authenticate('basic', {
+			session: false
+		}),
+		function(req, res) {
+			res.json({
+				id: req.user.id,
+				username: req.user.username
+			});
+		});
+
+	router.post('/login',
+		passport.authenticate('local'),
+		function(req, res) {
+			// If this function gets called, authentication was successful.
+			// `req.user` contains the authenticated user.
+			res.redirect('/users/' + req.user.username);
+		});
+
+
+	app.get('/api/' + config.version + '/me', function(req, res, next) {
 		authLogger(req.url, req.session);
-		res.status(200).json(req.user);
+		res.status(200).json(req.session);
 	});
 
 	app.use(function(req, res, next) {
@@ -244,15 +293,18 @@ module.exports = function(program, app) {
 
 		next();
 	});
+
 	app.use(session({
 		//	store: new RedisStore(config.redis),
 		secret: config.security.salt,
 		resave: true,
 		saveUninitialized: true
 	}));
+
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));
+
 	app.use(bodyParser.json());
 	app.use(methodOverride());
 

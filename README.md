@@ -43,11 +43,32 @@ $ npm start
 ## Release History
 _(Nothing yet)_
 
-
+https://developer.apple.com/library/ios/documentation/PassKit/Reference/PassKit_WebService/WebService.html
 
 
 
 ## How To
+
+
+You will now need to create a Pass Type ID. Follow the link on the left menu for Pass Type IDs or visit:
+
+> [https://developer.apple.com/account/ios/identifiers/passTypeId/passTypeIdList.action](https://developer.apple.com/account/ios/identifiers/passTypeId/passTypeIdList.action)
+
+Click on the + button to create a new Pass Type ID. You will need to create a Pass Type ID for each type of Pass you intend to create. The types of Passes currently available to create are Boarding Pass, Coupon, Event Ticket, Store Card, and Generic. T
+
+![image](https://www.safaribooksonline.com/library/view/instant-passbook-app/9781849697064/graphics/7064OT_01_08.jpg)
+
+![image](https://www.safaribooksonline.com/library/view/instant-passbook-app/9781849697064/graphics/7064OT_01_09.jpg)
+
+
+#### Export .cert to disk
+
+1. Launch the Keychain Access utility. -From the menu, select Keychain Access | Certificate Assistant | Request a Certificate from a Certificate Authority. In the Certificate Information window, enter the following:
+
+* User Email Address: Enter the e-mail address associated with your iOS developer account.
+* Common Name: Choose a name that relates to the Pass Type ID.
+* CA Email Address: Leave this field blank
+* Request is: Choose Saved to Disk
 
 1. #### Creating a pass
 
@@ -55,9 +76,40 @@ _(Nothing yet)_
 
 * #### Signing a pass
 
+```
+openssl smime -binary -sign \
+	-certfile /Users/jps/Github/jps-passbook-manager/certificates/wwdr-authority.pem \
+	-signer /Users/jps/Github/jps-passbook-manager/certificates/pass-cert.pem \
+	-inkey /Users/jps/Github/jps-passbook-manager/certificates/pass-key.pem \
+	-in /var/folders/pw/y2bdztx93jl73s811y60dtx40000gn/T/mock-coupon.raw/manifest.json \
+	-out /var/folders/pw/y2bdztx93jl73s811y60dtx40000gn/T/signature \
+	-outform DER \
+	-password pass:fred
+```
+
 * #### Distributing a pass
 
-* #### Create Certs + Sign Pass
+Use the following Terminal commands to generate a certificate.pem file and a key.pem file.
+
+https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW55
+
+```
+openssl pkcs12 -in pass.p12 -clcerts -nokeys -out pass-certificate.pem -password pass:fred
+openssl pkcs12 -in pass.p12 -nocerts -out pass-key.pem
+
+open sslsmime -binary -sign -certfile wwdr.pem -signer pass-cert.pem -inkey pass-key.pem -in manifest.json -out signature -outform DER -passin pass:fred
+```
+
+* #### Create Certs
+
+```
+$ openssl pkcs12 -in certificates/pass.p12 -password pass:fred -clcerts -nokeys -out certificates/pass-cert.pem
+```
+
+```
+$ openssl pkcs12 -in certificates/pass.p12 -password pass:fred -nocerts -out certificates/pass-key.pem
+```
+
 
 ```
 $ openssl pkcs12 -in cert.p12 -clcerts -nokeys -out certificate.pem
@@ -71,14 +123,4 @@ $ openssl smime -sign \
               -outform DER \
               -inkey ./certificates/pass-passbookmanager-key.p12 \
               -signer ./certificates/AppleWWDRCA.cer
-
-
-```
-
-
-
-
-
-
-
 ```

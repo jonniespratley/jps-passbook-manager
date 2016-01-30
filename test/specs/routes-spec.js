@@ -122,19 +122,6 @@ describe('routes', function() {
 		});
 
 
-		it('GET - /api/v1/admin/find?docType=device - should return devices', function(done) {
-			request(app)
-				.get('/api/v1/admin/find?docType=device')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		it('GET - /api/v1/admin/find?docType=log - should return logs', function(done) {
-			request(app)
-				.get('/api/v1/admin/find?docType=log')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
 
 	});
 
@@ -201,7 +188,7 @@ describe('routes', function() {
 				function(done) {
 					request(app)
 						.post(
-							//'/api/v1/devices/123456789/registrations/pass.jsapps.io/123456789'
+							//'/api/v1/devices/012345678987654321/registrations/pass.jsapps.io/012345678987654321'
 							`/api/v1/devices/${mockDevice.deviceLibraryIdentifier}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`
 						)
 						.send({
@@ -217,7 +204,7 @@ describe('routes', function() {
 				function(done) {
 					request(app)
 						.post(
-							//'/api/v1/devices/123456789/registrations/pass.jsapps.io/123456789'
+							//'/api/v1/devices/012345678987654321/registrations/pass.jsapps.io/012345678987654321'
 							`/api/v1/devices/${mockDevice.deviceLibraryIdentifier}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`
 						)
 						.send({
@@ -313,6 +300,22 @@ describe('routes', function() {
 				.send({
 					logs: ['test log']
 				})
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+
+
+		it('GET - /api/v1/admin/find?docType=device - should return devices', function(done) {
+			request(app)
+				.get('/api/v1/admin/find?docType=device')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/admin/find?docType=log - should return logs', function(done) {
+			request(app)
+				.get('/api/v1/admin/find?docType=log')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});

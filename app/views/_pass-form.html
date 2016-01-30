@@ -1,6 +1,7 @@
 
 
-			<form id="passForm" class="form-horizontal" ng-submit="SmartPass.savePass(pass);" ng-show="pass">
+			<form id="passForm" class="form-horizontal"
+			ng-submit="savePass(pass);" ng-show="pass">
 
 
 				<jps-card title="Details">
@@ -13,7 +14,7 @@
 							<select ng-model="pass.type"
 										class="form-control c-select"
 									  ng-change="loadSchema(t)"
-									  ng-options="t.name as t.title for t in passTypes"></select>
+									  ng-options="t.value as t.name for t in passTypes"></select>
 						</formitem>
 						<formitem title="Organization:">
 							<input type="text" ng-model="pass.organizationName" class="form-control"/>
@@ -28,7 +29,6 @@
 						<formitem title="Serial Number:">
 							<input type="text" ng-model="pass.serialNumber" class="form-control"/>
 						</formitem>
-
 
 					</fieldset>
 				</jps-card>
@@ -46,14 +46,14 @@
 						</div>
 					</fieldset>
 
-					<!-- @TODO: [Primary Fields] -->
 					<fieldset>
 						<legend>Primary fields</legend>
 						<p>
 							 Fields to be displayed prominently on the front of the pass.
 						</p>
 						<div id="pass-primaryFields" class="well well-sm">
-							<pass-field-group label="Primary Fields" fields="pass[pass.type].primaryFields">
+							<pass-field-group label="Primary Fields"
+								fields="pass[pass.type].primaryFields">
 							</pass-field-group>
 						</div>
 					</fieldset>
@@ -82,7 +82,6 @@
 							<pass-field-group label="Header Fields" fields="pass[pass.type].auxiliaryFields"></pass-field-group>
 						</div>
 					</fieldset>
-
 
 					<!-- @TODO: [Back Fields] -->
 					<fielset>
@@ -121,15 +120,17 @@
 									<input type="text" name="minor" ng-model="l.minor" class="form-control" placeholder="Minor"/>
 
 									<span class="help-inline">
-										<button class="btn btn-mini btn-default remove-row-btn" type="button" ng-click="pass.beacons.splice($index, 1)">
-											<i class="fa fa-lg fa-times-circle"></i>
+										<button class="btn btn-mini btn--outline remove-row-btn" type="button" ng-click="pass.beacons.splice($index, 1)">
+										  <i class="fa fa-lg fa-times"></i>
 										</button>
 									</span>
 								</div>
 							</formitem>
 
-							<button class="btn btn-block btn-default" type="button"
-										ng-click="pass.beacons.push({proximityUUID: '', major: 0, minor: 1, relevantText: 'Nearby'})"> Add
+							<button class="btn btn-block btn-default btn--outline" type="button"
+										ng-click="pass.beacons.push({proximityUUID: '', major: 0, minor: 1, relevantText: 'Nearby'})">
+  								<i class="fa fa-lg fa-plus"></i>
+										Add
 							</button>
 						</div>
 					</fieldset>
@@ -157,8 +158,10 @@
 									</span>
 								</div>
 							</formitem>
-							<button class="btn btn-block btn-default" type="button"
-									  ng-click="pass.locations.push({latitude: '37.6189722', longitude: '-122.3748889'})"> Add
+							<button class="btn btn-block btn-default btn--outline" type="button"
+									  ng-click="pass.locations.push({latitude: '37.6189722', longitude: '-122.3748889'})">
+										<i class="fa fa-lg fa-plus"></i>
+										Add
 							</button>
 						</div>
 					</fieldset>
@@ -213,16 +216,19 @@
 						</p>
 
 						<div id="pass-styleFields" class="well well-sm">
-							<formitem title="Label Color:">
-								<input type="text" ng-model="pass.labelColor" ng-colorpicker class="form-control"/>
+							<formitem title="Labels:">
+								<input type="text" ng-model="pass.labelColor" class="form-control"/>
 							</formitem>
 
-							<formitem title="Foreground Color:">
-								<input type="text" ng-model="pass.foregroundColor" ng-colorpicker class="form-control"/>
+							<formitem title="Foreground:">
+								<input type="text" ng-model="pass.foregroundColor" class="form-control"/>
 							</formitem>
 
-							<formitem title="Background Color:">
-								<input type="text" ng-model="pass.backgroundColor" ng-colorpicker class="form-control"/>
+							<formitem title="Background:">
+								<input type="text" ng-model="pass.backgroundColor" class="form-control"/>
+							</formitem>
+							<formitem title="Strip Shine:">
+								<input type="checkbox" ng-model="pass.suppressStripShine" class="form-control"/>
 							</formitem>
 	<!--
 							<formitem title="Icon:">
@@ -245,24 +251,31 @@
 						<formitem title="Background.png">
 							<pass-file-group id="passBackground"
 								model="pass.background"
+								pass-id="{{pass._id}}"
 								hint="The image displayed as the background of the front of the pass.">
 							</pass-file-group>
 						</formitem>
+
 						<formitem title="Footer.png">
 							<pass-file-group id="passFooter"
 								model="pass.footer"
+								pass-id="{{pass._id}}"
 								hint="The image displayed on the front of the pass near the barcode.">
 							</pass-file-group>
 						</formitem>
+
 						<formitem title="Icon.png">
 							<pass-file-group id="passIcon"
 								model="pass.icon"
+								pass-id="{{pass._id}}"
 								hint="The pass’s icon. This is displayed in notifications and in emails that have a pass attached, and on the lock screen.">
 							</pass-file-group>
 						</formitem>
+
 						<formitem title="Logo.png">
 							<pass-file-group id="passLogo"
 								model="pass.logo"
+								pass-id="{{pass._id}}"
 								hint="The image displayed on the front of the pass in the top left.">
 							</pass-file-group>
 						</formitem>
@@ -303,7 +316,7 @@
 								<input type="text" ng-model="pass.teamIdentifier" class="form-control"/>
 							</formitem>
 
-							<formitem title="Web Service URL:">
+							<formitem title="Web Service:">
 								<input type="text" ng-model="pass.webServiceURL" class="form-control" disabled=""/>
 							</formitem>
 
@@ -318,7 +331,10 @@
 						</div>
 					</fieldset>
 				</jps-card>
-					<button ng-click="savePass(pass)" class="btn btn-primary btn-block">
+
+
+					<button type="submit"
+						class="btn btn-primary btn-block">
 						Save
 					</button>
 				</form>

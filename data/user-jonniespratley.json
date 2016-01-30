@@ -1,0 +1,23 @@
+{
+  "_id": "user-jonniespratley",
+  "provider": "",
+  "id": "",
+  "displayName": "",
+  "username": "jonniespratley",
+  "password": "",
+  "name": {
+    "familyName": "",
+    "givenName": "",
+    "middleName": ""
+  },
+  "emails": [
+    {
+      "value": "",
+      "type": ""
+    }
+  ],
+  "photos": [],
+  "passTypeIdentifiers": [],
+  "data": null,
+  "_key": "user-jonniespratley"
+}

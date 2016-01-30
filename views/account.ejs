@@ -44,12 +44,30 @@
 
 
 
+
+				<div class="card">
+				  <div class="card-header">
+				    Pass IDS
+				  </div>
+				  <div class="card-block">
+				    <blockquote class="card-blockquote">
+				      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+				      <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+				    </blockquote>
+				  </div>
+				</div>
+
+				<div class="alert alert-info">
+					<p>
+						Upload your pass type id certificates.
+					</p>
+				</div>
 				<form id="certForm" action="" method="post">
-					<div class="form-group row">
-						<label class="col-sm-2 form-control-label">.p12 cert</label>
+					<div class="form-group">
+						<label class="form-control-label">Pass Type ID .cert</label>
 						<div class="col-sm-10">
 							<label class="file">
-								<input id="p12File" type="file" id="file">
+								<input id="certFile" type="file" id="file">
 								<span class="file-custom"></span>
 							</label>
 						</div>
@@ -67,6 +85,12 @@
 
 <script type="text/javascript">
 	console.warn('Handle cert upload');
+	document.getElementById('certForm').addEventListener('submit', function(e){
+		e.preventDefault();
+
+		console.log('form', e);
+		return false;
+	})
 </script>
 
 </body>

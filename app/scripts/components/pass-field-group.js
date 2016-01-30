@@ -6,6 +6,7 @@ jpsPassbookManagerApp
       replace: true,
       transclude: false,
       scope: {
+        passId: '@',
         url: '@',
         hint: '@',
         title: '@',
@@ -24,6 +25,7 @@ jpsPassbookManagerApp
         function sendUploadRequest(f) {
           console.warn('Sending', f);
           var data = new FormData();
+          data.append('_id', $scope.passId);
           data.append("files", f);
 
           var xhr = new XMLHttpRequest();
@@ -82,27 +84,40 @@ jpsPassbookManagerApp
       transclude: false,
       scope: {
         label: '@',
+        'add': '&onAdd',
+        'remove': '&onRemove',
         fields: '='
       },
       templateUrl: 'views/_pass-field-group.html',
       link: function($scope, $element, $attrs) {
 
-        $scope.removeField = function(index) {
-          console.log('removeField', index);
+        if (!$scope.fields) {
+          $scope.fields = [];
+        }
+
+        $scope.$on('$destroy', function() {
+          $element.remove();
+        });
+
+        $scope.remove = function(e) {
+          console.warn('remove', e);
+          //  $element.find('[data-index=' + e + ']').fadeOut();
+          $scope.fields.splice(e, 1);
+
         };
 
-        $scope.addField = function(obj) {
-          obj = obj || {
+        $scope.add = function(e) {
+          console.warn('add', e);
+          $scope.fields.push({
             key: 'key',
             label: 'label',
             value: 'value'
-          };
-          fields.push(obj);
-
-          console.log('addField', obj);
+          });
         };
 
-        console.log('passFieldGroup - linked');
+
+
+        console.log('passFieldGroup - linked', $scope);
       }
     };
   });

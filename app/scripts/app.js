@@ -2,33 +2,37 @@
 
 var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'ngRoute',
+	'ngAnimate',
 	'ngResource',
 	'ui.ace',
 	'mgcrea.ngStrap'
 ])
 
-.controller('AppCtrl', function($scope, $rootScope, Api, $http, $routeParams, $location) {
+.factory('App', function($rootScope, Api, $http, $routeParams, $location) {
 	$rootScope.location = $location;
+
+	var db = Api;
 	$rootScope.passTypes = [{
-		name: 'generic',
-		title: 'Generic'
+		value: 'generic',
+		name: 'Generic'
 	}, {
-		name: 'boardingPass',
-		title: 'Boarding Pass'
+		value: 'boardingPass',
+		name: 'Boarding Pass'
 	}, {
-		name: 'coupon',
-		title: 'Coupon'
+		value: 'coupon',
+		name: 'Coupon'
 	}, {
-		name: 'eventTicket',
-		title: 'Event Ticket'
+		value: 'eventTicket',
+		name: 'Event Ticket'
 	}, {
-		name: 'storeCard',
-		title: 'Store Card'
+		value: 'storeCard',
+		name: 'Store Card'
 	}];
 
-	window.App = $rootScope.App = {
+	var App = {
 		http: $http,
 		debug: true,
+		db: db,
 		api: Api,
 		title: 'Pass Manager',
 		description: 'With this interface you can easily manage Apple Wallet Passes.',
@@ -37,34 +41,49 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			title: 'Easy Passes',
 			body: 'With this interface you can easily create Apple iOS Passbook Passes.'
 		},
-		menu: [{
-				id: null,
-				slug: 'home',
-				title: 'Home',
-				icon: 'home',
-				href: '#/home'
-			},
-			//	{ id: null, slug: 'manage', title: 'Manage', icon: 'edit', href:'#/manage' },
-			{
-				id: null,
-				slug: 'passes',
-				title: 'Passes',
-				icon: 'tags',
-				href: '#/passes'
-			}, {
-				id: null,
-				slug: 'server',
-				title: 'Server',
-				icon: 'cloud',
-				href: '#/server'
-			}, {
-				id: null,
-				slug: 'docs',
-				title: 'Docs',
-				icon: 'book',
-				href: '#/docs'
+		passTypes: $rootScope.passTypes,
+		session: {
+			user: {
+				"_id": "user-jonniespratley",
+				"provider": "",
+				"id": "",
+				"displayName": "",
+				"username": "jonniespratley",
+				"password": "",
+				"name": {
+					"familyName": "",
+					"givenName": "",
+					"middleName": ""
+				},
+				"emails": [{
+					"value": "",
+					"type": ""
+				}],
+				"photos": [],
+				"passTypeIdentifiers": [],
+				"data": null,
+				"_key": "user-jonniespratley"
 			}
-		],
+		},
+		menu: [{
+			id: null,
+			slug: 'home',
+			title: 'Home',
+			icon: 'home',
+			href: '#/home'
+		}, {
+			id: null,
+			slug: 'manage',
+			title: 'Manage',
+			icon: 'edit',
+			href: '#/manage'
+		}, {
+			id: null,
+			slug: 'passes',
+			title: 'Passes',
+			icon: 'tags',
+			href: '#/passes'
+		}],
 		alerts: [],
 		alert: function(type, msg) {
 			$scope.$apply(function() {
@@ -73,14 +92,45 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 					body: msg
 				};
 			});
+		},
+		hideModals: function() {
+			$('.modal').modal('hide');
+			$('.modal-backdrop').remove();
+		},
+		savePass: function(p) {
+			var self = this;
+			p = p || {};
+			console.log('savePass', p);
+
+
+			if (p._id) {
+				db.put(p).then(function(resp) {
+					console.log('response', resp);
+					$scope.pass = resp.data;
+					self.hideModals();
+					$location.path('/passes')
+				}).catch(function(err) {
+					console.error('savePass', err);
+				});
+			} else {
+				db.post(p).then(function(resp) {
+					console.log('createPass', resp);
+					self.hideModals();
+					$location.path('/passes/' + resp.data._id);
+				}).catch(function(err) {
+					console.error('db.post', err);
+					alert('Error while creating pass');
+				});
+			}
 		}
 	};
-
-	$http.get('/README.md').success(function(data) {
-		angular.element('#docs').html(markdown.toHTML(data));
-	});
-
+	return App;
 })
+
+.controller('AppCtrl', function($scope, $rootScope, App, $http) {
+	$rootScope.App = App;
+})
+
 
 .config(['$routeProvider', function($routeProvider) {
 	var routeResolver = {
@@ -97,10 +147,14 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			controller: 'MainCtrl',
 			resolve: routeResolver
 		})
-		.when('/admin', {
+		.when('/manage', {
 			templateUrl: './views/manage.html',
 			controller: 'ManageCtrl',
-			resolve: routeResolver
+			resolve: {
+				user: function(App) {
+					return App.session.user;
+				}
+			}
 		})
 		.when('/passes', {
 			templateUrl: './views/passes.html',

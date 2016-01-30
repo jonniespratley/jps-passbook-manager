@@ -12,7 +12,15 @@
 
 .ace_editor { height: 200px; }
 
+.animate-enter {
+	-webkit-transition: 1s linear all; /* Chrome */
+	transition: 1s linear all;
+	opacity: 0;
+}
 
+.animate-enter.animate-enter-active {
+	opacity: 1;
+}
 @import url('./bootstrap.min.css');
 @import url('../bower_components/angular-motion/dist/angular-motion.css');
 
@@ -202,4 +210,75 @@ dt {
 
 dd {
   line-height: 1em;
+}
+
+
+@charset "UTF-8";
+.passList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.passList li {
+  margin-bottom: 10px;
+}
+.passList a {
+  display: block;
+  text-decoration: none;
+  height: 2em;
+  font-size: 1.5em;
+  background-repeat: no-repeat;
+  background-position: 0.5em center;
+  padding: 0.5em;
+  background-size: auto 75%;
+}
+
+.pass.mini {
+  width: 5em;
+  height: 8em;
+  font-size: 0.25em;
+  margin-right: 2em;
+  display: inline-block;
+  float: left;
+}
+
+.generic .pass {
+  background: #f882ee;
+}
+
+.boardingPass .pass {
+  background: #4CA3D5;
+}
+
+.eventTicket .pass {
+  border-radius: 0;
+  border: none;
+  background: #3FCA00;
+}
+.eventTicket .pass.mini:after {
+  content: "7:00";
+  font-size: 2em;
+}
+
+.storeCard .pass {
+  background: #FF5342;
+}
+.storeCard .mini:after {
+  content: "$︎";
+}
+
+.pass {
+  border: none;
+  border-radius: 0.83333333em;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.pass.mini:after {
+  font-size: 3em;
+  text-align: center;
+  display: block;
+  margin: auto;
+  margin-top: 0.6em;
 }

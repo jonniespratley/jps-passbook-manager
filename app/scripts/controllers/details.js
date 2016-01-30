@@ -1,6 +1,6 @@
 'use strict';
 
-jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, $http, Api, pass) {
+jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $location, $rootScope, $http, Api, pass) {
   $scope.pass = pass;
   var db = Api;
   $(document).ready(function() {
@@ -53,13 +53,17 @@ jpsPassbookManagerApp.controller('DetailCtrl', function($scope, $rootScope, $htt
       db.put(p).then(function(resp) {
         console.log('response', resp);
         $scope.pass = resp.data;
+        $location.path('/passes')
       }).catch(function(err) {
         console.error('savePass', err);
       });
     } else {
       db.post(p).then(function(data) {
-
         console.log('createPass', data);
+        $location.path('/passes')
+      }).catch(function(err) {
+        console.error('db.post', err);
+        alert('Error while creating pass');
       });
     }
   };
