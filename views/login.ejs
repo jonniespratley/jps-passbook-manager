@@ -8,14 +8,36 @@
       <div class="row">
         <div class="col-sm-12">
 
+
+
+
+
           <% if (!user) { %>
+
           	<div class="alert alert-info">
           	  <p>
-                <strong>Hey!</strong> Please sign in.
+                <strong>Info!</strong> Please sign in.
               </p>
           	</div>
+
+
+        				<form action="/login" method="post">
+        					<legend>Sign In</legend>
+        					<fieldset class="form-group">
+        					  <label>Username:</label>
+        						<input type="text" name="username" class="form-control"/>
+        					</fieldset>
+        					<fieldset class="form-group">
+        						<label>Password:</label>
+        						<input type="password" name="password" class="form-control"/>
+        					</fieldset>
+        					<div>
+        						<input type="submit" value="Sign in" class="btn btn-primary"/>
+        					</div>
+        				</form>
+ <hr>
             <p>
-              <a href="/auth/github" class="btn btn-block btn-lg btn-social btn-github">
+              <a href="/auth/github" class="btn btn-block btn-lg btn-default btn-social btn-github">
                  <i class="fa fa-github"></i>
                   Sign in with Github
               </a>
@@ -28,6 +50,6 @@
       </div>
     </div>
   </main>
-  <footer><% include ./partials/footer %></footer>
+
 </body>
 </html>

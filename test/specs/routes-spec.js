@@ -188,7 +188,7 @@ describe('routes', function() {
 				function(done) {
 					request(app)
 						.post(
-							//'/api/v1/devices/123456789/registrations/pass.jsapps.io/123456789'
+							//'/api/v1/devices/012345678987654321/registrations/pass.jsapps.io/012345678987654321'
 							`/api/v1/devices/${mockDevice.deviceLibraryIdentifier}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`
 						)
 						.send({
@@ -204,7 +204,7 @@ describe('routes', function() {
 				function(done) {
 					request(app)
 						.post(
-							//'/api/v1/devices/123456789/registrations/pass.jsapps.io/123456789'
+							//'/api/v1/devices/012345678987654321/registrations/pass.jsapps.io/012345678987654321'
 							`/api/v1/devices/${mockDevice.deviceLibraryIdentifier}/registrations/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}`
 						)
 						.send({

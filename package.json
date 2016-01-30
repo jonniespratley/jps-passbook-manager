@@ -11,8 +11,8 @@
     "cli": "node cli.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "prestart": "grunt -v --force",
+    "pretest": "rimraf test/temp",
     "start": "node server.js",
-    "pretest": "rimraf test/temp data",
     "test": "gulp test",
     "watch": "nodemon -w routes/ -w lib/ server.js"
   },
@@ -43,6 +43,7 @@
     "node-zip": "^1.1.1",
     "passport": "^0.3.2",
     "passport-github2": "^0.1.9",
+    "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
     "pem": "^1.8.1",
     "redis": "^2.4.2",

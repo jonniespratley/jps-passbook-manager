@@ -36,7 +36,7 @@ describe('Users', function() {
 	});
 });
 
-describe('Device', function() {
+xdescribe('Device', function() {
 	it('should throw error if no deviceLibraryIdentifier', function() {
 		assert.throws(function() {
 			d = new Device();
@@ -50,7 +50,8 @@ var User = require(path.resolve(__dirname, '../../lib/models/user.js'));
 describe('User Model', function() {
 	before(function() {
 		u = new User({
-			id: 'test',
+
+			username: 'jonnie',
 			displayName: 'jonnie',
 			_json: {
 				name: 'test'

@@ -8,28 +8,28 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'mgcrea.ngStrap'
 ])
 
-.controller('AppCtrl', function($scope, $rootScope, Api, $http, $routeParams, $location) {
+.factory('App', function($rootScope, Api, $http, $routeParams, $location) {
 	$rootScope.location = $location;
 
 	var db = Api;
 	$rootScope.passTypes = [{
-		name: 'generic',
-		title: 'Generic'
+		value: 'generic',
+		name: 'Generic'
 	}, {
-		name: 'boardingPass',
-		title: 'Boarding Pass'
+		value: 'boardingPass',
+		name: 'Boarding Pass'
 	}, {
-		name: 'coupon',
-		title: 'Coupon'
+		value: 'coupon',
+		name: 'Coupon'
 	}, {
-		name: 'eventTicket',
-		title: 'Event Ticket'
+		value: 'eventTicket',
+		name: 'Event Ticket'
 	}, {
-		name: 'storeCard',
-		title: 'Store Card'
+		value: 'storeCard',
+		name: 'Store Card'
 	}];
 
-	window.App = $rootScope.App = {
+	var App = {
 		http: $http,
 		debug: true,
 		db: db,
@@ -41,22 +41,49 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			title: 'Easy Passes',
 			body: 'With this interface you can easily create Apple iOS Passbook Passes.'
 		},
-		menu: [{
-				id: null,
-				slug: 'home',
-				title: 'Home',
-				icon: 'home',
-				href: '#/home'
-			},
-			//	{ id: null, slug: 'manage', title: 'Manage', icon: 'edit', href:'#/manage' },
-			{
-				id: null,
-				slug: 'passes',
-				title: 'Passes',
-				icon: 'tags',
-				href: '#/passes'
+		passTypes: $rootScope.passTypes,
+		session: {
+			user: {
+				"_id": "user-jonniespratley",
+				"provider": "",
+				"id": "",
+				"displayName": "",
+				"username": "jonniespratley",
+				"password": "",
+				"name": {
+					"familyName": "",
+					"givenName": "",
+					"middleName": ""
+				},
+				"emails": [{
+					"value": "",
+					"type": ""
+				}],
+				"photos": [],
+				"passTypeIdentifiers": [],
+				"data": null,
+				"_key": "user-jonniespratley"
 			}
-		],
+		},
+		menu: [{
+			id: null,
+			slug: 'home',
+			title: 'Home',
+			icon: 'home',
+			href: '#/home'
+		}, {
+			id: null,
+			slug: 'manage',
+			title: 'Manage',
+			icon: 'edit',
+			href: '#/manage'
+		}, {
+			id: null,
+			slug: 'passes',
+			title: 'Passes',
+			icon: 'tags',
+			href: '#/passes'
+		}],
 		alerts: [],
 		alert: function(type, msg) {
 			$scope.$apply(function() {
@@ -97,12 +124,13 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			}
 		}
 	};
-
-	$http.get('/README.md').success(function(data) {
-		angular.element('#docs').html(markdown.toHTML(data));
-	});
-
+	return App;
 })
+
+.controller('AppCtrl', function($scope, $rootScope, App, $http) {
+	$rootScope.App = App;
+})
+
 
 .config(['$routeProvider', function($routeProvider) {
 	var routeResolver = {
@@ -122,7 +150,11 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 		.when('/manage', {
 			templateUrl: './views/manage.html',
 			controller: 'ManageCtrl',
-			resolve: routeResolver
+			resolve: {
+				user: function(App) {
+					return App.session.user;
+				}
+			}
 		})
 		.when('/passes', {
 			templateUrl: './views/passes.html',

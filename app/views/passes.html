@@ -1,5 +1,5 @@
 <div class="clearfix">
-	<div class="media" ng-repeat="pass in passes track by $index | orderBy:order:reverse" id="{{pass._id}}">
+	<div class="media" ng-repeat="pass in passes track by $index" id="{{pass._id}}">
 	  <a class="media-left" ng-href="#/passes/{{pass._id}}">
 	    <img ng-src="img/{{pass.type}}.png" alt="{{pass.type}} Icon" class="media-object"/>
 	  </a>

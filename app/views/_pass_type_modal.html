@@ -13,10 +13,12 @@
 			<div class="modal-body">
 
 				<form id="passForm" class="form-horizontal clearfix">
-					<label class="radio-inline">
-						<input type="radio" name="passType" id="radio1" value="boardingPass" ng-model="passType"> Boarding Pass
+
+					<label class="radio-inline" ng-repeat="type in App.passTypes">
+						<input type="radio" name="passType" id="radio-{{$index}}" value="{{type.value}}" ng-model="passType"> {{type.name}}
 					</label>
 
+<!--
 					<label class="radio-inline">
 						<input type="radio" name="passType" id="radio2" value="coupon" ng-model="passType"> Coupon
 					</label>
@@ -30,7 +32,7 @@
 					<label class="radio-inline">
 						<input type="radio" name="passType" id="radio5" value="generic" ng-model="passType"> Store Card
 					</label>
-					<!--
+
 
                              <label class="radio-inline">
                                  <img alt="boardingPass Icon" class="pass-icon" src="/img/boardingPass.png">

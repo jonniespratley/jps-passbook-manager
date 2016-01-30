@@ -14,7 +14,7 @@
 							<select ng-model="pass.type"
 										class="form-control c-select"
 									  ng-change="loadSchema(t)"
-									  ng-options="t.name as t.title for t in passTypes"></select>
+									  ng-options="t.value as t.name for t in passTypes"></select>
 						</formitem>
 						<formitem title="Organization:">
 							<input type="text" ng-model="pass.organizationName" class="form-control"/>
@@ -337,7 +337,4 @@
 						class="btn btn-primary btn-block">
 						Save
 					</button>
-
-
 				</form>
-<pre>{{pass | json}}</pre>

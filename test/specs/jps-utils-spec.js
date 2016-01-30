@@ -27,13 +27,8 @@ describe('Utils', function(done) {
 		});
 	});
 
-	xit('should create Github Pass', function(done) {
-		const GITHUB_USERS = [
-			'sindresorhus',
-			'eddiemonge',
-			'addyosmani',
-			'jonniespratley'
-		];
+	it('should create Github Pass', function(done) {
+		const GITHUB_USERS = [ /*'sindresorhus', 'eddiemonge', 'addyosmani', */ 'jonniespratley'];
 		var _done = _.after(GITHUB_USERS.length, function() {
 			done();
 		});

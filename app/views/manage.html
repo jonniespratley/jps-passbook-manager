@@ -1,31 +1,32 @@
-<h2>Manage</h2>
-
   <div class="row">
     <div class="col-sm-12">
       <div class="card">
-        <div class="card-header">
-        Signing Certificates
-        </div>
+
         <div class="card-block">
-         
-          <form id="certForm" action="" method="post">
-
-						<formitem title="Cert 1">
-							<pass-file-group id="cert1"
-								model="user.cert"
-								pass-id="{{pass._id}}"
-								hint="The certificate downloaded from Apple website.">
-							</pass-file-group>
-						</formitem>
+          <fieldset>
+            <legend>Pass Identifiers</legend>
+            <p>
+              Passes are cryptographically signed and compressed before being distributed.
+            </p>
+              <form id="passTypeIdentifierForm" enctype="multipart/form-data" ng-submit="handleFormSubmit(formData)">
 
 
-          </form>
+                    <input type="text" name="passTypeIdentifier" ng-model="formData.passTypeIdentifier" class="form-control" placeholder="Identifier" required/>
+                    <input type="text" name="passphrase" ng-model="formData.passphrase" class="form-control" placeholder="Passphrase" required=""/>
+                    <input type="file" name="file" ng-model="formData.file">
 
+                  <button class="btn btn-block btn-default btn--outline" type="button"
+                        ng-click="user.passTypeIdentifiers.push({})">
+                      <i class="fa fa-lg fa-plus"></i>
+                        Add
+                  </button>
+
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </fieldset>
         </div>
       </div>
-
-
-
-
     </div>
   </div>
+  <pre>{{formData | json}}</pre>
+  <pre>{{user | json}}</pre>

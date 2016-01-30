@@ -10,11 +10,14 @@ var program = mocks.program;
 var config = program.config.defaults;
 
 var mockPass = mocks.mockPass;
+var db;
 
 describe('Adapters', function() {
 
 	describe('redis', function() {
-		var db = new RedisDB();
+		before(function() {
+			db = new RedisDB();
+		});
 
 		it('should be defined', function(done) {
 			assert(db);
