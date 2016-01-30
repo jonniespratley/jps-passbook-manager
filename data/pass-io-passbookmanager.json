@@ -1,96 +1,12 @@
 {
   "_id": "pass-io-passbookmanager",
-  "docType": "pass-type-id",
-  "type": "generic",
-  "lastUpdated": 1454113319599,
-  "logoText": "Company Staff ID",
-  "description": "Staff Pass for Employee Number 001",
-  "formatVersion": 1,
-  "organizationName": "Passbook Example Company",
   "passTypeIdentifier": "pass.io.passbookmanager",
-  "serialNumber": "0000001",
-  "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "37c6f386-20d1-42f9-a57f-90cb1c4e7cde",
-  "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
-  "voided": false,
-  "barcode": {
-    "format": "PKBarcodeFormatQR",
-    "message": "0000001",
-    "messageEncoding": "iso-8859-1",
-    "altText": "Staff ID 0000001"
-  },
-  "beacons": [],
-  "locations": [
-    {
-      "latitude": 51.50506,
-      "longitude": -0.0196,
-      "relevantText": "Company Offices"
-    }
-  ],
-  "maxDistance": 0,
-  "barcodes": [],
-  "groupingIdentifier": "",
-  "labelColor": "rgb(255, 255, 255)",
-  "foregroundColor": "rgb(255, 255, 255)",
-  "backgroundColor": "rgb(90, 90, 90)",
-  "suppressStripShine": false,
-  "filename": null,
-  "pkpassFilename": null,
-  "rawFilename": null,
-  "associatedStoreIdentifiers": [
-    375380948
-  ],
-  "generic": {
-    "headerFields": [
-      {
-        "key": "staffNumber",
-        "label": "Staff Number",
-        "value": "001"
-      }
-    ],
-    "primaryFields": [
-      {
-        "key": "staffName",
-        "label": "Name",
-        "value": "Jonnie Spratley"
-      }
-    ],
-    "secondaryFields": [
-      {
-        "key": "telephoneExt",
-        "label": "Extension",
-        "value": "9779"
-      },
-      {
-        "key": "jobTitle",
-        "label": "Job Title",
-        "value": "Chief Pass Creator"
-      }
-    ],
-    "backFields": [
-      {
-        "key": "managersName",
-        "label": "Manager's Name",
-        "value": "Paul Bailey"
-      },
-      {
-        "key": "managersExt",
-        "label": "Manager's Extension",
-        "value": "9673"
-      },
-      {
-        "key": "expiryDate",
-        "dateStyle": "PKDateStyleShort",
-        "label": "Expiry Date",
-        "value": "2013-12-31T00:00-23:59"
-      }
-    ]
-  },
-  "cert": "/Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager-cert.pem",
-  "key": "/Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager-key.pem",
+  "cert": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager-cert.pem",
+  "key": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager-key.pem",
   "passphrase": "fred",
-  "p12": "/Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12",
-  "certcmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12 -passin pass:fred -clcerts -nokeys -out /Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager-cert.pem",
-  "keycmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12 -nocerts -passout pass:fred -passin pass:fred -out /Users/jps/Github/jps-passbook-manager/data/certs/pass-io-passbookmanager-pass.io.passbookmanager-key.pem",
+  "docType": "pass-type-id",
+  "p12": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12",
+  "certcmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12 -passin pass:fred -clcerts -nokeys -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager-cert.pem",
+  "keycmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12 -nocerts -passout pass:fred -passin pass:fred -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager-key.pem",
   "_key": "pass-io-passbookmanager"
 }

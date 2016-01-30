@@ -13,6 +13,7 @@ Passbook handles the middle; it lets users view and manage their passes and prov
 ## Getting Started
 This is a simple web app interface for creating iOS Passbook passes from content.
 
+> Note: https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1
 
 ### 1. Fork It
 Clone or fork this repo.

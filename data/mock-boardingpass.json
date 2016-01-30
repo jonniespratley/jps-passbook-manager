@@ -2,15 +2,15 @@
   "_id": "mock-boardingpass",
   "docType": "pass",
   "type": "boardingPass",
-  "lastUpdated": 1454116266796,
+  "lastUpdated": 1454180252055,
   "logoText": "Jonnie Airways",
   "description": "Example Boarding Pass",
   "formatVersion": 1,
   "organizationName": "Jonnie Airways",
   "passTypeIdentifier": "pass.io.passbookmanager",
-  "serialNumber": "bc065fc4-574e-404c-8b08-315a12af81b3",
+  "serialNumber": "df4046ba-2070-41af-a934-ca394b66e234",
   "teamIdentifier": "USE9YUYDFH",
-  "authenticationToken": "bc065fc4-574e-404c-8b08-315a12af81b3",
+  "authenticationToken": "df4046ba-2070-41af-a934-ca394b66e234",
   "webServiceURL": "https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api",
   "voided": false,
   "barcode": {
@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(22, 55, 110)",
   "backgroundColor": "rgb(50, 91, 185)",
   "suppressStripShine": false,
-  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-boardingpass.raw",
-  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-boardingpass.pkpass",
-  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/mock-boardingpass.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-boardingpass.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-boardingpass.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-boardingpass.raw",
   "relevantDate": "2012-07-22T14:25-08:00",
   "boardingPass": {
     "transitType": "PKTransitTypeAir",
@@ -108,6 +108,6 @@
       }
     ]
   },
-  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes",
   "_key": "mock-boardingpass"
 }

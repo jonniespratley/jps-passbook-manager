@@ -3,11 +3,16 @@ const fs = require('fs-extra');
 const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
-const program = require(path.resolve(__dirname, '../../lib/program'))();
+
+
 const SignPass = require(path.resolve(__dirname, '../../lib/signpass'));
+var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+var program = mocks.program;
+var config = program.config.defaults;
 var signpass;
 var tmpdir = path.resolve(__dirname, '../../data/passes');
-fs.existsSync(tmpdir);
+const jpsPassbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))(program);
+
 
 var certFilename = path.resolve(__dirname, '../../certificates/pass-cert.pem');
 var keyFilename = path.resolve(__dirname, '../../certificates/pass-key.pem');
@@ -77,38 +82,7 @@ describe('SignPass', function(done) {
 		done();
 	});
 
-
-	it('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {
-		var _done = _.after(passes.length, function() {
-			done();
-		});
-
-		program.db.find({
-			docType: 'pass'
-		}).then(function(resp) {
-			passes = resp;
-
-			// TODO: Sign each pass with cert.
-			_.forEach(passes, function(pass) {
-				console.log('creating pass', pass.filename);
-				//set .raw folder
-				options.passFilename = pass.filename;
-
-				signpass = new SignPass(options);
-				signpass.sign(function(err, resp) {
-					assert(resp);
-					//assert(fs.existsSync(resp.zip));
-					assert(fs.existsSync(resp.pkpass));
-					_done(resp);
-				});
-
-
-			});
-		});
-
-	});
-
-	xit('sign_pass() - should create .zip and .pkpass files', function(done) {
+	it('sign_pass() - should create .zip and .pkpass files', function(done) {
 		signpass.sign(function(err, resp) {
 			files = resp;
 			assert(resp);
@@ -117,5 +91,38 @@ describe('SignPass', function(done) {
 			done();
 		});
 	});
+
+	it('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {
+		this.timeout(15000);
+
+		program.db.find({
+			docType: 'pass'
+		}).then(function(resp) {
+
+			var _done = _.after(resp.length, function() {
+				done();
+			});
+
+
+			// TODO: Sign each pass with cert.
+			_.forEach(resp, function(pass) {
+
+				jpsPassbook.createPass(pass, function(err, _pass) {
+					console.log('creating pass', _pass.filename);
+					options.passFilename = _pass.filename;
+
+					signpass = new SignPass(options);
+					signpass.sign(function(err, resp) {
+						assert(resp);
+						assert(fs.existsSync(_pass.pkpass));
+						_done(resp);
+					});
+				})
+
+			});
+		});
+
+	});
+
 
 });

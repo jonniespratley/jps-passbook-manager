@@ -14,7 +14,7 @@ var db;
 
 describe('Adapters', function() {
 
-	describe('redis', function() {
+	xdescribe('redis', function() {
 		before(function() {
 			db = new RedisDB();
 		});

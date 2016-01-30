@@ -147,74 +147,8 @@ module.exports = function(program, app) {
 	var multipartMiddleware = multipart();
 
 
-
-	const SignPass = program.require('signpass');
-
-	// TODO: Save pass Type id to database, and create pems.
-	function savePassTypeIdentifier(obj) {
-		return new Promise(function(resolve, reject) {
-			logger('savePassTypeIdentifier', obj);
-
-			if (!obj.cert) {
-				reject({
-					error: 'Must provide path to .p12 certificate'
-				});
-			}
-			SignPass.createPems(obj.passTypeIdentifier, obj.cert, obj.passphrase, function(err, resp) {
-				if (err) {
-					reject(err);
-				}
-				logger('createPems', resp);
-				program.db.put(resp).then(resolve, reject);
-
-				//assert(fs.existsSync(options.key));
-				//assert(fs.existsSync(options.cert));
-				//resolve(resp);
-			});
-		});
-	}
-
-	// TODO: Save upload to database and move to data directory
-	function saveUpload(file) {
-		return new Promise(function(resolve, reject) {
-			var toFilename = path.resolve(program.config.defaults.dataPath, './uploads/' + file.originalFilename);
-			var _doc = {
-				_id: 'file-' + file.name,
-				originalFilename: file.originalFilename,
-				path: toFilename,
-				size: file.size,
-				name: file.name,
-				type: file.type
-			};
-			logger('saveUpload', _doc);
-			fs.copy(file.path, _doc.path, function(err) {
-				if (err) {
-					reject(err);
-				}
-				program.db.put(_doc).then(resolve, reject);
-			});
-		});
-	}
-
-
-	router.post('/passTypeIdentifier', multipartMiddleware, function(req, res) {
-		logger('Create pass type identifier', req.body, req.files);
-		var out = {};
-
-		if (req.files) {
-			saveUpload(req.files.file).then(function(_file) {
-				logger('Save file', _file);
-				req.body.cert = _file.path;
-				savePassTypeIdentifier(req.body).then(function(resp) {
-					res.status(200).json(resp);
-				}).catch(function(err) {
-					res.status(400).json(err);
-				});
-			});
-			logger('Upload file', req.files);
-
-		}
-	});
+	const adminController = new program.require('controllers/admin-controller')(program);
+	router.post('/passTypeIdentifier', multipartMiddleware, adminController.post_passTypeIdentifier);
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
 		var out = [];
