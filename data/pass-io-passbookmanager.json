@@ -8,5 +8,6 @@
   "p12": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12",
   "certcmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12 -passin pass:fred -clcerts -nokeys -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager-cert.pem",
   "keycmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager.p12 -nocerts -passout pass:fred -passin pass:fred -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass-io-passbookmanager-pass.io.passbookmanager-key.pem",
+  "wwdr": "/Users/jps/Github/jps-passbook-manager/certificates/wwdr-authority.pem",
   "_key": "pass-io-passbookmanager"
 }

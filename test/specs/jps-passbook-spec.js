@@ -21,6 +21,7 @@ var _passes = [];
 var passFiles = [];
 var mockIdentifer = {
 	passTypeIdentifier: 'pass.io.passbookmanager',
+	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
 	cert: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
 	passphrase: 'fred'
 };
@@ -28,27 +29,40 @@ describe('jps-passbook', function() {
 
 	it('savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database.', function(done) {
 		//this.timeout(10000);
-		jpsPassbook.savePassTypeIdentifier(mockIdentifer).then(function(p) {
+		jpsPassbook.savePassTypeIdentifier(mockIdentifer, function(err, p) {
 			assert.ok(p);
-			done();
-		}).catch(function(err) {
-			assert.fail(err);
 			done();
 		});
 	});
 
 	it('getPassCerts() - should get pass certs from database.', function(done) {
-		//	this.timeout(10000);
-		jpsPassbook.getPassCerts(mockIdentifer.passTypeIdentifier).then(function(p) {
+		//this.timeout(10000);
+		jpsPassbook.getPassCerts(mockIdentifer.passTypeIdentifier, function(err, p) {
 			assert.ok(p);
-			done();
-		}).catch(function(err) {
-			assert.fail(err);
 			done();
 		});
 	});
 
 	it('createPass() - should create each mocks.mockPasses', function(done) {
+		//	this.timeout(10000);
+
+		_passes = [mocks.mockPass];
+		var _done = _.after(_passes.length, function() {
+			done();
+		});
+
+		_.forEach(_passes, function(_pass) {
+			jpsPassbook.createPass(_pass, function(err, p) {
+				if (err) {
+					assert.fail(err);
+				}
+				assert.ok(p._id);
+				_done();
+			});
+		});
+
+	});
+	xit('createPass() - should create each pass in database', function(done) {
 		//	this.timeout(10000);
 		program.db.find({
 			docType: 'pass'
@@ -72,20 +86,24 @@ describe('jps-passbook', function() {
 		});
 	});
 
-	it('createPass() - should create a pass .raw package', function(done) {
+	xit('createPass() - should create a pass .raw package', function(done) {
 		//	this.timeout(10000);
 		var _done = _.after(_passes.length, function() {
 			done();
 		});
 		_.forEach(_passes, function(_pass) {
-			jpsPassbook.createPass(mockPass, function(err, p) {
-				if (err) {
-					assert.fail(err);
-				}
-				assert.ok(p);
-				assert.ok(fs.existsSync(p.rawFilename));
-				_done();
+
+			_.defer(function() {
+				jpsPassbook.createPass(mockPass, function(err, p) {
+					if (err) {
+						assert.fail(err);
+					}
+					assert.ok(p);
+					assert.ok(fs.existsSync(p.rawFilename));
+					_done();
+				});
 			});
+
 		});
 	});
 
@@ -95,6 +113,7 @@ describe('jps-passbook', function() {
 			done();
 		});
 		_.forEach(_passes, function(_pass) {
+
 			jpsPassbook.signPass(mockPass, function(err, p) {
 				if (err) {
 					assert.fail(err);
@@ -103,6 +122,7 @@ describe('jps-passbook', function() {
 				//	assert(fs.existsSync(p.pkpassFilename));
 				_done();
 			});
+
 		});
 	});
 
