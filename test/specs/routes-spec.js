@@ -23,15 +23,18 @@ var config = program.config.defaults;
 //Test Instances
 
 var mockDevice = mocks.mockDevice;
-var mockPass = mocks.mockPass;
+var mockPass;
 
 
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
 	'jps-passbook-routes'))(program, app);
 
 describe('routes', function() {
-	before(function() {
-		//mockPass = db.getSync('mock-generic');
+	before(function(done) {
+		program.models.Passes.getPasses().then(function(resp) {
+			mockPass = resp[0];
+			done();
+		});
 	});
 
 	it('GET - /api/v1 - should return api', function(done) {
@@ -40,7 +43,6 @@ describe('routes', function() {
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
-
 
 
 	describe('Cert Routes', function() {
@@ -65,27 +67,24 @@ describe('routes', function() {
 	});
 
 
-	describe('Export/Sign', function() {
-
-		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
-			request(app)
-				.get('/api/v1/sign/mock-generic')
-				//.expect('Content-Type', /application\/vnd.apple.pkpass/)
-				.expect(200, done);
-		});
-
-		xit('GET - /api/v1/export/:id - should export pass', function(done) {
-			request(app)
-				.get('/api/v1/export/mock-generic')
-				//.expect('Content-Type', /json/)
-				//	.expect('Content-Type', /application\/vnd.apple.pkpass/)
-				.expect(200, done);
-		});
-
-	});
-
 
 	describe('Admin Passes', function() {
+
+
+		it('POST - /api/v1/admin/passes - should create pass', function(done) {
+			delete mockPass._id;
+			request(app)
+				.post('/api/v1/admin/passes')
+				.send(mockPass)
+				.expect(function(res) {
+					//	mocks.mockPasses[0]._id = res.body._id;
+					mockPass = res.body;
+					console.log('create pass resp', res.body)
+				})
+				.expect('Content-Type', /json/)
+				.expect(201, done);
+		});
+
 
 		it('GET - /api/v1/admin/passes - should return all passes', function(done) {
 			request(app)
@@ -100,6 +99,7 @@ describe('routes', function() {
 				.send(mocks.mockPass)
 				.expect(function(res) {
 					//	mocks.mockPasses[0]._id = res.body._id;
+					//	mockPass = res;
 					//	console.log(res)
 				})
 				.expect('Content-Type', /json/)
@@ -108,7 +108,7 @@ describe('routes', function() {
 
 		it('GET - /api/v1/admin/passes/:id - should return 1 pass', function(done) {
 			request(app)
-				.get('/api/v1/admin/passes/' + mocks.mockPass._id)
+				.get('/api/v1/admin/passes/' + mockPass._id)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
@@ -134,9 +134,26 @@ describe('routes', function() {
 				.expect(200, done);
 		});
 
+	});
 
+	describe('Download/Sign', function() {
+
+		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
+			request(app)
+				.get(`/api/v1/sign/${mockPass._id}`)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		it('GET - /api/v1/download/:id - should export pass', function(done) {
+			request(app)
+				.get(`/api/v1/download/${mockPass._id}`)
+				.expect('Content-Type', /application\/vnd.apple.pkpass/)
+				.expect(200, done);
+		});
 
 	});
+
 
 	describe('DB Routes', function() {
 
@@ -301,7 +318,7 @@ describe('routes', function() {
 					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}?passesUpdatedSince=`)
 					.set('Authorization', mockDevice.authorization)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
-					.expect(200, done);
+					.expect(204, done);
 
 			});
 		});

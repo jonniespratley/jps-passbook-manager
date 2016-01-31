@@ -1,8 +1,8 @@
 {
-  "_id": "mock-generic",
+  "_id": "pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a",
   "docType": "pass",
   "type": "generic",
-  "lastUpdated": 1454201606490,
+  "lastUpdated": 1454201185968,
   "logoText": "Company Staff ID",
   "description": "Example Generic",
   "formatVersion": 1,
@@ -86,5 +86,5 @@
       }
     ]
   },
-  "_key": "mock-generic"
+  "_key": "pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a"
 }

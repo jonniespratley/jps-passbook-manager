@@ -39,6 +39,9 @@ module.exports = function(program, app) {
 	var config = program.config.defaults;
 	var router = new Router();
 
+	const multipart = require('connect-multiparty');
+	const adminController = new program.require('controllers/admin-controller')(program);
+
 	router.get('/', function(req, res) {
 		res.status(200).json({
 			message: config.name
@@ -78,31 +81,9 @@ module.exports = function(program, app) {
 		});
 	});
 
-	/**
-	 * I am the signpass route
-	 */
-	router.get('/sign/:id', function(req, res) {
-		logger('sign', req.params);
-		program.db.get(req.params.id).then(function(resp) {
-			if (resp) {
+	//	const adminController = program.require('controllers/admin-controller')(program);
 
-				jpsPassbook.createPass(resp, function(err, data) {
-					if (err) {
-						res.status(404).json(err);
-					}
-					logger('sign', data);
-					res.status(200).send(data);
-				});
-			} else {
-				res.status(400).json({
-					message: 'Must id!'
-				});
-			}
-		}).catch(function(err) {
-			logger('sign', 'error', err);
-			res.status(400).json(err);
-		})
-	});
+	router.get('/sign/:id', adminController.get_signPass);
 
 	/**
 	 * I am the export pass route.
@@ -118,12 +99,9 @@ module.exports = function(program, app) {
 			logger('id', id);
 
 			program.db.get(id).then(function(resp) {
-
 				logger('found pass', resp._id);
 
-
-
-				if (fs.existsSync(resp.pkpassFilename)) {
+				if (!fs.existsSync(resp.pkpassFilename)) {
 					res.status(404).json({
 						error: '.pkpass file does not exist'
 					});
@@ -135,19 +113,16 @@ module.exports = function(program, app) {
 			}).catch(function(err) {
 				res.status(404).json(err);
 			});
-
-
-
 		} else {
 			res.status(400).json('Must provide id!');
 		}
 	});
 
-	const multipart = require('connect-multiparty');
+
 	var multipartMiddleware = multipart();
 
 
-	const adminController = new program.require('controllers/admin-controller')(program);
+
 	router.post('/passTypeIdentifier', multipartMiddleware, adminController.post_passTypeIdentifier);
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {

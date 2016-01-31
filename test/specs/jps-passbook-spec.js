@@ -22,7 +22,7 @@ var passFiles = [];
 var mockIdentifer = {
 	passTypeIdentifier: 'pass.io.passbookmanager',
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
-	cert: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
+	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
 	passphrase: 'fred'
 };
 describe('jps-passbook', function() {
@@ -30,7 +30,11 @@ describe('jps-passbook', function() {
 	it('savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database.', function(done) {
 		//this.timeout(10000);
 		jpsPassbook.savePassTypeIdentifier(mockIdentifer, function(err, p) {
-			assert.ok(p);
+			if (err) {
+				assert.fail(err);
+				done();
+			}
+			assert(p);
 			done();
 		});
 	});
@@ -45,8 +49,7 @@ describe('jps-passbook', function() {
 
 	it('createPass() - should create each mocks.mockPasses', function(done) {
 		//	this.timeout(10000);
-
-		_passes = [mocks.mockPass];
+		_passes = mocks.mockPasses;
 		var _done = _.after(_passes.length, function() {
 			done();
 		});
@@ -60,8 +63,8 @@ describe('jps-passbook', function() {
 				_done();
 			});
 		});
-
 	});
+
 	xit('createPass() - should create each pass in database', function(done) {
 		//	this.timeout(10000);
 		program.db.find({
@@ -86,7 +89,8 @@ describe('jps-passbook', function() {
 		});
 	});
 
-	xit('createPass() - should create a pass .raw package', function(done) {
+
+	it('createPass() - should create a pass .raw package', function(done) {
 		//	this.timeout(10000);
 		var _done = _.after(_passes.length, function() {
 			done();

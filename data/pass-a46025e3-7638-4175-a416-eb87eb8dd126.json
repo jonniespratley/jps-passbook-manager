@@ -1,5 +1,5 @@
 {
-  "_id": "mock-storecard",
+  "_id": "pass-a46025e3-7638-4175-a416-eb87eb8dd126",
   "docType": "pass",
   "type": "storeCard",
   "lastUpdated": 1454200639823,
@@ -70,5 +70,5 @@
     ]
   },
   "directory": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes",
-  "_key": "mock-storecard"
+  "_key": "pass-a46025e3-7638-4175-a416-eb87eb8dd126"
 }
