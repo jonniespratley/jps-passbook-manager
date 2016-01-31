@@ -145,7 +145,7 @@ describe('routes', function() {
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/download/:id - should export pass', function(done) {
+		xit('GET - /api/v1/download/:id - should export pass', function(done) {
 			request(app)
 				.get(`/api/v1/download/${mockPass._id}`)
 				.expect('Content-Type', /application\/vnd.apple.pkpass/)
