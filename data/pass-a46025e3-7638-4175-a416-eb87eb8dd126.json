@@ -33,9 +33,9 @@
   "foregroundColor": "rgb(72, 72, 72)",
   "backgroundColor": "rgb(183, 180, 183)",
   "suppressStripShine": false,
-  "filename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-storecard.raw",
-  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-storecard.pkpass",
-  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-storecard.raw",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/pass-a46025e3-7638-4175-a416-eb87eb8dd126.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/pass-a46025e3-7638-4175-a416-eb87eb8dd126.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/pass-a46025e3-7638-4175-a416-eb87eb8dd126.raw",
   "storeCard": {
     "primaryFields": [
       {

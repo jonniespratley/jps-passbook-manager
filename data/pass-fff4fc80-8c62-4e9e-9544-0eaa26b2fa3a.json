@@ -34,9 +34,9 @@
   "foregroundColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(90, 90, 90)",
   "suppressStripShine": false,
-  "filename": null,
-  "pkpassFilename": null,
-  "rawFilename": null,
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a.pkpass",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a.raw",
   "associatedStoreIdentifiers": [
     375380948
   ],
@@ -86,5 +86,6 @@
       }
     ]
   },
-  "_key": "pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a"
+  "_key": "pass-fff4fc80-8c62-4e9e-9544-0eaa26b2fa3a",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes"
 }

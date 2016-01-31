@@ -138,7 +138,7 @@ describe('routes', function() {
 
 	describe('Download/Sign', function() {
 
-		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
+		xit('GET - /api/v1/sign/:id - should sign pass', function(done) {
 			request(app)
 				.get(`/api/v1/sign/${mockPass._id}`)
 				.expect('Content-Type', /json/)
@@ -313,9 +313,9 @@ describe('routes', function() {
 
 			});
 
-			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number - ?updated since date', function(done) {
 				request(app)
-					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}?passesUpdatedSince=`)
+					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}?updatedSince=` + Date.now())
 					.set('Authorization', mockDevice.authorization)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
 					.expect(204, done);
