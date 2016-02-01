@@ -184,8 +184,9 @@ module.exports = function(program, app) {
 			if (err) {
 				throw err;
 			}
+			authLogger('session.user', req.user);
 			res.render('account', {
-				session: req.session.passport
+				user: req.user
 			});
 		});
 	});
@@ -279,14 +280,20 @@ module.exports = function(program, app) {
 		next();
 	});
 
-	app.use(session({
+	let sess = session({
 		//	store: new RedisStore(config.redis),
 		name: config.name,
 		secret: config.security.salt,
 		proxy: true,
 		resave: true,
-		saveUninitialized: false
-	}));
+		saveUninitialized: true
+	});
+
+	if (app.get('env') === 'production') {
+		app.set('trust proxy', 1) // trust first proxy
+		sess.cookie.secure = true // serve secure cookies
+	}
+	app.use(sess);
 
 	app.use(bodyParser.urlencoded({
 		extended: true

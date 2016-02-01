@@ -29,9 +29,9 @@ const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware
 describe('Admin', function() {
 	before(function(done) {
 		db.saveAll([
-			mockLog,
-			mockDevice,
-			mockPass
+			mocks.mockLog,
+			mocks.mockDevice,
+			mocks.mockPass
 		]).then(function(resp) {
 
 			done();
@@ -77,8 +77,8 @@ describe('Admin', function() {
 		describe('Cert Routes', function() {
 			it('/api/v1/admin/passes/passTypeIdentifier - should create new pass type identifier entry', function(done) {
 				request(app)
-					.post('/api/v1/admin/passes/passTypeIdentifier')
-					.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
+					.post(`/api/v1/admin/passes/passTypeIdentifier/${mockIdentifer.passTypeIdentifier}`)
+					//.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
 					.field('passphrase', mockIdentifer.passphrase)
 					.attach('file', mockIdentifer.p12)
 					.expect('Content-Type', /json/)

@@ -43,6 +43,9 @@ describe('routes', function() {
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
+
+
+
 	describe('Admin Passes', function() {
 
 		it('POST - /api/v1/admin/passes - should create pass', function(done) {
@@ -58,79 +61,8 @@ describe('routes', function() {
 				.expect('Content-Type', /json/)
 				.expect(201, done);
 		});
-
-		it('POST - /api/v1/admin/passes - should create pass', function(done) {
-			request(app)
-				.post('/api/v1/admin/passes')
-				.send(mocks.mockPass)
-				.expect(function(res) {
-					//	mocks.mockPasses[0]._id = res.body._id;
-					//	mockPass = res;
-					//	console.log(res)
-				})
-				.expect('Content-Type', /json/)
-				.expect(201, done);
-		});
-
-		xit('DELETE - /api/v1/admin/passes/:id - should remove pass', function(done) {
-			request(app)
-				.delete('/api/v1/admin/passes/' + mocks.mockPass._id)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
 	});
 
-
-
-	describe('DB Routes', function() {
-
-		xit('GET - /api/v1/db/passbookmanager/_changes - should return db info', function(done) {
-			request(app)
-				.get('/api/v1/db/passbookmanager/_changes')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		xit('GET - /api/v1/db/passbookmanager/_all_docs - should return all docs', function(done) {
-			request(app)
-				.get('/api/v1/db/passbookmanager/_all_docs')
-				.expect('Content-Type', /json/)
-				.expect(function(res) {
-
-					passes = res.body.rows;
-					console.log(passes)
-				})
-				.expect(200, done);
-		});
-
-		it('PUT - /api/v1/db/passbookmanager/:id - should create doc', function(done) {
-			request(app)
-				.put('/api/v1/db/passbookmanager/' + mockPass._id)
-				.send(mockPass)
-				.expect('Content-Type', /json/)
-				.expect(201, done);
-		});
-
-		it('GET - /api/v1/db/passbookmanager/:id - should get doc', function(done) {
-			request(app)
-				.get('/api/v1/db/passbookmanager/' + mockPass._id)
-				.expect('Content-Type', /json/)
-				.expect(function(res) {
-					assert(res.body._id === mockPass._id);
-					mockPass = res.body;
-				})
-				.expect(200, done);
-		});
-
-		it('DELETE - /api/v1/db/passbookmanager/:id - should remove doc', function(done) {
-			request(app)
-				.delete('/api/v1/db/passbookmanager/' + mockPass._id + '?rev=' + mockPass._rev)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-	});
 
 
 	describe('PassKit Web Service', function() {
@@ -138,8 +70,8 @@ describe('routes', function() {
 		beforeEach(function() {
 			//console.log('Using Device', mockDevice);
 			//console.log('Using Pass', mockPass);
-
 		});
+
 		describe('Devices', function() {
 			it(
 				'POST - /api/v1/devices/:device_id/registrations/:pass_type_id/:serial_number - register a new device for pass',

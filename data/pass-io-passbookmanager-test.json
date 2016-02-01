@@ -1,0 +1,13 @@
+{
+  "_id": "pass-io-passbookmanager-test",
+  "passTypeIdentifier": "pass.io.passbookmanager.test",
+  "cert": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test-cert.pem",
+  "key": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test-key.pem",
+  "passphrase": "test",
+  "docType": "pass-type-id",
+  "p12": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test.p12",
+  "certcmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test.p12 -passin pass:test -clcerts -nokeys -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test-cert.pem",
+  "keycmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test.p12 -nocerts -passout pass:test -passin pass:test -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager.test/certs/pass.io.passbookmanager.test-key.pem",
+  "wwdr": "/Users/jps/Github/jps-passbook-manager/certificates/wwdr-authority.pem",
+  "_key": "pass-io-passbookmanager-test"
+}

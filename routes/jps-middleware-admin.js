@@ -27,8 +27,8 @@ module.exports = function(program, app) {
 
 	adminRouter.get('/download/:id', adminController.get_downloadPass);
 	adminRouter.get('/sign/:id', adminController.get_signPass);
-	adminRouter.post('/passTypeIdentifier', multipartMiddleware, adminController.post_passTypeIdentifier);
-	app.get('/api/' + config.version +'/admin/find?', adminController.get_find);
+	adminRouter.post('/passTypeIdentifier/:id', multipartMiddleware, adminController.post_passTypeIdentifier);
+	app.get('/api/' + config.version + '/admin/find?', adminController.get_find);
 	app.use('/api/' + config.version + '/admin/passes', adminRouter);
 
 	return adminRouter;
