@@ -2,22 +2,14 @@ var assert = require('assert'),
 	path = require('path'),
 	_ = require('lodash'),
 	fs = require('fs-extra'),
-	os = require('os'),
 	SignPass = require(path.resolve(__dirname, '../../lib/signpass')),
 	Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'));
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
-var config = program.config.defaults;
 var jpsPassbook = new Passbook(program);
-var Pass = program.models.Pass;
-var mockDevice = mocks.mockDevice;
 var mockIdentifer = mocks.mockIdentifer;
 var mockPass = mocks.mockPass;
-var testPass = mockPass;
-var testPassfile = '';
-var rawPassFolder = '';
-var testPassDir = path.resolve(__dirname, '../../.tmp/');
 var _passes = [];
 var passFiles = [];
 
@@ -46,24 +38,54 @@ describe('jps-passbook', function() {
 			});
 		});
 
-
-		it('savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database.', function(done) {
-			jpsPassbook.savePassTypeIdentifier(mocks.mockIdentifer, function(err, p) {
-				if (err) {
-					assert.fail(err);
-					done();
-				}
+		it('savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database successfully.', function(done) {
+			jpsPassbook.savePassTypeIdentifierPromise(mocks.mockIdentifer).then(function(p) {
 				assert(p);
+				done();
+			}).catch(function(err) {
+				assert.fail(err);
 				done();
 			});
 		});
 
-		it('getPassCerts() - should get pass certs from database.', function(done) {
+		it('savePassTypeIdentifier() - should should fail when no p12 present.', function(done) {
+			jpsPassbook.savePassTypeIdentifierPromise({
+				passphrase: 'test',
+				passTypeIdentifier: 'test'
+			}).then(function(p) {
+				assert.fail(p);
+				done();
+			}).catch(function(err) {
+				assert(err);
+				done();
+			});
+		});
+
+		it('savePassTypeIdentifier() - should should fail when no passphrase present.', function(done) {
+			jpsPassbook.savePassTypeIdentifierPromise({
+				passTypeIdentifier: 'test'
+			}).then(function(p) {
+				assert.fail(p);
+				done();
+			}).catch(function(err) {
+				assert(err);
+				done();
+			});
+		});
+
+		it('getPassCerts() - should get pass certs from database successfully.', function(done) {
 			jpsPassbook.getPassCerts(mockIdentifer.passTypeIdentifier, function(err, p) {
 				if (err) {
 					assert.fail(err);
 				}
 				assert.ok(p);
+				done();
+			});
+		});
+
+		it('getPassCerts() - should get pass certs from database fail.', function(done) {
+			jpsPassbook.getPassCerts('unknown-id', function(err, p) {
+				assert(err);
 				done();
 			});
 		});
