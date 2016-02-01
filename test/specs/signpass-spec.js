@@ -52,8 +52,8 @@ describe('SignPass', function() {
 				assert.fail(err);
 				done();
 			}
-			
-			assert(fs.existsSync(resp.key));	
+
+			assert(fs.existsSync(resp.key));
 			assert(fs.existsSync(resp.p12));
 			assert(fs.existsSync(resp.wwdr));
 			assert(fs.existsSync(resp.cert));
@@ -69,7 +69,7 @@ describe('SignPass', function() {
 				done();
 			}
 			assert(options);
-			assert(fs.existsSync(resp.key));	
+			assert(fs.existsSync(resp.key));
 			assert(fs.existsSync(resp.p12));
 			assert(fs.existsSync(resp.wwdr));
 			assert(fs.existsSync(resp.cert));
@@ -111,9 +111,6 @@ describe('SignPass', function() {
 				}
 					console.log('pass', _pass);
 				options.passFilename = _pass.rawFilename;
-				testPasses.push(_pass);
-				
-				
 				signpass = new SignPass(options);
 				signpass.signPromise().then(function(resp) {
 					assert(resp);
