@@ -15,14 +15,6 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 
 
-var GITHUB_PRODUCTION_CLIENT_ID = '96943ce4c9b4f09bf98f';
-var GITHUB_PRODUCTION_CLIENT_SECRET = 'f9809160c20f1f57876924c015aa68283f1c4a4b';
-var GITHUB_DEV_CLIENT_ID = '7171ef010ffc067de767';
-var GITHUB_DEV_CLIENT_SECRET = '387c9cd85b4c48abcaa7547bf2865aaf922e4ac2';
-var GITHUB_CLIENT_ID = GITHUB_DEV_CLIENT_ID;
-var GITHUB_CLIENT_SECRET = GITHUB_DEV_CLIENT_SECRET;
-var GITHUB_CALLBACK_URL = '/auth/provider/callback';
-
 module.exports = function(program, app) {
 	const User = require(path.resolve(__dirname, '../lib/models/user.js'));
 	const Users = require(path.resolve(__dirname, '../lib/models/users.js'))(program.db);
@@ -30,17 +22,14 @@ module.exports = function(program, app) {
 	const config = program.config.defaults;
 	const db = program.db;
 
-	const OAUTH_CALLBACK_URL = url.format({
-		protocol: (process.env.VCAP_APP_HOST ? 'https' : 'http'),
-		hostname: process.env.VCAP_APP_HOST || process.env.IP || config.server.hostname || '127.0.0.1',
-		port: process.env.PORT || config.server.port || 8080,
-		pathname: GITHUB_CALLBACK_URL
-	});
+	var GITHUB_CLIENT_ID = config.passport.development.github.clientID;
+	var GITHUB_CLIENT_SECRET = config.passport.development.github.clientSecret;
+	var OAUTH_CALLBACK_URL = config.passport.development.github.callbackURL;
 
 	if (process.env.NODE_ENV === 'production') {
-		GITHUB_CLIENT_ID = GITHUB_PRODUCTION_CLIENT_ID;
-		GITHUB_CLIENT_SECRET = GITHUB_PRODUCTION_CLIENT_SECRET;
-		OAUTH_CALLBACK_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io' + GITHUB_CALLBACK_URL;
+		GITHUB_CLIENT_ID = config.passport.production.github.clientID;
+		GITHUB_CLIENT_SECRET = config.passport.production.github.clientSecret;
+		OAUTH_CALLBACK_URL = config.passport.production.github.callbackURL;
 	}
 
 	const OAUTH_CLIENT_SECRET = GITHUB_CLIENT_SECRET;
@@ -196,7 +185,7 @@ module.exports = function(program, app) {
 				throw err;
 			}
 			res.render('account', {
-				user: req.user
+				session: req.session.passport
 			});
 		});
 	});
@@ -292,20 +281,28 @@ module.exports = function(program, app) {
 
 	app.use(session({
 		//	store: new RedisStore(config.redis),
+		name: config.name,
 		secret: config.security.salt,
+		proxy: true,
 		resave: true,
-		saveUninitialized: true
+		saveUninitialized: false
 	}));
 
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));
 
+	app.set('views', path.resolve(__dirname, '../', './views'));
+	app.set('view engine', 'ejs');
+	app.engine('html', require('ejs').renderFile);
+
 	app.use(bodyParser.json());
 	app.use(methodOverride());
 
 	app.use(passport.initialize());
 	app.use(passport.session());
+
+
 	app.use(router);
 
 	authLogger('mounted!');

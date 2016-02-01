@@ -12,6 +12,20 @@ const APPLE_PASS_TYPE_IDENTIFIER_KEY = path.resolve(__dirname,
 
 const APPLE_WEB_SERVICE_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api';
 
+
+const GITHUB_PRODUCTION_CLIENT_ID = '96943ce4c9b4f09bf98f';
+const GITHUB_PRODUCTION_CLIENT_SECRET = 'f9809160c20f1f57876924c015aa68283f1c4a4b';
+const GITHUB_PRODUCTION_CALLBACK_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/auth/provider/callback';
+
+const GITHUB_DEV_CLIENT_ID = '7171ef010ffc067de767';
+const GITHUB_DEV_CLIENT_SECRET = '387c9cd85b4c48abcaa7547bf2865aaf922e4ac2';
+const GITHUB_DEV_CALLBACK_URL = 'http://127.0.0.1:5001/auth/provider/callback';
+
+var GITHUB_CLIENT_ID = GITHUB_DEV_CLIENT_ID;
+var GITHUB_CLIENT_SECRET = GITHUB_DEV_CLIENT_SECRET;
+
+var GITHUB_CALLBACK_URL = '/auth/provider/callback';
+
 var VCAP_SERVICES = {
 	"logstash-4": [{
 		"name": "my_logstash_instance",
@@ -42,10 +56,10 @@ var VCAP_SERVICES = {
 };
 
 var config = {
-	"name": "passbookmanager",
+	"name": "pass-manager",
 	debug: true,
 	baseUrl: 'http://localhost:5984/passbookmanager',
-	"message": "Passbook Manager API Server",
+	"message": "Pass Manager API Server",
 	"dataPath": path.resolve(__dirname, "./data/"),
 	redis: {
 		hostname: '127.0.0.1',
@@ -58,7 +72,7 @@ var config = {
 		}
 	},
 	database: {
-		name: 'passbookmanager',
+		name: 'passmanager',
 		"dataPath": path.resolve(__dirname, "./data")
 	},
 	"passkit": {
@@ -67,11 +81,27 @@ var config = {
 		"passTypeIdentifier": APPLE_PASS_TYPE_IDENTIFIER,
 		"webServiceURL": APPLE_WEB_SERVICE_URL
 	},
+	passport: {
+		development: {
+			github: {
+				clientID: GITHUB_DEV_CLIENT_ID,
+				clientSecret: GITHUB_DEV_CLIENT_SECRET,
+				callbackURL: GITHUB_DEV_CALLBACK_URL
+			}
+		},
+		production: {
+			github: {
+				clientID: GITHUB_PRODUCTION_CLIENT_ID,
+				clientSecret: GITHUB_PRODUCTION_CLIENT_SECRET,
+				callbackURL: GITHUB_PRODUCTION_CALLBACK_URL
+			}
+		}
+	},
 	"security": {
 		"salt": "a58e325c6df628d07a18b673a3420986"
 	},
 	"server": {
-		"host": process.env.VCAP_APP_HOST || process.env.IP || "localhost",
+		"host": process.env.VCAP_APP_HOST || process.env.IP || "127.0.0.1",
 		"port": process.env.PORT || 5001
 	},
 	"db": {

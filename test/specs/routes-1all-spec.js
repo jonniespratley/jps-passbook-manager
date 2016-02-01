@@ -81,14 +81,6 @@ describe('routes', function() {
 
 	});
 
-	describe('Auth Routes', function() {
-		xit('/api/v1/me - should return user info', function(done) {
-			request(app)
-				.get('/api/v1/me')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-	});
 
 
 	describe('DB Routes', function() {
@@ -269,8 +261,6 @@ describe('routes', function() {
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
-
-
 
 
 
