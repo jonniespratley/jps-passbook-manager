@@ -12,7 +12,7 @@ const jsonParser = bodyParser.json();
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
-
+const LocalStrategy = require('passport-local').Strategy;
 
 
 var GITHUB_PRODUCTION_CLIENT_ID = '96943ce4c9b4f09bf98f';
@@ -21,35 +21,35 @@ var GITHUB_DEV_CLIENT_ID = '7171ef010ffc067de767';
 var GITHUB_DEV_CLIENT_SECRET = '387c9cd85b4c48abcaa7547bf2865aaf922e4ac2';
 var GITHUB_CLIENT_ID = GITHUB_DEV_CLIENT_ID;
 var GITHUB_CLIENT_SECRET = GITHUB_DEV_CLIENT_SECRET;
-if (process.env.NODE_ENV === 'production') {
-	GITHUB_CLIENT_ID = GITHUB_PRODUCTION_CLIENT_ID;
-	GITHUB_CLIENT_SECRET = GITHUB_PRODUCTION_CLIENT_SECRET;
-}
-
-
+var GITHUB_CALLBACK_URL = '/auth/provider/callback';
 
 module.exports = function(program, app) {
-	var User = require(path.resolve(__dirname, '../lib/models/user.js'));
-	var Users = require(path.resolve(__dirname, '../lib/models/users.js'))(program.db);
+	const User = require(path.resolve(__dirname, '../lib/models/user.js'));
+	const Users = require(path.resolve(__dirname, '../lib/models/users.js'))(program.db);
 
-	var config = program.config.defaults;
-	var db = program.db;
+	const config = program.config.defaults;
+	const db = program.db;
 
 	const OAUTH_CALLBACK_URL = url.format({
 		protocol: (process.env.VCAP_APP_HOST ? 'https' : 'http'),
 		hostname: process.env.VCAP_APP_HOST || process.env.IP || config.server.hostname || '127.0.0.1',
 		port: process.env.PORT || config.server.port || 8080,
-		pathname: '/auth/provider/callback'
+		pathname: GITHUB_CALLBACK_URL
 	});
 
+	if (process.env.NODE_ENV === 'production') {
+		GITHUB_CLIENT_ID = GITHUB_PRODUCTION_CLIENT_ID;
+		GITHUB_CLIENT_SECRET = GITHUB_PRODUCTION_CLIENT_SECRET;
+		OAUTH_CALLBACK_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io' + GITHUB_CALLBACK_URL;
+	}
 
 	const OAUTH_CLIENT_SECRET = GITHUB_CLIENT_SECRET;
 	const OAUTH_CLIENT_ID = GITHUB_CLIENT_ID;
 	const OAUTH_AUTH_URL = 'https://github.com/login/oauth/authorize';
 	const OAUTH_TOKEN_URL = 'https://github.com/login/oauth/access_token';
 
-	var router = new Router();
-	var authLogger = program.getLogger('auth');
+	let router = new Router();
+	let authLogger = program.getLogger('auth');
 
 	authLogger('OAUTH_CLIENT_SECRET', OAUTH_CLIENT_SECRET);
 	authLogger('OAUTH_CLIENT_ID', OAUTH_CLIENT_ID);
@@ -78,9 +78,6 @@ module.exports = function(program, app) {
 		}
 		res.redirect('/login');
 	}
-
-
-
 	// Passport session setup.
 	//   To support persistent login sessions, Passport needs to be able to
 	//   serialize users into and deserialize users out of the session.  Typically,
@@ -98,7 +95,6 @@ module.exports = function(program, app) {
 		Users.find(id, done);
 	});
 
-	const LocalStrategy = require('passport-local').Strategy;
 
 	passport.use(new LocalStrategy(function(username, password, done) {
 		Users.findOne({
