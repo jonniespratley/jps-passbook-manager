@@ -88,7 +88,34 @@ types:
                 "message": "value"
               }
 
-/admin/passes:
+/passTypeIdentifier:
+  description: Create a new passTypeIdentifier and .pem file generated.
+  post:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "message" : "Hello World"
+              }
+    body:
+      multipart/form-data:
+        type:
+          - string
+/admin/find:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "message" : "Hello World"
+              }
+/admin/passes/{id}:
+  uriParameters:
+    id: string
   get:
     responses:
       200:

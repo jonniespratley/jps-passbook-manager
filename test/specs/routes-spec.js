@@ -25,14 +25,19 @@ var config = program.config.defaults;
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
+var mockIdentifer = {
+	passTypeIdentifier: 'pass.io.passbookmanager',
+	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
+	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
+	passphrase: 'fred'
+};
+
 
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
 	'jps-passbook-routes'))(program, app);
 
 describe('routes', function() {
-	before(function() {
-		//mockPass = db.getSync('mock-generic');
-	});
+
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
@@ -41,6 +46,17 @@ describe('routes', function() {
 			.expect(200, done);
 	});
 
+	describe('Cert Routes', function() {
+		it('/api/v1/passTypeIdentifier - should create new pass type identifier entry', function(done) {
+			request(app)
+				.post('/api/v1/passTypeIdentifier')
+				.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
+				.field('passphrase', mockIdentifer.passphrase)
+				.attach('file', mockIdentifer.p12)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+	});
 
 	describe('Auth Routes', function() {
 		xit('/api/v1/me - should return user info', function(done) {
@@ -48,31 +64,27 @@ describe('routes', function() {
 				.get('/api/v1/me')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
-		})
-	});
-
-
-	xdescribe('Export/Sign', function() {
-
-		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
-			request(app)
-				.get('/api/v1/sign/mock-generic')
-				.expect('Content-Type', /application\/vnd.apple.pkpass/)
-				.expect(200, done);
 		});
-
-		it('GET - /api/v1/export/:id - should export pass', function(done) {
-			request(app)
-				.get('/api/v1/export/mock-generic')
-				//.expect('Content-Type', /json/)
-				.expect('Content-Type', /application\/vnd.apple.pkpass/)
-				.expect(200, done);
-		});
-
 	});
 
 
 	describe('Admin Passes', function() {
+
+
+		it('POST - /api/v1/admin/passes - should create pass', function(done) {
+			delete mockPass._id;
+			request(app)
+				.post('/api/v1/admin/passes')
+				.send(mockPass)
+				.expect(function(res) {
+					//	mocks.mockPasses[0]._id = res.body._id;
+					mockPass = res.body;
+					console.log('create pass resp', res.body)
+				})
+				.expect('Content-Type', /json/)
+				.expect(201, done);
+		});
+
 
 		it('GET - /api/v1/admin/passes - should return all passes', function(done) {
 			request(app)
@@ -87,6 +99,7 @@ describe('routes', function() {
 				.send(mocks.mockPass)
 				.expect(function(res) {
 					//	mocks.mockPasses[0]._id = res.body._id;
+					//	mockPass = res;
 					//	console.log(res)
 				})
 				.expect('Content-Type', /json/)
@@ -95,7 +108,7 @@ describe('routes', function() {
 
 		it('GET - /api/v1/admin/passes/:id - should return 1 pass', function(done) {
 			request(app)
-				.get('/api/v1/admin/passes/' + mocks.mockPass._id)
+				.get('/api/v1/admin/passes/' + mockPass._id)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
@@ -121,9 +134,26 @@ describe('routes', function() {
 				.expect(200, done);
 		});
 
+	});
 
+	describe('Download/Sign', function() {
+
+		it(`GET - /api/v1/sign/:id - should sign pass _id ${mockPass._id}`, function(done) {
+			request(app)
+				.get(`/api/v1/sign/${mockPass._id}`)
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+
+		xit(`GET - /api/v1/download/:id - should download pass _id ${mockPass._id}`, function(done) {
+			request(app)
+				.get(`/api/v1/download/${mockPass._id}`)
+				.expect('Content-Type', /application\/vnd.apple.pkpass/)
+				.expect(200, done);
+		});
 
 	});
+
 
 	describe('DB Routes', function() {
 
@@ -283,12 +313,12 @@ describe('routes', function() {
 
 			});
 
-			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 204 - No matching passes', function(done) {
+			it('GET - /api/v1/passes/:pass_type_id/:serial_number - ?updated since date', function(done) {
 				request(app)
-					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}?passesUpdatedSince=`)
+					.get(`/api/v1/passes/${mockPass.passTypeIdentifier}/${mockPass.serialNumber}?updatedSince=` + Date.now())
 					.set('Authorization', mockDevice.authorization)
 					//.expect('Content-Type', /application\/vnd.apple.pkpass/)
-					.expect(200, done);
+					.expect(204, done);
 
 			});
 		});

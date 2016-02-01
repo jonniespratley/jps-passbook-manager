@@ -39,6 +39,9 @@ module.exports = function(program, app) {
 	var config = program.config.defaults;
 	var router = new Router();
 
+	const multipart = require('connect-multiparty');
+	const adminController = new program.require('controllers/admin-controller')(program);
+
 	router.get('/', function(req, res) {
 		res.status(200).json({
 			message: config.name
@@ -51,7 +54,6 @@ module.exports = function(program, app) {
 		dataLog.docType = 'log';
 		dataLog.data = req.body;
 		dataLog.created_at = _.now();
-
 		_.defer(function() {
 			program.db.put(dataLog).then(function(resp) {
 				res.status(200).json(resp);
@@ -59,14 +61,6 @@ module.exports = function(program, app) {
 				res.status(400).json(err);
 			});
 		}, 250);
-	});
-
-	router.get('/admin/find?', function(req, res) {
-		program.db.find(req.query).then(function(resp) {
-			res.status(200).json(resp);
-		}).catch(function(err) {
-			res.status(400).json(err);
-		});
 	});
 
 	// TODO: Get tokens
@@ -78,143 +72,13 @@ module.exports = function(program, app) {
 		});
 	});
 
-	/**
-	 * I am the signpass route
-	 */
-	router.get('/sign/:id', function(req, res) {
-		logger('sign', req.params);
-		program.db.get(req.params.id).then(function(resp) {
-			if (resp) {
 
-				jpsPassbook.createPass(resp, function(err, data) {
-					if (err) {
-						res.status(404).json(err);
-					}
-					logger('sign', data);
-					res.status(200).send(data);
-				});
-			} else {
-				res.status(400).json({
-					message: 'Must id!'
-				});
-			}
-		}).catch(function(err) {
-			logger('sign', 'error', err);
-			res.status(400).json(err);
-		})
-	});
-
-	/**
-	 * I am the export pass route.
-	 *
-	 * I handle taking a pass's id, quering the database,
-	 * taking the contents of the pass and invoking the createPass method which
-	 * creates a .raw folder containing a pass.json file and then invokes the
-	 * signpass binary.
-	 */
-	router.get('/download/:id', function(req, res) {
-		var id = req.params.id;
-		if (id) {
-			logger('id', id);
-
-			program.db.get(id).then(function(resp) {
-
-				logger('found pass', resp._id);
-
-
-
-				if (fs.existsSync(resp.pkpassFilename)) {
-					res.status(404).json({
-						error: '.pkpass file does not exist'
-					});
-				} else {
-					res.set('Content-Type', 'application/vnd.apple.pkpass')
-						.status(200)
-						.download(resp.pkpassFilename);
-				}
-			}).catch(function(err) {
-				res.status(404).json(err);
-			});
-
-
-
-		} else {
-			res.status(400).json('Must provide id!');
-		}
-	});
-
-	const multipart = require('connect-multiparty');
 	var multipartMiddleware = multipart();
 
-
-
-	const SignPass = program.require('signpass');
-
-	// TODO: Save pass Type id to database, and create pems.
-	function savePassTypeIdentifier(obj) {
-		return new Promise(function(resolve, reject) {
-			logger('savePassTypeIdentifier', obj);
-
-			if (!obj.cert) {
-				reject({
-					error: 'Must provide path to .p12 certificate'
-				});
-			}
-			SignPass.createPems(obj.passTypeIdentifier, obj.cert, obj.passphrase, function(err, resp) {
-				if (err) {
-					reject(err);
-				}
-				logger('createPems', resp);
-				program.db.put(resp).then(resolve, reject);
-
-				//assert(fs.existsSync(options.key));
-				//assert(fs.existsSync(options.cert));
-				//resolve(resp);
-			});
-		});
-	}
-
-	// TODO: Save upload to database and move to data directory
-	function saveUpload(file) {
-		return new Promise(function(resolve, reject) {
-			var toFilename = path.resolve(program.config.defaults.dataPath, './uploads/' + file.originalFilename);
-			var _doc = {
-				_id: 'file-' + file.name,
-				originalFilename: file.originalFilename,
-				path: toFilename,
-				size: file.size,
-				name: file.name,
-				type: file.type
-			};
-			logger('saveUpload', _doc);
-			fs.copy(file.path, _doc.path, function(err) {
-				if (err) {
-					reject(err);
-				}
-				program.db.put(_doc).then(resolve, reject);
-			});
-		});
-	}
-
-
-	router.post('/passTypeIdentifier', multipartMiddleware, function(req, res) {
-		logger('Create pass type identifier', req.body, req.files);
-		var out = {};
-
-		if (req.files) {
-			saveUpload(req.files.file).then(function(_file) {
-				logger('Save file', _file);
-				req.body.cert = _file.path;
-				savePassTypeIdentifier(req.body).then(function(resp) {
-					res.status(200).json(resp);
-				}).catch(function(err) {
-					res.status(400).json(err);
-				});
-			});
-			logger('Upload file', req.files);
-
-		}
-	});
+	router.get('/admin/find?', adminController.get_find);
+	router.get('/download/:id', adminController.get_downloadPass);
+	router.get('/sign/:id', adminController.get_signPass);
+	router.post('/passTypeIdentifier', multipartMiddleware, adminController.post_passTypeIdentifier);
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
 		var out = [];
@@ -269,7 +133,6 @@ module.exports = function(program, app) {
 		// don't forget to delete all req.files when done
 	});
 
-
 	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
@@ -278,14 +141,6 @@ module.exports = function(program, app) {
 		//	logger(req.method, req.url);
 		next();
 	});
-
-	app.use(function(err, req, res, next) {
-		logger('error', err);
-		console.error(err.stack);
-		res.status(500).send('Something broke!');
-		next();
-	});
-
 	//app.use(bodyParser.json());
 	//app.use(expressValidator);
 	var middleware = [
