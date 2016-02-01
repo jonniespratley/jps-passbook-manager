@@ -40,7 +40,6 @@ module.exports = function(program, app) {
 	var router = new Router();
 
 	const multipart = require('connect-multiparty');
-	const adminController = new program.require('controllers/admin-controller')(program);
 
 	router.get('/', function(req, res) {
 		res.status(200).json({
@@ -74,11 +73,6 @@ module.exports = function(program, app) {
 
 
 	var multipartMiddleware = multipart();
-
-	router.get('/admin/find?', adminController.get_find);
-	router.get('/download/:id', adminController.get_downloadPass);
-	router.get('/sign/:id', adminController.get_signPass);
-	router.post('/passTypeIdentifier', multipartMiddleware, adminController.post_passTypeIdentifier);
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
 		var out = [];

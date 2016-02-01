@@ -32,12 +32,10 @@ var mockIdentifer = {
 	passphrase: 'fred'
 };
 
-
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
 	'jps-passbook-routes'))(program, app);
 
 describe('routes', function() {
-
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
@@ -45,31 +43,7 @@ describe('routes', function() {
 			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
-
-	describe('Cert Routes', function() {
-		it('/api/v1/passTypeIdentifier - should create new pass type identifier entry', function(done) {
-			request(app)
-				.post('/api/v1/passTypeIdentifier')
-				.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
-				.field('passphrase', mockIdentifer.passphrase)
-				.attach('file', mockIdentifer.p12)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-	});
-
-	describe('Auth Routes', function() {
-		xit('/api/v1/me - should return user info', function(done) {
-			request(app)
-				.get('/api/v1/me')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-	});
-
-
 	describe('Admin Passes', function() {
-
 
 		it('POST - /api/v1/admin/passes - should create pass', function(done) {
 			delete mockPass._id;
@@ -85,14 +59,6 @@ describe('routes', function() {
 				.expect(201, done);
 		});
 
-
-		it('GET - /api/v1/admin/passes - should return all passes', function(done) {
-			request(app)
-				.get('/api/v1/admin/passes')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
 		it('POST - /api/v1/admin/passes - should create pass', function(done) {
 			request(app)
 				.post('/api/v1/admin/passes')
@@ -106,27 +72,6 @@ describe('routes', function() {
 				.expect(201, done);
 		});
 
-		it('GET - /api/v1/admin/passes/:id - should return 1 pass', function(done) {
-			request(app)
-				.get('/api/v1/admin/passes/' + mockPass._id)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		xit('GET - /api/v1/register/:token - add device to db', function(done) {
-			request(app)
-				.get('/api/v1/register/' + mockDevice.token)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		it('GET - /api/v1/push/:token - send push to device', function(done) {
-			request(app)
-				.get('/api/v1/push/' + mockDevice.token)
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
 		xit('DELETE - /api/v1/admin/passes/:id - should remove pass', function(done) {
 			request(app)
 				.delete('/api/v1/admin/passes/' + mocks.mockPass._id)
@@ -136,22 +81,13 @@ describe('routes', function() {
 
 	});
 
-	describe('Download/Sign', function() {
-
-		it(`GET - /api/v1/sign/:id - should sign pass _id ${mockPass._id}`, function(done) {
+	describe('Auth Routes', function() {
+		xit('/api/v1/me - should return user info', function(done) {
 			request(app)
-				.get(`/api/v1/sign/${mockPass._id}`)
+				.get('/api/v1/me')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
-
-		xit(`GET - /api/v1/download/:id - should download pass _id ${mockPass._id}`, function(done) {
-			request(app)
-				.get(`/api/v1/download/${mockPass._id}`)
-				.expect('Content-Type', /application\/vnd.apple.pkpass/)
-				.expect(200, done);
-		});
-
 	});
 
 
@@ -336,19 +272,6 @@ describe('routes', function() {
 
 
 
-		it('GET - /api/v1/admin/find?docType=device - should return devices', function(done) {
-			request(app)
-				.get('/api/v1/admin/find?docType=device')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
-
-		it('GET - /api/v1/admin/find?docType=log - should return logs', function(done) {
-			request(app)
-				.get('/api/v1/admin/find?docType=log')
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
 
 
 	});
