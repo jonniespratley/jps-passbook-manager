@@ -14,6 +14,8 @@
     "pretest": "rimraf test/temp",
     "start": "node server.js",
     "test": "gulp test",
+    "prewatch": "export DEBUG=jps-passbook-manager:*; export NODE_ENV=development;",
+
     "watch": "nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {

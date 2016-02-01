@@ -19,13 +19,13 @@
 				<div class="card">
 					<div class="card-block">
 						<img class="card-img pull-left"
-							  src="<%= user.data.avatar_url %>"
-							  alt="<%= user.username %>">
+							  src="<%= session.user.data.avatar_url %>"
+							  alt="<%= session.user.username %>">
 
-						<h4 class="card-title"><%= user.displayName %></h4>
+						<h4 class="card-title"><%= session.user.displayName %></h4>
 						<p class="card-text">
-							<%= user.data.location %><br/>
-							<a href="<%= user.data.blog %>" title="Blog" target="_blank"><%= user.data.blog %></a>
+							<%= session.user.data.location %><br/>
+							<a href="<%= session.user.data.blog %>" title="Blog" target="_blank"><%= session.user.data.blog %></a>
 						</p>
 					</div>
 <!--
@@ -38,7 +38,7 @@
 
 					<div class="card-block">
 						<a href="#" class="card-link">Download Pass</a>
-						<a href="#" class="card-link">Another link</a>
+
 					</div>
 				</div>
 
