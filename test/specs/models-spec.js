@@ -1,14 +1,26 @@
 var path = require('path');
+var _ = require('lodash');
 var assert = require('assert');
-var program = require(path.resolve(__dirname, '../../lib/program.js'))();
-var config = program.config.defaults;
-
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
-
+var program = mocks.program;
+var config = program.config.defaults;
 var Users = require(path.resolve(__dirname, '../../lib/models/users.js'))(program.db);
-var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
-
+var Device = program.require('models/device');
+var User = program.require('models/user');
+var u;
 var d;
+
+var docTypes = [];
+describe('Passes', function() {
+
+	it('should return only passes', function(done) {
+		program.models.Passes.getPasses().then(function(resp) {
+			docTypes = _.pluck(resp, '_key');
+			console.log('docTypes', docTypes);
+			done();
+		});
+	});
+});
 
 describe('Users', function() {
 	it('be defined', function() {
@@ -20,6 +32,9 @@ describe('Users', function() {
 		Users.findOrCreate({
 			username: 'jonniespratley'
 		}, function(err, resp) {
+			if (err) {
+				assert.fail(err);
+			}
 			assert(resp);
 			done();
 		})
@@ -36,21 +51,9 @@ describe('Users', function() {
 	});
 });
 
-xdescribe('Device', function() {
-	it('should throw error if no deviceLibraryIdentifier', function() {
-		assert.throws(function() {
-			d = new Device();
-		}, Error);
-		``
-	});
-});
-
-var u;
-var User = require(path.resolve(__dirname, '../../lib/models/user.js'));
 describe('User Model', function() {
 	before(function() {
 		u = new User({
-
 			username: 'jonnie',
 			displayName: 'jonnie',
 			_json: {

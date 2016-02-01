@@ -6,10 +6,8 @@ var p;
 var program = require(path.resolve(__dirname, '../../lib/program.js'))();
 var config = program.config.defaults;
 
-
-
 describe('Pass', function() {
-	it('should create default pass', function(done) {
+	it('should create default generic Pass', function(done) {
 		assert(Pass);
 		p = new Pass();
 		assert.ok(p._id);
@@ -30,10 +28,14 @@ describe('Pass', function() {
 		p = new Pass({
 			type: 'generic'
 		});
-		//	assert.ok(p.storeCard);
-		assert.equal(p.teamIdentifier, config.passkit.teamIdentifier);
-		assert.equal(p.passTypeIdentifier, config.passkit.passTypeIdentifier);
-		assert.equal(p.webServiceURL, config.passkit.webServiceURL);
+
+		assert.equal(p.type, 'generic');
+		assert(p.generic);
+
+		assert(p.serialNumber);
+		assert(p.teamIdentifier);
+		assert(p.passTypeIdentifier);
+		assert(p.webServiceURL);
 		done();
 	});
 });

@@ -23,7 +23,8 @@ var config = program.config.defaults;
 //Test Instances
 
 var mockDevice = mocks.mockDevice;
-var mockPass;
+var mockPass = mocks.mockPass;
+
 var mockIdentifer = {
 	passTypeIdentifier: 'pass.io.passbookmanager',
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
@@ -36,12 +37,7 @@ var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.
 	'jps-passbook-routes'))(program, app);
 
 describe('routes', function() {
-	before(function(done) {
-		program.models.Passes.getPasses().then(function(resp) {
-			mockPass = resp[0];
-			done();
-		});
-	});
+
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
@@ -70,7 +66,6 @@ describe('routes', function() {
 				.expect(200, done);
 		});
 	});
-
 
 
 	describe('Admin Passes', function() {
@@ -143,14 +138,14 @@ describe('routes', function() {
 
 	describe('Download/Sign', function() {
 
-		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
+		it(`GET - /api/v1/sign/:id - should sign pass _id ${mockPass._id}`, function(done) {
 			request(app)
 				.get(`/api/v1/sign/${mockPass._id}`)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		it('GET - /api/v1/download/:id - should export pass', function(done) {
+		xit(`GET - /api/v1/download/:id - should download pass _id ${mockPass._id}`, function(done) {
 			request(app)
 				.get(`/api/v1/download/${mockPass._id}`)
 				.expect('Content-Type', /application\/vnd.apple.pkpass/)

@@ -2,7 +2,7 @@
 var path = require('path');
 var config = require(path.resolve(__dirname, '../../config.js'));
 var program = require(path.resolve(__dirname, '../../lib/program.js'))({
-	//dataPath: path.resolve(__dirname, '../temp')
+	dataPath: path.resolve(__dirname, '../temp')
 });
 exports.program = program;
 
@@ -10,19 +10,11 @@ var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
 var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
-
 exports.mockIdentifer = {
-	"_id": "pass-io-passbookmanager",
-	"passTypeIdentifier": "pass.io.passbookmanager",
-	"cert": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager-cert.pem",
-	"key": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager-key.pem",
-	"passphrase": "fred",
-	"docType": "pass-type-id",
-	"p12": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager.p12",
-	"certcmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager.p12 -passin pass:fred -clcerts -nokeys -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager-cert.pem",
-	"keycmd": "openssl pkcs12 -in /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager.p12 -nocerts -passout pass:fred -passin pass:fred -out /Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/certs/pass.io.passbookmanager-key.pem",
-	"wwdr": "/Users/jps/Github/jps-passbook-manager/certificates/wwdr-authority.pem",
-	"_key": "pass-io-passbookmanager"
+	passTypeIdentifier: 'pass.io.passbookmanager',
+	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
+	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
+	passphrase: 'fred'
 };
 
 
