@@ -1,4 +1,0 @@
-app-dir: ./
-name: passbook-manager
-ignore: ["node_modules", "app/bower_components", "db", "docs"]
-framework: node
