@@ -2,7 +2,7 @@
   "_id": "mock-generic",
   "docType": "pass",
   "type": "generic",
-  "lastUpdated": 1454202092971,
+  "lastUpdated": 1454292983183,
   "logoText": "Company Staff ID",
   "description": "Example Generic",
   "formatVersion": 1,
@@ -29,14 +29,13 @@
   ],
   "maxDistance": 0,
   "barcodes": [],
-  "groupingIdentifier": "",
   "labelColor": "rgb(255, 255, 255)",
   "foregroundColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(90, 90, 90)",
   "suppressStripShine": false,
-  "filename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-generic.raw",
-  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-generic.pkpass",
-  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes/mock-generic.raw",
+  "filename": null,
+  "pkpassFilename": null,
+  "rawFilename": null,
   "associatedStoreIdentifiers": [
     375380948
   ],
@@ -86,6 +85,5 @@
       }
     ]
   },
-  "directory": "/Users/jps/Github/jps-passbook-manager/data/pass.io.passbookmanager/passes",
   "_key": "mock-generic"
 }

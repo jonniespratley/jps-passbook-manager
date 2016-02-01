@@ -25,10 +25,21 @@ var mockIdentifer = {
 	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
 	passphrase: 'fred'
 };
+
 describe('jps-passbook', function() {
+	before(function(done) {
+		program.db.find({
+			docType: 'pass'
+		}).then(function(resp) {
+			_passes = resp;
+			mockPass = resp[resp.length - 1];
+			console.log('GOT PASSES', resp);
+			done();
+		});
+	});
+
 
 	it('savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database.', function(done) {
-		//this.timeout(10000);
 		jpsPassbook.savePassTypeIdentifier(mockIdentifer, function(err, p) {
 			if (err) {
 				assert.fail(err);
@@ -40,111 +51,75 @@ describe('jps-passbook', function() {
 	});
 
 	it('getPassCerts() - should get pass certs from database.', function(done) {
-		//this.timeout(10000);
 		jpsPassbook.getPassCerts(mockIdentifer.passTypeIdentifier, function(err, p) {
+			if (err) {
+				assert.fail(err);
+			}
 			assert.ok(p);
 			done();
 		});
 	});
 
-	it('createPass() - should create each mocks.mockPasses', function(done) {
-		//	this.timeout(10000);
-		_passes = mocks.mockPasses;
-		var _done = _.after(_passes.length, function() {
+	it('validatePass() - should validate a pass', function(done) {
+		jpsPassbook.validatePass(mockPass, function(err, p) {
+			if (err) {
+				assert.fail(err);
+			}
+			assert(p, 'returns pass');
+			assert(p.filename, 'returns pass filename');
+			assert(fs.existsSync(path.resolve(p.filename, './manifest.json')));
 			done();
-		});
-
-		_.forEach(_passes, function(_pass) {
-			jpsPassbook.createPass(_pass, function(err, p) {
-				if (err) {
-					assert.fail(err);
-				}
-				assert.ok(p._id);
-				_done();
-			});
 		});
 	});
 
-	xit('createPass() - should create each pass in database', function(done) {
-		//	this.timeout(10000);
-		program.db.find({
-			docType: 'pass'
-		}).then(function(resp) {
-			_passes = resp;
-			var _done = _.after(_passes.length, function() {
-				done();
-			});
-			_.forEach(_passes, function(_pass) {
-				jpsPassbook.createPass(_pass, function(err, p) {
-					if (err) {
-						assert.fail(err);
-					}
-					assert.ok(p._id);
-					_done();
-				});
-			});
+	it('signPass() - should sign .raw package into a .pkpass', function(done) {
+		jpsPassbook.signPass(mockPass, function(err, p) {
+			if (err) {
+				assert.fail(err);
+			}
+			assert(fs.existsSync(p.dest), 'returns .pkpass path');
+			done();
+		});
+	});
+
+
+
+	it('createPassPromise() - should create pass .raw and resolve promise', function(done) {
+		jpsPassbook.createPassPromise(mockPass).then(function(p) {
+			assert(fs.existsSync(p.rawFilename), 'returns .raw path');
+			done();
+		});
+	});
+
+	it('signPassPromise() - should sign pass .raw into .pkpass and resolve promise', function(done) {
+		jpsPassbook.signPassPromise(mockPass).then(function(p) {
+			assert(fs.existsSync(p.dest), 'returns .pkpass path');
+			done();
+		});
+	});
+
+	it('validatePassPromise() - should validate pass .pkpass signature and resolve promise', function(done) {
+		done();
+	});
+
+	it('batchPromise("create", passes) - should create each pass in database', function(done) {
+		jpsPassbook.batchPromise('create', _passes).then(function(_resp) {
+			assert(_resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+	it('batchPromise("sign", passes) - should create each pass in database', function(done) {
+		jpsPassbook.batchPromise('sign', _passes).then(function(_resp) {
+			assert(_resp);
+			done();
 		}).catch(function(err) {
 			assert.fail(err);
 			done();
 		});
 	});
 
-
-	it('createPass() - should create a pass .raw package', function(done) {
-		//	this.timeout(10000);
-		var _done = _.after(_passes.length, function() {
-			done();
-		});
-		_.forEach(_passes, function(_pass) {
-
-			_.defer(function() {
-				jpsPassbook.createPass(mockPass, function(err, p) {
-					if (err) {
-						assert.fail(err);
-					}
-					assert.ok(p);
-					assert.ok(fs.existsSync(p.rawFilename));
-					_done();
-				});
-			});
-
-		});
-	});
-
-	it('signPass() - should sign .raw package into a .pkpass', function(done) {
-		//this.timeout(10000);
-		var _done = _.after(_passes.length, function() {
-			done();
-		});
-		_.forEach(_passes, function(_pass) {
-
-			jpsPassbook.signPass(mockPass, function(err, p) {
-				if (err) {
-					assert.fail(err);
-				}
-				assert.ok(p, 'returns pass location');
-				//	assert(fs.existsSync(p.pkpassFilename));
-				_done();
-			});
-
-		});
-	});
-
-	it('validatePass() - should validate a pass', function(done) {
-		var _done = _.after(_passes.length, function() {
-			done();
-		});
-		_.forEach(_passes, function(_pass) {
-			jpsPassbook.validatePass(_pass, function(err, p) {
-				if (err) {
-					assert.fail(err);
-				}
-				assert.ok(p, 'returns pass');
-				//assert.ok(fs.existsSync(path.resolve(p.rawFilename, './signature')));
-				assert.ok(fs.existsSync(path.resolve(_pass.rawFilename, './manifest.json')));
-				_done();
-			});
-		});
-	});
 
 });

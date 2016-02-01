@@ -10,23 +10,27 @@ const SignPass = require(path.resolve(__dirname, '../../lib/signpass'));
 const jpsPassbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))(program);
 
 var options = mocks.mockIdentifer;
-var passes = [];
+
 var signpass;
-
+var mockPass = mocks.mockPass;
+var passes = mocks.mockPasses;
 describe('SignPass', function(done) {
-
+	before(function(done) {
+		program.db.find({
+			docType: 'pass'
+		}).then(function(resp) {
+			passes = resp;
+			mockPass = resp[resp.length - 1];
+			console.log('GOT PASSES', resp);
+			done();
+		});
+	});
 	it('should be defined', function(done) {
 		assert(SignPass);
 		done();
 	});
 
-	it('should be fetch pass', function(done) {
-		program.models.Passes.getPasses().then(function(resp) {
-			passes = resp;
-			assert(passes);
-			done();
-		});
-	});
+
 
 	it('should return PassTypeId object', function(done) {
 		options = SignPass.createPassTypeId(mocks.mockIdentifer.passTypeIdentifier, {});
@@ -58,6 +62,8 @@ describe('SignPass', function(done) {
 		});
 	});
 
+
+
 	it('should create SignPass instance', function(done) {
 		signpass = new SignPass(options);
 		assert(signpass);
@@ -75,7 +81,7 @@ describe('SignPass', function(done) {
 		});
 	});
 
-	it('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {
+	xit('sign() - all passes - should create .zip and .pkpass for all passes', function(done) {
 		this.timeout(15000);
 		var _done = _.after(passes.length, function() {
 			done();

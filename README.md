@@ -10,6 +10,36 @@ Passbook handles the middle; it lets users view and manage their passes and prov
 > You are responsible for the two ends: creating passes and redeeming passes.
 
 
+
+ 
+⚡ signpass
+usage:	signpass -p <rawpass> [-o <path>] [-c <certSuffix>]
+	signpass -v <signedpass>
+
+	 -p Sign and zip a raw pass directory
+	 -v Unzip and verify a signed pass's signature and manifest. This DOES NOT validate pass content.
+jps in ~/Github/jps-passbook-manager on feature/signing*
+⚡ signpass -v ./data/pass.io.passbookmanager/passes/pass-jonniespratley.pkpass
+Signature valid.
+Certificates: (
+	0: Apple Push Services: io.predix.passbook-manager
+	1: Apple Worldwide Developer Relations Certification Authority
+)
+Trust chain is valid.
+
+*** SUCCEEDED ***
+```
+sudo open sslsmime -binary \
+	-sign \
+	-certfile ../signing/wwdr.pem \
+	-signer ../sgning/certificate.pem \
+	-inkey ../signing/key.pem \
+	-in manifest.json \
+	-out signature \
+	-outform DER \
+	-passin pass:[Pass phrase provided when creating the key.pem]
+```
+
 ## Getting Started
 This is a simple web app interface for creating iOS Passbook passes from content.
 

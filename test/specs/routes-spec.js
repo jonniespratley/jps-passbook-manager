@@ -24,6 +24,12 @@ var config = program.config.defaults;
 
 var mockDevice = mocks.mockDevice;
 var mockPass;
+var mockIdentifer = {
+	passTypeIdentifier: 'pass.io.passbookmanager',
+	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
+	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
+	passphrase: 'fred'
+};
 
 
 var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
@@ -44,14 +50,13 @@ describe('routes', function() {
 			.expect(200, done);
 	});
 
-
 	describe('Cert Routes', function() {
-		it('/api/v1/passTypeIdentifier - should return user info', function(done) {
+		it('/api/v1/passTypeIdentifier - should create new pass type identifier entry', function(done) {
 			request(app)
 				.post('/api/v1/passTypeIdentifier')
-				.field('passTypeIdentifier', mocks.mockIdentifer.passTypeIdentifier)
-				.field('passphrase', mocks.mockIdentifer.passphrase)
-				.attach('file', mocks.mockIdentifer.p12)
+				.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
+				.field('passphrase', mockIdentifer.passphrase)
+				.attach('file', mockIdentifer.p12)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
@@ -138,14 +143,14 @@ describe('routes', function() {
 
 	describe('Download/Sign', function() {
 
-		xit('GET - /api/v1/sign/:id - should sign pass', function(done) {
+		it('GET - /api/v1/sign/:id - should sign pass', function(done) {
 			request(app)
 				.get(`/api/v1/sign/${mockPass._id}`)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
 
-		xit('GET - /api/v1/download/:id - should export pass', function(done) {
+		it('GET - /api/v1/download/:id - should export pass', function(done) {
 			request(app)
 				.get(`/api/v1/download/${mockPass._id}`)
 				.expect('Content-Type', /application\/vnd.apple.pkpass/)

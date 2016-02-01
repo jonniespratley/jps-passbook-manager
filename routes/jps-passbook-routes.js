@@ -54,7 +54,6 @@ module.exports = function(program, app) {
 		dataLog.docType = 'log';
 		dataLog.data = req.body;
 		dataLog.created_at = _.now();
-
 		_.defer(function() {
 			program.db.put(dataLog).then(function(resp) {
 				res.status(200).json(resp);
@@ -62,14 +61,6 @@ module.exports = function(program, app) {
 				res.status(400).json(err);
 			});
 		}, 250);
-	});
-
-	router.get('/admin/find?', function(req, res) {
-		program.db.find(req.query).then(function(resp) {
-			res.status(200).json(resp);
-		}).catch(function(err) {
-			res.status(400).json(err);
-		});
 	});
 
 	// TODO: Get tokens
@@ -81,48 +72,12 @@ module.exports = function(program, app) {
 		});
 	});
 
-	//	const adminController = program.require('controllers/admin-controller')(program);
-
-	router.get('/sign/:id', adminController.get_signPass);
-
-	/**
-	 * I am the export pass route.
-	 *
-	 * I handle taking a pass's id, quering the database,
-	 * taking the contents of the pass and invoking the createPass method which
-	 * creates a .raw folder containing a pass.json file and then invokes the
-	 * signpass binary.
-	 */
-	router.get('/download/:id', function(req, res) {
-		var id = req.params.id;
-		if (id) {
-			logger('id', id);
-
-			program.db.get(id).then(function(resp) {
-				logger('found pass', resp._id);
-
-				if (!fs.existsSync(resp.pkpassFilename)) {
-					res.status(404).json({
-						error: '.pkpass file does not exist'
-					});
-				} else {
-					res.set('Content-Type', 'application/vnd.apple.pkpass')
-						.status(200)
-						.download(resp.pkpassFilename);
-				}
-			}).catch(function(err) {
-				res.status(404).json(err);
-			});
-		} else {
-			res.status(400).json('Must provide id!');
-		}
-	});
-
 
 	var multipartMiddleware = multipart();
 
-
-
+	router.get('/admin/find?', adminController.get_find);
+	router.get('/download/:id', adminController.get_downloadPass);
+	router.get('/sign/:id', adminController.get_signPass);
 	router.post('/passTypeIdentifier', multipartMiddleware, adminController.post_passTypeIdentifier);
 
 	router.all('/upload/:id?', multipartMiddleware, function(req, res) {
@@ -178,7 +133,6 @@ module.exports = function(program, app) {
 		// don't forget to delete all req.files when done
 	});
 
-
 	app.use(function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'X-Requested-With');
@@ -187,14 +141,6 @@ module.exports = function(program, app) {
 		//	logger(req.method, req.url);
 		next();
 	});
-
-	app.use(function(err, req, res, next) {
-		logger('error', err);
-		console.error(err.stack);
-		res.status(500).send('Something broke!');
-		next();
-	});
-
 	//app.use(bodyParser.json());
 	//app.use(expressValidator);
 	var middleware = [
