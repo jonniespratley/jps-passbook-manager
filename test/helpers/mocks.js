@@ -17,7 +17,8 @@ exports.mockIdentifer = {
 	passphrase: 'test'
 };
 program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
-console.log('MOCK program', program.config.defaults);
+
+//console.log('MOCK program', program.config.defaults);
 
 
 exports.program = program;

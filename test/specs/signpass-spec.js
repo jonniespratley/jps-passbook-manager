@@ -24,7 +24,7 @@ describe('SignPass', function() {
 		}).then(function(resp) {
 			passes = resp;
 			mockPass = resp[resp.length - 1];
-			console.log('GOT PASSES', resp);
+
 			done();
 		});
 	});
@@ -48,8 +48,14 @@ describe('SignPass', function() {
 			output: program.config.defaults.dataPath
 		}, function(err, resp) {
 			options = resp;
-			console.log('resp', resp);
-			assert(fs.existsSync(resp.key));
+			if(err){
+				assert.fail(err);
+				done();
+			}
+			
+			assert(fs.existsSync(resp.key));	
+			assert(fs.existsSync(resp.p12));
+			assert(fs.existsSync(resp.wwdr));
 			assert(fs.existsSync(resp.cert));
 			done();
 		});
@@ -58,8 +64,15 @@ describe('SignPass', function() {
 	it('should be fetch pass type info', function(done) {
 		jpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
 			options = resp;
-			console.log('options', options);
+		 if(err){
+				assert.fail(err);
+				done();
+			}
 			assert(options);
+			assert(fs.existsSync(resp.key));	
+			assert(fs.existsSync(resp.p12));
+			assert(fs.existsSync(resp.wwdr));
+			assert(fs.existsSync(resp.cert));
 			done();
 		});
 	});
@@ -74,7 +87,10 @@ describe('SignPass', function() {
 		options.passFilename = mocks.mockPass.rawFilename;
 		signpass = new SignPass(options);
 		signpass.sign(function(err, resp) {
-			console.log('signed', resp);
+			if(err){
+				assert.fail(err);
+				done();
+			}
 			assert(resp);
 			assert(fs.existsSync(resp.dest));
 			done();
@@ -82,19 +98,22 @@ describe('SignPass', function() {
 	});
 
 	it('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
-		this.timeout(20000);
-		var _done = _.after(SignPass.passTypes.length, function() {
+		this.timeout(10000);
+		var _done = _.after(passes.length, function() {
 			done();
 		});
 
-		_.forEach(SignPass.passTypes, function(type) {
-			jpsPassbook.createPass({
-				passTypeIdentifier: options.passTypeIdentifier,
-				type: type.value
-			}, function(err, _pass) {
-				assert(_pass);
+		_.forEach(passes, function(p) {
+			jpsPassbook.createPass(p, function(err, _pass) {
+				if(err){
+					assert.fail(err);
+					done();
+				}
+					console.log('pass', _pass);
 				options.passFilename = _pass.rawFilename;
 				testPasses.push(_pass);
+				
+				
 				signpass = new SignPass(options);
 				signpass.signPromise().then(function(resp) {
 					assert(resp);
@@ -102,7 +121,7 @@ describe('SignPass', function() {
 					_done(resp);
 				}).catch(function(err) {
 					assert.fail(err);
-					_done();
+					done();
 				});
 			});
 		});
