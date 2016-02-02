@@ -11,6 +11,7 @@
     "cli": "node cli.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "prestart": "grunt -v --force",
+    "clean": "rimraf .tmp data test/temp",
     "pretest": "rimraf test/temp",
     "start": "node server.js",
     "test": "gulp test",

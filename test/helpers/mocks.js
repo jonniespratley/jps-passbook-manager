@@ -30,6 +30,7 @@ exports.mockPasses = [
 		description: 'Example Generic',
 		serialNumber: '0123456789876543210',
 		authenticationToken: '0123456789876543210',
+
 		type: 'generic'
 	}),
 

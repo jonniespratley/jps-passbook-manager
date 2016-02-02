@@ -9,8 +9,8 @@ const Users = program.require('models/users')(program.db);;
 var u;
 var testUserId = null;
 describe('Users Model', function() {
-  after(function(done){
-    program.db.remove(testUserId).then(function(resp){
+  after(function(done) {
+    program.db.remove(testUserId).then(function(resp) {
       done();
     });
   });
@@ -55,7 +55,7 @@ describe('Users Model', function() {
     }, function(err, resp) {
       if (err) {
         assert.fail(err);
-        done();
+
       }
       assert(resp);
       done();
@@ -69,7 +69,7 @@ describe('Users Model', function() {
     }, function(err, resp) {
       if (err) {
         assert.fail(err);
-        done();
+
       }
       testUserId = resp._id;
       assert(resp);

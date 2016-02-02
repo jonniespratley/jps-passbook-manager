@@ -5,42 +5,22 @@ jpsPassbookManagerApp.controller('ManageCtrl', function($scope, $rootScope, user
   $scope.passTypeIdentifiers = user.passTypeIdentifiers;
   $scope.formData = {};
 
-  function sendRequest() {
-    var data = new FormData();
-    data.append("passphrase", "test");
-    data.append("passTypeIdentifier", "pass.io.passbookmanager.test");
-    data.append("file", "pass.io.passbookmanager.test.p12");
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener("readystatechange", function() {
-      if (this.readyState === 4) {
-        console.log(this.responseText);
-      }
-    });
-
-    xhr.open("POST", "/api/v1/passTypeIdentifier");
-
-
-    xhr.send(data);
-  }
-
   function sendUploadRequest(obj) {
     console.warn('Sending', obj);
     var xhr = new XMLHttpRequest();
     var data = new FormData();
 
-    data.append('passTypeIdentifier', obj.passTypeIdentifier);
+    //data.append('passTypeIdentifier', obj.passTypeIdentifier);
     data.append('passphrase', obj.passphrase);
     data.append('file', obj.file);
 
     xhr.addEventListener('readystatechange', function() {
       if (this.readyState === 4) {
-        console.log(this.responseText);
+        console.log('readystatechange', this.readyState, this.responseText);
       }
     });
-    xhr.open('POST', '/api/v1/passTypeIdentifier');
+
+    xhr.open('POST', '/api/v1/admin/passes/passTypeIdentifier/' + obj.passTypeIdentifier);
     xhr.send(data);
   }
 

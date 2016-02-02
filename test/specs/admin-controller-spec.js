@@ -6,16 +6,22 @@ const request = require('supertest');
 const express = require('express');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const db = program.db;
 const AdminController = program.require('controllers/admin-controller');
 
 
 let mockDevice = mocks.mockDevice;
-let mockPass = mocks.mockPass;
+let testDevice = mockDevice;
+delete testDevice._id;
+
+let mockPass = mocks.mockPasses[2];
+let testPass = mockPass;
+delete testPass._id;
+
 let mockLog = {
 	name: 'test',
 	docType: 'log'
 };
+
 let controller;
 let app = express();
 let mockIdentifer = {
@@ -26,18 +32,21 @@ let mockIdentifer = {
 };
 
 const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
+
 describe('Admin', function() {
-	before(function(done) {
-		db.saveAll([
+
+	before(function() {
+		program.db.saveAll([
 			mockLog,
 			mockDevice,
-			mockPass
+			testDevice,
+			mockPass,
+			testPass
 		]).then(function(resp) {
-
-			done();
+			console.log('Saved', resp);
 		});
-
 	});
+
 
 	describe('Admin Controller', function() {
 		before(function() {
@@ -74,21 +83,34 @@ describe('Admin', function() {
 
 	describe('Admin Routes', function() {
 
-		describe('Cert Routes', function() {
-			it('/api/v1/admin/passes/passTypeIdentifier - should create new pass type identifier entry', function(done) {
+		describe('passTypeIdentifier Routes', function() {
+			it('/api/v1/admin/identifiers - should create new pass type identifier entry', function(done) {
 				request(app)
-					.post('/api/v1/admin/passes/passTypeIdentifier')
-					.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
+					.post(`/api/v1/admin/identifiers/${mockIdentifer.passTypeIdentifier}`)
+					//.field('passTypeIdentifier', mockIdentifer.passTypeIdentifier)
 					.field('passphrase', mockIdentifer.passphrase)
 					.attach('file', mockIdentifer.p12)
 					.expect('Content-Type', /json/)
-					.expect(200, done);
+					.expect(201, done);
 			});
 		});
 
-		it('GET - /api/v1/admin/passes - should return all passes', function(done) {
+		it('POST - /api/v1/admin/passes - should create pass', function(done) {
 			request(app)
-				.get('/api/v1/admin/passes')
+				.post('/api/v1/admin/passes')
+				.send({
+					type: 'generic'
+				})
+				.expect('Content-Type', /json/)
+				.expect(201, done);
+		});
+
+
+
+		it('PUT - /api/v1/admin/passes/:ID - should update pass', function(done) {
+			request(app)
+				.put(`/api/v1/admin/passes/${mockPass._id}`)
+				.send(mockPass)
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});
@@ -117,6 +139,12 @@ describe('Admin', function() {
 		it('GET - /api/v1/admin/find?docType=log - should return logs', function(done) {
 			request(app)
 				.get('/api/v1/admin/find?docType=log')
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+		});
+		it('GET - /api/v1/admin/find?docType=pass - should return passes', function(done) {
+			request(app)
+				.get('/api/v1/admin/find?docType=pass')
 				.expect('Content-Type', /json/)
 				.expect(200, done);
 		});

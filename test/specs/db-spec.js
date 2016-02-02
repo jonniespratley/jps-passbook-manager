@@ -39,13 +39,13 @@ describe('db', function() {
 		done();
 	});
 
-
 	it('should save array of docs', function(done) {
 		db.saveAll([
 			mockDevice,
 			mockPass
 		]).then(function(resp) {
 			assert(resp);
+			assert(resp.length === 2);
 			done();
 		});
 	});
@@ -84,8 +84,9 @@ describe('db', function() {
 			done();
 		});
 	});
-	xit('should remove doc with id', function(done) {
-		db.remove(testId).then(function(resp) {
+
+	it('should remove doc with id', function(done) {
+		db.remove('test-file').then(function(resp) {
 			assert(resp);
 			done();
 		}).catch(function(err) {
@@ -93,7 +94,6 @@ describe('db', function() {
 			done();
 		});
 	});
-
 
 	it('should find device', function(done) {
 		db.find({
@@ -137,15 +137,6 @@ describe('db', function() {
 		});
 	});
 
-	it('should remove file with id', function(done) {
-		db.remove('test-file').then(function(resp) {
-			assert(resp);
-			done();
-		}).catch(function(err) {
-			assert.fail(err);
-			done();
-		});
-	});
 
 
 });
