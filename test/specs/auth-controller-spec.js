@@ -11,33 +11,38 @@ let app = express();
 let controller;
 const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-auth'))(program, app);
 
-
-
 describe('Auth', function() {
 
 	describe('Routes', function() {
-
-
+		it('/index - should return index', function(done) {
+			request(app)
+				.get('/index')
+				.expect('Content-Type', /html/)
+				.expect(200, done);
+		});
+		it('/account - should return account', function(done) {
+			request(app)
+				.get('/account')
+				.expect('Content-Type', /html/)
+				.expect(200, done);
+		});
 		it('/login - should return login form', function(done) {
 			request(app)
 				.get('/login')
 				.expect('Content-Type', /html/)
 				.expect(200, done);
 		});
-
 		it('/logout - should return logout', function(done) {
 			request(app)
 				.get('/logout')
 				.expect(302, done);
 		});
-
 		it('/register - should return register form', function(done) {
 			request(app)
 				.get('/register')
 				.expect('Content-Type', /html/)
 				.expect(200, done);
 		});
-
 	});
 
 	describe('Auth Controller', function() {

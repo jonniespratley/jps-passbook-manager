@@ -1,21 +1,22 @@
 'use strict';
-const path = require('path');
-const url = require('url');
-const express = require('express');
-const expressValidator = require('express-validator');
-const methodOverride = require('method-override');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
-const Router = express.Router;
-const jsonParser = bodyParser.json();
-const passport = require('passport');
-const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
-const LocalStrategy = require('passport-local').Strategy;
-
-
 module.exports = function(program, app) {
+	const path = require('path');
+	const url = require('url');
+	const express = require('express');
+	const expressValidator = require('express-validator');
+	const methodOverride = require('method-override');
+	const bodyParser = require('body-parser');
+	const session = require('express-session');
+	const RedisStore = require('connect-redis')(session);
+	const Router = express.Router;
+	const jsonParser = bodyParser.json();
+	const passport = require('passport');
+	const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+	const GitHubStrategy = require('passport-github2').Strategy;
+	const LocalStrategy = require('passport-local').Strategy;
+
+
+
 	const User = require(path.resolve(__dirname, '../lib/models/user.js'));
 	const Users = require(path.resolve(__dirname, '../lib/models/users.js'))(program.db);
 
@@ -39,6 +40,9 @@ module.exports = function(program, app) {
 
 	let router = new Router();
 	let authLogger = program.getLogger('auth');
+
+	const AuthController = program.require('controllers/auth-controller');
+	let authController = new AuthController(program);
 
 	authLogger('OAUTH_CLIENT_SECRET', OAUTH_CLIENT_SECRET);
 	authLogger('OAUTH_CLIENT_ID', OAUTH_CLIENT_ID);
@@ -173,78 +177,19 @@ module.exports = function(program, app) {
 	});
 
 	// TODO: Handle get
-	router.get('/account', ensureAuthenticated, function(req, res) {
-		if (req.isAuthenticated()) {
-			console.log('isAuthenticated');
-		}
-		req.authenticated = true;
-		req.session.authenticated = true;
-		req.session.save(function(err) {
-			authLogger('session.save', req.session);
-			if (err) {
-				throw err;
-			}
-			authLogger('session.user', req.user);
-			res.render('account', {
-				user: req.user
-			});
-		});
-	});
-
 	var urlencodedParser = bodyParser.urlencoded({
 		extended: false
-	})
-
-	// TODO: Handle post certs
-	router.post('/account', [urlencodedParser, isAuthenticated], function(req, res) {
-		console.log('file', req.file);
-		res.render('account', {
-			message: 'File uploaded!'
-		});
 	});
 
-	router.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/login');
-	});
+	router.get('/logout', authController.logout);
+	router.all('/login', urlencodedParser, authController.login);
+	router.all('/register', urlencodedParser, authController.register);
+	router.all('/account', [urlencodedParser, ensureAuthenticated], authController.account);
 
-	router.get('/login', function(req, res) {
-		res.render('login', {
-			user: req.user
-		});
-	});
 
-	router.get('/register', function(req, res) {
-		res.render('register', {
-			user: req.user
-		});
-	});
-
-	router.post('/register', function(req, res) {
-		console.log('register', req.body);
-		Users.findOrCreate(req.body, function(err, u) {
-			if (err) {
-				res.send(err);
-			}
-			res.status(200).send(u);
-		})
-	});
 
 	router.get('/login', function(req, res, next) {
-		passport.authenticate('local', function(err, user, info) {
-			if (err) {
-				return next(err);
-			}
-			if (!user) {
-				return res.redirect('/login');
-			}
-			req.logIn(user, function(err) {
-				if (err) {
-					return next(err);
-				}
-				return res.redirect('/users/' + user.username);
-			});
-		})(req, res, next);
+
 	});
 
 	router.get('/api/users/me',
@@ -258,12 +203,9 @@ module.exports = function(program, app) {
 			});
 		});
 
-	router.post('/login',
-		passport.authenticate('local'),
+	router.post('/login', passport.authenticate('local'),
 		function(req, res) {
-			// If this function gets called, authentication was successful.
-			// `req.user` contains the authenticated user.
-			res.redirect('/users/' + req.user.username);
+
 		});
 
 

@@ -2,21 +2,24 @@
   "name": "jps-passbook-manager",
   "version": "0.0.2",
   "config": {
-    "delimiter": "passbook-manager"
+    "delimiter": "pass-manager"
   },
   "bin": {
-    "passbook-manager": "./cli.js"
+    "pass-manager": "./cli.js"
   },
   "scripts": {
+    "clean": "rimraf .tmp data test/temp",
     "cli": "node cli.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "prestart": "grunt -v --force",
-    "clean": "rimraf .tmp data test/temp",
+    "build": "grunt build -v",
+    "mocha": "mocha test/specs",
     "pretest": "rimraf test/temp",
+    "prewatch": "export DEBUG=jps-passbook-manager:*; export NODE_ENV=development;",
     "start": "node server.js",
     "test": "gulp test",
-    "prewatch": "export DEBUG=jps-passbook-manager:*; export NODE_ENV=development;",
-
+    "debug-mocha": "iron-node node_modules/mocha/bin/_mocha",
+    "debug-grunt": "iron-node node_modules/grunt-cli/bin/grunt build",
+    "debug-gulp": "iron-node node_modules/gulp/bin/gulp.js",
     "watch": "nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {
@@ -65,6 +68,8 @@
     "grunt-contrib-connect": "^0.9.0",
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-cssmin": "^0.11.0",
+    "grunt-contrib-htmlmin": "^0.6.0",
+    "grunt-contrib-imagemin": "^1.0.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-livereload": "^0.1.2",
     "grunt-contrib-uglify": "^0.7.0",

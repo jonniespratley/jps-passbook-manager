@@ -109,17 +109,24 @@ cli.command('passes <action>')
     tree(args.options);
 
     return new Promise(function(resolve, reject) {
-      switch (args.action) {
 
+      switch (args.action) {
 
         case 'list':
           self.log('Getting passes');
           program.models.Passes.getPasses().then(function(resp) {
+            console.log((resp));
             self.log(createTable(resp));
             resolve(resp);
           }, reject);
           break;
+
         case 'export':
+          self.log('Export passes');
+          resolve();
+          break;
+
+        case 'sign':
           self.log('Export passes');
           resolve();
           break;
@@ -132,7 +139,11 @@ cli.command('passes <action>')
           break;
 
         default:
-
+          self.log('Getting passes');
+          program.models.Passes.getPasses().then(function(resp) {
+            self.log(createTable(resp));
+            resolve(resp);
+          }, reject);
           break;
       }
 
@@ -144,8 +155,8 @@ cli.command('passes <action>')
 
 
 // TODO: Devices
+/*
 cli.command('devices')
-  //.option('-c, --cert [cert]', 'The path to output the .pems')
   .description('All devices')
   .action(function(args, callback) {
     let self = this;
@@ -175,18 +186,32 @@ cli.command('logs')
     });
   });
 
-
+*/
 // TODO: Pems command
 cli
-  .command('create-pems <cert>')
-  .option('-i, --identifier <identifier>', 'Pass type identifier for the certificate')
-  .option('-p, --passphrase <passphrase>', 'Passphrase for the certificate')
+  .command('identifiers <action>')
+  .option('-i, --identifier <identifier>', 'Pass type identifier for the certificate.')
+  .option('-c, --cert <cert>', 'Path to pass type identifier .p12 certificate.')
+  .option('-p, --passphrase <passphrase>', 'Passphrase for the .p12 certificate.')
   .description('Utility to create a cert and key .pem from a .p12')
   .action(function(args, callback) {
     var self = this;
+    var action = args.action;
     var cert_url = args.cert;
     var cert_pass = args.options.passphrase;
     var cert_id = args.options.identifier;
+    this.log(args.options);
+    switch (action) {
+      case 'list':
+
+        break;
+      case 'create':
+
+        break;
+      default:
+        this.log('Choose');
+        break;
+    }
 
     if (cert_url && cert_pass) {
       SignPass.createPems(cert_id, cert_url, cert_pass, function(err, resp) {
@@ -200,28 +225,16 @@ cli
 
 
 // TODO: Sign pass command.
-cli.command('sign-pass')
-  .option('-o, --output [output]', 'The path to output the .pkpass')
+cli.command('signpass <rawfolder>')
+  .option('-c, --cert [cert]', 'The path to the cert')
+  .option('-o, --output [output]', 'The path to the .pkpass')
   .description('Utility to sign .raw into .pkpass')
   .action(function(args, callback) {
     var self = this;
-    var output_url = args.output;
-
+    var output_url = args.rawfolder;
+    this.log(args);
     callback('Please select a pass!');
   });
-
-
-// TODO: Pass Type IDs
-cli.command('pass-type-ids')
-  .option('-c, --cert [cert]', 'The path to output the .pems')
-  .description('Utility to store certs and passphrases')
-  .action(function(args, callback) {
-    var self = this;
-
-    callback('Pass type ids');
-  });
-
-
 
 cli
   .delimiter(program.pkg.config.delimiter + '$')

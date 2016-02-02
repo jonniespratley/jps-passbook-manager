@@ -1,0 +1,12 @@
+<ul class="list-group passList">
+	<li class="list-group-item {{pass.type}}" ng-repeat="pass in passes">
+		<a href="#/passes/{{pass._id}}">
+			<div class="pass mini">
+				<div class="decoration"></div>
+				<div class="decoration"></div>
+			</div>
+			{{pass.description}}
+		</a>
+	</li>
+
+</ul>

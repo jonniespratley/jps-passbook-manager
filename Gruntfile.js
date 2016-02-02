@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 	// configurable paths
 	var yeomanConfig = {
 		app: 'app',
-		dist: 'dist'
+		dist: 'public'
 	};
 
 	try {
@@ -266,9 +266,9 @@ module.exports = function(grunt) {
 
 	grunt.renameTask('regarde', 'watch');
 	// remove when mincss task is renamed
-	//grunt.renameTask('mincss', 'cssmin');
+	grunt.renameTask('mincss', 'cssmin');
 
-	grunt.registerTask('server', [
+	grunt.registerTask('serve', [
 		'clean:server',
 		//'coffee:dist',
 		// 'compass:server',
@@ -288,12 +288,12 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('build', [
 		'clean:dist',
-		//  'jshint',
-		//	'test',
+		'jshint',
+		//		'test',
 		//  'coffee',
 		//'compass:dist',
 		'useminPrepare',
-		//'imagemin',
+		'imagemin',
 		'cssmin',
 		'htmlmin',
 		'concat',
