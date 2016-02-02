@@ -18,63 +18,11 @@ var passes = mocks.mockPasses;
 var testPasses = [];
 describe('SignPass', function() {
 
-	before(function(done) {
-		program.db.find({
-			docType: 'pass'
-		}).then(function(resp) {
-			passes = resp;
-			mockPass = resp[resp.length - 1];
 
-			done();
-		});
-	});
 
 	it('should be defined', function(done) {
 		assert(SignPass);
 		done();
-	});
-
-	it('should return PassTypeId object', function(done) {
-		options = SignPass.createPassTypeId(mocks.mockIdentifer.passTypeIdentifier, {});
-		assert(options);
-		done();
-	});
-
-	it('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {
-		SignPass.createPems({
-			passphrase: mocks.mockIdentifer.passphrase,
-			passTypeIdentifier: mocks.mockIdentifer.passTypeIdentifier,
-			p12: mocks.mockIdentifer.p12,
-			output: program.config.defaults.dataPath
-		}, function(err, resp) {
-			options = resp;
-			if(err){
-				assert.fail(err);
-				done();
-			}
-
-			assert(fs.existsSync(resp.key));
-			assert(fs.existsSync(resp.p12));
-			assert(fs.existsSync(resp.wwdr));
-			assert(fs.existsSync(resp.cert));
-			done();
-		});
-	});
-
-	it('should be fetch pass type info', function(done) {
-		jpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
-			options = resp;
-		 if(err){
-				assert.fail(err);
-				done();
-			}
-			assert(options);
-			assert(fs.existsSync(resp.key));
-			assert(fs.existsSync(resp.p12));
-			assert(fs.existsSync(resp.wwdr));
-			assert(fs.existsSync(resp.cert));
-			done();
-		});
 	});
 
 	xit('should create SignPass instance', function(done) {
@@ -83,44 +31,117 @@ describe('SignPass', function() {
 		done();
 	});
 
-	it('sign() - should create .zip and .pkpass files', function(done) {
-		options.passFilename = mocks.mockPass.rawFilename;
-		signpass = new SignPass(options);
-		signpass.sign(function(err, resp) {
-			if(err){
-				assert.fail(err);
-				done();
-			}
-			assert(resp);
-			assert(fs.existsSync(resp.dest));
-			done();
-		});
-	});
+	describe('Certs', function() {
 
-	it('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
-		this.timeout(10000);
-		var _done = _.after(passes.length, function() {
+		it('should return PassTypeId object', function(done) {
+			options = SignPass.createPassTypeId(mockPass.passTypeIdentifier, {});
+			assert(options);
 			done();
 		});
 
-		_.forEach(passes, function(p) {
-			jpsPassbook.createPass(p, function(err, _pass) {
-				if(err){
+		it('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {
+			SignPass.createPems({
+				passphrase: mocks.mockIdentifer.passphrase,
+				passTypeIdentifier: mocks.mockIdentifer.passTypeIdentifier,
+				p12: mocks.mockIdentifer.p12,
+				output: program.config.defaults.dataPath
+			}, function(err, resp) {
+				options = resp;
+				if (err) {
 					assert.fail(err);
 					done();
 				}
-					console.log('pass', _pass);
-				options.passFilename = _pass.rawFilename;
-				signpass = new SignPass(options);
-				signpass.signPromise().then(function(resp) {
-					assert(resp);
-					assert(fs.existsSync(resp.dest));
-					_done(resp);
-				}).catch(function(err) {
+
+				assert(fs.existsSync(resp.key));
+				assert(fs.existsSync(resp.p12));
+				assert(fs.existsSync(resp.wwdr));
+				assert(fs.existsSync(resp.cert));
+				done();
+			});
+		});
+
+		it('should be fetch pass type info', function(done) {
+			jpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
+				options = resp;
+				if (err) {
 					assert.fail(err);
 					done();
-				});
+				}
+				assert(options);
+				assert(fs.existsSync(resp.key));
+				assert(fs.existsSync(resp.p12));
+				assert(fs.existsSync(resp.wwdr));
+				assert(fs.existsSync(resp.cert));
+				done();
 			});
 		});
 	});
+
+
+	describe('Siging', function() {
+		before(function(done) {
+			jpsPassbook.createPassPromise(mocks.mockPass).then(function(resp) {
+				mockPass = resp;
+				//	mockPass = resp[0];
+				console.log('Using Mock Pass', mockPass);
+				done();
+			});
+		});
+		it('sign() - should create .zip and .pkpass files', function(done) {
+			options.passFilename = mockPass.rawFilename || mockPass.filename;
+			signpass = new SignPass(options);
+			signpass.sign(function(err, resp) {
+				console.log('\n\n Signed using', options.passFilename);
+				if (err) {
+					assert.fail(err);
+					done();
+				}
+				assert(resp);
+				assert(fs.existsSync(resp.dest));
+				done();
+			});
+		});
+
+		describe('Batching', function() {
+			var _passes = [];
+			var _mockPassFilenames = [];
+
+
+			before(function(done) {
+				program.db.find({
+					docType: 'pass'
+				}).then(function(resp) {
+					_passes = resp;
+					_mockPassFilenames = _.pluck(resp, 'filename');
+					console.log('GOT PASSES', resp);
+					done();
+				});
+			});
+
+
+			xit('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
+				this.timeout(10000);
+				var _done = _.after(_mockPassFilenames.length, function() {
+					done();
+				});
+
+				_.forEach(_mockPassFilenames, function(filename) {
+					options.passFilename = filename;
+					signpass = new SignPass(options);
+					signpass.signPromise().then(function(resp) {
+						assert(resp);
+						assert(fs.existsSync(resp.dest));
+						_done(resp);
+					}).catch(function(err) {
+						assert.fail(err);
+						done();
+					});
+				});
+			});
+
+		});
+
+	});
+
+
 });
