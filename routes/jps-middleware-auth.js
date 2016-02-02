@@ -181,10 +181,14 @@ module.exports = function(program, app) {
 		extended: false
 	});
 
-	router.get('/logout', authController.logout);
-	router.all('/login', urlencodedParser, authController.login);
-	router.all('/register', urlencodedParser, authController.register);
-	router.all('/account', [urlencodedParser, ensureAuthenticated], authController.account);
+	router.get('/logout', authController.get_logout);
+	router.get('/login', authController.get_login);
+	router.post('/login', urlencodedParser, authController.post_login);
+	router.get('/register', authController.get_register);
+	router.post('/register', urlencodedParser, authController.post_register);
+
+	router.post('/account', [urlencodedParser, ensureAuthenticated], authController.post_account);
+	router.get('/account', authController.get_account);
 
 
 
