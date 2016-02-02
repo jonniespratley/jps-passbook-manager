@@ -46,14 +46,14 @@ describe('Auth', function() {
 
 		describe('Account', function() {
 
-			it('GET - /account - should return account view', function(done) {
+			xit('GET - /account - should return account view', function(done) {
 				request(app)
 					.get('/account')
 					.expect('Content-Type', /html/)
 					.expect(200, done);
 			});
 
-			it('GET - /me - should return json user info', function(done) {
+			xit('GET - /me - should return json user info', function(done) {
 				request(app)
 					.get('/me')
 					.expect('Content-Type', /json/)
@@ -71,7 +71,7 @@ describe('Auth', function() {
 					.expect(200, done);
 			});
 
-			it('POST - /login - should login user', function(done) {
+			xit('POST - /login - should login user', function(done) {
 				request(app)
 					.post('/login')
 					.send({
