@@ -53,34 +53,25 @@ module.exports = function(program, app) {
 	}), function(req, res) {});
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
-			failureRedirect: '/login'
-		}),
-		function(req, res) {
-			authLogger('github-callback', req.url);
-			res.redirect('/account');
-		});
+		failureRedirect: '/login'
+	}), authController.get_provider_callback);
 
 	router.get('/index', authController.get_index);
 	router.get('/logout', authController.get_logout);
 	router.get('/login', authController.get_login);
-	router.post('/login', passport.authenticate('local'), authController.post_login);
+	router.post('/login', urlencodedParser, authController.post_login);
 
-	router.get('/register', authController.get_register);
-	router.post('/register', urlencodedParser, authController.post_register);
+	router.get('/signup', authController.get_register);
+	router.post('/signup', urlencodedParser, authController.post_register);
 
-	router.post('/account', urlencodedParser, authController.post_account);
-	router.get('/account', authController.get_account);
-
-	router.get('/me',
-		passport.authenticate('basic', {
-			session: false
-		}), authController.get_me);
+	router.post('/account', [urlencodedParser, authController.ensureAuthenticated], authController.post_account);
+	router.get('/account', authController.ensureAuthenticated, authController.get_account);
+	router.get('/me', authController.ensureAuthenticated, authController.get_me);
 
 	app.use(function(req, res, next) {
 		res.locals.user = req.user;
 		res.locals.session = req.session;
 		res.locals.authenticated = !req.authenticated;
-
 		next();
 	});
 

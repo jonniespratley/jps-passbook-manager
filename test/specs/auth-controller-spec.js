@@ -14,35 +14,82 @@ const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-
 describe('Auth', function() {
 
 	describe('Routes', function() {
-		it('/index - should return index', function(done) {
+
+		it('GET - /index - should return index', function(done) {
 			request(app)
 				.get('/index')
 				.expect('Content-Type', /html/)
 				.expect(200, done);
 		});
-		it('/account - should return account', function(done) {
-			request(app)
-				.get('/account')
-				.expect('Content-Type', /html/)
-				.expect(200, done);
+
+		describe('Register', function() {
+
+			it('POST - /signup - should register user', function(done) {
+				request(app)
+					.post('/signup')
+					.send({
+						email: 'test@gmail.com',
+						username: 'test',
+						password: 'test'
+					})
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('GET - /signup - should return register form', function(done) {
+				request(app)
+					.get('/signup')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
 		});
-		it('/login - should return login form', function(done) {
-			request(app)
-				.get('/login')
-				.expect('Content-Type', /html/)
-				.expect(200, done);
+
+		describe('Account', function() {
+
+			it('GET - /account - should return account view', function(done) {
+				request(app)
+					.get('/account')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('GET - /me - should return json user info', function(done) {
+				request(app)
+					.get('/me')
+					.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
 		});
-		it('/logout - should return logout', function(done) {
-			request(app)
-				.get('/logout')
-				.expect(302, done);
+
+		describe('Authorization', function() {
+
+			it('GET - /login - should return login form', function(done) {
+				request(app)
+					.get('/login')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('POST - /login - should login user', function(done) {
+				request(app)
+					.post('/login')
+					.send({
+						username: 'test',
+						password: 'test'
+					})
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('GET - /logout - should return logout', function(done) {
+				request(app)
+					.get('/logout')
+					.expect(302, done);
+			});
+
 		});
-		it('/register - should return register form', function(done) {
-			request(app)
-				.get('/register')
-				.expect('Content-Type', /html/)
-				.expect(200, done);
-		});
+
 	});
 
 	describe('Auth Controller', function() {

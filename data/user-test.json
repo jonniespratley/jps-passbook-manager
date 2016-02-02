@@ -1,0 +1,27 @@
+{
+  "_id": "user-test",
+  "id": "user-test",
+  "provider": null,
+  "displayName": null,
+  "username": "test",
+  "password": "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3",
+  "name": {
+    "familyName": null,
+    "givenName": null,
+    "middleName": null
+  },
+  "emails": [
+    {
+      "value": null,
+      "type": null
+    }
+  ],
+  "photos": [],
+  "passTypeIdentifiers": [],
+  "data": {},
+  "docType": "user",
+  "created_at": 1454433014345,
+  "updated_at": 1454433014345,
+  "email": "test@gmail.com",
+  "_key": "user-test"
+}
