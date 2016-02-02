@@ -79,14 +79,16 @@ describe('SignPass', function() {
 
 
 	describe('Siging', function() {
+
 		before(function(done) {
-			jpsPassbook.createPassPromise(mocks.mockPass).then(function(resp) {
+			jpsPassbook.createPassPromise(mockPass).then(function(resp) {
 				mockPass = resp;
 				//	mockPass = resp[0];
 				console.log('Using Mock Pass', mockPass);
 				done();
 			});
 		});
+
 		it('sign() - should create .zip and .pkpass files', function(done) {
 			options.passFilename = mockPass.rawFilename || mockPass.filename;
 			signpass = new SignPass(options);
@@ -101,6 +103,8 @@ describe('SignPass', function() {
 				done();
 			});
 		});
+
+
 
 		describe('Batching', function() {
 			var _passes = [];
