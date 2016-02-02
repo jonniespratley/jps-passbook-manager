@@ -80,12 +80,12 @@ describe('SignPass', function() {
 
 	describe('Siging', function() {
 
-		before(function(done) {
+		before(function() {
 			jpsPassbook.createPassPromise(mockPass).then(function(resp) {
 				mockPass = resp;
 				//	mockPass = resp[0];
 				console.log('Using Mock Pass', mockPass);
-				done();
+
 			});
 		});
 
