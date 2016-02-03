@@ -16,17 +16,19 @@ describe('Program', function() {
 	});
 
 	it('should have db', function(done) {
-		assert(program.db);
-		done();
-	});
-
-	it('get() - should return registered module.', function(done) {
-		assert(program.get);
+		assert(program.get('db'));
 		done();
 	});
 
 	it('register() - should register a module.', function(done) {
 		assert(program.register);
+		program.register('name', 'value');
+		done();
+	});
+
+	it('get() - should return registered module.', function(done) {
+		assert(program.get);
+		assert(program.get('name') === 'value');
 		done();
 	});
 

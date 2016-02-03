@@ -5,6 +5,7 @@ const assert = require('assert');
 const request = require('supertest');
 const express = require('express');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+
 const program = mocks.program;
 const DbController = program.get('DbController');
 const config = program.get('config');

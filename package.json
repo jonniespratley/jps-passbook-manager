@@ -20,7 +20,7 @@
     "pretest": "rimraf test/temp",
     "start": "node server.js",
     "test": "gulp test",
-    "watch-test": "export DEBUG=jps-passbook-manager:*; nodemon -w lib/ -w test/ --exec 'gulp test'",
+    "watch-test": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ -w test/specs/ --exec 'gulp test'",
     "watch": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {

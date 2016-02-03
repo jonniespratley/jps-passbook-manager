@@ -1,11 +1,8 @@
 'use strict';
-var assert = require('assert'),
-	path = require('path'),
-	fs = require('fs-extra'),
-	request = require('supertest'),
-	express = require('express'),
-	os = require('os');
-
+const assert = require('assert');
+const path = require('path');
+const request = require('supertest');
+const express = require('express');
 
 //Test vars
 var testPassName = 'Test_Pass_';
@@ -16,24 +13,13 @@ var passes;
 
 // TODO: Program
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
-var program = mocks.program;
-var db = program.db;
-var config = program.config.defaults;
+
+const program = mocks.program;
 
 //Test Instances
-
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
-var mockIdentifer = {
-	passTypeIdentifier: 'pass.io.passbookmanager',
-	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
-	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.p12'),
-	passphrase: 'fred'
-};
-
-var jpsPassbook = require(path.resolve(__dirname, '..' + path.sep + '..' + path.sep + 'routes' + path.sep +
-	'jps-passbook-routes'))(program, app);
 
 describe('routes', function() {
 

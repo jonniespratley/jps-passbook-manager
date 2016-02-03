@@ -15,12 +15,11 @@ var testPassDir = path.resolve(__dirname, '../../.tmp/');
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
-//var program = require(path.resolve(__dirname, '../../lib/program.js'))();
-var config = program.config.defaults;
-var db = program.db;
+var config = program.get('config');
+var db = program.get('db');
+
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
-
 
 describe('db', function() {
 	it('should be defined', function(done) {

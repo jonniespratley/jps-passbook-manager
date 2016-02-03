@@ -4,8 +4,8 @@ const _ = require('lodash');
 const assert = require('assert');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const Users = program.require('models/users')(program.db);;
-const User = program.require('models/user');
+const Users = program.get('Users');
+const User = program.get('User');
 var u;
 var testUserId = null;
 

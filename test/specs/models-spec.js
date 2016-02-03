@@ -6,7 +6,7 @@ const program = mocks.program;
 
 var docTypes = [];
 
-describe('Passes', function() {
+xdescribe('Passes', function() {
 	it('should return only passes', function(done) {
 		program.models.Passes.getPasses().then(function(resp) {
 			docTypes = _.pluck(resp, '_key');

@@ -4,10 +4,11 @@ const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+
 const program = mocks.program;
-const config = program.config.defaults;
-const SignPass = require(path.resolve(__dirname, '../../lib/signpass'));
-const jpsPassbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))(program);
+const config = program.get('config');
+const SignPass = program.get('SignPass');
+const jpsPassbook = program.get('jpsPassbook');
 
 var options = mocks.mockIdentifer;
 
@@ -17,8 +18,6 @@ var passes = mocks.mockPasses;
 
 var testPasses = [];
 describe('SignPass', function() {
-
-
 
 	it('should be defined', function(done) {
 		assert(SignPass);

@@ -4,7 +4,7 @@ const _ = require('lodash');
 const assert = require('assert');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const Device = program.require('models/device');
+const Device = program.get('Device');
 
 var d;
 
