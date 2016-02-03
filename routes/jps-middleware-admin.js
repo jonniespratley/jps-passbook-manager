@@ -1,11 +1,9 @@
 'use strict';
-const express = require('express');
 const bodyParser = require('body-parser');
-const Router = express.Router;
 const jsonParser = bodyParser.json();
 const multipart = require('connect-multiparty');
 
-module.exports = function(PassesController, AdminController) {
+module.exports = function(app, Router, PassesController, AdminController) {
 	let multipartMiddleware = multipart();
 	let adminRouter = new Router();
 
@@ -19,8 +17,6 @@ module.exports = function(PassesController, AdminController) {
 	adminRouter.post('/identifiers/:id', multipartMiddleware, AdminController.post_passTypeIdentifier);
 
 	adminRouter.get('/find?', AdminController.get_find);
-
 	app.use('/api/' + config.version + '/admin', adminRouter);
-
 	return adminRouter;
 };
