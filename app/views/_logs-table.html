@@ -1,0 +1,15 @@
+<table id="logs-table" class="table table-condensed table-bordered">
+  <thead>
+    <th>Date</th>
+    <th>Log</th>
+  </thead>
+  <tbody>
+    <tr id="{{item._id}}"
+      ng-repeat="item in logs track by $index | orderBy:_id:sort">
+      <td>
+        {{item.created_at | date:'medium'}}
+      </td>
+      <td><pre>{{item.data.logs.join('\n')}}</pre></td>
+    </tr>
+  </tbody>
+</table>

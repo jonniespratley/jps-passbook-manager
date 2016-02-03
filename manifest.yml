@@ -1,22 +1,18 @@
-name: passbook-manager
-#document-root: app
-app-dir: app
-framework:
-  type: node
-buildpack: https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
-instances: 1
-mem: 256
-processes:
-  web: node server.js
-ignores: ['.git', 'node_modules', 'app/bower_components']
-hooks:
-#  pre-push:
-    #- gulp test
-  pre-staging:
-    - npm install bower grunt-cli
-    - bower install
-    - grunt
-#  post-staging:
-    #- python manage.py syncdb --noinput
-#  pre-running:
-    #- python prerunsetup.py
+---
+applications:
+  - name: passbook-manager
+    buildpack: https://github.com/cloudfoundry/heroku-buildpack-nodejs.git
+    memory: 64M
+    stack: cflinuxfs2
+    path: .
+    command: node server.js
+    services:
+    #  - my_logstash_instance
+      #- my_predix_mobile_instance
+      - my_uaa_instance # change this to your redis service instance name
+      #- my_viewsvc_instance # change this to your view service instance name
+    env:
+      NODE_ENV: 'production'
+      DEBUG: '*'
+      UAA_SERVER_URL: https://69687fd0-c926-4e4f-8563-5c88042db69c.predix-uaa.run.aws-usw02-pr.ice.predix.io
+      #REDIS: redis-<num>

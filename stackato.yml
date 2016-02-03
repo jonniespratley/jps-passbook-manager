@@ -1,4 +1,0 @@
-app-dir: ./
-disk: 1024
-memory: 256
-name: passbook-manager

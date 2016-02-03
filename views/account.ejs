@@ -1,0 +1,97 @@
+<html>
+<% include ./partials/head %>
+<body>
+
+<style media="screen">
+	.card-img {
+		margin-right: 20px;
+		height: 80px;
+	}
+</style>
+
+<% include ./partials/header %>
+
+<main>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="card">
+					<div class="card-block">
+						<img class="card-img pull-left"
+							  src="<%= user.data.avatar_url %>"
+							  alt="<%= user.username %>">
+
+						<h4 class="card-title"><%= user.displayName %></h4>
+						<p class="card-text">
+							<%= user.data.location %><br/>
+							<a href="<%= user.data.blog %>" title="Blog" target="_blank"><%= user.data.blog %></a>
+						</p>
+					</div>
+<!--
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><%= user.data.followers %> Followers</li>
+						<li class="list-group-item"><%= user.data.public_repos %> Repos</li>
+						<li class="list-group-item"><%= user.data.public_gists %> Gists</li>
+					</ul>
+				-->
+
+					<div class="card-block">
+						<a href="#" class="card-link">Download Pass</a>
+
+					</div>
+				</div>
+
+
+
+
+				<div class="card">
+				  <div class="card-header">
+				    Pass IDS
+				  </div>
+				  <div class="card-block">
+				    <blockquote class="card-blockquote">
+				      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+				      <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+				    </blockquote>
+				  </div>
+				</div>
+
+				<div class="alert alert-info">
+					<p>
+						Upload your pass type id certificates.
+					</p>
+				</div>
+				<form id="certForm" action="" method="post">
+					<div class="form-group">
+						<label class="form-control-label">Pass Type ID .cert</label>
+						<div class="col-sm-10">
+							<label class="file">
+								<input id="certFile" type="file" id="file">
+								<span class="file-custom"></span>
+							</label>
+						</div>
+					</div>
+					<button type="submit" name="uploadBtn" class="btn btn-primary">Upload</button>
+				</form>
+
+
+
+			</div>
+		</div>
+	</div>
+</main>
+
+
+<script type="text/javascript">
+	console.warn('Handle cert upload');
+	document.getElementById('certForm').addEventListener('submit', function(e){
+		e.preventDefault();
+
+		console.log('form', e);
+		return false;
+	})
+</script>
+
+</body>
+</html>

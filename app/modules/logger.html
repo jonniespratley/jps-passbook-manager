@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Logger</title>
+		<link rel="stylesheet" href="/bower_components/ansi_up/examples/theme.css"/>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/bower_components/ansi_up/ansi_up.js"></script>
+		<script src="/bower_components/jquery/dist/jquery.js"></script>
+		<style type="text/css">
+			body {
+				background-color: black;
+				color: white;
+				font-size: .9em;
+				padding-bottom: 1em;
+			}
+		</style>
+	</head>
+	<body>
+   <pre id="console"></pre>
+
+	<script type="text/javascript">
+	var socket = io();
+		socket.on('newlog', function(logs){
+			console.log("logging", logs);
+			var $console = $("#console");
+			var $page = $('html, body');
+			var $document = $(document);
+			var len = logs.length;
+			var log = '';
+			for (var i = 0; i < len; i++) {
+				log = ansi_up.ansi_to_html(logs[i].msg);
+				$console.append(log);
+				console.log('log', log);
+			}
+
+			$page.stop(true, true).animate({ scrollTop: $document.height() }, "slow");
+		});
+	</script>
+	</body>
+</html>

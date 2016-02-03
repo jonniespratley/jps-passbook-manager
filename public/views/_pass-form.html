@@ -1,0 +1,313 @@
+<form id="passForm" class="form-horizontal" ng-submit="savePass(pass);" ng-show="pass">
+
+
+				<jps-card title="Details">
+					<fieldset>
+						<legend>Details</legend>
+						<p>
+							Information about the pass.
+						</p>
+						<formitem title="Type:">
+							<select ng-model="pass.type" class="form-control c-select" ng-change="loadSchema(t)" ng-options="t.value as t.name for t in passTypes"></select>
+						</formitem>
+						<formitem title="Organization:">
+							<input type="text" ng-model="pass.organizationName" class="form-control">
+						</formitem>
+						<formitem title="Logo:">
+							<input type="text" ng-model="pass.logoText" class="form-control">
+						</formitem>
+						<formitem title="Description:">
+							<textarea ng-model="pass.description" class="form-control"></textarea>
+						</formitem>
+
+						<formitem title="Serial Number:">
+							<input type="text" ng-model="pass.serialNumber" class="form-control">
+						</formitem>
+
+					</fieldset>
+				</jps-card>
+
+				<jps-card title="Fields">
+					<fieldset>
+						<legend>
+							Header fields
+						</legend>
+						<p>
+							Fields to be displayed in the header on the front of the pass.
+						</p>
+						<div id="pass-headerFields" class="well well-sm">
+							<pass-field-group label="Header Fields" fields="pass[pass.type].headerFields"></pass-field-group>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend>Primary fields</legend>
+						<p>
+							 Fields to be displayed prominently on the front of the pass.
+						</p>
+						<div id="pass-primaryFields" class="well well-sm">
+							<pass-field-group label="Primary Fields" fields="pass[pass.type].primaryFields">
+							</pass-field-group>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend>
+							Secondary fields
+						</legend>
+						<p>
+							Fields to be displayed on the front of the pass.
+						</p>
+						<div id="pass-secondaryFields" class="well well-sm">
+							<pass-field-group label="Secondary Fields" fields="pass[pass.type].secondaryFields"></pass-field-group>
+						</div>
+					</fieldset>
+
+
+					<fieldset>
+						<legend>
+							Auxiliary fields
+						</legend>
+						<p>
+							Additional fields to be displayed on the front of the pass.
+						</p>
+						<div id="pass-auxiliaryFields" class="well well-sm">
+							<pass-field-group label="Header Fields" fields="pass[pass.type].auxiliaryFields"></pass-field-group>
+						</div>
+					</fieldset>
+
+					<!-- @TODO: [Back Fields] -->
+					<fielset>
+						<legend>
+							Back fields
+						</legend>
+						<p>
+							Fields to be on the back of the pass.
+						</p>
+						<div id="pass-backFields" class="well well-sm">
+							<pass-field-group label="Back Fields" fields="pass[pass.type].backFields"></pass-field-group>
+						</div>
+					</fielset>
+				</jps-card>
+
+
+
+				<jps-card title="Relevance">
+
+					<!-- @TODO: [Beacons] -->
+					<fieldset>
+						<legend>
+							Beacons
+						</legend>
+						<p>
+							Information about a location beacon.
+						</p>
+						<div id="pass-beaconFields" class="well well-sm">
+
+
+							<formitem title="Beacon #{{$index}}:" ng-repeat="l in pass.beacons">
+								<input type="text" name="proximityUUID" ng-model="l.proximityUUID" class="form-control" placeholder="Proximity UUID">
+								<input type="text" name="relevantText" ng-model="l.relevantText" class="form-control" placeholder="Relevant Text">
+								<div class="controls-row">
+									<input type="text" name="major" ng-model="l.major" class="form-control" placeholder="Major">
+									<input type="text" name="minor" ng-model="l.minor" class="form-control" placeholder="Minor">
+
+									<span class="help-inline">
+										<button class="btn btn-mini btn--outline remove-row-btn" type="button" ng-click="pass.beacons.splice($index, 1)">
+										  <i class="fa fa-lg fa-times"></i>
+										</button>
+									</span>
+								</div>
+							</formitem>
+
+							<button class="btn btn-block btn-default btn--outline" type="button" ng-click="pass.beacons.push({proximityUUID: '', major: 0, minor: 1, relevantText: 'Nearby'})">
+  								<i class="fa fa-lg fa-plus"></i>
+										Add
+							</button>
+						</div>
+					</fieldset>
+
+					<!-- @TODO: [Locations] -->
+					<fieldset>
+						<legend>
+							Locations
+						</legend>
+						<p>
+							Information about a location.
+						</p>
+						<div id="pass-locationFields" class="well well-sm">
+
+							<formitem title="Location #{{$index}}:" ng-repeat="l in pass.locations">
+								<div class="controls-row">
+									<input type="string" name="altitude" ng-model="l.altitude" class="form-control" placeholder="Altitude">
+									<input type="string" name="latitude" ng-model="l.latitude" class="form-control" placeholder="Latitude">
+									<input type="string" name="longitude" ng-model="l.longitude" class="form-control" placeholder="Longitude">
+									<input type="text" name="relevantText" ng-model="l.relevantText" class="form-control" placeholder="Relevant Text">
+									<span class="help-inline">
+										<button class="btn btn-mini btn-default remove-row-btn" type="button" ng-click="pass.locations.splice($index, 1)">
+											<i class="fa fa-lg fa-times-circle"></i>
+										</button>
+									</span>
+								</div>
+							</formitem>
+							<button class="btn btn-block btn-default btn--outline" type="button" ng-click="pass.locations.push({latitude: '37.6189722', longitude: '-122.3748889'})">
+										<i class="fa fa-lg fa-plus"></i>
+										Add
+							</button>
+						</div>
+					</fieldset>
+
+
+					<!-- @TODO: [Barcode Fields] -->
+					<fieldset>
+						<legend>
+							Barcode
+						</legend>
+						<p>
+							Information about a barcode.
+						</p>
+						<div id="pass-barcodeFields" class="well well-sm">
+
+							<formitem title="Format:">
+								<select ng-model="pass.barcode.format" ng-selected="pass.barcode.format" class="form-control c-select" ng-options="format.name for format in barcodes"></select>
+							</formitem>
+
+							<formitem title="Messsage:">
+									<textarea class="form-control" ng-change="updateQrcode(pass)" ng-model="pass.barcode.message"></textarea>
+
+							</formitem>
+
+							<formitem title="Image:">
+								<div class="pass-qrcode-wrap">
+									<div id="pass-qrcode"></div>
+								</div>
+							</formitem>
+
+							<formitem title="Encoding:">
+								<input type="text" ng-model="pass.barcode.messageEncoding" class="form-control" disabled="disabled">
+							</formitem>
+
+						</div>
+					</fieldset>
+				</jps-card>
+
+				<jps-card title="Visual">
+					<!-- @TODO: [Style Fields] -->
+					<fieldset>
+						<legend>
+							Styles
+						</legend>
+						<p>
+							Keys that define the visual style and appearance of the pass.
+						</p>
+
+						<div id="pass-styleFields" class="well well-sm">
+							<formitem title="Labels:">
+								<input type="text" ng-model="pass.labelColor" class="form-control">
+							</formitem>
+
+							<formitem title="Foreground:">
+								<input type="text" ng-model="pass.foregroundColor" class="form-control">
+							</formitem>
+
+							<formitem title="Background:">
+								<input type="text" ng-model="pass.backgroundColor" class="form-control">
+							</formitem>
+							<formitem title="Strip Shine:">
+								<input type="checkbox" ng-model="pass.suppressStripShine" class="form-control">
+							</formitem>
+	<!--
+							<formitem title="Icon:">
+								<div id="PassIconDiv">
+									<img id="pass_icon" alt="Pass Icon" src="http://placehold.it/72x72&text=icon.png"/>
+								</div>
+								<input name="data[Pass][icon]" id="PassIcon" value="" type="file"
+										 class="form-control file-url-input">
+							</formitem>
+	-->
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend>Images</legend>
+						<p>
+							Assets that make up your passes appearance.
+						</p>
+
+						<formitem title="Background.png">
+							<pass-file-group id="passBackground" model="pass.background" pass-id="{{pass._id}}" hint="The image displayed as the background of the front of the pass.">
+							</pass-file-group>
+						</formitem>
+
+						<formitem title="Footer.png">
+							<pass-file-group id="passFooter" model="pass.footer" pass-id="{{pass._id}}" hint="The image displayed on the front of the pass near the barcode.">
+							</pass-file-group>
+						</formitem>
+
+						<formitem title="Icon.png">
+							<pass-file-group id="passIcon" model="pass.icon" pass-id="{{pass._id}}" hint="The pass’s icon. This is displayed in notifications and in emails that have a pass attached, and on the lock screen.">
+							</pass-file-group>
+						</formitem>
+
+						<formitem title="Logo.png">
+							<pass-file-group id="passLogo" model="pass.logo" pass-id="{{pass._id}}" hint="The image displayed on the front of the pass in the top left.">
+							</pass-file-group>
+						</formitem>
+
+
+
+
+					</fieldset>
+
+
+
+				</jps-card>
+
+
+				<!-- @TODO: [Identity Fields] -->
+				<jps-card title="Identity">
+					<fieldset>
+						<legend>
+							Identity
+						</legend>
+						<p>
+							Information used to update passes using the web service.
+						</p>
+						<div id="pass-identityFields" class="well well-sm">
+
+							<formitem title="ID:">
+								<input type="text" ng-model="pass._id" class="form-control" disabled="disabled">
+							</formitem>
+
+							<formitem title="Identifier:">
+								<input type="text" ng-model="pass.passTypeIdentifier" class="form-control">
+								<small class="text-muted">
+								  You can upload certificates <a href="#/account">here.</a>
+								</small>
+							</formitem>
+
+							<formitem title="Team Identifier:">
+								<input type="text" ng-model="pass.teamIdentifier" class="form-control">
+							</formitem>
+
+							<formitem title="Web Service:">
+								<input type="text" ng-model="pass.webServiceURL" class="form-control" disabled="disabled">
+							</formitem>
+
+							<formitem title="Authentication:">
+								<input type="text" ng-model="pass.authenticationToken" class="form-control" disabled="disabled">
+							</formitem>
+
+							<formitem title="Version:">
+								<input type="text" ng-model="pass.formatVersion" class="form-control" disabled="disabled">
+							</formitem>
+
+						</div>
+					</fieldset>
+				</jps-card>
+
+
+					<button type="submit" class="btn btn-primary btn-block">
+						Save
+					</button>
+				</form>
