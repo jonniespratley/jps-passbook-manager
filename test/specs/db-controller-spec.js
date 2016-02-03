@@ -4,17 +4,16 @@ const _ = require('lodash');
 const assert = require('assert');
 const request = require('supertest');
 const express = require('express');
-
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const DbController = program.require('controllers/db-controller');
+const DbController = program.get('DbController');
+const config = program.get('config');
 
-const config = program.config.defaults;
 let app = express();
 let controller;
 let testDoc = mocks.mockPass;
 delete testDoc._id;
-const DbRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-db'))(program, app);
+//const DbRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-db'))
 
 var nock = require('nock');
 var scope = nock('/api/v1/db')

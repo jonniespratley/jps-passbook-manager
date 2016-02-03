@@ -1,10 +1,9 @@
 var path = require('path');
 var assert = require('assert');
-var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
-var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
+var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+var program = mocks.program;
+var Pass = program.get('Pass');
 var p;
-var program = require(path.resolve(__dirname, '../../lib/program.js'))();
-var config = program.config.defaults;
 
 describe('Pass', function() {
 	it('should create default generic Pass', function(done) {
@@ -12,7 +11,7 @@ describe('Pass', function() {
 		p = new Pass();
 		assert.ok(p._id);
 		assert.equal(p.type, 'generic');
-		done()
+		done();
 	});
 
 	it('should create pass model with [storeCard] type', function(done) {

@@ -1,21 +1,11 @@
 'use strict';
 
-module.exports = function(program, app) {
-
-	const express = require('express');
-	const Router = express.Router;
-	//const expressValidator = require('express-validator');
+module.exports = function(config, app, Router, Logger, DbController) {
 	const bodyParser = require('body-parser');
-	const jsonParser = bodyParser.json();
 
-	const DbController = program.require('controllers/db-controller');
-
-
-	let config = program.config.defaults;
-	let logger = program.getLogger('router:db')
+	let logger = Logger.getLogger('router:db')
 	let dbRouter = new Router();
 	let dbController = new DbController(program);
-
 
 	dbRouter.route('/:id?', bodyParser.json()).all(function(req, res, next) {
 			logger('debug', req.method, req.url);
@@ -27,6 +17,9 @@ module.exports = function(program, app) {
 		.put(dbController.put_doc)
 		.post(dbController.post_doc);
 
-	app.use(bodyParser.json());
+	dbRouter.use(bodyParser.json());
+
 	app.use('/api/' + config.version + '/db', dbRouter);
+
+	return dbRouter;
 };

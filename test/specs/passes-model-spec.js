@@ -1,15 +1,12 @@
 var path = require('path');
 var assert = require('assert');
-
-
-var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
 var p;
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
-var config = program.config.defaults;
+var config = program.get('config');
+var Passes = program.get('Passes');
 
-var mocks = require('../helpers/mocks');
 describe('Passes', function() {
 	it('should be defined', function(done) {
 		assert(Passes);

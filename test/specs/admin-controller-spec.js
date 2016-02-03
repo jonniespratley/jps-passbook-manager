@@ -6,7 +6,7 @@ const request = require('supertest');
 const express = require('express');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const AdminController = program.require('controllers/admin-controller');
+const AdminController = program.get('AdminController');
 
 let mockDevice = mocks.mockDevice;
 let testDevice = mockDevice;
@@ -30,7 +30,7 @@ let mockIdentifer = {
 	passphrase: 'test'
 };
 
-const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
+//const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
 
 describe('Admin', function () {
 	before(function () {

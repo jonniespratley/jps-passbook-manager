@@ -1,19 +1,16 @@
 'use strict';
 const express = require('express');
 const bodyParser = require('body-parser');
-const Router = express.Router;
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 
-module.exports = function(program, app) {
-	const AppController = program.require('controllers/app-controller');
+module.exports = function(app, config, AppController) {
+	let router = new express.Router();
 
-	let router = new Router();
-	let appController = new AppController(program);
 
-	router.get('/', appController.index);
-	router.get('/upload/:id?', appController.get_upload);
-	router.post('/upload/:id?', multipartMiddleware, appController.post_upload);
-	router.post('/log', bodyParser.json(), appController.post_log);
-	app.use('/api/' + program.config.defaults.version, router);
+	router.get('/', AppController.index);
+	router.get('/upload/:id?', AppController.get_upload);
+	router.post('/upload/:id?', multipartMiddleware, AppController.post_upload);
+	router.post('/log', bodyParser.json(), AppController.post_log);
+	app.use('/api/' + config.version, router);
 };

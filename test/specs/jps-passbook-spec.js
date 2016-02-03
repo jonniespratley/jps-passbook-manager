@@ -1,19 +1,18 @@
 var assert = require('assert'),
 	path = require('path'),
 	_ = require('lodash'),
-	fs = require('fs-extra'),
-	SignPass = require(path.resolve(__dirname, '../../lib/signpass')),
-	Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'));
+	fs = require('fs-extra');
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
-var program = mocks.program;
-var jpsPassbook = new Passbook(program);
+const program = mocks.program;
+
+//const SignPass = program.get('SignPass');
+const jpsPassbook = program.get('jpsPassbook');
 
 var mockIdentifer = mocks.mockIdentifer;
 var mockPass = mocks.mockPass;
 var mockPasses = mocks.mockPasses;
-var _passes = [];
-var passFiles = [];
+
 
 describe('jps-passbook', function() {
 	describe('Batching', function() {

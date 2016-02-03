@@ -1,20 +1,16 @@
 'use strict';
-module.exports = function (program, app) {
-	const path = require('path');
+module.exports = function (path, config, Router, app, AuthController, Logger) {
 	const flash = require('connect-flash');
 	const express = require('express');
 	const methodOverride = require('method-override');
 	const bodyParser = require('body-parser');
-	const Router = express.Router;
 	const passport = require('passport');
 	const urlencodedParser = bodyParser.urlencoded({
 		extended: false
 	});
 
-	const config = program.config.defaults;
-	const authLogger = program.getLogger('auth');
-	const AuthController = program.require('controllers/auth-controller');
-
+	const authLogger = Logger.getLogger('auth');
+	//const AuthController = program.require('controllers/auth-controller');
 	let router = new Router();
 	let authController = new AuthController(program);
 
@@ -88,7 +84,7 @@ module.exports = function (program, app) {
 			sess.cookie.secure = true;
 		} catch (e) {
 			console.error( 'Cookie.secure error', e);
-		} 
+		}
 	}
 
 	app.use(sess);

@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const multipart = require('connect-multiparty');
 
-module.exports = function(app, Router, PassesController, AdminController) {
+module.exports = function(app, config, Router, PassesController, AdminController) {
 	let multipartMiddleware = multipart();
 	let adminRouter = new Router();
 

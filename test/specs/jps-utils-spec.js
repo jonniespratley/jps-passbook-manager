@@ -1,16 +1,13 @@
 'use strict';
 const assert = require('assert');
 const _ = require('lodash');
-const child_process = require('child_process');
 const path = require('path');
-const utils = require(path.resolve(__dirname, '../../lib/utils'));
+
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const config = program.config.defaults;
-const Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'));
-const cert_url = path.resolve(__dirname, '../../certificates/pass.p12');
-const cert_pass = 'fred';
-const jpsPassbook = new Passbook(program);
+const utils = program.get('utils');
+
+const jpsPassbook = program.get('jpsPassbook');
 
 describe('Utils', function(done) {
 

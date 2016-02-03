@@ -1,19 +1,34 @@
+'use strict';
 var path = require('path');
 var assert = require('assert');
-var program = require(path.resolve(__dirname, '../../lib/program.js'))();
-var config = program.config.defaults;
+var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+var program = mocks.program;
 
-describe('program', function() {
-	it('should defined', function(done) {
+describe('Program', function() {
+
+	it('should be defined', function() {
 		assert(program);
-		done();
 	});
+
 	it('should have getLogger', function(done) {
 		assert(program.getLogger);
 		done();
 	});
+
 	it('should have db', function(done) {
 		assert(program.db);
 		done();
 	});
+
+	it('get() - should return registered module.', function(done) {
+		assert(program.get);
+		done();
+	});
+
+	it('register() - should register a module.', function(done) {
+		assert(program.register);
+		done();
+	});
+
+
 });

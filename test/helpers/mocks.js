@@ -1,14 +1,13 @@
 'use strict';
-var path = require('path');
-var config = require(path.resolve(__dirname, '../../config.js'));
-var program = require(path.resolve(__dirname, '../../lib/program.js'))({
+const path = require('path');
+const Program = require(path.resolve(__dirname, '../../lib/program.js'));
+
+var program = new Program({
 	dataPath: path.resolve(__dirname, '../temp')
 });
 
-
-var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
-var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
-var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
+const Pass = program.get('Pass');
+const Device = program.get('Device');
 
 exports.mockIdentifer = {
 	passTypeIdentifier: 'pass.io.passbookmanager.test',
@@ -16,13 +15,10 @@ exports.mockIdentifer = {
 	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.test.p12'),
 	passphrase: 'test'
 };
-program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
+//program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
 
 //console.log('MOCK program', program.config.defaults);
-
-
 exports.program = program;
-
 exports.mockPasses = [
 
 	new Pass({
@@ -30,7 +26,6 @@ exports.mockPasses = [
 		description: 'Example Generic',
 		serialNumber: '0123456789876543210',
 		authenticationToken: '0123456789876543210',
-
 		type: 'generic'
 	}),
 

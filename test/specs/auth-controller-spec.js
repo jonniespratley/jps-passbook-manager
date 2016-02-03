@@ -6,10 +6,11 @@ const request = require('supertest');
 const express = require('express');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const AuthController = program.require('controllers/auth-controller');
+
+const AuthController = program.get('AuthController');
 let app = express();
 let controller;
-const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-auth'))(program, app);
+//const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-auth'))(program, app);
 
 describe('Auth', function() {
 

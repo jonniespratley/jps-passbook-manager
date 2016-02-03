@@ -4,16 +4,13 @@
  */
 var assert = require('assert'),
 	_ = require('lodash'),
-
 	path = require('path');
-
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
 
-var config = program.config.defaults;
-var CouchDB = require(path.resolve(__dirname, '../../lib/adapters/db-couchdb.js'));
-
+var config = program.get('config');
+var CouchDB = program.get('CouchDBAdapter');
 var testDoc = {
 	_id: 'test-doc',
 
