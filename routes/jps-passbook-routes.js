@@ -25,8 +25,7 @@ module.exports = function(program, app) {
 		path.resolve(__dirname, './jps-middleware-admin'),
 		path.resolve(__dirname, './jps-middleware-db'),
 		path.resolve(__dirname, './jps-middleware-devices'),
-		path.resolve(__dirname, './jps-middleware-passes'),
-		path.resolve(__dirname, './jps-middleware-sockets')
+		path.resolve(__dirname, './jps-middleware-passes')
 	];
 
 	middleware.forEach(function(m) {

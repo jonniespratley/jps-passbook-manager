@@ -5,6 +5,7 @@
     "delimiter": "pass-manager"
   },
   "bin": {
+    "jps-passbook-manager": "./lib/cli.js",
     "pass-manager": "./cli.js"
   },
   "scripts": {
