@@ -46,25 +46,6 @@ describe('routes', function() {
 
 
 
-	describe('Admin Passes', function() {
-
-		it('POST - /api/v1/admin/passes - should create pass', function(done) {
-			delete mockPass._id;
-			request(app)
-				.post('/api/v1/admin/passes')
-				.send(mockPass)
-				.expect(function(res) {
-					//	mocks.mockPasses[0]._id = res.body._id;
-					mockPass = res.body;
-					console.log('create pass resp', res.body)
-				})
-				.expect('Content-Type', /json/)
-				.expect(201, done);
-		});
-	});
-
-
-
 	describe('PassKit Web Service', function() {
 
 		beforeEach(function() {
@@ -156,6 +137,18 @@ describe('routes', function() {
 				});
 		});
 
+		describe('Logs', function() {
+			it('POST - /api/v1/log - should store logs', function(done) {
+				this.slow(5000);
+				request(app)
+					.post('/api/v1/log')
+					.send({
+						logs: ['test log']
+					})
+					.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+		});
 		describe('Passes', function() {
 
 			it('GET - /api/v1/passes/:pass_type_id/:serial_number - 401', function(done) {
@@ -183,16 +176,7 @@ describe('routes', function() {
 			});
 		});
 
-		it('POST - /api/v1/log - should store logs', function(done) {
-			this.slow(5000);
-			request(app)
-				.post('/api/v1/log')
-				.send({
-					logs: ['test log']
-				})
-				.expect('Content-Type', /json/)
-				.expect(200, done);
-		});
+
 
 
 

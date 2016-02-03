@@ -1,0 +1,23 @@
+<!-- Profile -->
+<div class="container">
+	<div class="page-header text-center">
+		<h1>
+			<i class="fa fa-anchor"></i> Profile</h1>
+		<a href="/logout" class="btn btn-default">Logout</a>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="well">
+				<h3><i class="fa fa-user"></i>Local</h3>
+				<dl class="dl-horizontal">
+					<dt>ID</dt>
+					<dd><%= user._id %></dd>
+					<dt>Email</dt>
+					<dd><%= user.email %></dd>
+					<dt>Password</dt>
+					<dd><%= user.password %></dd>
+				</dl>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,18 @@
+<table id="devices-table" class="table table-condensed table-bordered">
+  <thead>
+
+  <th>deviceLibraryIdentifier</th>
+  <th>Serial #</th>
+  <th>Created</th>
+  <th>Actions</th>
+  </thead>
+  <tbody>
+  <tr ng-repeat="item in devices track by $index | orderBy:created_at:true" id="{{item._id}}">
+
+    <td>{{item.deviceLibraryIdentifier}}</td>
+    <td>{{item.serialNumber}}</td>
+    <td>{{item.created_at}}</td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>

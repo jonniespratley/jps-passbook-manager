@@ -11,31 +11,99 @@ let app = express();
 let controller;
 const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-auth'))(program, app);
 
-
-
 describe('Auth', function() {
 
-	describe('Routes', function() {
+	xdescribe('Routes', function() {
 
-
-		it('/login - should return login form', function(done) {
+		it('GET - /index - should return index', function(done) {
 			request(app)
-				.get('/login')
+				.get('/index')
 				.expect('Content-Type', /html/)
 				.expect(200, done);
 		});
 
-		it('/logout - should return logout', function(done) {
-			request(app)
-				.get('/logout')
-				.expect(302, done);
+		describe('Register', function() {
+
+			it('POST - /signup - should register user', function(done) {
+				request(app)
+					.post('/signup')
+					.send({
+						email: 'test5@gmail.com',
+						password: 'test'
+					})
+					//.set('Content-Type', 'application/json')
+					//.set('Accept', 'application/json')
+					//.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
+			it('POST - /signup - should register new user', function(done) {
+				request(app)
+					.post('/signup')
+					.send({
+						email: 'test6@gmail.com',
+						password: 'test'
+					})
+					.set('Content-Type', 'application/json')
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
+			it('GET - /signup - should return register form', function(done) {
+				request(app)
+					.get('/signup')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
 		});
 
-		it('/register - should return register form', function(done) {
-			request(app)
-				.get('/register')
-				.expect('Content-Type', /html/)
-				.expect(200, done);
+		describe('Account', function() {
+
+			it('GET - /account - should return account view', function(done) {
+				request(app)
+					.get('/account')
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
+			it('GET - /me - should return json user info', function(done) {
+				request(app)
+					.get('/me')
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
+		});
+
+		describe('Authorization', function() {
+
+			it('GET - /login - should return login form', function(done) {
+				request(app)
+					.get('/login')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('POST - /login - should login user', function(done) {
+				request(app)
+					.post('/login')
+					.send({
+						email: 'test@gmail.com',
+						password: 'test'
+					})
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('GET - /logout - should return logout', function(done) {
+				request(app)
+					.get('/logout')
+					.expect(302, done);
+			});
+
 		});
 
 	});

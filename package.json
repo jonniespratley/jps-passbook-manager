@@ -2,22 +2,24 @@
   "name": "jps-passbook-manager",
   "version": "0.0.2",
   "config": {
-    "delimiter": "passbook-manager"
+    "delimiter": "pass-manager"
   },
   "bin": {
-    "passbook-manager": "./cli.js"
+    "pass-manager": "./cli.js"
   },
   "scripts": {
-    "cli": "node cli.js",
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "prestart": "grunt -v --force",
+    "build": "grunt build -v",
     "clean": "rimraf .tmp data test/temp",
+    "cli": "node cli.js",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "debug-grunt": "iron-node node_modules/grunt-cli/bin/grunt build",
+    "debug-gulp": "iron-node node_modules/gulp/bin/gulp.js",
+    "debug-mocha": "iron-node node_modules/mocha/bin/_mocha",
+    "mocha": "mocha test/specs",
     "pretest": "rimraf test/temp",
     "start": "node server.js",
     "test": "gulp test",
-    "prewatch": "export DEBUG=jps-passbook-manager:*; export NODE_ENV=development;",
-
-    "watch": "nodemon -w routes/ -w lib/ server.js"
+    "watch": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
@@ -27,6 +29,7 @@
     "cli-table": "^0.3.1",
     "cli-tree": "0.0.1",
     "commander": "^2.9.0",
+    "connect-flash": "^0.1.1",
     "connect-multiparty": "^2.0.0",
     "connect-redis": "^3.0.2",
     "debug": "^2.2.0",
@@ -65,6 +68,8 @@
     "grunt-contrib-connect": "^0.9.0",
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-cssmin": "^0.11.0",
+    "grunt-contrib-htmlmin": "^0.6.0",
+    "grunt-contrib-imagemin": "^1.0.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-livereload": "^0.1.2",
     "grunt-contrib-uglify": "^0.7.0",
@@ -82,12 +87,14 @@
     "istanbul": "^0.4.1",
     "json-proxy": "^0.9.1",
     "karma": "^0.13.16",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
+    "karma-jasmine": "^0.3.7",
+    "karma-phantomjs-launcher": "^0.2.3",
     "load-grunt-tasks": "^2.0.0",
     "matchdep": "~0.1.1",
     "mocha": "^2.1.0",
     "nock": "^5.2.1",
+    "redis-mock": "^0.5.1",
     "rimraf": "^2.5.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"
