@@ -1,8 +1,18 @@
 language: node_js
 node_js:
-  - 'iojs'
+- iojs
 before_script:
-  - 'npm -v'
-  - 'npm install -g gulp'
+- npm -v
+- npm install -g gulp
 service_name: travis-pro
 repo_token: VvrRjqdZxikZabAx2bBNQ7jmndgX80n79
+deploy:
+  provider: cloudfoundry
+  api: https://api.system.aws-usw02-pr.ice.predix.io
+  username: jonnie.spratley@ge.com
+  password:
+    secure: DK1vFxdeEtGztY9nyDXfiF8+aEAH9y76sx06Q81xnZ9jTO8D+0W2rcr0t7w/kHiJwcB5L3VOatns3tBWs/BDAN5SXa1N0fhjm3BSjAuHepm2saT8sBMstmkpeMK0LlparAggAYBUNoiOGVXWq+B/fYfuVdWzU97+6Kt184nTWww=
+  organization: jonnie.spratley@ge.com
+  space: Development
+  on:
+    repo: jonniespratley/jps-passbook-manager
