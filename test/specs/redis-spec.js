@@ -4,19 +4,29 @@ var assert = require('assert'),
 	_ = require('lodash'),
 	path = require('path');
 
-var RedisDB = require(path.resolve(__dirname, '../../lib/adapters/db-redis.js'));
-var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
-var program = mocks.program;
-var config = program.config.defaults;
+const redis = require("redis-mock");
+const RedisDB = require(path.resolve(__dirname, '../../lib/adapters/db-redis.js'));
+const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+const program = mocks.program;
+const config = program.config.defaults;
 
-var mockPass = mocks.mockPass;
-var db;
+let mockPass = mocks.mockPass;
+let client;
+let db;
 
 describe('Adapters', function() {
 
 	describe('redis', function() {
 		before(function() {
-			db = new RedisDB();
+			client = redis.createClient();
+			db = new RedisDB({
+				client: client
+			});
+		});
+
+		it('should be have mock client', function(done) {
+			assert(client);
+			done();
 		});
 
 		it('should be defined', function(done) {

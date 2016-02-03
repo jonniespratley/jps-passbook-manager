@@ -17,7 +17,6 @@
     "debug-mocha": "iron-node node_modules/mocha/bin/_mocha",
     "mocha": "mocha test/specs",
     "pretest": "rimraf test/temp",
-
     "start": "node server.js",
     "test": "gulp test",
     "watch": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ server.js"
@@ -26,7 +25,6 @@
     "adm-zip": "^0.4.7",
     "apn": "^1.7.5",
     "async": "^1.5.1",
-
     "body-parser": "^1.10.1",
     "cli-table": "^0.3.1",
     "cli-tree": "0.0.1",
@@ -89,12 +87,14 @@
     "istanbul": "^0.4.1",
     "json-proxy": "^0.9.1",
     "karma": "^0.13.16",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
+    "karma-jasmine": "^0.3.7",
+    "karma-phantomjs-launcher": "^0.2.3",
     "load-grunt-tasks": "^2.0.0",
     "matchdep": "~0.1.1",
     "mocha": "^2.1.0",
     "nock": "^5.2.1",
+    "redis-mock": "^0.5.1",
     "rimraf": "^2.5.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"

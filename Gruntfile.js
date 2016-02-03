@@ -282,11 +282,11 @@ module.exports = function(grunt) {
 		'clean:server',
 		//  'jshint',
 		'mkdir',
-		//	'karma',
+		'karma',
 		'mochaTest'
 	]);
 
-	grunt.registerTask('build', [
+	grunt.registerTask('dist', [
 		'clean:dist',
 		//	'jshint',
 		//		'test',
@@ -304,5 +304,6 @@ module.exports = function(grunt) {
 		'uglify'
 	]);
 
-	grunt.registerTask('default', ['test', 'build']);
+	grunt.registerTask('build', ['test', 'dist']);
+	grunt.registerTask('default', ['test', 'dist']);
 };
