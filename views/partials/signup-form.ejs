@@ -2,9 +2,11 @@
 <div class="container">
 	<div class="col-sm-6 col-sm-offset-3">
 		<h2>Sign up</h2>
-		<div class="alert alert-danger">
-			<p>Please Sign up.</p>
-		</div>
+
+		<!-- show any messages that come back with authentication -->
+		<% if (message.length > 0) { %>
+			<div class="alert alert-warning"><%= message %></div>
+		<% } %>
 
 		<form action="/signup" method="post">
 			<div class="form-group">

@@ -17,10 +17,10 @@
     "debug-mocha": "iron-node node_modules/mocha/bin/_mocha",
     "mocha": "mocha test/specs",
     "pretest": "rimraf test/temp",
-    "prewatch": "export DEBUG=jps-passbook-manager:*; export NODE_ENV=development;",
+
     "start": "node server.js",
     "test": "gulp test",
-    "watch": "nodemon -w routes/ -w lib/ server.js"
+    "watch": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",

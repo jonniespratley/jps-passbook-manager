@@ -62,7 +62,7 @@ var scope = nock(config.baseUrl)
 	});
 */
 
-describe('couchdb', function() {
+describe('CouchDB Adapter', function() {
 	var db = new CouchDB(config);
 
 	var mockDevice = mocks.mockDevice;
@@ -84,7 +84,7 @@ describe('couchdb', function() {
 		done();
 	});
 
-	it('should create doc with id', function(done) {
+	it('db.put - should create doc with id', function(done) {
 		db.put(mockPass).then(function(resp) {
 			mockPass._rev = 1;
 			assert(resp);
@@ -95,7 +95,7 @@ describe('couchdb', function() {
 		});
 	});
 
-	it('should reject create doc with _id', function(done) {
+	it('db.put - should reject create doc with _id', function(done) {
 		db.put({
 			_id: 'test-fail'
 		}).then(function(resp) {
@@ -107,7 +107,7 @@ describe('couchdb', function() {
 		});
 	});
 
-	it('should create doc with generated', function(done) {
+	it('db.post - should create doc with generated', function(done) {
 		let o = _.assign({}, mocks.mockPass);
 		delete o._id;
 		db.post(o).then(function(resp) {
@@ -144,7 +144,7 @@ describe('couchdb', function() {
 		});
 	});
 
-	it('should remove doc with id', function(done) {
+	it('db.remove - should remove doc with id', function(done) {
 		db.remove(testDoc._id, testDoc._rev).then(function(resp) {
 			assert(resp);
 			done();
@@ -167,7 +167,7 @@ describe('couchdb', function() {
 		});
 	});
 
-	it('should return array of docs', function(done) {
+	it('db.allDocs - should return array of docs', function(done) {
 		db.allDocs().then(function(resp) {
 			assert(resp);
 			done();

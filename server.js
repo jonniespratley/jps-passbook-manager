@@ -31,9 +31,10 @@ app.use('/public', serveStatic(path.resolve(__dirname, config.publicDir)));
 app.use('/', serveStatic(path.resolve(__dirname, config.staticDir)));
 
 app.locals.config = config;
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
+//app.set('views', __dirname + '/views');
+//app.set('view engine', 'ejs');
+//app.engine('html', require('ejs').renderFile);
+app.use(require('connect-flash')());
 program.app = app;
 
 var middleware = [

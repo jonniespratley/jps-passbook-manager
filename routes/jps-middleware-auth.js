@@ -1,6 +1,7 @@
 'use strict';
-module.exports = function(program, app) {
+module.exports = function (program, app) {
 	const path = require('path');
+	const flash = require('connect-flash');
 	const url = require('url');
 	const express = require('express');
 	const expressValidator = require('express-validator');
@@ -33,16 +34,15 @@ module.exports = function(program, app) {
 	let authController = new AuthController(program);
 
 
-
 	/*	router.get('/auth/provider/callback',
-			passport.authenticate('oauth2', {
-				failureRedirect: '/login'
-			}),
-			function(req, res) {
-				authLogger('/auth/provider/callback', req.account, req.user);
-				// Successful authentication, redirect home.
-				res.redirect('/account');
-			});*/
+	 passport.authenticate('oauth2', {
+	 failureRedirect: '/login'
+	 }),
+	 function(req, res) {
+	 authLogger('/auth/provider/callback', req.account, req.user);
+	 // Successful authentication, redirect home.
+	 res.redirect('/account');
+	 });*/
 
 	// Use the GitHubStrategy within Passport.
 	router.get('/auth/github', passport.authenticate('github', {
@@ -50,7 +50,8 @@ module.exports = function(program, app) {
 			'user:email',
 			'gist'
 		]
-	}), function(req, res) {});
+	}), function (req, res) {
+	});
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
@@ -58,17 +59,30 @@ module.exports = function(program, app) {
 
 	router.get('/index', authController.get_index);
 	router.get('/logout', authController.get_logout);
+
+	//router.post('/login', urlencodedParser, authController.post_login);
+
 	router.get('/login', authController.get_login);
-	router.post('/login', urlencodedParser, authController.post_login);
-
 	router.get('/signup', authController.get_register);
-	router.post('/signup', urlencodedParser, authController.post_register);
 
-	router.post('/account', [urlencodedParser, authController.ensureAuthenticated], authController.post_account);
+	//router.post('/signup', urlencodedParser, authController.post_register);
+	router.post('/login', [urlencodedParser, bodyParser.json(), passport.authenticate('local-login', {
+		successRedirect: '/profile',
+		failureRedirect: '/login',
+		failureFlash: true
+	})]);
+
+	router.post('/signup', [bodyParser.json(), passport.authenticate('local-signup', {
+		successRedirect: '/profile',
+		failureRedirect: '/signup',
+		failureFlash: true
+	})]);
+
+	router.post('/account', [bodyParser.json(), urlencodedParser, authController.ensureAuthenticated], authController.post_account);
 	router.get('/account', authController.ensureAuthenticated, authController.get_account);
 	router.get('/me', authController.ensureAuthenticated, authController.get_me);
 
-	app.use(function(req, res, next) {
+	app.use(function (req, res, next) {
 		res.locals.user = req.user;
 		res.locals.session = req.session;
 		res.locals.authenticated = !req.authenticated;
@@ -89,10 +103,10 @@ module.exports = function(program, app) {
 		sess.cookie.secure = true // serve secure cookies
 	}
 	app.use(sess);
-
 	app.set('views', path.resolve(__dirname, '../', './views'));
 	app.set('view engine', 'ejs');
 	app.engine('html', require('ejs').renderFile);
+	app.use(require('connect-flash')());
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({
 		extended: true
@@ -100,6 +114,7 @@ module.exports = function(program, app) {
 	app.use(methodOverride());
 	app.use(passport.initialize());
 	app.use(passport.session());
+
 	app.use(router);
 
 	authLogger('mounted!');

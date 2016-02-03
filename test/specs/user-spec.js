@@ -11,7 +11,7 @@ var u;
 describe('User Model', function() {
 	before(function() {
 		u = new User({
-			username: 'jonnie',
+			email: 'jonnie@test.com',
 			displayName: 'jonnie',
 			_json: {
 				name: 'test'
@@ -27,7 +27,7 @@ describe('User Model', function() {
 
 	it('should create instance', function(done) {
 		assert(u);
-		assert(u.displayName === 'jonnie');
+		assert(u.username === 'jonnie');
 		done();
 	});
 

@@ -13,7 +13,7 @@ const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-
 
 describe('Auth', function() {
 
-	describe('Routes', function() {
+	xdescribe('Routes', function() {
 
 		it('GET - /index - should return index', function(done) {
 			request(app)
@@ -28,11 +28,25 @@ describe('Auth', function() {
 				request(app)
 					.post('/signup')
 					.send({
-						email: 'test@gmail.com',
-						username: 'test',
+						email: 'test5@gmail.com',
 						password: 'test'
 					})
-					.expect('Content-Type', /html/)
+					//.set('Content-Type', 'application/json')
+					//.set('Accept', 'application/json')
+					//.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
+			it('POST - /signup - should register new user', function(done) {
+				request(app)
+					.post('/signup')
+					.send({
+						email: 'test6@gmail.com',
+						password: 'test'
+					})
+					.set('Content-Type', 'application/json')
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
 
@@ -46,16 +60,18 @@ describe('Auth', function() {
 
 		describe('Account', function() {
 
-			xit('GET - /account - should return account view', function(done) {
+			it('GET - /account - should return account view', function(done) {
 				request(app)
 					.get('/account')
-					.expect('Content-Type', /html/)
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
 
-			xit('GET - /me - should return json user info', function(done) {
+			it('GET - /me - should return json user info', function(done) {
 				request(app)
 					.get('/me')
+					.set('Accept', 'application/json')
 					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
@@ -71,11 +87,11 @@ describe('Auth', function() {
 					.expect(200, done);
 			});
 
-			xit('POST - /login - should login user', function(done) {
+			it('POST - /login - should login user', function(done) {
 				request(app)
 					.post('/login')
 					.send({
-						username: 'test',
+						email: 'test@gmail.com',
 						password: 'test'
 					})
 					.expect('Content-Type', /html/)
