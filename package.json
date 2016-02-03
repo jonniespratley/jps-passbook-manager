@@ -11,7 +11,7 @@
     "build": "grunt build -v",
     "clean": "rimraf .tmp data test/temp",
     "cli": "node cli.js",
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "debug-grunt": "iron-node node_modules/grunt-cli/bin/grunt build",
     "debug-gulp": "iron-node node_modules/gulp/bin/gulp.js",
     "debug-mocha": "iron-node node_modules/mocha/bin/_mocha",
