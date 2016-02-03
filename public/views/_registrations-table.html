@@ -1,0 +1,18 @@
+<table id="registrations-table" class="table table-condensed table-bordered">
+  <thead>
+  <th>ID</th>
+  <th>Device</th>
+  <th>Pass</th>
+  <th>Created</th>
+  <th>Actions</th>
+  </thead>
+  <tbody>
+  <tr ng-repeat="item in registrations track by $index | orderBy:created_at:true" id="{{item._id}}">
+    <td>{{item._id}}</td>
+    <td>{{item.device}}</td>
+    <td>{{item.pass}}</td>
+    <td>{{item.created_at}}</td>
+    <td></td>
+  </tr>
+  </tbody>
+</table>

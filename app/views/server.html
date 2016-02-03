@@ -1,55 +1,79 @@
-<div class="row-fluid" ng-controller="PassesCtrl">
-    <div class="span12">
-       
-            <legend>Server </legend>
-       
-        <div id="status">
-			<dl>
-			  <dt>passes</dt> <dd>24</dd>
-			</dl>
-        </div>
-        
-        
-        <!-- <legend>Devices</legend>
-        <div id="devices">
-            
-        </div>
-        
-        <legend>Passes</legend>
-        <div id="passes">
-            
-        </div>
-        
-        <legend>Notifications</legend>
-        <div id="notifications">
-            
-        </div>
-         -->
-        
-         <legend>
-			API
-            </legend>
-        	<div id="api-wrap">
-        		<form class="form-horizontal">
+<div class="row">
+	<div class="col-sm-12">
+		<ol class="breadcrumb">
+			<li><a href="#/">Home</a></li>
+			<li class="active">Server</li>
+		</ol>
 
-		            <formitem title="Register Device:">
-		                <input type="text" value="{{SmartPass.api.url}}/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
-		                <span class="help-block"><a ng-click="Api.registerDevice(pass);" class="label label-info">POST</a> Handles registering a device to recieve push notifications.</span>
-		            </formitem>
-		            <formitem title="Unregister Device:">
-		                <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
-		                <span class="help-block"> <a ng-click="Api.unregisterDevice(pass);" class="label label-info">DELETE</a> Handles unregistering a device.</span>
-		            </formitem>
-		            <formitem title="Get Passes on Device:">
-		                <input type="text" value="{{SmartPass.api.url}}/devices/:uuid/registrations/{{pass.passTypeIdentifier}}?passesUpdatedSince=:tag" class="span12"/>
-		                <span class="help-block"> <a ng-click="Api.getPassesOnDevice(pass);" class="label label-info">GET</a> Handles getting the serial numbers for Passes associated with a device. </span>
-		            </formitem>
-		            <formitem title="Latest Version:">
-		                <input type="text" value="{{SmartPass.api.url}}/passes/{{pass.passTypeIdentifier}}/{{pass.serialNumber}}" class="span12"/>
-		                <span class="help-block"><a ng-click="Api.getLatestVersion(pass);" class="label label-info">GET</a> Handles getting the serial numbers for Passes associated with a device. </span>
-		            </formitem>
-		        </form>
-				
-        	</div>
+
+
+    <title>dnd binary upload</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript">
+        function sendFile(file) {
+            var uri = "/index.php";
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+
+            xhr.open("POST", uri, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Handle response.
+                    alert(xhr.responseText); // handle response.
+                }
+            };
+            fd.append('myFile', file);
+            // Initiate a multipart/form-data upload
+            xhr.send(fd);
+        }
+
+        window.onload = function() {
+            var dropzone = document.getElementById("dropzone");
+            dropzone.ondragover = dropzone.ondragenter = function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+
+            dropzone.ondrop = function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                var filesArray = event.dataTransfer.files;
+                for (var i=0; i<filesArray.length; i++) {
+                    sendFile(filesArray[i]);
+                }
+            }
+        }
+    </script>
+
+    <div>
+        <div id="dropzone" style="margin:30px; width:500px; height:300px; border:1px dotted grey;">Drag & drop your file here...</div>
     </div>
+
+
+		<tabs id="server-tabs">
+			<pane title="Logs">
+				<div ng-include src="'views/_logs-table.html'"></div>
+			</pane>
+			<!-- TODO: Devices -->
+			<pane title="Devices">
+
+			</pane>
+
+
+
+			<!-- TODO: registrations -->
+			<pane title="Registrations">
+
+			</pane>
+
+
+
+		</tabs>
+
+
+
+
+
+	</div>
 </div>

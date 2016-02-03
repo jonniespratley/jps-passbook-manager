@@ -20,6 +20,12 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
+	  "it": false,
+	  "xit": false,
+	  "describe": false,
+	  "xdescribe": false,
+	  "before": false,
+	  "after": false,
     "angular": false
   }
 }

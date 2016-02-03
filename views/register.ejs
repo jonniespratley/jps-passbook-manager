@@ -1,0 +1,14 @@
+<% include ./partials/head %>
+<body>
+  <header>
+      <% include ./partials/header %>
+  </header>
+  <main>
+    <% if (!user) { %>
+      <% include ./partials/signup-form %>
+    <% } else { %>
+      <h2>Hello, <%= user.displayName %>.</h2>
+    <% } %>
+  </main>
+</body>
+</html>

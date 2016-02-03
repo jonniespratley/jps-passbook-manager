@@ -1,113 +1,135 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> 
-	<html class="no-js" ng-app="jpsPassbookManagerApp">  
-	<!--<![endif]-->
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title></title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		    <meta name="description" content="">
-		    <meta name="author" content="Jonnie Spratley">
-		    <link rel="stylesheet" href="styles/main.css"/>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<title>Passbook Manager</title>
+	<script>document.write('<base href="' + document.location + '" />');</script>
 
-	    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-	    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-	    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-	    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-	    <link rel="shortcut icon" href="ico/favicon.png">
-    </head>
-    <body ng-controller="MainCtrl">
+	<meta name="description" content="">
+	<meta name="author" content="Jonnie Spratley">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
 
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
-        <![endif]-->
-        
-        <!--[if lt IE 9]>
+	<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-            <script src="scripts/vendor/es5-shim.min.js"></script>
-            <script src="scripts/vendor/json3.min.js"></script>
-        <![endif]-->
+<link rel="apple-touch-icon" sizes="57x57" href="images/icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="images/icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="images/icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="images/icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="images/icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="images/icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="images/icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="images/icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="images/icons/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="images/icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/icons/favicon-16x16.png">
+<link rel="shortcut icon" href="images/icons/favicon.ico">
+<link rel="manifest" href="images/icons/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="images/icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
 
-		<div class="navbar navbar-fixed-top navbar-inverse" bs-navbar>
-	      <div class="navbar-inner">
-	        <div class="container">
-	          	<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-		      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		      </a>
-	          <a class="brand brand-calvus" href="#"> <i class="icon-{{App.icon}}"></i> <span>{{App.name}}</span></a>
-			  <div class="nav-collapse collapse">
-	           	<ul class="nav">
-	           	    <li ng-repeat="item in App.menu">
-	           	        <a ng-href="{{item.href}}"><i class="icon-{{item.icon}}"></i> <span>{{item.title}}</span></a>
-	           	    </li>
-	           	</ul>
-			  </div>
-	        </div>
-	      </div>
-	    </div>
-		<br/>
-		<br/>
-	
-			<div id="content" class="container">
-				<div id="content-view" ng-view>
-					
+
+	<!-- build:css styles/main.css -->
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+	<link rel="stylesheet" href="styles/bootstrap.min.css">
+	<link rel="stylesheet" href="styles/main.css"/>
+	<!-- endbuild-->
+
+	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+	<style media="screen">
+	[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+display: none !important;
+}
+	</style>
+</head>
+<body ng-app="jpsPassbookManagerApp" ng-controller="AppCtrl" ng-cloak>
+
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser
+	today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better
+	experience this site.</p>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="scripts/vendor/es5-shim.min.js"></script>
+<script src="scripts/vendor/json3.min.js"></script>
+<![endif]-->
+
+<ng-include src="'./views/_header.html'"></ng-include>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div id="alerts" class="alerts" ng-cloak>
+				<div class="alert alert-{{alert.type}} alert-dismissible fade in" role="alert" ng-repeat="alert in App.alerts">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<strong>{{alert.type}}</strong> {{alert.body}}
 				</div>
-				<hr/>
-				<footer id="footer" class="clearfix">
-					<div id="copywrite">
-					  <div class="container">
-					    <div class="row">
-						  <div class="span12">
-						    <p>&copy; 2013 <a href="https://github.com/jonniespratley" target="_blank">@jonniespratley</a> 
-							<span id="totop" class="pull-right"><a class="scroll">Back to Top </a><i class="icon-arrow-up icon-white"></i></span></p>			
-						  </div>		  
-						</div>	  
-				      </div>	  
-				    </div>
-				</footer>
-
 			</div>
+			<div id="content-view" ng-view></div>
+		</div>
+	</div>
+</div>
 
 
-	
-		<script src="scripts/vendor/jquery.min.js"></script>
-        <script src="scripts/vendor/angular.min.js"></script>
-        <script src="scripts/vendor/angular-resource.js"></script>
-        <script src="scripts/vendor/angular-strap.min.js"></script>
-        <script src="scripts/vendor/angular-ui.min.js"></script>
-        <script src="scripts/vendor/bootstrap.min.js"></script>
-        <script src="scripts/vendor/bootstrap-wysihtml5.js"></script>
-        <script src="scripts/vendor/bootstrap-colorpicker.js"></script>
-        <script src="scripts/vendor/bootstrap-datepicker.js"></script>
-        <script src="scripts/vendor/bootstrap-timepicker.js"></script>
-        <script src="scripts/vendor/prettify.js"></script>
-        <script src="scripts/vendor/jquery.qrcode.min.js"></script>
-        <script src="scripts/vendor/markdown.js"></script>
-	
-        <!-- build:js scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/components/components.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/passes.js"></script>
-        <script src="scripts/controllers/docs.js"></script>
-        <script src="scripts/controllers/server.js"></script>
-        <script src="scripts/services/api.js"></script>
-        <!-- endbuild -->
+<ng-include src="'./views/_footer.html'"></ng-include>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
-    </body>
+
+<!-- build:js scripts/vendor.js -->
+<script src="bower_components/ansi_up/ansi_up.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/lodash/lodash.js"></script>
+
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+
+<script src="bower_components/jquery-qrcode/jquery.qrcode.js"></script>
+<script src="bower_components/markdown/lib/markdown.js"></script>
+<script src="bower_components/pouchdb/dist/pouchdb.js"></script>
+<script src="bower_components/pouchdb/dist/pouchdb.localstorage.js"></script>
+
+<!-- endbuild -->
+
+<!-- build:js scripts/app.js -->
+<script src="scripts/main.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/components/pass-field-group.js"></script>
+<script src="scripts/components/components.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/details.js"></script>
+<script src="scripts/controllers/docs.js"></script>
+<script src="scripts/controllers/manage.js"></script>
+<script src="scripts/controllers/passes.js"></script>
+<script src="scripts/controllers/server.js"></script>
+<script src="scripts/services/api.js"></script>
+<!-- endbuild -->
+
+<!-- TODO - Google Analytics: change UA-XXXXX-X to be your site's ID.
+<script>
+	var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
+	(function (d, t) {
+		var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+		g.src = ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+		s.parentNode.insertBefore(g, s)
+	}(document, 'script'));
+</script> -->
+</body>
 </html>
-

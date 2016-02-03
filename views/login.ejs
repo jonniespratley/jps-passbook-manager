@@ -1,0 +1,25 @@
+<% include ./partials/head %>
+<body>
+  <header>
+      <% include ./partials/header %>
+  </header>
+  <main>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+
+          <% if (!user) { %>
+            <% include ./partials/signin-form %>
+            
+          <% } else { %>
+
+          	<% include ./partials/profile %>
+
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

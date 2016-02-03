@@ -1,0 +1,44 @@
+<div id="main-row" class="row">
+	<div class="col-sm-12">
+
+		<div class="jumbotron jumbotron- text-center">
+			<h2 class="display-2">
+				Hello, Pass.
+			</h2>
+			<p class="lead">Create and manage Apple Wallet Passes.</p>
+			<p class="lead">
+
+
+				<a href="/auth/github" class="btn btn-primary btn-lg btn-social btn-github">
+					<i class="fa fa-github"></i>
+					Sign in with Github
+				</a>
+
+						<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#passTypeModal">Create new pass</button>
+
+			</p>
+		</div>
+
+		<div id="info-row" class="row">
+			<div class="col-sm-6">
+				<h4 class="title">What is Apple Wallet?</h4>
+				<p>
+					Wallet is where you store and access all your boarding passes, movie tickets, retail coupons, rewards cards, and more.
+					<a href="#other-pass-apps">here</a>.</p>
+			</div>
+			<div class="col-sm-6">
+				<h4>Developer API</h4>
+				<p>For more information about developing for Passbook please refer to the
+					<a href="http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/PassKit_PG/Chapters/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW55" target="_blank">Passbook Programming Guide</a>.
+				</p>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+
+<div id="main">
+ 	<div ng-include src="'./views/_pass_type_modal.html'"></div>
+</div>

@@ -1,14 +1,19 @@
 /* @override http://localhost:4040/styles/styles.css */
+.th-type{
+  width:75px;
+  text-align: center;
+}
+.td-actions{
+    width:110px;
+    text-align: center;
+}
 .pass{
 	border: 1px solid #ccc;
 	background-color: #eee;
 }
 
 .pass {
-
-	width: 320px;
-	height: 400px;
-	margin: 10px auto;		
+	margin: 10px auto;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-background-clip: padding-box;
@@ -40,12 +45,12 @@ dt{
 	padding: 5px;
 }
 
-div.pass-header {
+.pass-header {
 	border-bottom: 1px solid #ccc;
 	padding-left: 2px;
 }
 
-div.pass-header i {
+.pass-header i {
 	margin-right: 5px;
 }
 .pass-header h1{
@@ -57,11 +62,11 @@ div.pass-header i {
 
 
 .pass .object {
-	
+
 }
 
 .pass dt {
-	
+
 }
 
 .pass dd {
