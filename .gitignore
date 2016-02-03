@@ -18,6 +18,20 @@ app/components
 
 db
 
+.idea
+npm-debug.log
+*.log
+atlassian-ide-plugin.xml
+.session
+.tern-project
+coverage
+data
+temp/data
+.settings
+/node_modules/
+node_modules/gruntacular/node_modules/testacular/node_modules/socket.io/node_modules/socket.io-client/lib/vendor/web-socket-js/flash-src/com/hurlant/crypto/rsa/RSAKey.as
+
+
 
 www
 
