@@ -5,8 +5,7 @@ const path = require('path');
 
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const utils = program.get('utils');
-
+const utils = program.get('Utils');
 const jpsPassbook = program.get('jpsPassbook');
 
 describe('Utils', function(done) {
@@ -41,6 +40,7 @@ describe('Utils', function(done) {
 		});
 	});
 
+
 	it('checksum() - should create a checksum hash', function(done) {
 		var hash1 = utils.checksum('This is my test text');
 		var hash1_expected = 'e53815e8c095e270c6560be1bb76a65d';
@@ -50,4 +50,5 @@ describe('Utils', function(done) {
 		assert(hash2 === hash2_expected);
 		done();
 	});
+
 });

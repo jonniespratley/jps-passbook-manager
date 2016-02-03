@@ -111,7 +111,7 @@ describe('Auth', function() {
 
 	describe('Auth Controller', function() {
 		before(function() {
-			controller = new AuthController(program);
+			controller = AuthController;
 		});
 
 		it('should be defined', function(done) {
