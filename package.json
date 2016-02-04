@@ -1,6 +1,11 @@
 {
   "name": "jps-passbook-manager",
   "version": "0.0.2",
+  "license" : "BSD-3-Clause",
+  "repository" :{ 
+    "type" : "git", 
+    "url" : "https://github.com/jonniespratley/jps-passbook-manager.git"
+  },
   "config": {
     "delimiter": "pass-manager"
   },
@@ -97,6 +102,7 @@
     "matchdep": "~0.1.1",
     "mocha": "^2.1.0",
     "nock": "^5.2.1",
+    "nodemon": "^1.8.1",
     "redis-mock": "^0.5.1",
     "rimraf": "^2.5.0",
     "supertest": "^0.15.0",

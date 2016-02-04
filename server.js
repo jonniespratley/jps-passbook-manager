@@ -13,7 +13,7 @@ const host = process.env.VCAP_APP_HOST || process.env.IP || config.server.hostna
 let program = new Program(config);
 let logger = program.getLogger('server');
 
-logger('env', process.env);
+//logger('env', process.env);
 
 program.mount().listen(port, host, function() {
 	logger('listening on', host + ':' + port);

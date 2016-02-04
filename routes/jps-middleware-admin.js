@@ -6,7 +6,7 @@ const multipart = require('connect-multiparty');
 
 module.exports = function(PassesController, AdminController) {
 
-	function Router(){
+	return function Router(){
 		console.warn('Mounted Admin');
 		let multipartMiddleware = multipart();
 		let adminRouter = new express.Router();
@@ -22,5 +22,4 @@ module.exports = function(PassesController, AdminController) {
 		adminRouter.get('/find?', AdminController.get_find);
 		return adminRouter;
 	}
-	return Router
 };
