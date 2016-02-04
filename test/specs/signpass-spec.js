@@ -60,7 +60,7 @@ describe('SignPass', function() {
 		});
 
 		it('should be fetch pass type info', function(done) {
-			jpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
+			jpsPassbook.getPassTypeIdentifier(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
 				options = resp;
 				if (err) {
 					assert.fail(err);
@@ -111,7 +111,7 @@ describe('SignPass', function() {
 
 
 			before(function(done) {
-				program.db.find({
+				program.get('db').find({
 					docType: 'pass'
 				}).then(function(resp) {
 					_passes = resp;
