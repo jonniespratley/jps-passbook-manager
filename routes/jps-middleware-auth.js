@@ -12,7 +12,7 @@ module.exports = function (path, config, Router, app, AuthController, Logger) {
 	const authLogger = Logger.getLogger('auth');
 	//const AuthController = program.require('controllers/auth-controller');
 	let router = new Router();
-	let authController = new AuthController(program);
+
 
 	/*	router.get('/auth/provider/callback',
 	 passport.authenticate('oauth2', {
@@ -32,18 +32,18 @@ module.exports = function (path, config, Router, app, AuthController, Logger) {
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
-	}), authController.get_provider_callback);
+	}), AuthController.get_provider_callback);
 
-	router.get('/index', authController.get_index);
-	router.get('/logout', authController.get_logout);
+	router.get('/index', AuthController.get_index);
+	router.get('/logout', AuthController.get_logout);
 
-	router.get('/login', authController.get_login);
-	router.get('/signup', authController.get_register);
-	router.post('/account', [bodyParser.json(), urlencodedParser, authController.ensureAuthenticated], authController.post_account);
-	router.get('/account', authController.ensureAuthenticated, authController.get_account);
-	router.get('/me', authController.ensureAuthenticated, authController.get_me);
+	router.get('/login', AuthController.get_login);
+	router.get('/signup', AuthController.get_register);
+	router.post('/account', [bodyParser.json(), urlencodedParser, AuthController.ensureAuthenticated], AuthController.post_account);
+	router.get('/account', AuthController.ensureAuthenticated, AuthController.get_account);
+	router.get('/me', AuthController.ensureAuthenticated, AuthController.get_me);
 
-	//router.post('/signup', urlencodedParser, authController.post_register);
+	//router.post('/signup', urlencodedParser, AuthController.post_register);
 	router.post('/login', [urlencodedParser, bodyParser.json(), passport.authenticate('local-login', {
 		successRedirect: '/profile',
 		failureRedirect: '/login',

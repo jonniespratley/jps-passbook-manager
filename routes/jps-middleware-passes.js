@@ -1,19 +1,13 @@
 'use strict';
-var express = require('express'),
-	bodyParser = require('body-parser'),
-	Router = express.Router,
-	jsonParser = bodyParser.json();
+const express = require('express');
 
-module.exports = function(program, app) {
-	var logger = program.getLogger('router:passes');
-	var config = program.config.defaults;
-	var router = new Router();
+module.exports = function(PassesController) {
+	return function(){
+		var router = new express.Router();
+		router.get('/:pass_type_id/:serial_number', PassesController.get_passes);
 
-	var PassController = require('../lib/controllers/passes-controller');
-	var passController = new PassController(program);
+		//app.use('/api/' + config.version + '/passes', router);
 
-	router.get('/:pass_type_id/:serial_number', passController.get_passes);
-	app.use('/api/' + config.version + '/passes', router);
-
-	return router;
+		return router;
+	};
 };

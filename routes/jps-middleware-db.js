@@ -1,17 +1,14 @@
 'use strict';
 
-module.exports = function(config, Logger, DbController) {
-
+module.exports = function(DbController, Logger) {
 	const Router = require('express').Router;
 	const bodyParser = require('body-parser');
 
-	let logger = Logger.getLogger('router:db')
+	let logger = Logger.getLogger('router:db');
 	let dbRouter = new Router();
 
-
 	dbRouter.route('/:id?', bodyParser.json()).all(function(req, res, next) {
-			logger('debug', req.method, req.url);
-			logger('all route', req.method, req.url, req.params)
+			logger('all route', req.method, req.url, req.params);
 			next();
 		})
 		.get(DbController.get_doc)

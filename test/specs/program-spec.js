@@ -1,8 +1,11 @@
 'use strict';
-var path = require('path');
-var assert = require('assert');
-var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
+
+const express = require('express');
+const path = require('path');
+const assert = require('assert');
+const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
+
 
 describe('Program', function() {
 
@@ -15,9 +18,23 @@ describe('Program', function() {
 		done();
 	});
 
+	it('should have session', function(done) {
+		assert(program.get('session'));
+		done();
+	});
+
 	it('should have db', function(done) {
 		assert(program.get('db'));
 		done();
+	});
+
+	it('mount() - should mount and return express instance', function(done) {
+		assert(program.mount);
+		let server = program.mount();
+		assert(server);
+		server.listen(4141, function(){
+			done();
+		});
 	});
 
 	it('register() - should register a module.', function(done) {
@@ -31,6 +48,5 @@ describe('Program', function() {
 		assert(program.get('name') === 'value');
 		done();
 	});
-
 
 });
