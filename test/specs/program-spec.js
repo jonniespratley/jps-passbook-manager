@@ -28,7 +28,6 @@ describe('Program', function () {
 		done();
 	});
 
-
 	it('register() - should register a module.', function (done) {
 		assert(program.register);
 		program.register('name', 'value');
@@ -39,35 +38,6 @@ describe('Program', function () {
 		assert(program.get);
 		assert(program.get('name') === 'value');
 		done();
-	});
-
-});
-
-let server = null;
-describe('Server', function () {
-
-	it('mount() - should mount and return express instance', function (done) {
-		server = program.mount();
-		assert(program.mount);
-		server.listen(4141, function () {
-			done();
-		});
-	});
-
-	it('should be defined', function () {
-		assert(server);
-	});
-
-	it('should create instance', function () {
-		//
-	});
-
-	it('should mount routes', function () {
-
-	});
-
-	it('should have program', function () {
-		//
 	});
 
 });
