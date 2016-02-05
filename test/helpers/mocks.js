@@ -26,30 +26,35 @@ exports.mockPasses = [
 		description: 'Example Generic',
 		serialNumber: '0123456789876543210',
 		authenticationToken: '0123456789876543210',
+		passTypeIdentifier: 'pass.io.passbookmanager.test',
 		type: 'generic'
 	}),
 
 	new Pass({
 		_id: 'mock-boardingpass',
 		description: 'Example Boarding Pass',
+		passTypeIdentifier: 'pass.io.passbookmanager.test',
 		type: 'boardingPass'
 	}),
 
 	new Pass({
 		_id: 'mock-coupon',
 		description: 'Example Coupon',
+		passTypeIdentifier: 'pass.io.passbookmanager.test',
 		type: 'coupon'
 	}),
 
 	new Pass({
 		_id: 'mock-eventticket',
 		description: 'Example Event Ticket',
+		passTypeIdentifier: 'pass.io.passbookmanager.test',
 		type: 'eventTicket'
 	}),
 
 	new Pass({
 		_id: 'mock-storecard',
 		description: 'Example Store Card',
+		passTypeIdentifier: 'pass.io.passbookmanager.test',
 		type: 'storeCard'
 	})
 ];

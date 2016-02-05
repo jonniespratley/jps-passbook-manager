@@ -94,6 +94,7 @@ describe('db', function() {
 			done();
 		});
 	});
+
 	it('remove(id) - should not remove doc with invalid id and reject promise', function(done) {
 		db.remove('not-a-test-file').then(function(resp) {
 			assert.fail(resp);
@@ -104,11 +105,13 @@ describe('db', function() {
 		});
 	});
 
-	it('find(params) - should find params and resolve promise', function(done) {
+	it('find(params) - should find by params and resolve promise with array', function(done) {
 		db.find({
 			deviceLibraryIdentifier: mockDevice.deviceLibraryIdentifier
 		}).then(function(resp) {
 			assert(resp);
+			assert(resp.length);
+			assert(resp instanceof Array);
 			done();
 		}).catch(function(err) {
 			assert.fail(err);
@@ -116,15 +119,29 @@ describe('db', function() {
 		});
 	});
 
-	it('findBy(params) - should find object and return first match', function(done) {
+	it('findBy(params) - should find object and resolve first match', function(done) {
 		db.findBy({
-			serialNumber: mockPass.serialNumber
+			passTypeIdentifier: mockPass.passTypeIdentifier
 		}).then(function(resp) {
+
 			assert(resp);
 			///assert(resp.name === 'test-file');
 			done();
 		}).catch(function(err) {
 			assert.fail(err);
+			done();
+		});
+	});
+
+
+	it('findBy(params) - should find object and reject on fail', function(done) {
+		db.findBy({
+			passTypeIdentifier: 'unknown'
+		}).then(function(resp) {
+			assert.fail(resp);
+			done();
+		}).catch(function(err) {
+			assert(err);
 			done();
 		});
 	});
