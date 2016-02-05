@@ -21,7 +21,7 @@ var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
 
 
-describe('routes', function() {
+describe('Routes', function() {
 
 	it('GET - /api/v1 - should return api', function(done) {
 		request(app)
