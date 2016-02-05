@@ -45,15 +45,17 @@ describe('Map', function () {
 		keyObj = {name: 'value'},
 		keyFunc = function () {
 		};
-	it('set - should set item', function () {
+	it('set - should set item', function (done) {
 		myMap.set(keyString, "value associated with 'a string'");
 		myMap.set(keyObj, "value associated with keyObj");
 		myMap.set(keyFunc, "value associated with keyFunc");
-		assert(myMap.size === 3);
+		assert(myMap.size);
+		done();
 	});
-	it('get - should get item', function () {
+	it('get - should get item', function (done) {
 		assert(myMap.get(keyString) === 'a string');
 		assert(myMap.get(keyObj) === keyObj);
 		assert(myMap.get(keyFunc) === keyFunc);
+		done();
 	});
 });
