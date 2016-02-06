@@ -29,7 +29,7 @@ var scope = nock('/api/v1/db')
 	.query(true)
 	.reply(404, {});
 
-describe('DB', function() {
+describe('DB Router / Controller', function() {
 
 	describe('DB Controller', function() {
 		before(function() {

@@ -32,7 +32,7 @@ let mockIdentifer = {
 
 //const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
 
-describe('Admin', function () {
+describe('Admin Router / Controller', function () {
 	before(function () {
 		program.db.saveAll([
 			mockLog,
