@@ -16,6 +16,8 @@ var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 
 const program = mocks.program;
 
+program.plugin(path.resolve(__dirname, '../../lib/routes'));
+
 //Test Instances
 var mockDevice = mocks.mockDevice;
 var mockPass = mocks.mockPass;
@@ -161,8 +163,6 @@ describe('Routes', function() {
 
 			});
 		});
-
-
 
 
 

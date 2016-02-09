@@ -12,18 +12,11 @@ const host = process.env.VCAP_APP_HOST || process.env.IP || config.server.hostna
 
 let program = new Program(config);
 let logger = program.getLogger('server');
-
-
-var routes = [
-	path.resolve(__dirname, './lib/routes/api'),
-	//	path.resolve(__dirname, './lib/routes/admin'),
-	//path.resolve(__dirname, './lib/routes/auth')
-];
-
-
 logger('env', process.env);
 logger('config', config);
 
-program.mount(routes).listen(port, host, function() {
+program.plugin(path.resolve(__dirname, './lib/routes'));
+
+program.mount().listen(port, host, function() {
 	logger('listening on', host + ':' + port);
 });

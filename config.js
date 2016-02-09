@@ -66,6 +66,7 @@ var config = {
 		port: 6379
 	},
 	"version": "v1",
+	"apiBase": "/api",
 	session: {
 		user: {
 			username: 'jonniespratley'
