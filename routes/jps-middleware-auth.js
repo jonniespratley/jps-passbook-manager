@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function (program, app) {
+module.exports = function(program, app) {
 	const path = require('path');
 	const flash = require('connect-flash');
 	const url = require('url');
@@ -50,8 +50,7 @@ module.exports = function (program, app) {
 			'user:email',
 			'gist'
 		]
-	}), function (req, res) {
-	});
+	}), function(req, res) {});
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
@@ -82,7 +81,7 @@ module.exports = function (program, app) {
 	router.get('/account', authController.ensureAuthenticated, authController.get_account);
 	router.get('/me', authController.ensureAuthenticated, authController.get_me);
 
-	app.use(function (req, res, next) {
+	app.use(function(req, res, next) {
 		res.locals.user = req.user;
 		res.locals.session = req.session;
 		res.locals.authenticated = !req.authenticated;
@@ -98,10 +97,6 @@ module.exports = function (program, app) {
 		saveUninitialized: true
 	});
 
-	if (app.get('env') === 'production') {
-		app.set('trust proxy', 1) // trust first proxy
-		sess.cookie.secure = true // serve secure cookies
-	}
 	app.use(sess);
 	app.set('views', path.resolve(__dirname, '../', './views'));
 	app.set('view engine', 'ejs');
@@ -117,5 +112,9 @@ module.exports = function (program, app) {
 
 	app.use(router);
 
+	if (app.get('env') === 'production' && sess.cookie) {
+		app.set('trust proxy', 1) // trust first proxy
+		sess.cookie.secure = true // serve secure cookies
+	}
 	authLogger('mounted!');
 };
