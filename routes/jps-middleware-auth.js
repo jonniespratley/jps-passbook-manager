@@ -114,7 +114,7 @@ module.exports = function(program, app) {
 
 	if (app.get('env') === 'production' && sess.cookie) {
 		app.set('trust proxy', 1) // trust first proxy
-		sess.cookie.secure = true // serve secure cookies
+			//	sess.cookie.secure = true // serve secure cookies
 	}
 	authLogger('mounted!');
 };

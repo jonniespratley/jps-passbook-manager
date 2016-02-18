@@ -4,8 +4,8 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 	'ngRoute',
 	'ngAnimate',
 	'ngResource',
-	'ui.ace',
-	'mgcrea.ngStrap'
+	//'ui.ace',
+	//'mgcrea.ngStrap'
 ])
 
 .factory('App', function($rootScope, Api, $http, $routeParams, $location) {
