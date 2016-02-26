@@ -5,6 +5,7 @@ This is a simple web app for creating and managing Apple Wallet passes.
 
 [![Build Status](https://travis-ci.org/jonniespratley/jps-passbook-manager.svg?branch=develop)](https://travis-ci.org/jonniespratley/jps-passbook-manager)
 
+[![API Doc](https://doclets.io/jonniespratley/jps-passbook-manager/develop.svg)](https://doclets.io/jonniespratley/jps-passbook-manager/develop)
 
 ## Getting Started
 This is a simple web app for creating and managing Apple Wallet passes.
