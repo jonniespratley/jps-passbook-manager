@@ -20,6 +20,10 @@ var testDoc = {
 	name: 'test'
 };
 
+var db = new CouchDB(config);
+
+var mockDevice = mocks.mockDevice;
+var mockPass = _.assign({}, mocks.mockPass);
 
 var nock = require('nock');
 var scope = nock(config.baseUrl)
@@ -30,19 +34,33 @@ var scope = nock(config.baseUrl)
 	.reply(200, testDoc)
 
 //put
-.put(`/${testDoc._id}`)
+.put(`/${mockPass._id}`)
+	.query(true)
+	.reply(200, {
+		id: mockPass._id
+	})
+
+//put
+.put(`/test-doc`)
+	.query(true)
+	.reply(200, testDoc)
+
+//put
+.put(`/test-doc?rev=2-0000`)
 	.query(true)
 	.reply(200, {
 		id: testDoc._id
 	})
 
 //remove
-.delete(`/${testDoc._id}`)
+.delete(`/test-doc?rev=2-0000`)
 	.query(true)
-	.reply(200)
+	.reply(200, {
+		id: testDoc._id
+	})
 
 //post
-.post(`/${testDoc._id}`)
+.post(`/test-doc`)
 	.reply(201, {
 		id: testDoc._id
 	})
@@ -59,7 +77,6 @@ var scope = nock(config.baseUrl)
 		error: 'Error'
 	})
 
-
 .get('/_all_docs')
 	.query(true)
 	.reply(200, {
@@ -71,10 +88,6 @@ var scope = nock(config.baseUrl)
 
 
 describe('CouchDB Adapter', function() {
-	var db = new CouchDB(config);
-
-	var mockDevice = mocks.mockDevice;
-	var mockPass = _.assign({}, mocks.mockPass);
 
 	it('should be defined', function(done) {
 		assert(db);
@@ -92,7 +105,7 @@ describe('CouchDB Adapter', function() {
 		done();
 	});
 
-	xit('db.put - should create doc with id', function(done) {
+	it('db.put - should create doc with id', function(done) {
 		db.put(mockPass).then(function(resp) {
 			mockPass._rev = 1;
 			assert(resp);
@@ -103,7 +116,7 @@ describe('CouchDB Adapter', function() {
 		});
 	});
 
-	xit('db.put - should reject create doc with _id', function(done) {
+	it('db.put - should reject create doc with _id', function(done) {
 		db.put({
 			_id: 'test-fail'
 		}).then(function(resp) {
@@ -153,6 +166,7 @@ describe('CouchDB Adapter', function() {
 	});
 
 	xit('db.remove - should remove doc with id', function(done) {
+		testDoc._rev = '2-0000';
 		db.remove(testDoc._id, testDoc._rev).then(function(resp) {
 			assert(resp);
 			done();
