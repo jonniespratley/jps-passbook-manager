@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function(program, app) {
+module.exports = function (program, app) {
 	const path = require('path');
 	const flash = require('connect-flash');
 	const url = require('url');
@@ -50,29 +50,32 @@ module.exports = function(program, app) {
 			'user:email',
 			'gist'
 		]
-	}), function(req, res) {});
+	}), function (req, res) {
+	});
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
 	}), authController.get_provider_callback);
 
+
+	/**
+	 * Local login
+	 */
 	router.get('/index', authController.get_index);
 	router.get('/logout', authController.get_logout);
 
 	//router.post('/login', urlencodedParser, authController.post_login);
-
 	router.get('/login', authController.get_login);
-	router.get('/signup', authController.get_register);
-
-	//router.post('/signup', urlencodedParser, authController.post_register);
 	router.post('/login', [urlencodedParser, bodyParser.json(), passport.authenticate('local-login', {
 		successRedirect: '/profile',
 		failureRedirect: '/login',
 		failureFlash: true
 	})]);
 
+	//router.post('/signup', urlencodedParser, authController.post_register);
+	router.get('/signup', authController.get_register);
 	router.post('/signup', [bodyParser.json(), passport.authenticate('local-signup', {
-		successRedirect: '/profile',
+		successRedirect: '/account',
 		failureRedirect: '/signup',
 		failureFlash: true
 	})]);
@@ -81,7 +84,7 @@ module.exports = function(program, app) {
 	router.get('/account', authController.ensureAuthenticated, authController.get_account);
 	router.get('/me', authController.ensureAuthenticated, authController.get_me);
 
-	app.use(function(req, res, next) {
+	app.use(function (req, res, next) {
 		res.locals.user = req.user;
 		res.locals.session = req.session;
 		res.locals.authenticated = !req.authenticated;
@@ -110,11 +113,12 @@ module.exports = function(program, app) {
 	app.use(passport.initialize());
 	app.use(passport.session());
 
-	app.use(router);
+	app.use('/', router);
 
 	if (app.get('env') === 'production' && sess.cookie) {
 		app.set('trust proxy', 1) // trust first proxy
-			//	sess.cookie.secure = true // serve secure cookies
+		//	sess.cookie.secure = true // serve secure cookies
 	}
 	authLogger('mounted!');
+	return app;
 };

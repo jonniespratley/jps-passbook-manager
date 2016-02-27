@@ -31,9 +31,9 @@ describe('Auth', function() {
 						email: 'test5@gmail.com',
 						password: 'test'
 					})
-					//.set('Content-Type', 'application/json')
-					//.set('Accept', 'application/json')
-					//.expect('Content-Type', /json/)
+					.set('Content-Type', 'application/json')
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
 
@@ -101,7 +101,7 @@ describe('Auth', function() {
 			it('GET - /logout - should return logout', function(done) {
 				request(app)
 					.get('/logout')
-					.expect(302, done);
+					.expect(200, done);
 			});
 
 		});
