@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function (program, app) {
+module.exports = function(program, app) {
 	const path = require('path');
 	const flash = require('connect-flash');
 	const url = require('url');
@@ -34,15 +34,15 @@ module.exports = function (program, app) {
 	let authController = new AuthController(program);
 
 
-	/*	router.get('/auth/provider/callback',
-	 passport.authenticate('oauth2', {
-	 failureRedirect: '/login'
-	 }),
-	 function(req, res) {
-	 authLogger('/auth/provider/callback', req.account, req.user);
-	 // Successful authentication, redirect home.
-	 res.redirect('/account');
-	 });*/
+	router.get('/auth/provider/callback',
+		passport.authenticate('oauth2', {
+			failureRedirect: '/login'
+		}),
+		function(req, res) {
+			authLogger('/auth/provider/callback', req.account, req.user);
+			// Successful authentication, redirect home.
+			res.redirect('/account');
+		});
 
 	// Use the GitHubStrategy within Passport.
 	router.get('/auth/github', passport.authenticate('github', {
@@ -50,8 +50,7 @@ module.exports = function (program, app) {
 			'user:email',
 			'gist'
 		]
-	}), function (req, res) {
-	});
+	}), function(req, res) {});
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
@@ -80,11 +79,12 @@ module.exports = function (program, app) {
 		failureFlash: true
 	})]);
 
-	router.post('/account', [bodyParser.json(), urlencodedParser, authController.ensureAuthenticated], authController.post_account);
+	router.post('/account', [bodyParser.json(), urlencodedParser, authController.ensureAuthenticated],
+		authController.post_account);
 	router.get('/account', authController.ensureAuthenticated, authController.get_account);
 	router.get('/me', authController.ensureAuthenticated, authController.get_me);
 
-	app.use(function (req, res, next) {
+	app.use(function(req, res, next) {
 		res.locals.user = req.user;
 		res.locals.session = req.session;
 		res.locals.authenticated = !req.authenticated;
@@ -117,7 +117,7 @@ module.exports = function (program, app) {
 
 	if (app.get('env') === 'production' && sess.cookie) {
 		app.set('trust proxy', 1) // trust first proxy
-		//	sess.cookie.secure = true // serve secure cookies
+			//	sess.cookie.secure = true // serve secure cookies
 	}
 	authLogger('mounted!');
 	return app;
