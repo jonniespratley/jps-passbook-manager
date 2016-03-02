@@ -25,8 +25,8 @@
     "pretest": "rimraf test/temp",
     "start": "node server.js",
     "test": "gulp test",
-    "watch-test": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ -w test/specs/ --exec 'gulp test'",
-    "watch": "export DEBUG=*; nodemon -w routes/ -w lib/ server.js"
+    "watch": "export DEBUG=*; nodemon -w routes/ -w lib/ server.js",
+    "watch-test": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ -w test/specs/ --exec 'gulp test'"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
@@ -41,7 +41,7 @@
     "connect-multiparty": "^2.0.0",
     "connect-redis": "^3.0.2",
     "debug": "^2.2.0",
-    "ejs": "^2.3.4",
+    "ejs": "^2.4.1",
     "express": "^4.11.0",
     "express-partials": "^0.3.0",
     "express-session": "^1.13.0",
@@ -51,6 +51,9 @@
     "glob": "^6.0.4",
     "intercept-stdout": "^0.1.2",
     "jfs": "^0.2.6",
+    "level": "^1.4.0",
+    "level-sublevel": "^6.5.4",
+    "leveldown": "^1.4.4",
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
     "node-uuid": "^1.4.7",
