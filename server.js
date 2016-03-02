@@ -4,6 +4,7 @@
  */
 'use strict';
 const path = require('path');
+const Server = require('./lib/server');
 const Program = require('./lib/program');
 
 let config = require(path.resolve(__dirname, './config.js'));
@@ -12,11 +13,13 @@ const host = process.env.VCAP_APP_HOST || process.env.IP || config.server.hostna
 
 let program = new Program(config);
 let logger = program.getLogger('server');
-logger('env', process.env);
+
+
+
 logger('config', config);
 
-program.plugin(path.resolve(__dirname, './lib/routes'));
-
-program.mount().listen(port, host, function() {
+program.mount([
+	path.resolve(__dirname, './lib/routes')
+]).listen(port, host, function() {
 	logger('listening on', host + ':' + port);
 });

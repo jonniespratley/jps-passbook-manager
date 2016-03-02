@@ -1,10 +1,10 @@
 {
   "name": "jps-passbook-manager",
   "version": "0.0.2",
-  "license" : "BSD-3-Clause",
-  "repository" :{ 
-    "type" : "git", 
-    "url" : "https://github.com/jonniespratley/jps-passbook-manager.git"
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonniespratley/jps-passbook-manager.git"
   },
   "config": {
     "delimiter": "pass-manager"
@@ -26,7 +26,7 @@
     "start": "node server.js",
     "test": "gulp test",
     "watch-test": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ -w test/specs/ --exec 'gulp test'",
-    "watch": "export DEBUG=jps-passbook-manager:*; nodemon -w routes/ -w lib/ server.js"
+    "watch": "export DEBUG=*; nodemon -w routes/ -w lib/ server.js"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
