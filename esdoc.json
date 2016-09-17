@@ -3,6 +3,7 @@
   "source": "./lib",
   "destination": "./esdoc",
   "includes": [
+
     "\\.(js|es6)$"
   ],
   "excludes": [

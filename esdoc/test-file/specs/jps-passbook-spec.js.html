@@ -55,7 +55,6 @@ var _passes = [];
 var passFiles = [];
 
 describe(&apos;jps-passbook&apos;, function() {
-		this.timeout(20000);
 	describe(&apos;Batching&apos;, function() {
 		before(function() {
 			program.db.saveAll(mocks.mockPasses).then(function(resp) {
@@ -74,8 +73,8 @@ describe(&apos;jps-passbook&apos;, function() {
 			});
 		});
 
-		it(&apos;batchPromise(&quot;sign&quot;, passes) - should create each pass in database&apos;, function(done) {
-
+		xit(&apos;batchPromise(&quot;sign&quot;, passes) - should create each pass in database&apos;, function(done) {
+			this.timeout(20000);
 			var mockIds = _.pluck(mockPasses, &apos;_id&apos;);
 			console.log(&apos;mockIds&apos;, mockIds);
 			jpsPassbook.batchPromise(&apos;sign&apos;, mockPasses).then(function(_resp) {

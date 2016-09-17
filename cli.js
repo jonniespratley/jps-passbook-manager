@@ -206,7 +206,19 @@ cli
 
         break;
       case 'create':
+        //  var cert_url = path.resolve(__dirname, './certificates/pass.io.jsapps.walletmanager.p12');
+        var options = {
+          passphrase: cert_pass,
+          passTypeIdentifier: cert_id,
+          p12: cert_url,
+          output: './tmp'
+        };
 
+
+        SignPass.createPems(options, function(err, resp) {
+          callback(null, resp);
+          self.log(resp);
+        });
         break;
       default:
         this.log('Choose');
@@ -214,10 +226,7 @@ cli
     }
 
     if (cert_url && cert_pass) {
-      SignPass.createPems(cert_id, cert_url, cert_pass, function(err, resp) {
-        callback(null, resp);
-        self.log(resp);
-      });
+
     } else {
       callback('Must provide path to .p12 and passhrase');
     }

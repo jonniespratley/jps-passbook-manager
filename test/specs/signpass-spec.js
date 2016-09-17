@@ -117,13 +117,13 @@ describe('SignPass', function() {
 				}).then(function(resp) {
 					_passes = resp;
 					_mockPassFilenames = _.pluck(resp, 'filename');
-					console.log('GOT PASSES', resp);
+					//	console.log('GOT PASSES', resp);
 					done();
 				});
 			});
 
 
-			xit('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
+			it('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
 				this.timeout(10000);
 				var _done = _.after(_mockPassFilenames.length, function() {
 					done();

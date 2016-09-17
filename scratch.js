@@ -14,11 +14,11 @@ var Pass = require(path.resolve(__dirname, './lib/models/pass.js'));
 var Device = require(path.resolve(__dirname, './lib/models/device.js'));
 var child_process = require('child_process');
 const SignPass = require('./lib/signpass');
-
+const PASS_ID = 'pass.io.jsapps.walletmanager';
 var output_url = path.resolve(__dirname, './tmp');
 var wwdr_url = path.resolve(__dirname, './certificates/wwdr-authority.pem');
-var cert_url = path.resolve(__dirname, './certificates/pass-cert.pem');
-var key_url = path.resolve(__dirname, './certificates/pass-key.pem');
+var cert_url = path.resolve(__dirname, `./certificates/${PASS_ID}-cert.pem`);
+var key_url = path.resolve(__dirname, `./certificates/${PASS_ID}-key.pem`);
 var cert_pass = 'fred';
 var pass_url = path.resolve(__dirname, './data/passes/pass-jonniespratley.raw');
 
@@ -93,7 +93,7 @@ function downloadGithubAvatar(user, output) {
 
 
 }
-/*
+
 _.forEach(GITHUB_USERS, function(n) {
 
 	utils.githubToPass(n, function(err, resp) {
@@ -111,7 +111,7 @@ _.forEach(GITHUB_USERS, function(n) {
 
 });
 
-
+/*
 
 request('https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api/v1/admin/find?docType=registration', function(err,
 	resp, body) {
@@ -125,15 +125,21 @@ pem.readCertificateInfo('./certificates/pass-cert.pem', function(err, data) {
 	logger('data', data);
 });
 
-*/
+
 var pem = require('pem');
 var _cert = fs.readFileSync(path.resolve(__dirname, './certificates/pass.cer'));
 pem.readCertificateInfo(_cert, function(err, data) {
 	logger('readCertificateInfo', err, data);
 });
-
-var cert_url = path.resolve(__dirname, './certificates/pass.p12');
-SignPass.createPems(cert_url, 'fred', function(err, resp) {
+*/
+var cert_url = path.resolve(__dirname, './certificates/pass.io.jsapps.walletmanager.p12');
+var options = {
+	passphrase: 'fred',
+	passTypeIdentifier: 'pass.io.jsapps.walletmanager',
+	p12: cert_url,
+	output: './tmp'
+};
+SignPass.createPems(options, function(err, resp) {
 	console.log(resp);
 });
 
@@ -170,6 +176,8 @@ function signPass(raw) {
 	});
 }
 
+
+/*
 program.db.find({
 	docType: 'pass'
 }).then(function(resp) {
@@ -179,3 +187,4 @@ program.db.find({
 	});
 
 })
+*/

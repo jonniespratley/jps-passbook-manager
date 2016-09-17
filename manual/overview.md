@@ -1,6 +1,6 @@
-# Overview
-This is my project overview.
-<img src="./asset/overview.png">
+This project aims to ease the process of creating Apple Wallet Passes.
+
+
 
 ## Author
 jonniespratley

@@ -53,7 +53,7 @@ const zip = new require(&apos;node-zip&apos;)();
 
 /**
  * SignPass class
-
+* @example
  var certFilename = path.resolve(__dirname, &apos;../../certificates/pass-cert.pem&apos;);
  var key = path.resolve(__dirname, &apos;../../certificates/pass-key.pem&apos;);
  var wwdrFilename = path.resolve(__dirname, &apos;../../certificates/wwdr-authority.pem&apos;);
@@ -535,6 +535,10 @@ SignPass.createPems = function(options, callback) {
 	});
 };
 
+/**
+ * Create pems for signing a pass
+ * @params {Object} options The options to pass
+ */
 SignPass.createPemsPromise = function(options) {
 	return new Promise(function(resolve, reject) {
 		SignPass.createPems(options, function(err, resp) {

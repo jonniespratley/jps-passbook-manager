@@ -52,13 +52,13 @@ const cert_pass = &apos;fred&apos;;
 const jpsPassbook = new Passbook(program);
 
 describe(&apos;Utils&apos;, function(done) {
-	this.timeout(20000);
+
 	it(&apos;should be defined&apos;, function(done) {
 		assert(utils);
 		done();
 	});
 
-	it(&apos;should return Github Pass&apos;, function(done) {
+	xit(&apos;should return Github Pass&apos;, function(done) {
 		this.slow(5000);
 		utils.githubToPass(&apos;jonniespratley&apos;, function(err, user) {
 			assert(user);
@@ -66,7 +66,7 @@ describe(&apos;Utils&apos;, function(done) {
 		});
 	});
 
-	it(&apos;should create Github Pass&apos;, function(done) {
+	xit(&apos;should create Github Pass&apos;, function(done) {
 		const GITHUB_USERS = [ /*&apos;sindresorhus&apos;, &apos;eddiemonge&apos;, &apos;addyosmani&apos;, */ &apos;jonniespratley&apos;];
 		var _done = _.after(GITHUB_USERS.length, function() {
 			done();

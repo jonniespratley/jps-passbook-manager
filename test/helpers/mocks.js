@@ -11,14 +11,14 @@ var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
 var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
 exports.mockIdentifer = {
-	passTypeIdentifier: 'pass.io.passbookmanager.test',
+	passTypeIdentifier: config.passkit.passTypeIdentifier,
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
-	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.test.p12'),
+	p12: path.resolve(__dirname, `../../certificates/${config.passkit.passTypeIdentifier}.p12`),
 	passphrase: 'test'
 };
 program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
 
-//console.log('MOCK program', program.config.defaults);
+console.log('MOCK program', program.config.defaults);
 
 
 exports.program = program;

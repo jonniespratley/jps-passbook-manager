@@ -943,13 +943,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/users-spec.js.html#lineNumber91",
+    "test-file/specs/users-spec.js.html#lineNumber79",
     "Users Model findOrCreate(profile, done) - should find/create user successfully",
     "test"
   ],
   [
     "",
-    "test-file/specs/users-spec.js.html#lineNumber79",
+    "test-file/specs/users-spec.js.html#lineNumber91",
     "Users Model findOrCreate(profile, done) - should find/create user successfully",
     "test"
   ],
@@ -987,18 +987,6 @@ window.esdocSearchIndex = [
     "",
     "test-file/specs/jps-utils-spec.js.html#lineNumber17",
     "Utils should be defined",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/jps-utils-spec.js.html#lineNumber30",
-    "Utils should create Github Pass",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/jps-utils-spec.js.html#lineNumber22",
-    "Utils should return Github Pass",
     "test"
   ],
   [
@@ -1087,97 +1075,91 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber20",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber19",
     "jps-passbook Batching",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber28",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber27",
     "jps-passbook Batching batchPromise(\"create\", passes) - should create each pass in database",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber38",
-    "jps-passbook Batching batchPromise(\"sign\", passes) - should create each pass in database",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber56",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber55",
     "jps-passbook Passes",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber119",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber118",
     "jps-passbook Passes Signing",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber147",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber146",
     "jps-passbook Passes Signing Validation",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber148",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber147",
     "jps-passbook Passes Signing Validation validatePass() - should validate a pass",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber160",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber159",
     "jps-passbook Passes Signing Validation validatePassPromise() - should validate pass .pkpass signature and resolve promise",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber130",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber129",
     "jps-passbook Passes Signing signPass() - should sign .raw package into a .pkpass",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber140",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber139",
     "jps-passbook Passes Signing signPassPromise() - should sign pass .raw into .pkpass and resolve promise",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber111",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber110",
     "jps-passbook Passes createPassPromise() - should create pass .raw and resolve promise",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber104",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber103",
     "jps-passbook Passes getPassCerts() - should get pass certs from database fail.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber94",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber93",
     "jps-passbook Passes getPassCerts() - should get pass certs from database successfully.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber58",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber57",
     "jps-passbook Passes savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database successfully.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber69",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber68",
     "jps-passbook Passes savePassTypeIdentifier() - should should fail when no p12 present.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber82",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber81",
     "jps-passbook Passes savePassTypeIdentifier() - should should fail when no passphrase present.",
     "test"
   ],
