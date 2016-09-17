@@ -30,7 +30,8 @@ gulp.task('pre-test', function() {
 gulp.task('test', ['pre-test'], function() {
   return gulp.src(config.specs)
     .pipe(mocha({
-      read: false
+      read: false,
+			reporter:'mochawesome'
     }))
     .pipe(istanbul.writeReports())
     .once('error', function() {

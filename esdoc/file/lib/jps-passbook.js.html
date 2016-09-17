@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/jps-passbook.js | Passbook Manager API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/jps-passbook.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+
+const fs = require(&apos;fs-extra&apos;);
+const async = require(&apos;async&apos;);
+const glob = require(&apos;glob&apos;);
+const path = require(&apos;path&apos;);
+const Pass = require(&apos;./models/pass&apos;);
+const assert = require(&apos;assert&apos;);
+const _ = require(&apos;lodash&apos;);
+const child_process = require(&apos;child_process&apos;);
+const debug = require(&apos;debug&apos;);
+
+/**
+ * jpsPassbook contains methods for creating/validating/signing passes.
+ * @param program
+ * @returns {{
+ * savePassTypeIdentifier: savePassTypeIdentifier,
+ * savePassTypeIdentifierPromise: savePassTypeIdentifierPromise,
+ * getPassTypeIdentifier: getPassTypeIdentifier,
+ * getPassCerts: getPassCerts,
+ * signPass: signPass,
+ * validatePass: validatePass,
+ * createPass: createPass,
+ * batchPromise: batchPromise,
+ * createPassPromise: createPassPromise,
+ * signPassPromise: signPassPromise,
+ * validatePassPromise: validatePassPromise
+ * }}
+ */
+module.exports = function jpsPassbook(program) {
+	var utils = program.utils;
+	let logger = program.getLogger(&apos;passbook&apos;);
+	let db = program.db;
+	let config = program.config.defaults;
+	const SignPass = program.require(&apos;signpass&apos;);
+
+	/**
+	 * I handle getting the certificates for a pass.
+	 * @param id
+	 * @param cb
+	 * @returns {*}
+	 */
+	function getPassCerts(id, cb) {
+		return new Promise(function (resolve, reject) {
+			db.findOne({
+				docType: &apos;pass-type-id&apos;,
+				passTypeIdentifier: id
+			}).then(function (resp) {
+				cb(null, resp);
+			}).catch(function (err) {
+				cb(err);
+			});
+		});
+	}
+
+	/**
+	 * I handle saving a pass type id to database and create pems.
+	 * @param obj
+	 * @param cb
+	 * @returns {*}
+	 */
+	function savePassTypeIdentifier(obj, cb) {
+		let outputPath = path.resolve(program.config.defaults.dataPath, &apos;./&apos;, &apos;&apos;);
+		fs.ensureDirSync(outputPath);
+		obj.wwdr = obj.wwdr || path.resolve(__dirname, &apos;../certificate/wwdr-authority.pem&apos;);
+
+		logger(&apos;savePassTypeIdentifier&apos;, &apos;outputPath&apos;, outputPath);
+		logger(&apos;savePassTypeIdentifier&apos;, &apos;passed&apos;, obj);
+
+		if (!obj.p12) {
+			return cb({
+				error: &apos;Must provide path to .p12 certificate&apos;
+			});
+		} else if (!obj.passphrase) {
+			return cb({
+				error: &apos;Must provide passphrase to .p12 certificate&apos;
+			});
+		}
+
+		SignPass.createPems({
+			output: outputPath,
+			wwdr: obj.wwdr,
+			passTypeIdentifier: obj.passTypeIdentifier,
+			passphrase: obj.passphrase,
+			p12: obj.p12
+		}, function (err, resp) {
+			if (err) {
+				cb(err, null);
+			}
+			logger(&apos;createPems&apos;, &apos;success&apos;, resp._id);
+			program.db.put(resp).then(function (o) {
+				if (cb) {
+					cb(null, o);
+				}
+
+			}).catch(function (err) {
+				if (cb) {
+					cb(err);
+				}
+			});
+		});
+	}
+
+	/**
+	 * I handle saving the pass type identifier.
+	 * @param obj
+	 * @returns {*}
+	 */
+	function savePassTypeIdentifierPromise(obj) {
+		return new Promise(function (resolve, reject) {
+			savePassTypeIdentifier(obj, function (err, resp) {
+				if (err) {
+					reject(err);
+				}
+				resolve(resp);
+			});
+		});
+	}
+
+	/**
+	 * I handle saving a upload to database and move to data directory
+	 * @param file
+	 * @returns {*}
+	 */
+	function saveUpload(file) {
+		return new Promise(function (resolve, reject) {
+			var toFilename = path.resolve(program.config.defaults.dataPath, &apos;./uploads/&apos; + file.originalFilename);
+			var _doc = {
+				_id: &apos;file-&apos; + file.name,
+				originalFilename: file.originalFilename,
+				path: toFilename,
+				size: file.size,
+				name: file.name,
+				type: file.type
+			};
+			logger(&apos;saveUpload&apos;, _doc);
+			fs.copy(file.path, _doc.path, function (err) {
+				if (err) {
+					reject(err);
+				}
+				program.db.put(_doc).then(resolve, reject);
+			});
+		});
+	}
+
+	/**
+	 * I handle signing a .raw pass with signpass bin.
+	 * Fetch pass certs from db and use signPass\
+	 * Fetch pass info from pass.json file instead of db.
+	 * @param pass
+	 * @param callback
+	 */
+	function signPass(pass, callback) {
+		pass = new Pass(pass);
+		let signpass = null;
+		let _passFilename = pass.filename || path.resolve(
+				program.config.defaults.dataPath, `./${pass.passTypeIdentifier}/passes/${pass._id}.raw`);
+		let options = {
+			passFilename: null,
+			cert: null,
+			passphrase: null,
+			key: null,
+			wwdr: null,
+			outputFilename: null,
+			compress: true
+		};
+
+		logger(&apos;signPass&apos;);
+		logger(&apos;signPass&apos;, &apos;pass&apos;, pass._id);
+		logger(&apos;signPass&apos;, &apos;filename&apos;, pass.filename);
+
+		//	assert(pass.rawFilename, &apos;has rawFilename&apos;);
+
+		// TODO: SignPass instance using cert info
+		getPassCerts(pass.passTypeIdentifier, function (err, _certs) {
+			logger(&apos;getPassCerts&apos;, _certs._id);
+			if (err) {
+				callback(err);
+			}
+			_certs.outputFilename = _passFilename.replace(&apos;.raw&apos;, &apos;.pkpass&apos;);
+			_certs.passFilename = pass.filename || pass.rawFilename || _passFilename;
+
+			logger(&apos;signPass&apos;, &apos;certs&apos;, _certs.cert);
+			//		logger(&apos;sign pass options&apos;, _certs);
+			//	callback(null, pass);
+			signpass = new SignPass(_certs);
+			signpass.signPromise().then(function (resp) {
+				logger(&apos;signPass&apos;, &apos;success&apos;, resp);
+				pass.pkpassFilename = resp.dest;
+				savePass(pass, function (err, p) {
+					callback(err, resp);
+				});
+			}).catch(function (err) {
+				callback(err);
+			});
+
+		});
+	}
+
+	/**
+	 * Validate the contents of a signed pass
+	 */
+	function validatePass(pass, callback) {
+		let _passFilename = pass.filename || pass.rawFilename || path.resolve(program.config.defaults.dataPath,
+				`./${pass.passTypeIdentifier}/passes/${pass._id}.raw`);
+		let pathToPass = _passFilename;
+		let passDir = path.resolve(pathToPass, &apos;./&apos;);
+		let files = fs.readdirSync(passDir);
+		let manifest = {};
+		let _manifest = {};
+		let _dsStoreFilename = path.resolve(passDir, &apos;./.DS_Store&apos;);
+		let _manifestFilename = path.resolve(passDir, &apos;./manifest.json&apos;);
+
+
+		logger(&apos;validatePass&apos;, pathToPass);
+
+		glob(passDir + &apos;/**/*.*&apos;, function (err, files) {
+			logger(&apos;validatePass&apos;, &apos;files&apos;, files);
+			if (err) {
+				callback(err)
+			}
+
+			let _done = _.after(files.length, function () {
+				fs.writeFile(_manifestFilename, JSON.stringify(_manifest), function (err) {
+					if (err) {
+						callback(err)
+					}
+					logger(&apos;generate_json_manifest&apos;, &apos;writing&apos;, _manifestFilename);
+					fs.remove(_dsStoreFilename, function () {
+						callback(null, pass);
+					});
+
+				});
+			});
+
+			_.forEach(files, function (file) {
+				logger(&apos;checksum&apos;, file);
+				_manifest[file.replace(passDir + path.sep, &apos;&apos;)] = utils.checksum(fs.readFileSync(file), &apos;sha1&apos;);
+				_done();
+			});
+		});
+	}
+
+	/**
+	 * Copy pass assets from ./templates dir to pass destination.
+	 * @param type
+	 * @param dest
+	 * @param callback
+	 */
+	function copyAssets(type, dest, callback) {
+		let templatesDir = path.resolve(__dirname, &apos;../templates/&apos; + type + &apos;.raw/&apos;);
+
+		logger(&apos;copyAssets&apos;, &apos;from&apos;, templatesDir);
+		logger(&apos;copyAssets&apos;, &apos;to&apos;, dest);
+		fs.ensureDir(dest, function (err) {
+			if (err) {
+				callback(err);
+			}
+			fs.copy(templatesDir, dest, function (err) {
+				if (err) {
+					callback(err);
+				}
+				if (callback) {
+					callback(null, dest);
+				}
+			});
+		});
+
+	}
+
+	/**
+	 * I handle creating the pass.raw folder and writing the pass.json file into it.
+	 * @param pass
+	 * @param cb
+	 * @returns {*}
+	 */
+	function createPass(pass, cb) {
+		logger(&apos;createPass&apos;, &apos;============================= start&apos;);
+
+		let _pass = new Pass(pass);
+		let passName = pass._id;
+
+		return async.waterfall([
+
+				//1. Build filenames
+				function (callback) {
+					logger(&apos;createPass&apos;, &apos;1. Build file names&apos;);
+					passName = passName.replace(/\W/g, &apos;-&apos;);
+					passName = passName.replace(&apos; &apos;, &apos;-&apos;);
+
+					let passPath = path.resolve(config.dataPath,
+						pass.passTypeIdentifier,
+						&apos;./passes/&apos;,
+						`./${passName}.raw`);
+
+					logger(&apos;createPass&apos;, &apos;passType =&apos;, pass.type);
+					logger(&apos;createPass&apos;, &apos;passName =&apos;, passName);
+					logger(&apos;createPass&apos;, &apos;passPath =&apos;, passPath);
+					callback(null, pass.type, passPath);
+				},
+
+				//2. Copy assets
+				function (_type, _path, callback) {
+					logger(&apos;createPass&apos;, &apos;2. Copy assets&apos;);
+					copyAssets(_type, _path, callback);
+				},
+
+				//3. Create pass.json
+				function (_path, callback) {
+					let passJsonPath = path.resolve(_path, &apos;./pass.json&apos;);
+					let passPath = _path;
+					logger(&apos;createPass&apos;, &apos;3. Create pass.json&apos;);
+					logger(&apos;createPass&apos;, &apos;writeFile&apos;, passJsonPath);
+					fs.writeFile(passJsonPath, JSON.stringify(pass), function (err) {
+						if (err) {
+							callback(err);
+						}
+						pass.filename = path.resolve(passPath);
+						pass.rawFilename = path.resolve(passPath);
+						callback(null, pass);
+					});
+				},
+
+				//4. Validate
+				function (_pass, callback) {
+					logger(&apos;validatePass&apos;, &apos;4.&apos;);
+					validatePass(_pass, callback);
+				},
+
+				/*
+				 //4. sign
+				 function(_pass, callback) {
+				 logger(&apos;sign&apos;, &apos;4. Sign Pass&apos;);
+				 signPass(_pass, callback);
+				 },
+				 */
+
+				//5. Save
+				function (_pass, callback) {
+					logger(&apos;createPass&apos;, &apos;5. Save to database&apos;);
+					savePass(_pass, callback);
+				}
+			],
+			function (err, resp) {
+				logger(&apos;createPass&apos;, &apos;============================= complete&apos;);
+				if (err) {
+					cb(err);
+				}
+				cb(null, resp);
+			});
+	}
+
+	/**
+	 * Save pass to data store.
+	 * @param pass
+	 * @param sign
+	 * @returns {*}
+	 */
+	function savePass(pass, callback) {
+		pass = new Pass(pass);
+		logger(&apos;savePass&apos;, pass._id);
+		program.db.put(pass).then(function (resp) {
+			logger(&apos;savePass&apos;, &apos;success&apos;, resp._id);
+			callback(null, resp);
+		}).catch(function (err) {
+			logger(&apos;savePass&apos;, &apos;error&apos;, err);
+			callback(err);
+		});
+	}
+
+	return {
+		savePassTypeIdentifier: savePassTypeIdentifier,
+		savePassTypeIdentifierPromise: savePassTypeIdentifierPromise,
+		getPassTypeIdentifier: function (id) {
+			return new Promise(function (resolve, reject) {
+				getPassCerts(id, function (err, resp) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(resp);
+					}
+				});
+			});
+		},
+		getPassCerts: getPassCerts,
+		signPass: signPass,
+		validatePass: validatePass,
+		createPass: createPass,
+		batchPromise: function (action, passes) {
+			return new Promise(function (resolve, reject) {
+				//	let passes = [];
+				let _resp = [];
+				let _done = _.after(passes.length, function () {
+					resolve(_resp);
+				});
+
+				let _doBatch = function (_pass) {
+					switch (action) {
+						case &apos;create&apos;:
+							createPass(_pass, function (err, p) {
+								if (err) {
+									console.error(err);
+									_done();
+								}
+								_resp.push(p);
+								_done();
+							});
+							break;
+						case &apos;sign&apos;:
+							signPass(_pass, function (err, p) {
+								if (err) {
+									console.error(err);
+									_done();
+								}
+								_resp.push(p);
+								_done();
+							});
+							break;
+						case &apos;validate&apos;:
+							validatePass(_pass, function (err, p) {
+								if (err) {
+									console.error(err);
+									_done();
+								}
+								_resp.push(p);
+								_done();
+							});
+							break;
+						default:
+
+							break;
+					}
+				};
+
+				_.forEach(passes, function (_pass) {
+					logger(&apos;batch&apos;, action, _pass);
+					_.defer(function () {
+						_doBatch(_pass);
+					});
+				});
+			});
+		},
+		createPassPromise: function (pass) {
+			return new Promise(function (resolve, reject) {
+				createPass(pass, function (err, resp) {
+					if (err) {
+						reject(err);
+					}
+					resolve(resp);
+				});
+			});
+		},
+		signPassPromise: function (pass) {
+			return new Promise(function (resolve, reject) {
+				signPass(pass, function (err, resp) {
+					if (err) {
+						reject(err);
+					}
+					resolve(resp);
+				});
+			});
+		},
+		validatePassPromise: function (pass) {
+			return new Promise(function (resolve, reject) {
+				validatePass(pass, function (err, resp) {
+					if (err) {
+						reject(err);
+					}
+					resolve(resp);
+				});
+			});
+		}
+	};
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/controllers/passes-controller.js | Passbook Manager API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/controllers/passes-controller.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const assert = require(&apos;assert&apos;);
+const _ = require(&apos;lodash&apos;);
+/*
+ * Methods
+ * to find the passes that a given device has registered for,
+ * to find the devices that have registered for a given pass.
+ *
+ *  Registration is a many-to-many relationship: a single device can register for updates to multiple passes,
+ *  and a single pass can be registered by multiple devices.*/
+module.exports = function(program) {
+	var db = program.db;
+	var logger = program.getLogger(&apos;controller:passes&apos;);
+	var Passbook = new program.modules.Passbook(program);
+	var Passes = program.models.Passes;
+	var Pass = program.models.Pass;
+
+	/*
+	 * To handle the device registration, do the following:
+
+	 Verify that the authentication token is correct. If it doesn&#x2019;t match, immediately return the HTTP status 401 Unauthorized and disregard the request.
+	 Store the mapping between the device library identifier and the push token in the devices table.
+	 Store the mapping between the pass (by pass type identifier and serial number) and the device library identifier in the registrations table.
+	 */
+	return {
+
+		get_passes: function(req, res) {
+			var self = this;
+			var auth = req.get(&apos;Authorization&apos;);
+			var pass_type_id = req.params.pass_type_id;
+			var device_id = req.params.device_id;
+			var serial_number = req.params.serial_number;
+			var lastUpdated = req.query.updatedSince;
+
+			//assert.ok(pass_type_id, &apos;has pass type id&apos;);
+
+			logger(&apos;Handling pass delivery request...&apos;);
+			logger(&apos;Authorization=&apos;, auth);
+			logger(&apos;pass_type_id=&apos;, pass_type_id);
+			logger(&apos;serial_number=&apos;, serial_number);
+			logger(&apos;device_id=&apos;, device_id);
+
+			if (!auth) {
+				logger(&apos;get_passes:unauthorized&apos;);
+				return res.status(401).json({
+					error: &apos;Unauthorized&apos;
+				});
+
+			} else {
+				Passes.find({
+					passTypeIdentifier: pass_type_id,
+					serialNumber: serial_number
+				}).then(function(resp) {
+					logger(&apos;get_passes:success&apos;);
+
+					if (lastUpdated &gt; resp.lastUpdated) {
+						res.status(204).json({});
+					} else {
+						res.status(200).json(resp);
+					}
+
+				}).catch(function(err) {
+					logger(&apos;get_passes:error&apos;, err);
+					res.status(404).json(err);
+				});
+			}
+		},
+
+
+		post_pass: function(req, res) {
+			var p = new Pass(req.body);
+			logger(&apos;post_pass&apos;, p._id);
+
+			Passes.save(p).then(function(resp) {
+				res.status(201).json(resp);
+				/*	Passbook.createPass(resp, function(err, obj) {
+						res.status(201).json(resp);
+					});*/
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+
+		},
+
+
+		put_pass: function(req, res) {
+			var p = new Pass(req.body);
+			var id = req.params.id
+			p._id = id;
+			logger(&apos;put_pass&apos;, id);
+			Passes.save(p).then(function(resp) {
+				logger(&apos;save&apos;, resp);
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+		},
+		get_all_passes: function(req, res) {
+			Passes.getPasses(req.params).then(function(resp) {
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+		},
+		get_pass: function(req, res) {
+			var id = req.params.id
+			logger(&apos;get_pass&apos;, id);
+			db.get(id).then(function(resp) {
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(204).json(err);
+			});
+		},
+		sign_pass: function(req, res) {
+			var id = req.params.id
+			logger(&apos;sign_pass&apos;, id);
+			Passes.get(id).then(function(resp) {
+				program.modules.Passbook.createPass(mockPass, function(err, p) {
+					//	res.status(200).json(p);
+					res.set(&apos;Content-Type&apos;, &apos;application/vnd.apple.pkpass&apos;)
+						.status(200)
+						.download(p.pkpassFilename);
+				});
+				//	res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+		},
+		delete_pass: function(req, res) {
+			var id = req.params.id;
+			logger(&apos;delete_pass&apos;, id);
+
+			Passes.remove(id).then(function(resp) {
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+		},
+		get_find_pass: function(req, res) {
+			var params = req.query;
+			logger(&apos;get_find_pass&apos;, params);
+			Passes.find(params).then(function(resp) {
+				res.status(200).json(resp);
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+		}
+	};
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

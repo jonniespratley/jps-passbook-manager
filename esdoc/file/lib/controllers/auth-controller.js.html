@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/controllers/auth-controller.js | Passbook Manager API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/controllers/auth-controller.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+module.exports = function (program) {
+	const path = require(&apos;path&apos;);
+	const url = require(&apos;url&apos;);
+	const express = require(&apos;express&apos;);
+	const expressValidator = require(&apos;express-validator&apos;);
+	const methodOverride = require(&apos;method-override&apos;);
+	const bodyParser = require(&apos;body-parser&apos;);
+	const session = require(&apos;express-session&apos;);
+	const RedisStore = require(&apos;connect-redis&apos;)(session);
+	const Router = express.Router;
+	const jsonParser = bodyParser.json();
+	const passport = require(&apos;passport&apos;);
+	const OAuth2Strategy = require(&apos;passport-oauth&apos;).OAuth2Strategy;
+	const GitHubStrategy = require(&apos;passport-github2&apos;).Strategy;
+	const LocalStrategy = require(&apos;passport-local&apos;).Strategy;
+	const User = require(path.resolve(__dirname, &apos;../models/user.js&apos;));
+	const Users = require(path.resolve(__dirname, &apos;../models/users.js&apos;))(program.db);
+	const config = program.config.defaults;
+	const db = program.db;
+	const logger = program.getLogger(&apos;AuthController&apos;);
+	var GITHUB_CLIENT_ID = config.passport.development.github.clientID;
+	var GITHUB_CLIENT_SECRET = config.passport.development.github.clientSecret;
+	var OAUTH_CALLBACK_URL = config.passport.development.github.callbackURL;
+
+	if (process.env.NODE_ENV === &apos;production&apos;) {
+		GITHUB_CLIENT_ID = config.passport.production.github.clientID;
+		GITHUB_CLIENT_SECRET = config.passport.production.github.clientSecret;
+		OAUTH_CALLBACK_URL = config.passport.production.github.callbackURL;
+	}
+
+	const OAUTH_CLIENT_SECRET = GITHUB_CLIENT_SECRET;
+	const OAUTH_CLIENT_ID = GITHUB_CLIENT_ID;
+	const OAUTH_AUTH_URL = &apos;https://github.com/login/oauth/authorize&apos;;
+	const OAUTH_TOKEN_URL = &apos;https://github.com/login/oauth/access_token&apos;;
+
+
+	logger(&apos;OAUTH_CLIENT_SECRET&apos;, OAUTH_CLIENT_SECRET);
+	logger(&apos;OAUTH_CLIENT_ID&apos;, OAUTH_CLIENT_ID);
+	logger(&apos;OAUTH_AUTH_URL&apos;, OAUTH_AUTH_URL);
+	logger(&apos;OAUTH_TOKEN_URL&apos;, OAUTH_TOKEN_URL);
+	logger(&apos;OAUTH_CALLBACK_URL&apos;, OAUTH_CALLBACK_URL);
+
+
+	// =========================================================================
+	// LOCAL SIGNUP ============================================================
+	// =========================================================================
+	passport.use(&apos;local-signup&apos;, new LocalStrategy({
+			usernameField: &apos;email&apos;,
+			passwordField: &apos;password&apos;,
+			passReqToCallback: true
+		},
+		function (req, email, password, done) {
+			logger(&apos;local-signup&apos;, email);
+
+			process.nextTick(function () {
+				Users.find({
+					&apos;email&apos;: email
+				}, function (err, user) {
+					if (err) {
+						logger(&apos;local-signup&apos;, &apos;error&apos;, &apos;Fatal error&apos;);
+						return done(err);
+					}
+
+					if (user) {
+						logger(&apos;local-signup&apos;, &apos;error&apos;, &apos;found existing user&apos;, user);
+						return done(null, false, req.flash(&apos;signupMessage&apos;, &apos;That email is already taken.&apos;));
+					} else {
+						logger(&apos;local-signup&apos;, &apos;registering&apos;, email);
+
+						var newUser = new User({
+							//username: email,
+							email: email
+						});
+						newUser.password = newUser.generateHash(password);
+
+						Users.save(newUser, function (err, u) {
+							if (err) {
+								logger(&apos;saveUser&apos;, &apos;error&apos;, err);
+								throw err;
+							}
+							logger(&apos;local-signup&apos;, &apos;success&apos;, u);
+							return done(null, u);
+						});
+					}
+				});
+			});
+		}));
+	// =========================================================================
+	// LOCAL LOGIN =============================================================
+	// =========================================================================
+	passport.use(&apos;local-login&apos;, new LocalStrategy({
+		usernameField: &apos;email&apos;,
+		passwordField: &apos;password&apos;,
+		passReqToCallback: true
+	}, function (req, email, password, done) {
+		logger(&apos;local-login&apos;, email);
+
+		Users.findByEmail(email, function (err, user) {
+			user = new User(user);
+			logger(&apos;local-login&apos;, &apos;findOne&apos;, user);
+
+			if (err) {
+				logger(&apos;local-login&apos;, &apos;error&apos;, err);
+				return done(err);
+			}
+
+			if (!user) {
+				logger(&apos;local-login&apos;, &apos;No User Found!&apos;);
+				return done(null, false, req.flash(&apos;loginMessage&apos;, &apos;No user found.&apos;));
+			}
+
+			if (!user.checkPassword(password, user.password)) {
+				logger(&apos;local-login&apos;, &apos;invalidePassword&apos;, user.password, password);
+				return done(null, false, req.flash(&apos;loginMessage&apos;, &apos;Oops! Wrong password.&apos;));
+			}
+
+			return done(null, user);
+		});
+	}));
+
+
+	passport.use(&apos;oauth2&apos;, new OAuth2Strategy({
+			authorizationURL: OAUTH_AUTH_URL,
+			tokenURL: OAUTH_TOKEN_URL,
+			clientID: OAUTH_CLIENT_ID,
+			clientSecret: OAUTH_CLIENT_SECRET,
+			callbackURL: OAUTH_CALLBACK_URL
+		},
+		function (accessToken, refreshToken, profile, done) {
+			logger(&apos;accessToken&apos;, accessToken, refreshToken, profile);
+			Users.findOrCreate(profile, done);
+		}
+	));
+
+	passport.use(&apos;github&apos;, new GitHubStrategy({
+			clientID: OAUTH_CLIENT_ID,
+			clientSecret: OAUTH_CLIENT_SECRET,
+			callbackURL: OAUTH_CALLBACK_URL
+		},
+		function (accessToken, refreshToken, profile, done) {
+			process.nextTick(function () {
+				logger(&apos;accessToken&apos;, accessToken);
+				logger(&apos;refreshToken&apos;, refreshToken);
+				logger(&apos;profile&apos;, profile);
+
+				return Users.findOrCreate(profile, done);
+			});
+		}
+	));
+
+	passport.serializeUser(function (user, done) {
+		logger(&apos;serializeUser&apos;, user);
+		Users.findOrCreate(user, done);
+	});
+
+	passport.deserializeUser(function (id, done) {
+		logger(&apos;deserializeUser&apos;, id);
+		Users.find(id, done);
+	});
+
+	function restrict(req, res, next) {
+		if (req.user) {
+			return next();
+		} else {
+			res.send(403); // Forbidden
+		}
+	}
+
+	function ensureAuthenticated(req, res, next) {
+		logger(&apos;ensureAuthenticated&apos;, req.url);
+		if (req.isAuthenticated()) {
+			return next();
+		}
+		res.redirect(&apos;/login&apos;)
+	}
+
+	// TODO: do any checks you want to in here
+	function isAuthenticated(req, res, next) {
+		logger(&apos;isAuthenticated&apos;, req.session);
+		if (req.session &amp;&amp; req.session.authenticated) {
+			return next();
+		}
+		res.redirect(&apos;/login&apos;);
+	}
+
+	let AuthController = {
+		ensureAuthenticated: ensureAuthenticated,
+		isAuthenticated: isAuthenticated,
+		restrict: restrict,
+		get_index: function (req, res, next) {
+			res.render(&apos;index&apos;, {
+				user: req.user
+			});
+		},
+		get_login: function (req, res, next) {
+			if (req.session) {
+				logger(&apos;get_login&apos;, &apos;session&apos;, req.session);
+			}
+			if (req.user) {
+				logger(&apos;get_login&apos;, &apos;user&apos;, req.user);
+			}
+			res.render(&apos;login&apos;, {
+				user: req.user,
+				message: req.flash(&apos;loginMessage&apos;, &apos;Please sign in&apos;)
+			});
+
+		},
+		post_login: function (req, res, next) {
+			logger(&apos;post_login&apos;, req.body);
+
+			//  localAuth(req, res, next);
+			if (req.user) {
+				res.redirect(&apos;/account&apos;);
+			}
+
+			Users.validate(_user, function (err, resp) {
+				if(err){
+					res.format({
+						html: function () {
+							res.render(&apos;login&apos;, {
+								user: req.user,
+								message: req.flash(&apos;loginMessage&apos;, err.message)
+							});
+						},
+						json: function () {
+							res.status(200).json(resp);
+						}
+					});
+				}
+				res.format({
+					html: function () {
+						res.redirect(&apos;/account&apos;);
+					},
+					json: function () {
+						res.status(200).json(resp);
+					}
+				});
+			});
+		},
+		get_logout: function (req, res, next) {
+			logger(&apos;get_logout&apos;);
+			req.logout();
+			res.redirect(&apos;/login&apos;, {
+				message: req.flash(&apos;loginMessage&apos;, &apos;You have been logged out.&apos;)
+			});
+		},
+		get_me: function (req, res, next) {
+			logger(&apos;get_me&apos;, req.url, req.session);
+			res.status(200).json(req.user);
+		},
+		post_me: function (req, res, next) {
+			logger(&apos;post_me&apos;, req.url, req.user);
+			res.status(200).json(req.user);
+		},
+		get_provider: function (req, res, next) {
+			logger(&apos;get_provider&apos;);
+			passport.authenticate(&apos;oauth2&apos;);
+		},
+		get_provider_callback: function (req, res, next) {
+			logger(&apos;get_provider_callback&apos;, req.url);
+			res.redirect(&apos;/account&apos;);
+		},
+		get_register: function (req, res, next) {
+			logger(&apos;get_register&apos;);
+			res.render(&apos;register&apos;, {
+				message: req.flash(&apos;signupMessage&apos;)
+			});
+		},
+		post_register: function (req, res, next) {
+			logger(&apos;post_register&apos;, req.body);
+
+			//user.password = user.generateHash(user.password);
+			//  req.body.password = program.utils.checksum(req.body.password, &apos;sha1&apos;);
+			logger(&apos;post_register&apos;, req.body);
+			Users.findOrCreate(req.body, function (err, u) {
+				if (err) {
+					res.format({
+						html: function () {
+							res.render(&apos;register&apos;, {
+								message: err
+							});
+						},
+						json: function () {
+							res.status(400).json(err);
+						}
+					});
+				} else {
+					res.format({
+						html: function () {
+							res.render(&apos;login&apos;, {
+								message: &apos;User was created!&apos;
+							});
+						},
+						json: function () {
+							res.status(200).json(u);
+						}
+					});
+				}
+			});
+		},
+		get_account: function (req, res, next) {
+			if (req.isAuthenticated()) {
+				logger(&apos;isAuthenticated&apos;);
+			}
+			req.authenticated = true;
+			req.session.authenticated = true;
+			req.session.save(function (err) {
+
+				if (err) {
+					throw err;
+				}
+				logger(&apos;session.save&apos;, req.session);
+				logger(&apos;session.user&apos;, req.user);
+
+
+				res.format({
+					html: function () {
+						res.render(&apos;account&apos;, {
+							user: req.user
+						});
+					},
+					json: function () {
+						res.status(200).json({ok: true});
+					}
+				});
+
+			});
+		},
+		post_account: function (req, res, next) {
+			logger(&apos;post_account&apos;);
+			//res.render(&apos;register&apos;, {});
+			res.format({
+				html: function () {
+					res.render(&apos;login&apos;, {
+						message: &apos;User was created!&apos;
+					});
+				},
+				json: function () {
+					res.status(200).json({ok: true});
+				}
+			});
+		}
+	};
+
+	return AuthController;
+	logger(&apos;initialized&apos;);
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

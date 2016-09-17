@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">specs/couchdb-spec.js | Passbook Manager API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">specs/couchdb-spec.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+/**
+ * Created by jps on 12/17/15.
+ */
+var assert = require(&apos;assert&apos;),
+	_ = require(&apos;lodash&apos;),
+
+	path = require(&apos;path&apos;);
+
+
+var mocks = require(path.resolve(__dirname, &apos;../helpers/mocks&apos;));
+var program = mocks.program;
+
+var config = program.config.defaults;
+var CouchDB = require(path.resolve(__dirname, &apos;../../lib/adapters/db-couchdb.js&apos;));
+
+var testDoc = {
+	_id: &apos;test-doc&apos;,
+
+	name: &apos;test&apos;
+};
+
+var db = new CouchDB(config);
+
+var mockDevice = mocks.mockDevice;
+var mockPass = _.assign({}, mocks.mockPass);
+
+var nock = require(&apos;nock&apos;);
+var scope = nock(config.baseUrl)
+
+//get
+.get(`/${testDoc._id}`)
+	.query(true)
+	.reply(200, testDoc)
+
+//put
+.put(`/${mockPass._id}`)
+	.query(true)
+	.reply(200, {
+		id: mockPass._id
+	})
+
+//put
+.put(`/test-doc`)
+	.query(true)
+	.reply(200, testDoc)
+
+//put
+.put(`/test-doc?rev=2-0000`)
+	.query(true)
+	.reply(200, {
+		id: testDoc._id
+	})
+
+//remove
+.delete(`/test-doc?rev=2-0000`)
+	.query(true)
+	.reply(200, {
+		id: testDoc._id
+	})
+
+//post
+.post(`/test-doc`)
+	.reply(201, {
+		id: testDoc._id
+	})
+
+//post
+.post(`/_bulk_docs`)
+	.query(true)
+	.reply(201, JSON.stringify(mocks.mockPasses))
+
+//put - fail
+.put(&apos;/test-fail&apos;)
+	.query(true)
+	.reply(404, {
+		error: &apos;Error&apos;
+	})
+
+.get(&apos;/_all_docs&apos;)
+	.query(true)
+	.reply(200, {
+		rows: [{
+			doc: testDoc
+		}]
+	});
+
+
+
+describe(&apos;CouchDB Adapter&apos;, function() {
+
+	it(&apos;should be defined&apos;, function(done) {
+		assert(db);
+		done();
+	});
+
+	it(&apos;should have allDocs, get, remove, put methods&apos;, function(done) {
+		assert(db.allDocs);
+		assert(db.remove);
+		assert(db.put);
+		assert(db.get);
+		assert(db.find, &apos;has find&apos;);
+		assert(db.post, &apos;has post&apos;);
+		assert(db.saveAll, &apos;has saveall&apos;);
+		done();
+	});
+
+	it(&apos;db.put - should create doc with id&apos;, function(done) {
+		db.put(mockPass).then(function(resp) {
+			mockPass._rev = 1;
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	it(&apos;db.put - should reject create doc with _id&apos;, function(done) {
+		db.put({
+			_id: &apos;test-fail&apos;
+		}).then(function(resp) {
+			assert.fail(resp);
+			done();
+		}).catch(function(err) {
+			assert.ok(err);
+			done();
+		});
+	});
+
+	xit(&apos;db.post - should create doc with generated&apos;, function(done) {
+		let o = _.assign({}, mocks.mockPass);
+		delete o._id;
+		db.post(o).then(function(resp) {
+			//	assert(resp._id, &apos;returns id&apos;);
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	xit(&apos;should get doc with id&apos;, function(done) {
+		db.get(testDoc._id).then(function(resp) {
+			assert(resp);
+			assert(resp.name === testDoc.name, &apos;returns object&apos;);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	xit(&apos;should find doc&apos;, function(done) {
+		db.find({
+			name: testDoc.name
+		}).then(function(resp) {
+			console.log(&apos;find res[&apos;, resp);
+			assert(resp.name === testDoc.name, &apos;returns object&apos;);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	xit(&apos;db.remove - should remove doc with id&apos;, function(done) {
+		testDoc._rev = &apos;2-0000&apos;;
+		db.remove(testDoc._id, testDoc._rev).then(function(resp) {
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	xit(&apos;should save array of docs&apos;, function(done) {
+		db.saveAll([
+			mockDevice,
+			mockPass
+		]).then(function(resp) {
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	it(&apos;db.allDocs - should return array of docs&apos;, function(done) {
+		db.allDocs().then(function(resp) {
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+	xit(&apos;should find doc by params&apos;, function(done) {
+		db.find({
+			serialNumber: mockPass.serialNumber
+		}).then(function(resp) {
+			assert(resp[0].serialNumber === mockPass.serialNumber, &apos;returns object&apos;);
+			assert(resp);
+			done();
+		}).catch(function(err) {
+			assert.fail(err);
+			done();
+		});
+	});
+
+
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

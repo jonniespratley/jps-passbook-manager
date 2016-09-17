@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">lib/controllers/admin-controller.js | Passbook Manager API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/controllers/admin-controller.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const path = require(&apos;path&apos;);
+const fs = require(&apos;fs-extra&apos;);
+module.exports = function(program) {
+	const jpsPassbook = program.require(&apos;jps-passbook&apos;)(program);
+	const SignPass = program.require(&apos;signpass&apos;);
+	const logger = program.getLogger(&apos;AdminController&apos;);
+	let AdminController = {};
+
+	/**
+	 * I handle saving a upload to the file system and data store.
+	 * @param file
+	 * @returns {*}
+	 */
+	function saveUpload(file) {
+		return new Promise(function(resolve, reject) {
+			let toFilename = path.resolve(program.config.defaults.dataPath, &apos;./uploads/&apos; + file.originalFilename);
+			let _doc = {
+				_id: &apos;file-&apos; + file.name,
+				originalFilename: file.originalFilename,
+				path: toFilename,
+				size: file.size,
+				name: file.name,
+				type: file.type
+			};
+			logger(&apos;saveUpload&apos;, _doc);
+			fs.copy(file.path, _doc.path, function(err) {
+				if (err) {
+					reject(err);
+				}
+				program.db.put(_doc).then(resolve, reject);
+			});
+		});
+	}
+	AdminController.saveUpload = saveUpload;
+
+	/**
+	 * I handle getting a pass type identifier
+	 * @param req
+	 * @param res
+	 */
+	AdminController.get_passTypeIdentifier = function(req, res) {
+		jpsPassbook.getPassTypeIdentifier(req.params.id).then(function(resp) {
+			console.log(&apos;found identifier&apos;, resp);
+			if(resp){
+				res.status(200).json(resp);
+			} else {
+				res.status(404).json(err);
+			}
+		}).catch(function(err) {
+			res.status(404).json(err);
+		});
+	};
+
+
+	/**
+	 * I handle saving a passTypeIdentifier
+	 * @param req
+	 * @param res
+	 */
+	AdminController.post_passTypeIdentifier = function(req, res) {
+		logger(&apos;post_passTypeIdentifier&apos;, req.body, req.files);
+		let out = {};
+		let _id = req.params.id;
+		let passTypeIdentifier = req.body;
+		passTypeIdentifier.passTypeIdentifier = _id;
+
+		if (req.files &amp;&amp; req.files.file) {
+			logger(&apos;Upload file&apos;, req.files);
+
+			saveUpload(req.files.file).then(function(_file) {
+				logger(&apos;Save file&apos;, _file);
+
+				passTypeIdentifier.p12 = _file.path;
+
+				jpsPassbook.savePassTypeIdentifier(passTypeIdentifier, function(err, resp) {
+					if (err) {
+						logger(&apos;savePassTypeIdentifier - error&apos;, err);
+						res.status(400).json(err);
+					} else {
+						res.status(201).json(resp);
+					}
+				});
+
+			}).catch(function(err) {
+				logger(&apos;saveUpload - error&apos;, err);
+				res.status(400).json(err);
+			});
+
+		} else {
+			res.status(400).json({
+				error: &apos;Please upload a .p12 file!&apos;
+			});
+		}
+	};
+
+	/**
+	 * I handle downloading a pass
+	 * @param req
+	 * @param res
+	 */
+	AdminController.get_downloadPass = function(req, res) {
+		let id = req.params.id;
+		logger(&apos;get_downloadPass&apos;, id);
+		if (id) {
+			program.db.get(id).then(function(resp) {
+				logger(&apos;found pass&apos;, resp._id);
+				logger(&apos;found pkpassFilename&apos;, resp.pkpassFilename);
+				res.set(&apos;Content-Type&apos;, &apos;application/vnd.apple.pkpass&apos;)
+					.status(200)
+					.download(resp.pkpassFilename);
+			}).catch(function(err) {
+				res.status(404).json(err);
+			});
+		} else {
+			res.status(400).json(&apos;Must provide id!&apos;);
+		}
+	};
+
+	/**
+	 * I handle getting a pass
+	 * @param req
+	 * @param res
+	 */
+	AdminController.get_signPass = function(req, res) {
+		let id = req.params.id
+		logger(&apos;get_signPass&apos;, id);
+		program.db.get(id).then(function(resp) {
+			jpsPassbook.createPassPromise(resp).then(function(p) {
+				jpsPassbook.signPassPromise(p).then(function(_resp) {
+					res.status(200).json(_resp);
+				}).catch(function(err) {
+					res.status(404).json(err);
+				});
+			}).catch(function(err) {
+				logger(&apos;get_signPass - error&apos;, err);
+				res.status(400).json(err);
+			});
+		}).catch(function(err) {
+			res.status(404).json(err);
+		});
+	};
+
+	/**
+	 * I handle finding data
+	 * @param req
+	 * @param res
+	 */
+	AdminController.get_find = function(req, res) {
+		logger(&apos;get_find&apos;, req.query);
+		program.db.find(req.query).then(function(resp) {
+			logger(&apos;get_find&apos;, &apos;resp&apos;, resp);
+			if(resp){
+				res.status(200).json(resp);
+			} else {
+				res.status(404).json(err);
+			}
+
+		}).catch(function(err) {
+			res.status(404).json(err);
+		});
+	};
+
+
+
+	return AdminController;
+
+
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

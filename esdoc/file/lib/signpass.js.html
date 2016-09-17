@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/signpass.js | Passbook Manager API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/signpass.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const async = require(&apos;async&apos;);
+const child_process = require(&apos;child_process&apos;);
+const assert = require(&apos;assert&apos;);
+const glob = require(&apos;glob&apos;);
+const _ = require(&apos;lodash&apos;);
+const path = require(&apos;path&apos;);
+const os = require(&apos;os&apos;);
+const fs = require(&apos;fs-extra&apos;);
+const utils = require(&apos;./utils&apos;);
+const zip = new require(&apos;node-zip&apos;)();
+
+
+
+/**
+ * SignPass class
+
+ var certFilename = path.resolve(__dirname, &apos;../../certificates/pass-cert.pem&apos;);
+ var key = path.resolve(__dirname, &apos;../../certificates/pass-key.pem&apos;);
+ var wwdrFilename = path.resolve(__dirname, &apos;../../certificates/wwdr-authority.pem&apos;);
+ var certPass = &apos;fred&apos;;
+ var passFilename = path.resolve(__dirname, &apos;../../data/pass-jonniespratley.json&apos;);
+ var rawpassFilename = path.resolve(__dirname, &apos;../../data/passes/pass-jonniespratley.raw&apos;);
+ var pkpassFilename = path.resolve(__dirname, &apos;../../data/passes/pass-jonniespratley.pkpass&apos;);
+ var outputFilename = path.resolve(__dirname, &apos;../temp/passes/&apos;);
+ var files = null;
+
+
+ var options = {
+ 	passFilename: rawpassFilename,
+ 	cert: certFilename,
+ 	passphrase: certPass,
+ 	key: keyFilename,
+ 	wwdr: wwdrFilename,
+ 	outputFilename: tmpdir,
+ 	compress: true
+ };
+
+ signpass = new SignPass(options);
+ signpass.sign(function(err, resp) {
+	 _done(resp);
+ });
+
+ * @param pass_url {String} The url to the .pkpass
+ * @param certificate_url {String} The url to the cert
+ * @param certificate_password {String} The cert password
+ * @param wwdr_certificate  {String} The url to the wwrd cert
+ * @param output_url  {String} The output url
+ * @param compress_into_zip_file {Boolean} Compress into zip.
+ * @constructor
+ */
+function SignPass(opts /*pass_url, cert_url, cert_password, key, wwdr_cert_path, output_url, compress, tmpdir*/ ) {
+
+	var defaults = {
+		passFilename: &apos;pass.raw&apos;,
+		cert: &apos;pass.cert&apos;,
+		passphrase: null,
+		key: null,
+		wwdr: null,
+		outputFilename: null,
+		compress: true,
+		force: true,
+		tempDir: os.tmpdir()
+	};
+
+	var options = _.extend(defaults, opts);
+	let logger = utils.getLogger(&apos;signpass:&apos; + path.basename(options.passFilename));
+	logger(&apos;SignPass&apos;, options);
+
+	let temporary_directory = options.tempDir;
+
+	//	assert(options.passFilename, &apos;has passFilename&apos;);
+	temporary_directory += path.sep + _.last(options.passFilename.split(&apos;/&apos;));
+
+	const certificate_url = options.cert;
+	const certificate_password = options.passphrase;
+	const key_url = options.key;
+	const compress_into_zip_file = options.compress;
+
+	if (!options.outputFilename) {
+		options.outputFilename = path.resolve(path.dirname(options.passFilename));
+	}
+
+	var signature_url = path.resolve(temporary_directory, &apos;./signature&apos;);
+	var cert_url = options.cert;
+	var cert_password = options.passphrase;
+
+	var pass_url = options.passFilename;
+	var output_url = options.outputFilename;
+	var zip_url = &apos;&apos;;
+	var pkpass_url = &apos;&apos;;
+
+	const wwdr_certificate = options.wwdr || path.resolve(__dirname, &apos;../certificates/wwdr-authority.pem&apos;);
+	var manifest_url;
+
+
+	assert(options, &apos;has options&apos;);
+	assert(pass_url, &apos;has pass url&apos;);
+	assert(cert_url, &apos;has cert url&apos;);
+	assert(cert_password, &apos;has cert password&apos;);
+	assert(wwdr_certificate, &apos;has wwdr&apos;);
+
+	//	assert(fs.existsSync(cert_url), &apos;has cert&apos;);
+	//assert(fs.existsSync(pass_url), &apos;has pass.raw&apos;);
+	//	assert(fs.existsSync(wwdr_certificate), &apos;has WWDR Cert&apos;);
+
+	logger(&apos;SignPass&apos;, &apos;instance&apos;);
+	logger(&apos;temporary_directory&apos;, temporary_directory);
+	logger(&apos;certificate_url&apos;, certificate_url);
+	logger(&apos;certificate_password&apos;, certificate_password);
+	logger(&apos;wwdr_certificate&apos;, wwdr_certificate);
+	logger(&apos;output_url&apos;, output_url);
+	logger(&apos;compress_into_zip_file&apos;, compress_into_zip_file);
+
+	function validate_directory_as_unsigned_raw_pass(cb) {
+		let has_manifiest = fs.existsSync(path.resolve(pass_url, &apos;./manifest.json&apos;));
+		let has_signiture = fs.existsSync(path.resolve(pass_url, &apos;./signature&apos;));
+		if (options.force) {
+			force_clean_raw_pass(cb);
+		} else if (has_signiture || has_manifiest) {
+			throw new Error(&apos;Pass contains artifacts that must be removed!&apos;);
+		} else {
+			if (cb) {
+				cb(null, null);
+			}
+		}
+	}
+
+	function force_clean_raw_pass(callback) {
+		let manifest_file = path.resolve(pass_url, &apos;./manifest.json&apos;);
+		let signature_file = path.resolve(pass_url, &apos;./signature&apos;);
+		let files = [manifest_file, signature_file];
+		let _done = _.after(files.length, function() {
+			callback(null, {
+				manifest: manifest_file,
+				signature: signature_file
+			});
+		});
+
+		_.forEach(files, function(file) {
+			logger(&apos;force_clean_raw_pass&apos;, &apos;removing&apos;, path.basename(file));
+			fs.remove(file, function(err) {
+				_done(err);
+			});
+		});
+	}
+
+	function create_temporary_directory(callback) {
+		logger(&apos;create_temporary_directory&apos;, temporary_directory);
+		fs.ensureDir(path.resolve(temporary_directory), function(err) {
+			callback(err, temporary_directory);
+		});
+	}
+
+	function copy_pass_to_temporary_location(callback) {
+		logger(&apos;copy_pass_to_temporary_location&apos;, pass_url, temporary_directory);
+		//	fs.ensureDirSync(pass_url);
+		fs.copy(path.resolve(pass_url, &apos;./&apos;), temporary_directory, function(err) {
+			callback(err, pass_url);
+		});
+	}
+
+	function clean_ds_store_files(callback) {
+		logger(&apos;clean_ds_store_files&apos;);
+		let ds_files = path.resolve(temporary_directory, &apos;./.DS_Store&apos;);
+		fs.remove(ds_files, function(err) {
+			callback(err, ds_files);
+		});
+	}
+
+	function generate_json_manifest(callback) {
+		logger(&apos;generate_json_manifest&apos;);
+		let _manifest = {};
+		let _manifestFilename = path.resolve(temporary_directory, &apos;./manifest.json&apos;);
+
+		manifest_url = _manifestFilename;
+		fs.removeSync(path.resolve(temporary_directory, &apos;./.DS_Store&apos;));
+		glob(temporary_directory + path.sep + &apos;**/*.*&apos;, function(err, files) {
+			if (err) {
+				callback(err, null)
+			}
+			if (files &amp;&amp; files.length) {
+				files.forEach(function(file) {
+					//	logger(&apos;checksum&apos;, file);
+					_manifest[file.replace(temporary_directory + path.sep, &apos;&apos;)] = utils.checksum(fs.readFileSync(file), &apos;sha1&apos;);
+				});
+				fs.writeFile(_manifestFilename, JSON.stringify(_manifest), function(err) {
+					logger(&apos;generate_json_manifest&apos;, &apos;wrote to&apos;, _manifestFilename);
+					callback(err, _manifestFilename);
+				});
+			}
+		});
+	}
+
+	function sign_manifest(cb) {
+		let signedContents;
+		logger(&apos;sign_manifest&apos;);
+		signature_url = path.resolve(temporary_directory, &apos;./signature&apos;);
+
+		let sign_pass_cmd =
+			`openssl smime \
+			-binary \
+			-sign \
+			-certfile ${wwdr_certificate} \
+			-signer ${certificate_url} \
+			-inkey ${key_url} \
+			-in ${manifest_url} \
+			-out ${signature_url} \
+			-outform DER \
+			-passin pass:${certificate_password}`;
+
+		logger(&apos;cmd&apos;, sign_pass_cmd);
+
+		let exec = child_process.exec(sign_pass_cmd, {
+			cwd: pass_url
+		}, function(error, stdout, stderr) {
+			if (error) {
+				cb(error, null);
+			} else {
+				logger(&apos;sign_manifest&apos;, &apos;child_process&apos;, stdout, stderr);
+				cb(null, signature_url);
+			}
+		});
+	}
+
+	function compress_pass_file(callback) {
+		logger(&apos;compress_pass_file&apos;);
+		let filename = temporary_directory.replace(&apos;.raw&apos;, &apos;.zip&apos;);
+		let zip_pass_cmd = `zip -R * ${filename}`;
+
+		pkpass_url = filename.replace(&apos;.zip&apos;, &apos;.pkpass&apos;);
+		glob(path.resolve(temporary_directory, &apos;./*&apos;), function(err, files) {
+			if (err) {
+				callback(err, null);
+			}
+			var done = _.after(files.length, function() {
+				var data = zip.generate({
+					base64: false,
+					compression: &apos;DEFLATE&apos;
+				});
+				zip_url = filename;
+				fs.writeFileSync(filename, data, &apos;binary&apos;);
+				logger(&apos;compress_pass_file&apos;, &apos;writeZip&apos;, path.basename(filename));
+				callback(null, filename);
+			});
+
+			_.forEach(files, function(file) {
+				logger(&apos;compress_pass_file&apos;, &apos;add&apos;, path.basename(file));
+				zip.file(path.basename(file), fs.readFileSync(path.resolve(file)));
+				done();
+			});
+		});
+	};
+
+	function rename_pass_file(cb) {
+		pkpass_url = zip_url.replace(&apos;.zip&apos;, &apos;.pkpass&apos;);
+		logger(&apos;rename_pass_file&apos;, &apos;to&apos;, pkpass_url);
+		fs.copy(zip_url, pkpass_url, function(err) {
+			if (err) {
+				cb(err);
+			}
+			cb(null, pkpass_url);
+		});
+	}
+
+	function copy_to_dest(cb) {
+		output_url = path.resolve(options.outputFilename, &apos;../&apos;, path.basename(pkpass_url));
+		fs.remove(output_url, function(err) {
+			if (err) {
+				cb(err);
+			}
+			logger(&apos;copy_to_dest&apos;, output_url);
+			fs.copy(pkpass_url, output_url, function(err) {
+				if (err) {
+					cb(err);
+				}
+				cb(null, output_url);
+			});
+		});
+
+	}
+
+	function delete_temp_dir(cb) {
+		logger(&apos;delete_temp_dir&apos;);
+		try {
+			fs.removeSync(pkpass_url);
+			fs.removeSync(zip_url);
+			fs.removeSync(temporary_directory);
+			cb(null, temporary_directory);
+		} catch (err) {
+			cb(err);
+		}
+	}
+
+	function sign_pass(cb) {
+		logger(&apos;sign_pass&apos;);
+		async.series({
+			validate: validate_directory_as_unsigned_raw_pass,
+			raw: force_clean_raw_pass,
+			tmpdir: create_temporary_directory,
+			copy: copy_pass_to_temporary_location,
+			clean: clean_ds_store_files,
+			manifest: generate_json_manifest,
+			signature: sign_manifest,
+			zip: compress_pass_file,
+			pkpass: rename_pass_file,
+			dest: copy_to_dest,
+			cleantmpdir: delete_temp_dir
+		}, function(err, result) {
+			logger(&apos;sign_pass&apos;, &apos;complete&apos;, result);
+			if (err) {
+				cb(err);
+			}
+			if (cb) {
+				cb(err, result);
+			}
+		});
+
+	}
+	return {
+		sign: sign_pass,
+		signPromise: function(raw) {
+			return new Promise(function(resolve, reject) {
+				sign_pass(function(err, resp) {
+					if (err) {
+						reject(err);
+					}
+					resolve(resp);
+				});
+			});
+		}
+	};
+}
+
+
+
+/*
+$ openssl pkcs12 -in cert.p12 -clcerts -nokeys -out certificate.pem
+$ openssl pkcs12 -in cert.p12 -nocerts -out key.pem
+
+$ openssl smime -sign \
+							-detach \
+							-in manifest.json \
+							-out ./signature \
+							-outform DER \
+							-inkey ./certificates/pass-passbookmanager-key.p12 \
+							-signer ./certificates/AppleWWDRCA.cer
+*/
+
+SignPass.passTypes = [{
+	value: &apos;generic&apos;,
+	name: &apos;Generic&apos;
+}, {
+	value: &apos;github&apos;,
+	name: &apos;Github&apos;
+}, {
+	value: &apos;boardingPass&apos;,
+	name: &apos;Boarding Pass&apos;
+}, {
+	value: &apos;coupon&apos;,
+	name: &apos;Coupon&apos;
+}, {
+	value: &apos;eventTicket&apos;,
+	name: &apos;Event Ticket&apos;
+}, {
+	value: &apos;storeCard&apos;,
+	name: &apos;Store Card&apos;
+}];
+
+
+function PassTypeId(id, o) {
+	let _id = id.replace(/\W/g, &apos;-&apos;);
+	return _.assign({
+		_id: _id,
+		passTypeIdentifier: o.passTypeIdentifier,
+		cert: &apos;&apos;,
+		key: &apos;&apos;,
+		passphrase: &apos;&apos;,
+		docType: &apos;pass-type-id&apos;
+	}, o);
+}
+
+SignPass.createPassTypeId = function(id, o) {
+	return new PassTypeId(id, o);
+};
+
+/*
+ take a apple .p12 pass cert and make the pems.
+ $ openssl pkcs12 -in cert.p12 -clcerts -nokeys -out certificate.pem
+ $ openssl pkcs12 -in cert.p12 -nocerts -out key.pem
+
+ @param {String} p12 - The path to the .p12 cert.
+ @param {String} pass - The passpharse for the .p12 cert.
+*/
+SignPass.createPems = function(options, callback) {
+	let _options = {
+		passphrase: null,
+		passTypeIdentifier: null,
+		p12: null,
+		output: null
+	};
+	_.assign(_options, options);
+
+	assert(_options.passTypeIdentifier, &apos;has passTypeIdentifier&apos;);
+	//assert(_options.pass, &apos;has pass&apos;);
+	assert(_options.passphrase, &apos;has passphrase&apos;);
+	assert(fs.existsSync(_options.p12), &apos;has p12&apos;);
+
+	let passTypeIdentifier = _options.passTypeIdentifier;
+	let passTypeIdentifierFilename = passTypeIdentifier.replace(/\W/g, &apos;-&apos;);
+	let p12 = _options.p12;
+	let passphrase = _options.passphrase;
+	let certOutputPath = path.resolve(_options.output, &apos;./&apos;, passTypeIdentifier, &apos;./certs&apos;);
+
+	let _out = [],
+		cmd1 = {},
+		cmd2 = {},
+		_p12,
+		_outCert,
+		_cmd1,
+		_cmd2,
+		_outKey,
+		_path = path.parse(p12);
+
+	function _checkCert(cb) {
+		fs.exists(p12, function(err) {
+			cb(err, p12);
+		});
+	}
+
+	function _copyP12(cb) {
+		_p12 = path.resolve(certOutputPath, &apos;./&apos;, path.basename(p12));
+		fs.removeSync(_p12);
+		fs.copy(path.resolve(p12), _p12, function(err) {
+			p12 = _p12;
+			cb(err, _p12);
+		});
+	}
+
+	function _certCmd(cb) {
+		_path.ext = &apos;.pem&apos;;
+		_path.name += &apos;-cert&apos;;
+		_outCert = p12.replace(&apos;.p12&apos;, &apos;-cert.pem&apos;);
+		_cmd1 = `openssl pkcs12 -in ${p12} -passin pass:${passphrase} -clcerts -nokeys -out ${_outCert}`;
+		fs.removeSync(_outCert);
+
+		cmd1 = {
+			filename: _outCert,
+			cmd: _cmd1
+		};
+		cb(null, _outCert);
+	}
+
+	function _keyCmd(cb) {
+		_path.name += &apos;-key&apos;;
+		_outKey = p12.replace(&apos;.p12&apos;, &apos;-key.pem&apos;);
+		_cmd2 = `openssl pkcs12 -in ${p12} -nocerts -passout pass:${passphrase} -passin pass:${passphrase} -out ${_outKey}`;
+		fs.removeSync(_outKey);
+
+		cmd2 = {
+			filename: _outKey,
+			cmd: _cmd2
+		};
+		cb(null, _outKey);
+	}
+
+	function _certCmdExec(cb) {
+		child_process.exec(cmd1.cmd, function(err, stdout, stderr) {
+			cb(err, cmd1.cmd);
+		});
+	}
+
+	function _keyCmdExec(cb) {
+		child_process.exec(cmd2.cmd, function(err, stdout, stderr) {
+			cb(err, cmd2.cmd);
+		});
+	}
+
+	async.series({
+
+		p12: _copyP12,
+		cert: _certCmd,
+		key: _keyCmd,
+		certcmd: _certCmdExec,
+		keycmd: _keyCmdExec
+	}, function(err, result) {
+
+		let _out = SignPass.createPassTypeId(passTypeIdentifier, result);
+		_out.passTypeIdentifier = passTypeIdentifier;
+		_out.wwdr = path.resolve(__dirname, &apos;../certificates/wwdr-authority.pem&apos;);
+		_out.p12 = p12;
+		_out.passphrase = passphrase;
+		if (callback) {
+			callback(err, _out);
+		}
+	});
+};
+
+SignPass.createPemsPromise = function(options) {
+	return new Promise(function(resolve, reject) {
+		SignPass.createPems(options, function(err, resp) {
+			if (err) {
+				reject(err);
+			}
+			resolve(resp);
+		});
+	});
+};
+
+module.exports = SignPass;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.3)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

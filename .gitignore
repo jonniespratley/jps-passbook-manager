@@ -31,7 +31,7 @@ temp/data
 /node_modules/
 node_modules/gruntacular/node_modules/testacular/node_modules/socket.io/node_modules/socket.io-client/lib/vendor/web-socket-js/flash-src/com/hurlant/crypto/rsa/RSAKey.as
 
-
+/mochawesome-reports/
 
 www
 
