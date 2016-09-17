@@ -5,7 +5,7 @@ applications:
     memory: 64M
     stack: cflinuxfs2
     path: .
-    command: node server.js
+    command: node ./server.js
     services:
     #  - my_logstash_instance
       #- my_predix_mobile_instance

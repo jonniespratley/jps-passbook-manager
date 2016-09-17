@@ -46,15 +46,6 @@ describe('Passes', function() {
 		});
 	});
 
-	xit('remove() - should remove pass', function(done) {
-		Passes.remove(mocks.mockPass._id).then(function(resp) {
-			assert.ok(resp);
-			done();
-		}, function(err) {
-			assert.fail(err);
-			done();
-		});
-	});
 
 	it('find(params) - should resolve pass that meets params', function(done) {
 		Passes.find({
