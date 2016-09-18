@@ -97,11 +97,11 @@ function downloadGithubAvatar(user, output) {
 _.forEach(GITHUB_USERS, function(n) {
 
 	utils.githubToPass(n, function(err, resp) {
-		logger('github user', resp);
+		//	logger('github user', resp);
 
 		//request(user.avatar_url).pipe(fs.createWriteStream(user.name + '@2x.png'))
 		jpsPassbook.createPass(resp.pass, function(err, pass) {
-			logger('create github pass', resp);
+			//logger('create github pass', resp);
 
 			downloadGithubAvatar(resp.user, pass.filename);
 			signPass(pass.filename);
@@ -137,7 +137,7 @@ var options = {
 	passphrase: 'fred',
 	passTypeIdentifier: 'pass.io.jsapps.walletmanager',
 	p12: cert_url,
-	output: './tmp'
+	output: output_url
 };
 SignPass.createPems(options, function(err, resp) {
 	console.log(resp);
@@ -166,13 +166,16 @@ function signPass(raw) {
 		certPassword: cert_pass,
 		keyFilename: path.resolve(__dirname, './certificates/pass-key.pem'),
 		wwdrFilename: wwdr_url,
+		passphrase: 'fred',
+		passTypeIdentifier: 'pass.io.jsapps.walletmanager',
+		p12: cert_url,
 		outputFilename: output_url,
 		compress: true
 	};
 
 	var signpass = new SignPass(options);
 	signpass.sign(function(err, resp) {
-		console.warn('signPass', resp);
+		console.warn('signPass', err, resp);
 	});
 }
 

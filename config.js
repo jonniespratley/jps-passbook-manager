@@ -58,7 +58,7 @@ var VCAP_SERVICES = {
 var config = {
 	"name": "pass-manager",
 	debug: true,
-	baseUrl: 'http://localhost:5984/passbookmanager',
+	baseUrl: 'http://localhost:4987/passmanager',
 	"message": "Pass Manager API Server",
 	"dataPath": path.resolve(__dirname, "./data/"),
 	redis: {
@@ -105,8 +105,8 @@ var config = {
 		"port": process.env.PORT || 5001
 	},
 	"db": {
-		"local": "passbookmanager",
-		"remote": "http://localhost:5984/passbookmanager"
+		"local": "passmanager",
+		"remote": "http://localhost:4987/passmanager"
 	},
 	"collections": [
 		"devices",

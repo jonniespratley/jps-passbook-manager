@@ -14,7 +14,7 @@ exports.mockIdentifer = {
 	passTypeIdentifier: config.passkit.passTypeIdentifier,
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
 	p12: path.resolve(__dirname, `../../certificates/${config.passkit.passTypeIdentifier}.p12`),
-	passphrase: 'test'
+	passphrase: 'fred'
 };
 program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
 

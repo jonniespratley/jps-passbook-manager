@@ -5717,7 +5717,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use strict';\nconst fs = require('fs-extra');\nconst _ = require('lodash');\nconst assert = require('assert');\nconst path = require('path');\nconst mocks = require(path.resolve(__dirname, '../helpers/mocks'));\nconst program = mocks.program;\nconst config = program.config.defaults;\nconst SignPass = require(path.resolve(__dirname, '../../lib/signpass'));\nconst jpsPassbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))(program);\n\nvar options = mocks.mockIdentifer;\n\nvar signpass;\nvar mockPass = mocks.mockPass;\nvar passes = mocks.mockPasses;\n\nvar testPasses = [];\ndescribe('SignPass', function() {\n\n\n\n\tit('should be defined', function(done) {\n\t\tassert(SignPass);\n\t\tdone();\n\t});\n\n\txit('should create SignPass instance', function(done) {\n\t\tsignpass = new SignPass(options);\n\t\tassert(signpass);\n\t\tdone();\n\t});\n\n\tdescribe('Certs', function() {\n\n\t\tit('should return PassTypeId object', function(done) {\n\t\t\toptions = SignPass.createPassTypeId(mockPass.passTypeIdentifier, {});\n\t\t\tassert(options);\n\t\t\tdone();\n\t\t});\n\n\t\tit('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {\n\t\t\tSignPass.createPems({\n\t\t\t\tpassphrase: mocks.mockIdentifer.passphrase,\n\t\t\t\tpassTypeIdentifier: mocks.mockIdentifer.passTypeIdentifier,\n\t\t\t\tp12: mocks.mockIdentifer.p12,\n\t\t\t\toutput: program.config.defaults.dataPath\n\t\t\t}, function(err, resp) {\n\t\t\t\toptions = resp;\n\t\t\t\tif (err) {\n\t\t\t\t\tassert.fail(err);\n\t\t\t\t\tdone();\n\t\t\t\t}\n\n\t\t\t\tassert(fs.existsSync(resp.key));\n\t\t\t\tassert(fs.existsSync(resp.p12));\n\t\t\t\tassert(fs.existsSync(resp.wwdr));\n\t\t\t\tassert(fs.existsSync(resp.cert));\n\t\t\t\tdone();\n\t\t\t});\n\t\t});\n\n\t\tit('should be fetch pass type info', function(done) {\n\t\t\tjpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {\n\t\t\t\toptions = resp;\n\t\t\t\tif (err) {\n\t\t\t\t\tassert.fail(err);\n\t\t\t\t\tdone();\n\t\t\t\t}\n\t\t\t\tassert(options);\n\t\t\t\tassert(fs.existsSync(resp.key));\n\t\t\t\tassert(fs.existsSync(resp.p12));\n\t\t\t\tassert(fs.existsSync(resp.wwdr));\n\t\t\t\tassert(fs.existsSync(resp.cert));\n\t\t\t\tdone();\n\t\t\t});\n\t\t});\n\t});\n\n\n\tdescribe('Siging', function() {\n\n\t\tbefore(function() {\n\t\t\tjpsPassbook.createPassPromise(mockPass).then(function(resp) {\n\t\t\t\tmockPass = resp;\n\t\t\t\t//\tmockPass = resp[0];\n\t\t\t\tconsole.log('Using Mock Pass', mockPass);\n\n\t\t\t});\n\t\t});\n\n\t\tit('sign() - should create .zip and .pkpass files', function(done) {\n\t\t\toptions.passFilename = mockPass.rawFilename || mockPass.filename;\n\t\t\tsignpass = new SignPass(options);\n\t\t\tsignpass.sign(function(err, resp) {\n\t\t\t\tconsole.log('\\n\\n Signed using', options.passFilename);\n\t\t\t\tif (err) {\n\t\t\t\t\tassert.fail(err);\n\t\t\t\t\tdone();\n\t\t\t\t}\n\t\t\t\tassert(resp);\n\t\t\t\tassert(fs.existsSync(resp.dest));\n\t\t\t\tdone();\n\t\t\t});\n\t\t});\n\n\n\n\t\tdescribe('Batching', function() {\n\t\t\tvar _passes = [];\n\t\t\tvar _mockPassFilenames = [];\n\n\n\t\t\tbefore(function(done) {\n\t\t\t\tprogram.db.find({\n\t\t\t\t\tdocType: 'pass'\n\t\t\t\t}).then(function(resp) {\n\t\t\t\t\t_passes = resp;\n\t\t\t\t\t_mockPassFilenames = _.pluck(resp, 'filename');\n\t\t\t\t\tconsole.log('GOT PASSES', resp);\n\t\t\t\t\tdone();\n\t\t\t\t});\n\t\t\t});\n\n\n\t\t\txit('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {\n\t\t\t\tthis.timeout(10000);\n\t\t\t\tvar _done = _.after(_mockPassFilenames.length, function() {\n\t\t\t\t\tdone();\n\t\t\t\t});\n\n\t\t\t\t_.forEach(_mockPassFilenames, function(filename) {\n\t\t\t\t\toptions.passFilename = filename;\n\t\t\t\t\tsignpass = new SignPass(options);\n\t\t\t\t\tsignpass.signPromise().then(function(resp) {\n\t\t\t\t\t\tassert(resp);\n\t\t\t\t\t\tassert(fs.existsSync(resp.dest));\n\t\t\t\t\t\t_done(resp);\n\t\t\t\t\t}).catch(function(err) {\n\t\t\t\t\t\tassert.fail(err);\n\t\t\t\t\t\tdone();\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t});\n\n\t\t});\n\n\t});\n\n\n});\n"
+    "content": "'use strict';\nconst fs = require('fs-extra');\nconst _ = require('lodash');\nconst assert = require('assert');\nconst path = require('path');\nconst mocks = require(path.resolve(__dirname, '../helpers/mocks'));\nconst program = mocks.program;\nconst config = program.config.defaults;\nconst SignPass = require(path.resolve(__dirname, '../../lib/signpass'));\nconst jpsPassbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))(program);\n\nvar options = mocks.mockIdentifer;\n\nvar signpass;\nvar mockPass = mocks.mockPass;\nvar passes = mocks.mockPasses;\n\nvar testPasses = [];\ndescribe('SignPass', function() {\n\n\n\n\tit('should be defined', function(done) {\n\t\tassert(SignPass);\n\t\tdone();\n\t});\n\n\txit('should create SignPass instance', function(done) {\n\t\tsignpass = new SignPass(options);\n\t\tassert(signpass);\n\t\tdone();\n\t});\n\n\tdescribe('Certs', function() {\n\n\t\tit('should return PassTypeId object', function(done) {\n\t\t\toptions = SignPass.createPassTypeId(mockPass.passTypeIdentifier, {});\n\t\t\tassert(options);\n\t\t\tdone();\n\t\t});\n\n\t\tit('createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.', function(done) {\n\t\t\tSignPass.createPems({\n\t\t\t\tpassphrase: mocks.mockIdentifer.passphrase,\n\t\t\t\tpassTypeIdentifier: mocks.mockIdentifer.passTypeIdentifier,\n\t\t\t\tp12: mocks.mockIdentifer.p12,\n\t\t\t\toutput: program.config.defaults.dataPath\n\t\t\t}, function(err, resp) {\n\t\t\t\toptions = resp;\n\t\t\t\tif (err) {\n\t\t\t\t\tassert.fail(err);\n\t\t\t\t\tdone();\n\t\t\t\t}\n\n\t\t\t\tassert(fs.existsSync(resp.key));\n\t\t\t\tassert(fs.existsSync(resp.p12));\n\t\t\t\tassert(fs.existsSync(resp.wwdr));\n\t\t\t\tassert(fs.existsSync(resp.cert));\n\t\t\t\tdone();\n\t\t\t});\n\t\t});\n\n\t\tit('should be fetch pass type info', function(done) {\n\t\t\tjpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {\n\t\t\t\toptions = resp;\n\t\t\t\tif (err) {\n\t\t\t\t\tassert.fail(err);\n\t\t\t\t\tdone();\n\t\t\t\t}\n\t\t\t\tassert(options);\n\t\t\t\tassert(fs.existsSync(resp.key));\n\t\t\t\tassert(fs.existsSync(resp.p12));\n\t\t\t\tassert(fs.existsSync(resp.wwdr));\n\t\t\t\tassert(fs.existsSync(resp.cert));\n\t\t\t\tdone();\n\t\t\t});\n\t\t});\n\t});\n\n\n\tdescribe('Siging', function() {\n\n\t\tbefore(function() {\n\t\t\tjpsPassbook.createPassPromise(mockPass).then(function(resp) {\n\t\t\t\tmockPass = resp;\n\t\t\t\t//\tmockPass = resp[0];\n\t\t\t\tconsole.log('Using Mock Pass', mockPass);\n\n\t\t\t});\n\t\t});\n\n\t\tit('sign() - should create .zip and .pkpass files', function(done) {\n\t\t\toptions.passFilename = mockPass.rawFilename || mockPass.filename;\n\t\t\tsignpass = new SignPass(options);\n\t\t\tsignpass.sign(function(err, resp) {\n\t\t\t\tconsole.log('\\n\\n Signed using', options.passFilename);\n\t\t\t\tif (err) {\n\t\t\t\t\tassert.fail(err);\n\t\t\t\t\tdone();\n\t\t\t\t}\n\t\t\t\tassert(resp);\n\t\t\t\tassert(fs.existsSync(resp.dest));\n\t\t\t\tdone();\n\t\t\t});\n\t\t});\n\n\n\n\t\tdescribe('Batching', function() {\n\t\t\tvar _passes = [];\n\t\t\tvar _mockPassFilenames = [];\n\n\n\t\t\tbefore(function(done) {\n\t\t\t\tprogram.db.find({\n\t\t\t\t\tdocType: 'pass'\n\t\t\t\t}).then(function(resp) {\n\t\t\t\t\t_passes = resp;\n\t\t\t\t\t_mockPassFilenames = _.pluck(resp, 'filename');\n\t\t\t\t\t//\tconsole.log('GOT PASSES', resp);\n\t\t\t\t\tdone();\n\t\t\t\t});\n\t\t\t});\n\n\n\t\t\tit('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {\n\t\t\t\tthis.timeout(10000);\n\t\t\t\tvar _done = _.after(_mockPassFilenames.length, function() {\n\t\t\t\t\tdone();\n\t\t\t\t});\n\n\t\t\t\t_.forEach(_mockPassFilenames, function(filename) {\n\t\t\t\t\toptions.passFilename = filename;\n\t\t\t\t\tsignpass = new SignPass(options);\n\t\t\t\t\tsignpass.signPromise().then(function(resp) {\n\t\t\t\t\t\tassert(resp);\n\t\t\t\t\t\tassert(fs.existsSync(resp.dest));\n\t\t\t\t\t\t_done(resp);\n\t\t\t\t\t}).catch(function(err) {\n\t\t\t\t\t\tassert.fail(err);\n\t\t\t\t\t\tdone();\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t});\n\n\t\t});\n\n\t});\n\n\n});\n"
   },
   {
     "__docId__": 341,
@@ -5847,6 +5847,20 @@
   },
   {
     "__docId__": 350,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it145",
+    "testId": 145,
+    "memberof": "specs/signpass-spec.js~describe136.describe142.describe144",
+    "testDepth": 3,
+    "longname": "specs/signpass-spec.js~describe136.describe142.describe144.it145",
+    "access": null,
+    "description": "sign() - all passes - should create .zip and .pkpass for each pass type",
+    "lineNumber": 126
+  },
+  {
+    "__docId__": 351,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -5859,32 +5873,18 @@
     "content": "'use strict';\nconst path = require('path');\nconst _ = require('lodash');\nconst assert = require('assert');\nconst mocks = require(path.resolve(__dirname, '../helpers/mocks'));\nconst program = mocks.program;\nconst User = program.require('models/user');\n\nvar u;\n\ndescribe('User Model', function() {\n\tbefore(function() {\n\t\tu = new User({\n\t\t\temail: 'jonnie@test.com',\n\t\t\tdisplayName: 'jonnie',\n\t\t\t_json: {\n\t\t\t\tname: 'test'\n\t\t\t},\n\t\t\t_raw: ''\n\t\t});\n\t});\n\n\tit('should be defined', function(done) {\n\t\tassert(User);\n\t\tdone();\n\t});\n\n\tit('should create instance', function(done) {\n\t\tassert(u);\n\t\tassert(u.username === 'jonnie');\n\t\tdone();\n\t});\n\n\tit('should not have _json', function(done) {\n\t\tassert(u);\n\t\tassert(!u._json);\n\t\tassert(u.data);\n\t\tdone();\n\t});\n\n\tit('should not have _raw', function(done) {\n\t\tassert(u);\n\t\tassert(!u._raw);\n\t\tdone();\n\t});\n\n});\n"
   },
   {
-    "__docId__": 351,
+    "__docId__": 352,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe145",
-    "testId": 145,
+    "name": "describe146",
+    "testId": 146,
     "memberof": "specs/user-spec.js",
     "testDepth": 0,
-    "longname": "specs/user-spec.js~describe145",
+    "longname": "specs/user-spec.js~describe146",
     "access": null,
     "description": "User Model",
     "lineNumber": 11
-  },
-  {
-    "__docId__": 352,
-    "kind": "testIt",
-    "static": true,
-    "variation": null,
-    "name": "it146",
-    "testId": 146,
-    "memberof": "specs/user-spec.js~describe145",
-    "testDepth": 1,
-    "longname": "specs/user-spec.js~describe145.it146",
-    "access": null,
-    "description": "should be defined",
-    "lineNumber": 23
   },
   {
     "__docId__": 353,
@@ -5893,12 +5893,12 @@
     "variation": null,
     "name": "it147",
     "testId": 147,
-    "memberof": "specs/user-spec.js~describe145",
+    "memberof": "specs/user-spec.js~describe146",
     "testDepth": 1,
-    "longname": "specs/user-spec.js~describe145.it147",
+    "longname": "specs/user-spec.js~describe146.it147",
     "access": null,
-    "description": "should create instance",
-    "lineNumber": 28
+    "description": "should be defined",
+    "lineNumber": 23
   },
   {
     "__docId__": 354,
@@ -5907,12 +5907,12 @@
     "variation": null,
     "name": "it148",
     "testId": 148,
-    "memberof": "specs/user-spec.js~describe145",
+    "memberof": "specs/user-spec.js~describe146",
     "testDepth": 1,
-    "longname": "specs/user-spec.js~describe145.it148",
+    "longname": "specs/user-spec.js~describe146.it148",
     "access": null,
-    "description": "should not have _json",
-    "lineNumber": 34
+    "description": "should create instance",
+    "lineNumber": 28
   },
   {
     "__docId__": 355,
@@ -5921,15 +5921,29 @@
     "variation": null,
     "name": "it149",
     "testId": 149,
-    "memberof": "specs/user-spec.js~describe145",
+    "memberof": "specs/user-spec.js~describe146",
     "testDepth": 1,
-    "longname": "specs/user-spec.js~describe145.it149",
+    "longname": "specs/user-spec.js~describe146.it149",
+    "access": null,
+    "description": "should not have _json",
+    "lineNumber": 34
+  },
+  {
+    "__docId__": 356,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it150",
+    "testId": 150,
+    "memberof": "specs/user-spec.js~describe146",
+    "testDepth": 1,
+    "longname": "specs/user-spec.js~describe146.it150",
     "access": null,
     "description": "should not have _raw",
     "lineNumber": 41
   },
   {
-    "__docId__": 356,
+    "__docId__": 357,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -5942,32 +5956,18 @@
     "content": "'use strict';\nconst path = require('path');\nconst _ = require('lodash');\nconst assert = require('assert');\nconst mocks = require(path.resolve(__dirname, '../helpers/mocks'));\nconst program = mocks.program;\nconst Users = program.require('models/users')(program.db);;\nconst User = program.require('models/user');\nvar u;\nvar testUserId = null;\n\nvar testUser = {\n\tusername: 'test',\n\temail: 'test@gmail.com',\n\tpassword: 'test'\n};\n\nvar testUser1 = {\n\temail: 'test1@gmail.com',\n\tpassword: 'test'\n};\nvar testUser2 = {\n\temail: 'test2@gmail.com',\n\tpassword: 'test'\n};\nvar testUser3 = {\n\temail: 'test3@gmail.com',\n\tpassword: 'test'\n};\n\ndescribe('Users Model', function() {\n/*\n  after(function(done) {\n    program.db.remove(testUserId).then(function(resp) {\n      console.log('Removed', resp);\n      done();\n    }).catch(function(err) {\n      done();\n    });\n  });*/\n\n  it('be defined', function() {\n    assert(Users);\n  });\n\n\tit('create(user, done) - should create a user', function (done) {\n\t\tUsers.create(testUser, function(err, resp){\n\t\t\tif (err) {\n\t\t\t\tassert.fail(err);\n\t\t\t\tdone();\n\t\t\t}\n\t\t\tassert(resp);\n\t\t\tdone();\n\t\t});\n\t});\n\n\tit('getUsers() - should fetch users and resolve promise on success', function (done) {\n\t\tUsers.getUsers().then(function(resp){\n\t\t\tconsole.log('GOT USERS', resp);\n\t\t\tassert(resp);\n\t\t\tdone();\n\t\t}).catch(function(err){\n\t\t\tassert.fail(err);\n\t\t\tdone();\n\t\t});\n\t});\n\n\tit('save(user, done) - should create a user', function (done) {\n\t\tUsers.save(testUser1, function(err, resp){\n\t\t\tif (err) {\n\t\t\t\tassert.fail(err);\n\t\t\t\tdone();\n\t\t\t}\n\t\t\tassert(resp);\n\t\t\tdone();\n\t\t});\n\t});\n\n\tit('findOrCreate(profile, done) - should find/create user successfully', function(done) {\n\t\tassert.ok(Users.findOrCreate);\n\t\tUsers.findOrCreate(testUser2, function(err, resp) {\n\t\t\tif (err) {\n\t\t\t\tassert.fail(err);\n\t\t\t\tdone();\n\t\t\t}\n\t\t\tassert(resp);\n\t\t\tdone();\n\t\t});\n\t});\n\n  it('findOrCreate(profile, done) - should find/create user successfully', function(done) {\n    Users.findOrCreate(testUser3, function(err, resp) {\n      if (err) {\n        assert.fail(err);\n      }\n      testUserId = resp._id;\n      assert(resp);\n      done();\n    });\n  });\n\n  it('find(profile, done) - should find user unsuccessfully', function(done) {\n    assert.ok(Users.find);\n    Users.find({\n      username: 'unknown'\n    }, function(err, resp) {\n      if (err) {\n        assert(err, 'returns error');\n        done();\n      }\n      assert.fail(resp);\n      done();\n    });\n  });\n\n\tit('validate(user, done) - find valid user by username/password', function (done) {\n\t\tUsers.validate(testUser3, function(err, resp){\n\t\t\tif (err) {\n\t\t\t\tassert.fail(err);\n\t\t\t\tdone();\n\t\t\t}\n\t\t\tassert(resp);\n\t\t\tdone();\n\t\t});\n\t});\n\n\tit('findByUsername(profile, done) - should find user successfully', function(done) {\n\t\tassert.ok(Users.findByUsername);\n\t\tUsers.findByUsername('test3', function(err, resp) {\n\t\t\tif (err) {\n\t\t\t\tassert.fail(err);\n\t\t\t}\n\t\t\tassert(resp);\n\t\t\tdone();\n\t\t});\n\t});\n\n\n\n});\n"
   },
   {
-    "__docId__": 357,
+    "__docId__": 358,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe150",
-    "testId": 150,
+    "name": "describe151",
+    "testId": 151,
     "memberof": "specs/users-spec.js",
     "testDepth": 0,
-    "longname": "specs/users-spec.js~describe150",
+    "longname": "specs/users-spec.js~describe151",
     "access": null,
     "description": "Users Model",
     "lineNumber": 31
-  },
-  {
-    "__docId__": 358,
-    "kind": "testIt",
-    "static": true,
-    "variation": null,
-    "name": "it151",
-    "testId": 151,
-    "memberof": "specs/users-spec.js~describe150",
-    "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it151",
-    "access": null,
-    "description": "be defined",
-    "lineNumber": 42
   },
   {
     "__docId__": 359,
@@ -5976,12 +5976,12 @@
     "variation": null,
     "name": "it152",
     "testId": 152,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it152",
+    "longname": "specs/users-spec.js~describe151.it152",
     "access": null,
-    "description": "create(user, done) - should create a user",
-    "lineNumber": 46
+    "description": "be defined",
+    "lineNumber": 42
   },
   {
     "__docId__": 360,
@@ -5990,12 +5990,12 @@
     "variation": null,
     "name": "it153",
     "testId": 153,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it153",
+    "longname": "specs/users-spec.js~describe151.it153",
     "access": null,
-    "description": "getUsers() - should fetch users and resolve promise on success",
-    "lineNumber": 57
+    "description": "create(user, done) - should create a user",
+    "lineNumber": 46
   },
   {
     "__docId__": 361,
@@ -6004,12 +6004,12 @@
     "variation": null,
     "name": "it154",
     "testId": 154,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it154",
+    "longname": "specs/users-spec.js~describe151.it154",
     "access": null,
-    "description": "save(user, done) - should create a user",
-    "lineNumber": 68
+    "description": "getUsers() - should fetch users and resolve promise on success",
+    "lineNumber": 57
   },
   {
     "__docId__": 362,
@@ -6018,12 +6018,12 @@
     "variation": null,
     "name": "it155",
     "testId": 155,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it155",
+    "longname": "specs/users-spec.js~describe151.it155",
     "access": null,
-    "description": "findOrCreate(profile, done) - should find/create user successfully",
-    "lineNumber": 79
+    "description": "save(user, done) - should create a user",
+    "lineNumber": 68
   },
   {
     "__docId__": 363,
@@ -6032,12 +6032,12 @@
     "variation": null,
     "name": "it156",
     "testId": 156,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it156",
+    "longname": "specs/users-spec.js~describe151.it156",
     "access": null,
     "description": "findOrCreate(profile, done) - should find/create user successfully",
-    "lineNumber": 91
+    "lineNumber": 79
   },
   {
     "__docId__": 364,
@@ -6046,12 +6046,12 @@
     "variation": null,
     "name": "it157",
     "testId": 157,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it157",
+    "longname": "specs/users-spec.js~describe151.it157",
     "access": null,
-    "description": "find(profile, done) - should find user unsuccessfully",
-    "lineNumber": 102
+    "description": "findOrCreate(profile, done) - should find/create user successfully",
+    "lineNumber": 91
   },
   {
     "__docId__": 365,
@@ -6060,12 +6060,12 @@
     "variation": null,
     "name": "it158",
     "testId": 158,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it158",
+    "longname": "specs/users-spec.js~describe151.it158",
     "access": null,
-    "description": "validate(user, done) - find valid user by username/password",
-    "lineNumber": 116
+    "description": "find(profile, done) - should find user unsuccessfully",
+    "lineNumber": 102
   },
   {
     "__docId__": 366,
@@ -6074,9 +6074,23 @@
     "variation": null,
     "name": "it159",
     "testId": 159,
-    "memberof": "specs/users-spec.js~describe150",
+    "memberof": "specs/users-spec.js~describe151",
     "testDepth": 1,
-    "longname": "specs/users-spec.js~describe150.it159",
+    "longname": "specs/users-spec.js~describe151.it159",
+    "access": null,
+    "description": "validate(user, done) - find valid user by username/password",
+    "lineNumber": 116
+  },
+  {
+    "__docId__": 367,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it160",
+    "testId": 160,
+    "memberof": "specs/users-spec.js~describe151",
+    "testDepth": 1,
+    "longname": "specs/users-spec.js~describe151.it160",
     "access": null,
     "description": "findByUsername(profile, done) - should find user successfully",
     "lineNumber": 127

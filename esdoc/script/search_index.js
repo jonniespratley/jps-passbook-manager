@@ -763,13 +763,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/passes-model-spec.js.html#lineNumber13",
+    "test-file/specs/models-spec.js.html#lineNumber9",
     "Passes",
     "test"
   ],
   [
     "",
-    "test-file/specs/models-spec.js.html#lineNumber9",
+    "test-file/specs/passes-model-spec.js.html#lineNumber13",
     "Passes",
     "test"
   ],
@@ -867,6 +867,12 @@ window.esdocSearchIndex = [
     "",
     "test-file/specs/signpass-spec.js.html#lineNumber109",
     "SignPass Siging Batching",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/signpass-spec.js.html#lineNumber126",
+    "SignPass Siging Batching sign() - all passes - should create .zip and .pkpass for each pass type",
     "test"
   ],
   [

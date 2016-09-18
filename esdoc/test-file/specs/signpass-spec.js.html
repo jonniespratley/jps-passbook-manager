@@ -156,13 +156,13 @@ describe(&apos;SignPass&apos;, function() {
 				}).then(function(resp) {
 					_passes = resp;
 					_mockPassFilenames = _.pluck(resp, &apos;filename&apos;);
-					console.log(&apos;GOT PASSES&apos;, resp);
+					//	console.log(&apos;GOT PASSES&apos;, resp);
 					done();
 				});
 			});
 
 
-			xit(&apos;sign() - all passes - should create .zip and .pkpass for each pass type&apos;, function(done) {
+			it(&apos;sign() - all passes - should create .zip and .pkpass for each pass type&apos;, function(done) {
 				this.timeout(10000);
 				var _done = _.after(_mockPassFilenames.length, function() {
 					done();

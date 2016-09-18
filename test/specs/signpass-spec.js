@@ -18,14 +18,12 @@ var passes = mocks.mockPasses;
 var testPasses = [];
 describe('SignPass', function() {
 
-
-
 	it('should be defined', function(done) {
 		assert(SignPass);
 		done();
 	});
 
-	xit('should create SignPass instance', function(done) {
+	it('should create SignPass instance', function(done) {
 		signpass = new SignPass(options);
 		assert(signpass);
 		done();
@@ -35,6 +33,7 @@ describe('SignPass', function() {
 
 		it('should return PassTypeId object', function(done) {
 			options = SignPass.createPassTypeId(mockPass.passTypeIdentifier, {});
+			console.log('pass type id', options);
 			assert(options);
 			done();
 		});
@@ -62,6 +61,7 @@ describe('SignPass', function() {
 
 		it('should be fetch pass type info', function(done) {
 			jpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
+				console.log('pass certs', resp);
 				options = resp;
 				if (err) {
 					assert.fail(err);
@@ -80,12 +80,12 @@ describe('SignPass', function() {
 
 	describe('Siging', function() {
 
-		before(function() {
+		before(function(done) {
 			jpsPassbook.createPassPromise(mockPass).then(function(resp) {
 				mockPass = resp;
 				//	mockPass = resp[0];
 				console.log('Using Mock Pass', mockPass);
-
+				done();
 			});
 		});
 
@@ -104,8 +104,6 @@ describe('SignPass', function() {
 			});
 		});
 
-
-
 		describe('Batching', function() {
 			var _passes = [];
 			var _mockPassFilenames = [];
@@ -117,14 +115,14 @@ describe('SignPass', function() {
 				}).then(function(resp) {
 					_passes = resp;
 					_mockPassFilenames = _.pluck(resp, 'filename');
-					//	console.log('GOT PASSES', resp);
+					console.log('GOT PASSES', resp);
 					done();
 				});
 			});
 
 
-			it('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
-				this.timeout(10000);
+			xit('sign() - all passes - should create .zip and .pkpass for each pass type', function(done) {
+				//this.timeout(10000);
 				var _done = _.after(_mockPassFilenames.length, function() {
 					done();
 				});

@@ -1,3 +1,4 @@
+'use strict';
 var assert = require('assert'),
 	path = require('path'),
 	_ = require('lodash'),
@@ -34,15 +35,15 @@ describe('jps-passbook', function() {
 			});
 		});
 
-		xit('batchPromise("sign", passes) - should create each pass in database', function(done) {
-			this.timeout(20000);
+		it('batchPromise("sign", passes) - should create each pass in database', function(done) {
+			this.timeout(10000);
 			var mockIds = _.pluck(mockPasses, '_id');
 			console.log('mockIds', mockIds);
 			jpsPassbook.batchPromise('sign', mockPasses).then(function(_resp) {
 				console.log(_resp);
 				assert(_resp);
 				assert(mockIds.length === _resp.length);
-				assert(fs.existsSync(p.dest), 'returns .pkpass path');
+				assert(fs.existsSync(_resp.dest), 'returns .pkpass path');
 				done();
 			}).catch(function(err) {
 				assert.fail(err);
