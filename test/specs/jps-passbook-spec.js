@@ -17,6 +17,7 @@ var _passes = [];
 var passFiles = [];
 
 describe('jps-passbook', function() {
+
 	describe('Batching', function() {
 		before(function() {
 			program.db.saveAll(mocks.mockPasses).then(function(resp) {

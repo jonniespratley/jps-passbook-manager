@@ -10,6 +10,9 @@ var Pass = require(path.resolve(__dirname, '../../lib/models/pass.js'));
 var Passes = require(path.resolve(__dirname, '../../lib/models/passes.js'));
 var Device = require(path.resolve(__dirname, '../../lib/models/device.js'));
 
+/**
+ * Mock identifier to use
+ */
 exports.mockIdentifer = {
 	passTypeIdentifier: config.passkit.passTypeIdentifier,
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
@@ -23,8 +26,10 @@ console.log('MOCK program', program.config.defaults);
 
 exports.program = program;
 
+/**
+ * Mock passes to create
+ */
 exports.mockPasses = [
-
 	new Pass({
 		_id: 'mock-generic',
 		description: 'Example Generic',

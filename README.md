@@ -18,14 +18,21 @@ $ git clone https://github.com/jonniespratley/jps-passbook-manager.git
 ```
 
 ### 2. Install
-You must install the dependencies.
+Install the dependencies.
 
 ```
 $ npm install
 ```
 
-### 3. Start
-Then start the server.
+### 3. Test
+Run unit tests and code coverage.
+
+```
+$ npm test
+```
+
+### 4. Server
+Start the server.
 
 ```
 $ npm start
@@ -38,6 +45,31 @@ $ npm start
 _(Nothing yet)_
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 ## How To
@@ -46,14 +78,14 @@ _(Nothing yet)_
 To create a Pass Type ID. Visit the link below and follow the screenshots.
 
     > [https://developer.apple.com/account/ios/identifiers/passTypeId/passTypeIdList.action](https://developer.apple.com/account/ios/identifiers/passTypeId/passTypeIdList.action)
-    
+
     ![image](https://dl.dropboxusercontent.com/u/26906414/jps-passbook-manager/step-1.png)
     ![image](https://dl.dropboxusercontent.com/u/26906414/jps-passbook-manager/step-2.png)
     ![image](https://dl.dropboxusercontent.com/u/26906414/jps-passbook-manager/step-3.png)
     ![image](https://dl.dropboxusercontent.com/u/26906414/jps-passbook-manager/step-4.png)
 
 2. ### Export .cert to disk
-Launch the Keychain Access utility. -From the menu, select Keychain Access | Certificate Assistant | Request a Certificate from a Certificate Authority. 
+Launch the Keychain Access utility. -From the menu, select Keychain Access | Certificate Assistant | Request a Certificate from a Certificate Authority.
 In the Certificate Information window, enter the following:    
     * User Email Address: Enter the e-mail address associated with your iOS developer account.
     * Common Name: Choose a name that relates to the Pass Type ID.
@@ -88,7 +120,7 @@ Use the following Terminal commands to generate a certificate file and a key.pem
     ```
     openssl pkcs12 -in pass.p12 -clcerts -nokeys -out pass-certificate.pem -password pass:fred
     openssl pkcs12 -in pass.p12 -nocerts -out pass-key.pem
-    
+
     open sslsmime -binary -sign -certfile wwdr.pem -signer pass-cert.pem -inkey pass-key.pem -in manifest.json -out signature -outform DER -passin pass:fred
     ```
 
@@ -97,16 +129,16 @@ Use the following Terminal commands to generate a certificate file and a key.pem
     ```
     $ openssl pkcs12 -in certificates/pass.p12 -password pass:fred -clcerts -nokeys -out certificates/pass-cert.pem
     ```
-    
+
     ```
     $ openssl pkcs12 -in certificates/pass.p12 -password pass:fred -nocerts -out certificates/pass-key.pem
     ```
 
     ```
     $ openssl pkcs12 -in cert.p12 -clcerts -nokeys -out certificate.pem
-    
+
     $ openssl pkcs12 -in cert.p12 -nocerts -out key.pem
-    
+
     $ openssl smime -sign \
                   -detach \
                   -in manifest.json \

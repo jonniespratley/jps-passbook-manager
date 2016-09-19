@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const _ = require('lodash');
+
 const assert = require('assert');
 const request = require('supertest');
 const express = require('express');
@@ -23,17 +23,12 @@ let mockLog = {
 
 let controller;
 let app = express();
-let mockIdentifer = {
-	passTypeIdentifier: 'pass.io.passbookmanager.test',
-	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
-	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.test.p12'),
-	passphrase: 'test'
-};
+let mockIdentifer = mocks.mockIdentifer;
 
 const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
 
 describe('Admin', function () {
-	before(function () {
+	before(function (done) {
 		program.db.saveAll([
 			mockLog,
 			mockDevice,
@@ -42,10 +37,11 @@ describe('Admin', function () {
 			testPass
 		]).then(function (resp) {
 			console.log('Saved', resp);
+			done();
 		});
 	});
 
-	describe('Admin Controller', function () {
+	describe('Controller', function () {
 		before(function () {
 			controller = new AdminController(program);
 		});
@@ -75,7 +71,7 @@ describe('Admin', function () {
 		});
 	});
 
-	describe('Admin Routes', function () {
+	describe('Routes', function () {
 		describe('Identifiers', function () {
 			it('/api/v1/admin/identifiers - should create new pass type identifier entry', function (done) {
 				request(app)
@@ -127,14 +123,12 @@ describe('Admin', function () {
 		});
 
 		describe('Finding', function () {
-
 			it('GET - /api/v1/admin/find?docType=device - should return documents matching.', function (done) {
 				request(app)
 					.get('/api/v1/admin/find?docType=device')
 					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
-
 			it('GET - /api/v1/admin/find?name=value - should return 404 if no match', function (done) {
 				request(app)
 					.get('/api/v1/admin/find?not-a-key=value')
@@ -158,6 +152,7 @@ describe('Admin', function () {
 					.expect(404, done);
 			});
 		});
+
 		describe('Downloading', function () {
 			it(`GET - /api/v1/admin/passes/download/:id - should download pass _id ${mockPass._id}`, function (done) {
 				request(app)

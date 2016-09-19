@@ -131,7 +131,7 @@ var _cert = fs.readFileSync(path.resolve(__dirname, './certificates/pass.cer'));
 pem.readCertificateInfo(_cert, function(err, data) {
 	logger('readCertificateInfo', err, data);
 });
-*/
+
 var cert_url = path.resolve(__dirname, './certificates/pass.io.jsapps.walletmanager.p12');
 var options = {
 	passphrase: 'fred',
@@ -142,7 +142,7 @@ var options = {
 SignPass.createPems(options, function(err, resp) {
 	console.log(resp);
 });
-
+*/
 
 function PassTypeId(id, o) {
 	let _id = id.replace(/\W/g, '-');

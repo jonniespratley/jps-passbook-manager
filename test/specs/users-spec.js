@@ -1,10 +1,10 @@
 'use strict';
 const path = require('path');
-const _ = require('lodash');
+
 const assert = require('assert');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const Users = program.require('models/users')(program.db);;
+const Users = program.require('models/users')(program.db);
 const User = program.require('models/user');
 var u;
 var testUserId = null;
@@ -44,7 +44,7 @@ describe('Users Model', function() {
   });
 
 	it('create(user, done) - should create a user', function (done) {
-		Users.create(testUser, function(err, resp){
+		Users.create(new User(testUser), function(err, resp){
 			if (err) {
 				assert.fail(err);
 				done();
@@ -56,7 +56,7 @@ describe('Users Model', function() {
 
 	it('getUsers() - should fetch users and resolve promise on success', function (done) {
 		Users.getUsers().then(function(resp){
-			console.log('GOT USERS', resp);
+
 			assert(resp);
 			done();
 		}).catch(function(err){
