@@ -9,11 +9,12 @@ const program = mocks.program;
 const AuthController = program.require('controllers/auth-controller');
 let app = express();
 let controller;
+var testUserEmail = `test${Date.now()}@gmail.com`;
 const AuthRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-auth'))(program, app);
 
 describe('Auth', function() {
 
-	xdescribe('Routes', function() {
+	describe('Routes', function() {
 
 		it('GET - /index - should return index', function(done) {
 			request(app)
@@ -24,26 +25,28 @@ describe('Auth', function() {
 
 		describe('Register', function() {
 
-			it('POST - /signup - should register user', function(done) {
+			it('POST - /auth/register - should register user', function(done) {
 				request(app)
-					.post('/signup')
-					.set('Accept', 'application/json')
-					.set('Content-Type', 'application/json')
-					.send({
+					.post('/auth/register')
+
+				.send({
 						email: 'test2@gmail.com',
 						password: 'test'
 					})
+					.set('Content-Type', 'application/json')
+					.set('Accept', 'application/json')
 					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
 
-			it('POST - /signup - should register new user', function(done) {
+			it('POST - /auth/register - should register new user as json', function(done) {
 				request(app)
-					.post('/signup')
+					.post('/auth/register')
 					.send({
-						email: 'test3@gmail.com',
+						email: testUserEmail,
 						password: 'test'
 					})
+					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.expect('Content-Type', /json/)
 					.expect(200, done);
@@ -57,6 +60,53 @@ describe('Auth', function() {
 			});
 		});
 
+
+
+		describe('Authorization', function() {
+			beforeEach(function(done) {
+				request(app).get('/logout').expect(302, done);
+			});
+
+			it('GET - /login - should return login form', function(done) {
+				request(app)
+					.get('/login')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('POST - /login - should login user as json', function(done) {
+				request(app)
+					.post('/auth/login')
+					.send({
+						email: testUserEmail,
+						password: 'test'
+					})
+					.set('Content-Type', 'application/json')
+					.set('Accept', 'application/json')
+					.expect('Content-Type', /json/)
+					.expect(200, done);
+			});
+
+
+
+			xit('GET - /logout - should return logout', function(done) {
+
+			});
+
+			it('POST - /auth/login - should login user', function(done) {
+				request(app)
+					.post('/auth/login')
+					.set('Content-Type', 'application/json')
+					.send({
+						email: testUserEmail,
+						password: 'test'
+					})
+					//.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+
+		});
 		describe('Account', function() {
 
 			it('GET - /account - should return account view', function(done) {
@@ -90,50 +140,6 @@ describe('Auth', function() {
 					.expect('Content-Type', /plain/)
 					.expect(200, done);
 			});
-
-		});
-
-		describe('Authorization', function() {
-			beforeEach(function(done){
-				request(app).get('/logout').expect(302, done);
-			});
-
-			it('GET - /login - should return login form', function(done) {
-				request(app)
-					.get('/login')
-					.expect('Content-Type', /html/)
-					.expect(200, done);
-			});
-
-
-			xit('GET - /logout - should return logout', function(done) {
-
-			});
-
-			it('POST - /login - should login user', function(done) {
-				request(app)
-					.post('/login')
-					.set('Content-Type', 'application/json')
-					.send({
-						email: 'test@gmail.com',
-						password: 'test'
-					})
-					//.expect('Content-Type', /html/)
-					.expect(200, done);
-			});
-
-			xit('POST - /login - should login user', function(done) {
-				request(app)
-					.post('/login')
-					.set('Accept', 'application/json')
-					.send({
-						email: 'test@gmail.com',
-						password: 'test'
-					})
-					.expect(200, done);
-			});
-
-
 
 		});
 

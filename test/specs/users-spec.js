@@ -30,21 +30,21 @@ var testUser3 = {
 
 describe('Users Model', function() {
 
-  after(function(done) {
-    program.db.remove(testUserId).then(function(resp) {
-      console.log('Removed', resp);
-      done();
-    }).catch(function(err) {
-      done();
-    });
-  });
+	after(function(done) {
+		program.db.remove(testUserId).then(function(resp) {
+			console.log('Removed', resp);
+			done();
+		}).catch(function(err) {
+			done();
+		});
+	});
 
-  it('be defined', function() {
-    assert(Users);
-  });
+	it('be defined', function() {
+		assert(Users);
+	});
 
-	it('create(user, done) - should create a user', function (done) {
-		Users.create(testUser, function(err, resp){
+	it('create(user, done) - should create a user', function(done) {
+		Users.create(testUser, function(err, resp) {
 			if (err) {
 				assert.fail(err);
 				done();
@@ -54,19 +54,20 @@ describe('Users Model', function() {
 		});
 	});
 
-	it('getUsers() - should fetch users and resolve promise on success', function (done) {
-		Users.getUsers().then(function(resp){
-			console.log('GOT USERS', resp);
+	it('getUsers() - should fetch users and resolve promise on success', function(done) {
+		Users.getUsers(function(err, resp) {
+			if (err) {
+				assert.fail(err);
+				done();
+			}
 			assert(resp);
-			done();
-		}).catch(function(err){
-			assert.fail(err);
+
 			done();
 		});
 	});
 
-	it('save(user, done) - should create a user', function (done) {
-		Users.save(testUser1, function(err, resp){
+	it('save(user, done) - should create a user', function(done) {
+		Users.save(testUser1, function(err, resp) {
 			if (err) {
 				assert.fail(err);
 				done();
@@ -88,33 +89,33 @@ describe('Users Model', function() {
 		});
 	});
 
-  it('findOrCreate(profile, done) - should find/create user successfully', function(done) {
-    Users.findOrCreate(testUser3, function(err, resp) {
-      if (err) {
-        assert.fail(err);
-      }
-      testUserId = resp._id;
-      assert(resp);
-      done();
-    });
-  });
+	it('findOrCreate(profile, done) - should find/create user successfully', function(done) {
+		Users.findOrCreate(testUser3, function(err, resp) {
+			if (err) {
+				assert.fail(err);
+			}
+			testUserId = resp._id;
+			assert(resp);
+			done();
+		});
+	});
 
-  it('find(profile, done) - should find user unsuccessfully', function(done) {
-    assert.ok(Users.find);
-    Users.find({
-      username: 'unknown'
-    }, function(err, resp) {
-      if (err) {
-        assert(err, 'returns error');
-        done();
-      }
-      assert.fail(resp);
-      done();
-    });
-  });
+	it('find(profile, done) - should find user unsuccessfully', function(done) {
+		assert.ok(Users.find);
+		Users.find({
+			username: 'unknown'
+		}, function(err, resp) {
+			if (err) {
+				assert(err, 'returns error');
+				done();
+			}
+			assert.fail(resp);
+			done();
+		});
+	});
 
-	it('validate(user, done) - find valid user by username/password', function (done) {
-		Users.validate(testUser3, function(err, resp){
+	it('validate(user, done) - find valid user by username/password', function(done) {
+		Users.validate(testUser3, function(err, resp) {
 			if (err) {
 				assert.fail(err);
 				done();
@@ -127,6 +128,36 @@ describe('Users Model', function() {
 	it('findByUsername(profile, done) - should find user successfully', function(done) {
 		assert.ok(Users.findByUsername);
 		Users.findByUsername('test3', function(err, resp) {
+			if (err) {
+				assert.fail(err);
+			}
+			assert(resp);
+			done();
+		});
+	});
+
+	it('findByEmail(email, done) - should find user by email successfully', function(done) {
+		assert.ok(Users.findByEmail);
+		Users.findByEmail('test3@gmail.com', function(err, resp) {
+			if (err) {
+				assert.fail(err);
+			}
+			assert(resp);
+			done();
+		});
+	});
+
+	it('register(email,password, done) - should register a successfully', function(done) {
+		Users.register('test4@gmail.com', 'test', function(err, resp) {
+			if (err) {
+				assert.fail(err);
+			}
+			assert(resp);
+			done();
+		});
+	});
+	it('login(email, password, done) - should login a successfully', function(done) {
+		Users.login('test4@gmail.com', 'test', function(err, resp) {
 			if (err) {
 				assert.fail(err);
 			}

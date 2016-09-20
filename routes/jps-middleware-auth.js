@@ -70,6 +70,8 @@ module.exports = function(program, app) {
 		failureRedirect: '/login',
 		failureFlash: true
 	})]);
+	router.post('/auth/login', bodyParser.json(), authController.post_login);
+	router.post('/auth/register', bodyParser.json(), authController.post_register);
 
 
 	//router.post('/signup', urlencodedParser, authController.post_register);
