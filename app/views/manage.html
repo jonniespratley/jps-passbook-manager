@@ -5,9 +5,29 @@
 			<p>
 				Passes are cryptographically signed and compressed before being distributed.
 			</p>
-		</div>	
-		<div class="card">
 
+		</div>
+
+<div class="card">
+
+	<legend>identifiers</legend>
+	<ul>
+		<li ng-repeat="identifier in identifiers track by $index" id="{{identifier._id}}">
+			<dl class="">
+				<dt>ID:</dt><dd>{{identifier._id}}</dd>
+				<dt>passTypeIdentifier:</dt><dd>{{identifier.passTypeIdentifier}}</dd>
+				<dt>certcmd:</dt><dd>{{identifier.certcmd}}</dd>
+			</dl>
+			<textarea>
+				{{identifier || json}}
+			</textarea>
+		</li>
+	</ul>
+
+
+</div>
+
+		<div class="card">
 			<div class="card-block">
 				<fieldset>
 					<legend>New Identifier</legend>

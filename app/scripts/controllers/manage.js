@@ -48,4 +48,15 @@ jpsPassbookManagerApp.controller('ManageCtrl', function($scope, $rootScope, user
 
     sendUploadRequest($scope.formData);
   };
+
+
+
+
+	$http.get('/api/v1/admin/identifiers').success(function(resp){
+		$scope.identifiers = resp.rows;
+		console.log('got identifiers', resp);
+	});
+
+
+
 });

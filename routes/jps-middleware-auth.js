@@ -26,6 +26,7 @@ module.exports = function(program, app) {
 	const config = program.config.defaults;
 	const db = program.db;
 
+
 	let router = new Router();
 	let authLogger = program.getLogger('auth');
 
@@ -39,7 +40,7 @@ module.exports = function(program, app) {
 		}),
 		function(req, res) {
 			authLogger('/auth/provider/callback', req.account, req.user);
-			// Successful authentication, redirect home.
+
 			res.redirect('/account');
 		});
 
@@ -56,8 +57,6 @@ module.exports = function(program, app) {
 		failureRedirect: '/login'
 	}), authController.get_provider_callback);
 
-
-
 	/**
 	 * Local login
 	 */
@@ -71,6 +70,7 @@ module.exports = function(program, app) {
 		failureRedirect: '/login',
 		failureFlash: true
 	})]);
+
 
 	//router.post('/signup', urlencodedParser, authController.post_register);
 	router.get('/signup', authController.get_register);

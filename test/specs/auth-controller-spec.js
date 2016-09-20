@@ -27,12 +27,12 @@ describe('Auth', function() {
 			it('POST - /signup - should register user', function(done) {
 				request(app)
 					.post('/signup')
+					.set('Accept', 'application/json')
+					.set('Content-Type', 'application/json')
 					.send({
-						email: 'test@gmail.com',
+						email: 'test2@gmail.com',
 						password: 'test'
 					})
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
 					.expect('Content-Type', /json/)
 					.expect(200, done);
 			});
@@ -41,10 +41,9 @@ describe('Auth', function() {
 				request(app)
 					.post('/signup')
 					.send({
-						email: 'test6@gmail.com',
+						email: 'test3@gmail.com',
 						password: 'test'
 					})
-					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.expect('Content-Type', /json/)
 					.expect(200, done);
@@ -68,7 +67,7 @@ describe('Auth', function() {
 					.expect(200, done);
 			});
 
-			it('GET - /me - should return json user info', function(done) {
+			xit('GET - /me - should return json user info', function(done) {
 				request(app)
 					.get('/me')
 					.set('Accept', 'application/json')
@@ -76,9 +75,28 @@ describe('Auth', function() {
 					.expect(200, done);
 			});
 
+			it('GET - /me - should return html user info', function(done) {
+				request(app)
+					.get('/me')
+					.set('Accept', 'text/html')
+					.expect('Content-Type', /html/)
+					.expect(200, done);
+			});
+
+			it('GET - /me - should return plain user info', function(done) {
+				request(app)
+					.get('/me')
+					.set('Accept', 'text/plain')
+					.expect('Content-Type', /plain/)
+					.expect(200, done);
+			});
+
 		});
 
 		describe('Authorization', function() {
+			beforeEach(function(done){
+				request(app).get('/logout').expect(302, done);
+			});
 
 			it('GET - /login - should return login form', function(done) {
 				request(app)
@@ -87,22 +105,35 @@ describe('Auth', function() {
 					.expect(200, done);
 			});
 
+
+			xit('GET - /logout - should return logout', function(done) {
+
+			});
+
 			it('POST - /login - should login user', function(done) {
 				request(app)
 					.post('/login')
+					.set('Content-Type', 'application/json')
 					.send({
 						email: 'test@gmail.com',
 						password: 'test'
 					})
-					.expect('Content-Type', /html/)
+					//.expect('Content-Type', /html/)
 					.expect(200, done);
 			});
 
-			it('GET - /logout - should return logout', function(done) {
+			xit('POST - /login - should login user', function(done) {
 				request(app)
-					.get('/logout')
+					.post('/login')
+					.set('Accept', 'application/json')
+					.send({
+						email: 'test@gmail.com',
+						password: 'test'
+					})
 					.expect(200, done);
 			});
+
+
 
 		});
 

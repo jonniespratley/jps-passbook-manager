@@ -22,10 +22,11 @@ module.exports = function(program, app) {
 	adminRouter.delete('/passes/:id', passController.delete_pass);
 	adminRouter.get('/passes/download/:id', adminController.get_downloadPass);
 	adminRouter.get('/passes/sign/:id', adminController.get_signPass);
-	//adminRouter.get('/identifiers', adminController.get_passTypeIdentifier);
+	adminRouter.get('/identifiers', adminController.get_AllPassTypeIdentifier);
 	adminRouter.get('/identifiers/:id?', adminController.get_passTypeIdentifier);
 	adminRouter.post('/identifiers/:id', multipartMiddleware, adminController.post_passTypeIdentifier);
 	adminRouter.put('/identifiers/:id', multipartMiddleware, adminController.post_passTypeIdentifier);
+
 
 	adminRouter.get('/find?', adminController.get_find);
 
