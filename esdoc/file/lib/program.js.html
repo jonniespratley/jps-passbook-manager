@@ -38,58 +38,58 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">lib/program.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const debug = require(&apos;debug&apos;);
+const _ = require(&apos;lodash&apos;);
+const http = require(&apos;http&apos;);
+const path = require(&apos;path&apos;);
+const pkg = require(path.resolve(__dirname, &apos;../package.json&apos;));
 
-module.exports = function(config) {
-	const debug = require(&apos;debug&apos;);
-	const _ = require(&apos;lodash&apos;);
-	const http = require(&apos;http&apos;);
-	const path = require(&apos;path&apos;);
-	const pkg = require(path.resolve(__dirname, &apos;../package.json&apos;));
+const defaultConfig = require(path.resolve(__dirname, &apos;../config.js&apos;));
+const DB = require(&apos;./db&apos;);
+//const db = require(&apos;./adapters/db-couchdb&apos;)();
+//const db = require(&apos;./adapters/db-redis&apos;)();
+const utils = require(&apos;./utils&apos;);
 
-	const defaultConfig = require(path.resolve(__dirname, &apos;../config.js&apos;));
-	const DB = require(&apos;./db&apos;);
-	//const db = require(&apos;./adapters/db-couchdb&apos;)();
-	//const db = require(&apos;./adapters/db-redis&apos;)();
-	const utils = require(&apos;./utils&apos;);
+const logger = utils.getLogger(&apos;program&apos;);
 
-	var logger = utils.getLogger(&apos;program&apos;);
-	if (!config) {
-		config = defaultConfig;
-	}
+/**
+ * @class
+ */
+class Program {
+	constructor(config) {
 
-	config = _.assign(defaultConfig, config);
-	var db = new DB.FileDataStore(config.dataPath);
-	var program = {
-		pkg: pkg,
-		log: logger,
-		getLogger: utils.getLogger,
-		utils: utils,
-		models: require(&apos;./models&apos;),
-		modules: {
+		if (!config) {
+			config = defaultConfig;
+		}
+
+		config = _.assign(defaultConfig, config);
+		var db = new DB.FileDataStore(config.dataPath);
+
+		this.pkg = pkg;
+		this.log = logger;
+		this.getLogger = utils.getLogger;
+		this.utils = utils;
+		this.models = require(&apos;./models&apos;);
+		this.config = {
+			defaults: config
+		};
+		this.db = db;
+		this.server = null;
+		this.modules = {
 			db: db,
 			Pusher: require(&apos;./pusher&apos;),
 			Passbook: require(&apos;./jps-passbook&apos;),
 			SignPass: require(&apos;./signpass&apos;)
-		},
-		db: db,
-		server: null,
-		config: {
-			defaults: config
-		},
-		require: function(name) {
-			return require(path.resolve(__dirname, name));
-		}
-	};
+		};
+	}
+	require(name) {
+		return require(path.resolve(__dirname, name));
+	}
+}
 
 
-	// TODO: Save Config
-	//config
-	config._id = &apos;config&apos;;
-
-	//db.put(config);
-
-
-	return program;
+module.exports = function(c) {
+	return new Program(c);
 };
 </code></pre>
 

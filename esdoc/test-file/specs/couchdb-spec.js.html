@@ -65,69 +65,73 @@ var mockDevice = mocks.mockDevice;
 var mockPass = _.assign({}, mocks.mockPass);
 
 var nock = require(&apos;nock&apos;);
-var scope = nock(config.baseUrl)
 
-//get
-.get(`/${testDoc._id}`)
-	.query(true)
-	.reply(200, testDoc)
 
-//put
-.put(`/${mockPass._id}`)
-	.query(true)
-	.reply(200, {
-		id: mockPass._id
-	})
 
-//put
-.put(`/test-doc`)
-	.query(true)
-	.reply(200, testDoc)
+xdescribe(&apos;CouchDB Adapter&apos;, function() {
 
-//put
-.put(`/test-doc?rev=2-0000`)
-	.query(true)
-	.reply(200, {
-		id: testDoc._id
-	})
+	before(&apos;should be defined&apos;, function(done) {
+		var scope = nock(config.baseUrl)
 
-//remove
-.delete(`/test-doc?rev=2-0000`)
-	.query(true)
-	.reply(200, {
-		id: testDoc._id
-	})
+		//get
+		.get(`/${testDoc._id}`)
+			.query(true)
+			.reply(200, testDoc)
 
-//post
-.post(`/test-doc`)
-	.reply(201, {
-		id: testDoc._id
-	})
+		//put
+		.put(`/${mockPass._id}`)
+			.query(true)
+			.reply(200, {
+				id: mockPass._id
+			})
 
-//post
-.post(`/_bulk_docs`)
-	.query(true)
-	.reply(201, JSON.stringify(mocks.mockPasses))
+		//put
+		.put(`/test-doc`)
+			.query(true)
+			.reply(200, testDoc)
 
-//put - fail
-.put(&apos;/test-fail&apos;)
-	.query(true)
-	.reply(404, {
-		error: &apos;Error&apos;
-	})
+		//put
+		.put(`/test-doc?rev=2-0000`)
+			.query(true)
+			.reply(200, {
+				id: testDoc._id
+			})
 
-.get(&apos;/_all_docs&apos;)
-	.query(true)
-	.reply(200, {
-		rows: [{
-			doc: testDoc
-		}]
+		//remove
+		.delete(`/test-doc?rev=2-0000`)
+			.query(true)
+			.reply(200, {
+				id: testDoc._id
+			})
+
+		//post
+		.post(`/test-doc`)
+			.reply(201, {
+				id: testDoc._id
+			})
+
+		//post
+		.post(`/_bulk_docs`)
+			.query(true)
+			.reply(201, JSON.stringify(mocks.mockPasses))
+
+		//put - fail
+		.put(&apos;/test-fail&apos;)
+			.query(true)
+			.reply(404, {
+				error: &apos;Error&apos;
+			})
+
+		.get(&apos;/_all_docs&apos;)
+			.query(true)
+			.reply(200, {
+				rows: [{
+					doc: testDoc
+				}]
+			});
+
+		done();
 	});
-
-
-
-describe(&apos;CouchDB Adapter&apos;, function() {
-
 	it(&apos;should be defined&apos;, function(done) {
 		assert(db);
 		done();
@@ -167,11 +171,11 @@ describe(&apos;CouchDB Adapter&apos;, function() {
 		});
 	});
 
-	xit(&apos;db.post - should create doc with generated&apos;, function(done) {
+	it(&apos;db.post - should create doc with generated&apos;, function(done) {
 		let o = _.assign({}, mocks.mockPass);
 		delete o._id;
 		db.post(o).then(function(resp) {
-			//	assert(resp._id, &apos;returns id&apos;);
+			assert(resp._id, &apos;returns id&apos;);
 			assert(resp);
 			done();
 		}).catch(function(err) {
@@ -180,7 +184,7 @@ describe(&apos;CouchDB Adapter&apos;, function() {
 		});
 	});
 
-	xit(&apos;should get doc with id&apos;, function(done) {
+	it(&apos;should get doc with id&apos;, function(done) {
 		db.get(testDoc._id).then(function(resp) {
 			assert(resp);
 			assert(resp.name === testDoc.name, &apos;returns object&apos;);
@@ -191,7 +195,7 @@ describe(&apos;CouchDB Adapter&apos;, function() {
 		});
 	});
 
-	xit(&apos;should find doc&apos;, function(done) {
+	it(&apos;should find doc&apos;, function(done) {
 		db.find({
 			name: testDoc.name
 		}).then(function(resp) {
@@ -204,7 +208,7 @@ describe(&apos;CouchDB Adapter&apos;, function() {
 		});
 	});
 
-	xit(&apos;db.remove - should remove doc with id&apos;, function(done) {
+	it(&apos;db.remove - should remove doc with id&apos;, function(done) {
 		testDoc._rev = &apos;2-0000&apos;;
 		db.remove(testDoc._id, testDoc._rev).then(function(resp) {
 			assert(resp);
@@ -215,7 +219,7 @@ describe(&apos;CouchDB Adapter&apos;, function() {
 		});
 	});
 
-	xit(&apos;should save array of docs&apos;, function(done) {
+	it(&apos;should save array of docs&apos;, function(done) {
 		db.saveAll([
 			mockDevice,
 			mockPass

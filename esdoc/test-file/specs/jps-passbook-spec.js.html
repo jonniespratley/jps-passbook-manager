@@ -37,7 +37,8 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">specs/jps-passbook-spec.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">var assert = require(&apos;assert&apos;),
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+var assert = require(&apos;assert&apos;),
 	path = require(&apos;path&apos;),
 	_ = require(&apos;lodash&apos;),
 	fs = require(&apos;fs-extra&apos;),
@@ -74,14 +75,14 @@ describe(&apos;jps-passbook&apos;, function() {
 		});
 
 		xit(&apos;batchPromise(&quot;sign&quot;, passes) - should create each pass in database&apos;, function(done) {
-			this.timeout(20000);
+			this.timeout(10000);
 			var mockIds = _.pluck(mockPasses, &apos;_id&apos;);
 			console.log(&apos;mockIds&apos;, mockIds);
 			jpsPassbook.batchPromise(&apos;sign&apos;, mockPasses).then(function(_resp) {
 				console.log(_resp);
 				assert(_resp);
 				assert(mockIds.length === _resp.length);
-				assert(fs.existsSync(p.dest), &apos;returns .pkpass path&apos;);
+				assert(fs.existsSync(_resp.dest), &apos;returns .pkpass path&apos;);
 				done();
 			}).catch(function(err) {
 				assert.fail(err);

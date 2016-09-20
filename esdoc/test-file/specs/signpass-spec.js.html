@@ -57,14 +57,12 @@ var passes = mocks.mockPasses;
 var testPasses = [];
 describe(&apos;SignPass&apos;, function() {
 
-
-
 	it(&apos;should be defined&apos;, function(done) {
 		assert(SignPass);
 		done();
 	});
 
-	xit(&apos;should create SignPass instance&apos;, function(done) {
+	it(&apos;should create SignPass instance&apos;, function(done) {
 		signpass = new SignPass(options);
 		assert(signpass);
 		done();
@@ -74,6 +72,7 @@ describe(&apos;SignPass&apos;, function() {
 
 		it(&apos;should return PassTypeId object&apos;, function(done) {
 			options = SignPass.createPassTypeId(mockPass.passTypeIdentifier, {});
+			console.log(&apos;pass type id&apos;, options);
 			assert(options);
 			done();
 		});
@@ -101,6 +100,7 @@ describe(&apos;SignPass&apos;, function() {
 
 		it(&apos;should be fetch pass type info&apos;, function(done) {
 			jpsPassbook.getPassCerts(mocks.mockIdentifer.passTypeIdentifier, function(err, resp) {
+				console.log(&apos;pass certs&apos;, resp);
 				options = resp;
 				if (err) {
 					assert.fail(err);
@@ -119,12 +119,12 @@ describe(&apos;SignPass&apos;, function() {
 
 	describe(&apos;Siging&apos;, function() {
 
-		before(function() {
+		before(function(done) {
 			jpsPassbook.createPassPromise(mockPass).then(function(resp) {
 				mockPass = resp;
 				//	mockPass = resp[0];
 				console.log(&apos;Using Mock Pass&apos;, mockPass);
-
+				done();
 			});
 		});
 
@@ -143,8 +143,6 @@ describe(&apos;SignPass&apos;, function() {
 			});
 		});
 
-
-
 		describe(&apos;Batching&apos;, function() {
 			var _passes = [];
 			var _mockPassFilenames = [];
@@ -156,14 +154,14 @@ describe(&apos;SignPass&apos;, function() {
 				}).then(function(resp) {
 					_passes = resp;
 					_mockPassFilenames = _.pluck(resp, &apos;filename&apos;);
-					//	console.log(&apos;GOT PASSES&apos;, resp);
+					console.log(&apos;GOT PASSES&apos;, resp);
 					done();
 				});
 			});
 
 
-			it(&apos;sign() - all passes - should create .zip and .pkpass for each pass type&apos;, function(done) {
-				this.timeout(10000);
+			xit(&apos;sign() - all passes - should create .zip and .pkpass for each pass type&apos;, function(done) {
+				//this.timeout(10000);
 				var _done = _.after(_mockPassFilenames.length, function() {
 					done();
 				});

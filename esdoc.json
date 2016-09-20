@@ -2,18 +2,12 @@
   "title": "Passbook Manager",
   "source": "./lib",
   "destination": "./esdoc",
-  "includes": [
 
-    "\\.(js|es6)$"
-  ],
   "excludes": [
     "-spec\\.(js|es6)$",
     "\\.config\\.(js|es6)$"
   ],
-  "access": [
-    "public",
-    "protected"
-  ],
+
   "autoPrivate": true,
   "unexportIdentifier": false,
   "undocumentIdentifier": true,
@@ -25,13 +19,7 @@
   "lint": true,
   "test": {
     "type": "mocha",
-    "source": "./test/specs",
-    "includes": [
-      "-spec\\.(js|es6)$"
-    ],
-    "excludes": [
-      "\\.config\\.(js|es6)$"
-    ]
+    "source": "./test/specs"
   },
   "manual": {
     "asset": "./manual/asset",

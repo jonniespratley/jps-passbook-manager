@@ -631,42 +631,6 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/couchdb-spec.js.html#lineNumber90",
-    "CouchDB Adapter",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/couchdb-spec.js.html#lineNumber192",
-    "CouchDB Adapter db.allDocs - should return array of docs",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/couchdb-spec.js.html#lineNumber108",
-    "CouchDB Adapter db.put - should create doc with id",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/couchdb-spec.js.html#lineNumber119",
-    "CouchDB Adapter db.put - should reject create doc with _id",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/couchdb-spec.js.html#lineNumber92",
-    "CouchDB Adapter should be defined",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/couchdb-spec.js.html#lineNumber97",
-    "CouchDB Adapter should have allDocs, get, remove, put methods",
-    "test"
-  ],
-  [
-    "",
     "test-file/specs/db-controller-spec.js.html#lineNumber33",
     "DB",
     "test"
@@ -763,13 +727,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/models-spec.js.html#lineNumber9",
+    "test-file/specs/passes-model-spec.js.html#lineNumber13",
     "Passes",
     "test"
   ],
   [
     "",
-    "test-file/specs/passes-model-spec.js.html#lineNumber13",
+    "test-file/specs/models-spec.js.html#lineNumber9",
     "Passes",
     "test"
   ],
@@ -835,25 +799,25 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/signpass-spec.js.html#lineNumber34",
+    "test-file/specs/signpass-spec.js.html#lineNumber32",
     "SignPass Certs",
     "test"
   ],
   [
     "",
-    "test-file/specs/signpass-spec.js.html#lineNumber42",
+    "test-file/specs/signpass-spec.js.html#lineNumber41",
     "SignPass Certs createPems() - should create -cert.pem and -key.pem files from a .p12 certficate.",
     "test"
   ],
   [
     "",
-    "test-file/specs/signpass-spec.js.html#lineNumber63",
+    "test-file/specs/signpass-spec.js.html#lineNumber62",
     "SignPass Certs should be fetch pass type info",
     "test"
   ],
   [
     "",
-    "test-file/specs/signpass-spec.js.html#lineNumber36",
+    "test-file/specs/signpass-spec.js.html#lineNumber34",
     "SignPass Certs should return PassTypeId object",
     "test"
   ],
@@ -865,14 +829,8 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/signpass-spec.js.html#lineNumber109",
+    "test-file/specs/signpass-spec.js.html#lineNumber107",
     "SignPass Siging Batching",
-    "test"
-  ],
-  [
-    "",
-    "test-file/specs/signpass-spec.js.html#lineNumber126",
-    "SignPass Siging Batching sign() - all passes - should create .zip and .pkpass for each pass type",
     "test"
   ],
   [
@@ -883,8 +841,14 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/signpass-spec.js.html#lineNumber23",
+    "test-file/specs/signpass-spec.js.html#lineNumber21",
     "SignPass should be defined",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/signpass-spec.js.html#lineNumber26",
+    "SignPass should create SignPass instance",
     "test"
   ],
   [
@@ -949,13 +913,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/users-spec.js.html#lineNumber79",
+    "test-file/specs/users-spec.js.html#lineNumber91",
     "Users Model findOrCreate(profile, done) - should find/create user successfully",
     "test"
   ],
   [
     "",
-    "test-file/specs/users-spec.js.html#lineNumber91",
+    "test-file/specs/users-spec.js.html#lineNumber79",
     "Users Model findOrCreate(profile, done) - should find/create user successfully",
     "test"
   ],
@@ -1075,97 +1039,127 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber18",
-    "jps-passbook",
+    "test-file/specs/couchdb-spec.js.html#lineNumber196",
+    "db.allDocs - should return array of docs",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber135",
+    "db.post - should create doc with generated",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber112",
+    "db.put - should create doc with id",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber123",
+    "db.put - should reject create doc with _id",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber172",
+    "db.remove - should remove doc with id",
     "test"
   ],
   [
     "",
     "test-file/specs/jps-passbook-spec.js.html#lineNumber19",
+    "jps-passbook",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber20",
     "jps-passbook Batching",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber27",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber28",
     "jps-passbook Batching batchPromise(\"create\", passes) - should create each pass in database",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber55",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber56",
     "jps-passbook Passes",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber118",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber119",
     "jps-passbook Passes Signing",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber146",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber147",
     "jps-passbook Passes Signing Validation",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber147",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber148",
     "jps-passbook Passes Signing Validation validatePass() - should validate a pass",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber159",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber160",
     "jps-passbook Passes Signing Validation validatePassPromise() - should validate pass .pkpass signature and resolve promise",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber129",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber130",
     "jps-passbook Passes Signing signPass() - should sign .raw package into a .pkpass",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber139",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber140",
     "jps-passbook Passes Signing signPassPromise() - should sign pass .raw into .pkpass and resolve promise",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber110",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber111",
     "jps-passbook Passes createPassPromise() - should create pass .raw and resolve promise",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber103",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber104",
     "jps-passbook Passes getPassCerts() - should get pass certs from database fail.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber93",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber94",
     "jps-passbook Passes getPassCerts() - should get pass certs from database successfully.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber57",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber58",
     "jps-passbook Passes savePassTypeIdentifier() - should create pass certs and save passTypeIdentifier to database successfully.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber68",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber69",
     "jps-passbook Passes savePassTypeIdentifier() - should should fail when no p12 present.",
     "test"
   ],
   [
     "",
-    "test-file/specs/jps-passbook-spec.js.html#lineNumber81",
+    "test-file/specs/jps-passbook-spec.js.html#lineNumber82",
     "jps-passbook Passes savePassTypeIdentifier() - should should fail when no passphrase present.",
     "test"
   ],
@@ -1449,6 +1443,36 @@ window.esdocSearchIndex = [
     "",
     "test-file/specs/routes-spec.js.html#lineNumber169",
     "routes PassKit Web Service Passes GET - /api/v1/passes/:pass_type_id/:serial_number - ?updated since date",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber96",
+    "should be defined",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber159",
+    "should find doc",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber148",
+    "should get doc with id",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber101",
+    "should have allDocs, get, remove, put methods",
+    "test"
+  ],
+  [
+    "",
+    "test-file/specs/couchdb-spec.js.html#lineNumber183",
+    "should save array of docs",
     "test"
   ],
   [

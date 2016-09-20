@@ -46,10 +46,11 @@ const request = require(&apos;request&apos;);
 module.exports = function(options) {
 	options = options || {};
 	var logger = utils.getLogger(&apos;couchdb&apos;);
-	const BASE_URL = options.baseUrl || &apos;http://localhost:5984/passbookmanager&apos;;
+	const BASE_URL = options.baseUrl || &apos;http://localhost:4987/passmanager&apos;;
 
 	var defaultOptions = {
 		method: &apos;GET&apos;,
+		//json: true,
 		headers: {
 			//&apos;Accept&apos;: &apos;application/json&apos;,
 			&apos;Content-Type&apos;: &apos;application/json&apos;,

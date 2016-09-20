@@ -51,6 +51,7 @@ const debug = require(&apos;debug&apos;);
 
 /**
  * jpsPassbook contains methods for creating/validating/signing passes.
+ * @class program
  * @param program
  * @returns {{
  * savePassTypeIdentifier: savePassTypeIdentifier,
@@ -80,13 +81,13 @@ module.exports = function jpsPassbook(program) {
 	 * @returns {*}
 	 */
 	function getPassCerts(id, cb) {
-		return new Promise(function (resolve, reject) {
+		return new Promise(function(resolve, reject) {
 			db.findOne({
 				docType: &apos;pass-type-id&apos;,
 				passTypeIdentifier: id
-			}).then(function (resp) {
+			}).then(function(resp) {
 				cb(null, resp);
-			}).catch(function (err) {
+			}).catch(function(err) {
 				cb(err);
 			});
 		});
@@ -122,17 +123,17 @@ module.exports = function jpsPassbook(program) {
 			passTypeIdentifier: obj.passTypeIdentifier,
 			passphrase: obj.passphrase,
 			p12: obj.p12
-		}, function (err, resp) {
+		}, function(err, resp) {
 			if (err) {
 				cb(err, null);
 			}
 			logger(&apos;createPems&apos;, &apos;success&apos;, resp._id);
-			program.db.put(resp).then(function (o) {
+			program.db.put(resp).then(function(o) {
 				if (cb) {
 					cb(null, o);
 				}
 
-			}).catch(function (err) {
+			}).catch(function(err) {
 				if (cb) {
 					cb(err);
 				}
@@ -146,8 +147,8 @@ module.exports = function jpsPassbook(program) {
 	 * @returns {*}
 	 */
 	function savePassTypeIdentifierPromise(obj) {
-		return new Promise(function (resolve, reject) {
-			savePassTypeIdentifier(obj, function (err, resp) {
+		return new Promise(function(resolve, reject) {
+			savePassTypeIdentifier(obj, function(err, resp) {
 				if (err) {
 					reject(err);
 				}
@@ -162,7 +163,7 @@ module.exports = function jpsPassbook(program) {
 	 * @returns {*}
 	 */
 	function saveUpload(file) {
-		return new Promise(function (resolve, reject) {
+		return new Promise(function(resolve, reject) {
 			var toFilename = path.resolve(program.config.defaults.dataPath, &apos;./uploads/&apos; + file.originalFilename);
 			var _doc = {
 				_id: &apos;file-&apos; + file.name,
@@ -173,7 +174,7 @@ module.exports = function jpsPassbook(program) {
 				type: file.type
 			};
 			logger(&apos;saveUpload&apos;, _doc);
-			fs.copy(file.path, _doc.path, function (err) {
+			fs.copy(file.path, _doc.path, function(err) {
 				if (err) {
 					reject(err);
 				}
@@ -193,7 +194,7 @@ module.exports = function jpsPassbook(program) {
 		pass = new Pass(pass);
 		let signpass = null;
 		let _passFilename = pass.filename || path.resolve(
-				program.config.defaults.dataPath, `./${pass.passTypeIdentifier}/passes/${pass._id}.raw`);
+			program.config.defaults.dataPath, `./${pass.passTypeIdentifier}/passes/${pass._id}.raw`);
 		let options = {
 			passFilename: null,
 			cert: null,
@@ -211,7 +212,7 @@ module.exports = function jpsPassbook(program) {
 		//	assert(pass.rawFilename, &apos;has rawFilename&apos;);
 
 		// TODO: SignPass instance using cert info
-		getPassCerts(pass.passTypeIdentifier, function (err, _certs) {
+		getPassCerts(pass.passTypeIdentifier, function(err, _certs) {
 			logger(&apos;getPassCerts&apos;, _certs._id);
 			if (err) {
 				callback(err);
@@ -223,13 +224,13 @@ module.exports = function jpsPassbook(program) {
 			//		logger(&apos;sign pass options&apos;, _certs);
 			//	callback(null, pass);
 			signpass = new SignPass(_certs);
-			signpass.signPromise().then(function (resp) {
+			signpass.signPromise().then(function(resp) {
 				logger(&apos;signPass&apos;, &apos;success&apos;, resp);
 				pass.pkpassFilename = resp.dest;
-				savePass(pass, function (err, p) {
+				savePass(pass, function(err, p) {
 					callback(err, resp);
 				});
-			}).catch(function (err) {
+			}).catch(function(err) {
 				callback(err);
 			});
 
@@ -241,7 +242,7 @@ module.exports = function jpsPassbook(program) {
 	 */
 	function validatePass(pass, callback) {
 		let _passFilename = pass.filename || pass.rawFilename || path.resolve(program.config.defaults.dataPath,
-				`./${pass.passTypeIdentifier}/passes/${pass._id}.raw`);
+			`./${pass.passTypeIdentifier}/passes/${pass._id}.raw`);
 		let pathToPass = _passFilename;
 		let passDir = path.resolve(pathToPass, &apos;./&apos;);
 		let files = fs.readdirSync(passDir);
@@ -253,26 +254,26 @@ module.exports = function jpsPassbook(program) {
 
 		logger(&apos;validatePass&apos;, pathToPass);
 
-		glob(passDir + &apos;/**/*.*&apos;, function (err, files) {
+		glob(passDir + &apos;/**/*.*&apos;, function(err, files) {
 			logger(&apos;validatePass&apos;, &apos;files&apos;, files);
 			if (err) {
 				callback(err)
 			}
 
-			let _done = _.after(files.length, function () {
-				fs.writeFile(_manifestFilename, JSON.stringify(_manifest), function (err) {
+			let _done = _.after(files.length, function() {
+				fs.writeFile(_manifestFilename, JSON.stringify(_manifest), function(err) {
 					if (err) {
 						callback(err)
 					}
 					logger(&apos;generate_json_manifest&apos;, &apos;writing&apos;, _manifestFilename);
-					fs.remove(_dsStoreFilename, function () {
+					fs.remove(_dsStoreFilename, function() {
 						callback(null, pass);
 					});
 
 				});
 			});
 
-			_.forEach(files, function (file) {
+			_.forEach(files, function(file) {
 				logger(&apos;checksum&apos;, file);
 				_manifest[file.replace(passDir + path.sep, &apos;&apos;)] = utils.checksum(fs.readFileSync(file), &apos;sha1&apos;);
 				_done();
@@ -291,11 +292,11 @@ module.exports = function jpsPassbook(program) {
 
 		logger(&apos;copyAssets&apos;, &apos;from&apos;, templatesDir);
 		logger(&apos;copyAssets&apos;, &apos;to&apos;, dest);
-		fs.ensureDir(dest, function (err) {
+		fs.ensureDir(dest, function(err) {
 			if (err) {
 				callback(err);
 			}
-			fs.copy(templatesDir, dest, function (err) {
+			fs.copy(templatesDir, dest, function(err) {
 				if (err) {
 					callback(err);
 				}
@@ -322,7 +323,7 @@ module.exports = function jpsPassbook(program) {
 		return async.waterfall([
 
 				//1. Build filenames
-				function (callback) {
+				function(callback) {
 					logger(&apos;createPass&apos;, &apos;1. Build file names&apos;);
 					passName = passName.replace(/\W/g, &apos;-&apos;);
 					passName = passName.replace(&apos; &apos;, &apos;-&apos;);
@@ -339,18 +340,18 @@ module.exports = function jpsPassbook(program) {
 				},
 
 				//2. Copy assets
-				function (_type, _path, callback) {
+				function(_type, _path, callback) {
 					logger(&apos;createPass&apos;, &apos;2. Copy assets&apos;);
 					copyAssets(_type, _path, callback);
 				},
 
 				//3. Create pass.json
-				function (_path, callback) {
+				function(_path, callback) {
 					let passJsonPath = path.resolve(_path, &apos;./pass.json&apos;);
 					let passPath = _path;
 					logger(&apos;createPass&apos;, &apos;3. Create pass.json&apos;);
 					logger(&apos;createPass&apos;, &apos;writeFile&apos;, passJsonPath);
-					fs.writeFile(passJsonPath, JSON.stringify(pass), function (err) {
+					fs.writeFile(passJsonPath, JSON.stringify(pass), function(err) {
 						if (err) {
 							callback(err);
 						}
@@ -361,7 +362,7 @@ module.exports = function jpsPassbook(program) {
 				},
 
 				//4. Validate
-				function (_pass, callback) {
+				function(_pass, callback) {
 					logger(&apos;validatePass&apos;, &apos;4.&apos;);
 					validatePass(_pass, callback);
 				},
@@ -375,12 +376,12 @@ module.exports = function jpsPassbook(program) {
 				 */
 
 				//5. Save
-				function (_pass, callback) {
+				function(_pass, callback) {
 					logger(&apos;createPass&apos;, &apos;5. Save to database&apos;);
 					savePass(_pass, callback);
 				}
 			],
-			function (err, resp) {
+			function(err, resp) {
 				logger(&apos;createPass&apos;, &apos;============================= complete&apos;);
 				if (err) {
 					cb(err);
@@ -398,10 +399,10 @@ module.exports = function jpsPassbook(program) {
 	function savePass(pass, callback) {
 		pass = new Pass(pass);
 		logger(&apos;savePass&apos;, pass._id);
-		program.db.put(pass).then(function (resp) {
+		program.db.put(pass).then(function(resp) {
 			logger(&apos;savePass&apos;, &apos;success&apos;, resp._id);
 			callback(null, resp);
-		}).catch(function (err) {
+		}).catch(function(err) {
 			logger(&apos;savePass&apos;, &apos;error&apos;, err);
 			callback(err);
 		});
@@ -410,9 +411,9 @@ module.exports = function jpsPassbook(program) {
 	return {
 		savePassTypeIdentifier: savePassTypeIdentifier,
 		savePassTypeIdentifierPromise: savePassTypeIdentifierPromise,
-		getPassTypeIdentifier: function (id) {
-			return new Promise(function (resolve, reject) {
-				getPassCerts(id, function (err, resp) {
+		getPassTypeIdentifier: function(id) {
+			return new Promise(function(resolve, reject) {
+				getPassCerts(id, function(err, resp) {
 					if (err) {
 						reject(err);
 					} else {
@@ -425,18 +426,18 @@ module.exports = function jpsPassbook(program) {
 		signPass: signPass,
 		validatePass: validatePass,
 		createPass: createPass,
-		batchPromise: function (action, passes) {
-			return new Promise(function (resolve, reject) {
+		batchPromise: function(action, passes) {
+			return new Promise(function(resolve, reject) {
 				//	let passes = [];
 				let _resp = [];
-				let _done = _.after(passes.length, function () {
+				let _done = _.after(passes.length, function() {
 					resolve(_resp);
 				});
 
-				let _doBatch = function (_pass) {
+				let _doBatch = function(_pass) {
 					switch (action) {
 						case &apos;create&apos;:
-							createPass(_pass, function (err, p) {
+							createPass(_pass, function(err, p) {
 								if (err) {
 									console.error(err);
 									_done();
@@ -446,7 +447,7 @@ module.exports = function jpsPassbook(program) {
 							});
 							break;
 						case &apos;sign&apos;:
-							signPass(_pass, function (err, p) {
+							signPass(_pass, function(err, p) {
 								if (err) {
 									console.error(err);
 									_done();
@@ -456,7 +457,7 @@ module.exports = function jpsPassbook(program) {
 							});
 							break;
 						case &apos;validate&apos;:
-							validatePass(_pass, function (err, p) {
+							validatePass(_pass, function(err, p) {
 								if (err) {
 									console.error(err);
 									_done();
@@ -471,17 +472,17 @@ module.exports = function jpsPassbook(program) {
 					}
 				};
 
-				_.forEach(passes, function (_pass) {
+				_.forEach(passes, function(_pass) {
 					logger(&apos;batch&apos;, action, _pass);
-					_.defer(function () {
+					_.defer(function() {
 						_doBatch(_pass);
 					});
 				});
 			});
 		},
-		createPassPromise: function (pass) {
-			return new Promise(function (resolve, reject) {
-				createPass(pass, function (err, resp) {
+		createPassPromise: function(pass) {
+			return new Promise(function(resolve, reject) {
+				createPass(pass, function(err, resp) {
 					if (err) {
 						reject(err);
 					}
@@ -489,9 +490,9 @@ module.exports = function jpsPassbook(program) {
 				});
 			});
 		},
-		signPassPromise: function (pass) {
-			return new Promise(function (resolve, reject) {
-				signPass(pass, function (err, resp) {
+		signPassPromise: function(pass) {
+			return new Promise(function(resolve, reject) {
+				signPass(pass, function(err, resp) {
 					if (err) {
 						reject(err);
 					}
@@ -499,9 +500,9 @@ module.exports = function jpsPassbook(program) {
 				});
 			});
 		},
-		validatePassPromise: function (pass) {
-			return new Promise(function (resolve, reject) {
-				validatePass(pass, function (err, resp) {
+		validatePassPromise: function(pass) {
+			return new Promise(function(resolve, reject) {
+				validatePass(pass, function(err, resp) {
 					if (err) {
 						reject(err);
 					}
