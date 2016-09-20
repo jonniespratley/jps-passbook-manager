@@ -94,6 +94,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 			});
 		},
 		hideModals: function() {
+			$('body').removeClass('modal-open');
 			$('.modal').modal('hide');
 			$('.modal-backdrop').remove();
 		},

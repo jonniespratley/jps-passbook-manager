@@ -20,7 +20,7 @@ jpsPassbookManagerApp.controller('ManageCtrl', function($scope, $rootScope, user
       }
     });
 
-    xhr.open('POST', '/api/v1/admin/passes/passTypeIdentifier/' + obj.passTypeIdentifier);
+    xhr.open('POST', '/api/v1/admin/identifiers/' + obj.passTypeIdentifier);
     xhr.send(data);
   }
 

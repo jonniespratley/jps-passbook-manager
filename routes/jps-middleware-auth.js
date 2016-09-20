@@ -16,7 +16,6 @@ module.exports = function(program, app) {
 	const GitHubStrategy = require('passport-github2').Strategy;
 	const LocalStrategy = require('passport-local').Strategy;
 
-
 	const urlencodedParser = bodyParser.urlencoded({
 		extended: false
 	});
@@ -51,10 +50,12 @@ module.exports = function(program, app) {
 			'gist'
 		]
 	}), function(req, res) {});
+	router.get('/auth/local', passport.authenticate('local', {}), function(req, res) {});
 
 	router.get('/auth/provider/callback', passport.authenticate('github', {
 		failureRedirect: '/login'
 	}), authController.get_provider_callback);
+
 
 
 	/**
@@ -82,14 +83,17 @@ module.exports = function(program, app) {
 	router.post('/account', [bodyParser.json(), urlencodedParser, authController.ensureAuthenticated],
 		authController.post_account);
 	router.get('/account', authController.ensureAuthenticated, authController.get_account);
+	router.get('/profile', authController.ensureAuthenticated, authController.get_me);
 	router.get('/me', authController.ensureAuthenticated, authController.get_me);
 
 	app.use(function(req, res, next) {
 		res.locals.user = req.user;
 		res.locals.session = req.session;
 		res.locals.authenticated = !req.authenticated;
+		console.log('request', req.url, req.query);
 		next();
 	});
+
 
 	let sess = session({
 		//	store: new RedisStore(config.redis),

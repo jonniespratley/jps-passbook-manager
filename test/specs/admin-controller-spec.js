@@ -8,31 +8,27 @@ const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
 const AdminController = program.require('controllers/admin-controller');
 
-let mockDevice = mocks.mockDevice;
-let testDevice = mockDevice;
-delete testDevice._id;
-
-let mockPass = mocks.mockPasses[2];
-let testPass = mockPass;
-delete testPass._id;
-
-let mockLog = {
-	name: 'test',
-	docType: 'log'
-};
-
-let controller;
-let app = express();
-let mockIdentifer = {
-	passTypeIdentifier: 'pass.io.passbookmanager.test',
-	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
-	p12: path.resolve(__dirname, '../../certificates/pass.io.passbookmanager.test.p12'),
-	passphrase: 'test'
-};
-
-const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
-
 describe('Admin', function () {
+
+	let mockDevice = mocks.mockDevice;
+	let testDevice = mockDevice;
+	delete testDevice._id;
+
+	let mockPass = mocks.mockPasses[2];
+	let testPass = mockPass;
+	delete testPass._id;
+
+	let mockLog = {
+		name: 'test',
+		docType: 'log'
+	};
+
+	let controller;
+	let app = express();
+	let mockIdentifer = mocks.mockIdentifer;
+
+	const AdminRoutes = require(path.resolve(__dirname, '../../routes/jps-middleware-admin'))(program, app);
+
 	before(function () {
 		program.db.saveAll([
 			mockLog,

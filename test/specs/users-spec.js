@@ -29,7 +29,7 @@ var testUser3 = {
 };
 
 describe('Users Model', function() {
-/*
+
   after(function(done) {
     program.db.remove(testUserId).then(function(resp) {
       console.log('Removed', resp);
@@ -37,7 +37,7 @@ describe('Users Model', function() {
     }).catch(function(err) {
       done();
     });
-  });*/
+  });
 
   it('be defined', function() {
     assert(Users);

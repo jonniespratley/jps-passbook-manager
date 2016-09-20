@@ -28,7 +28,7 @@ describe('Auth', function() {
 				request(app)
 					.post('/signup')
 					.send({
-						email: 'test5@gmail.com',
+						email: 'test@gmail.com',
 						password: 'test'
 					})
 					.set('Content-Type', 'application/json')
