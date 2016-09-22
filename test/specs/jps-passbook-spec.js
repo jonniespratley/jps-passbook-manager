@@ -20,11 +20,11 @@ describe('jps-passbook', function() {
 
 
 
-	this.timeout(20000);
 	describe('Batching', function() {
 		before(function() {
 			program.db.saveAll(mocks.mockPasses).then(function(resp) {
 				mockPasses = resp;
+				mockPass = resp[1];
 				console.log('GOT PASSES', resp);
 			});
 		});
@@ -39,16 +39,19 @@ describe('jps-passbook', function() {
 			});
 		});
 
-		xit('batchPromise("sign", passes) - should create each pass in database', function(done) {
+		it('batchPromise("sign", passes) - should create each pass in database', function(done) {
 			this.timeout(10000);
-			var mockIds = _.pluck(mockPasses, '_id');
-			console.log('mockIds', mockIds);
-			jpsPassbook.batchPromise('sign', mockPasses).then(function(_resp) {
+			var _done = _.after(mockPasses.length, function(){
+				done();
+			});
+			jpsPassbook.batchSignPasses(mockPasses).then(function(_resp) {
 				console.log(_resp);
 				assert(_resp);
-				assert(mockIds.length === _resp.length);
-				assert(fs.existsSync(_resp.dest), 'returns .pkpass path');
-				done();
+				_resp.forEach(function(p){
+					assert(fs.existsSync(p.dest), 'returns .pkpass path');
+					_done();
+				});
+
 			}).catch(function(err) {
 				assert.fail(err);
 				done();

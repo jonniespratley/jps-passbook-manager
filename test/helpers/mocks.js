@@ -1,5 +1,6 @@
 'use strict';
 var path = require('path');
+var log = require('npmlog');
 var config = require(path.resolve(__dirname, '../../config.js'));
 var program = require(path.resolve(__dirname, '../../lib/program.js'))({
 	dataPath: path.resolve(__dirname, '../temp')
@@ -14,13 +15,14 @@ exports.mockIdentifer = {
 	passTypeIdentifier: config.passkit.passTypeIdentifier,
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
 	p12: path.resolve(__dirname, `../../certificates/${config.passkit.passTypeIdentifier}.p12`),
-	passphrase: 'fred'
+	passphrase: 'test'
 };
-program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
-
-console.log('MOCK program', program.config.defaults);
 
 
+
+log.info('mock-program', 'config', program.config.defaults);
+
+log.info('passTypeIdentifier', config.passkit.passTypeIdentifier);
 exports.program = program;
 
 exports.mockPasses = [
@@ -30,30 +32,30 @@ exports.mockPasses = [
 		description: 'Example Generic',
 		serialNumber: '0123456789876543210',
 		authenticationToken: '0123456789876543210',
-
 		type: 'generic'
 	}),
 
 	new Pass({
-		_id: 'mock-boardingpass',
+		serialNumber: 'mock-boarding',
 		description: 'Example Boarding Pass',
 		type: 'boardingPass'
 	}),
 
 	new Pass({
-		_id: 'mock-coupon',
+		serialNumber: 'mock-coupon',
+
 		description: 'Example Coupon',
 		type: 'coupon'
 	}),
 
 	new Pass({
-		_id: 'mock-eventticket',
+		serialNumber: 'mock-eventticket',
 		description: 'Example Event Ticket',
 		type: 'eventTicket'
 	}),
 
 	new Pass({
-		_id: 'mock-storecard',
+		serialNumber: 'mock-storecard',
 		description: 'Example Store Card',
 		type: 'storeCard'
 	})
