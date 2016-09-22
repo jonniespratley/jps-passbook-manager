@@ -10,7 +10,7 @@ const APPLE_PASS_TYPE_IDENTIFIER_CERT = path.resolve(__dirname,
 const APPLE_PASS_TYPE_IDENTIFIER_KEY = path.resolve(__dirname,
 	`./certs/${APPLE_PASS_TYPE_IDENTIFIER}-key.pem`);
 
-const APPLE_WEB_SERVICE_URL = 'https://passbook-manager.run.aws-usw02-pr.ice.predix.io/api';
+const APPLE_WEB_SERVICE_URL = 'https://passbook-server.run.aws-usw02-pr.ice.predix.io/api';
 
 
 const GITHUB_PRODUCTION_CLIENT_ID = '96943ce4c9b4f09bf98f';
