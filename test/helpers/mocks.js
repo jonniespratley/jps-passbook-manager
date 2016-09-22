@@ -18,6 +18,7 @@ exports.mockIdentifer = {
 	passphrase: 'test'
 };
 
+var authToken = '0123456789876543210';
 
 
 log.info('mock-program', 'config', program.config.defaults);
@@ -28,36 +29,44 @@ exports.program = program;
 exports.mockPasses = [
 
 	new Pass({
-		_id: 'mock-generic',
+		serialNumber: 'mock-generic',
 		description: 'Example Generic',
-		serialNumber: '0123456789876543210',
-		authenticationToken: '0123456789876543210',
+		authenticationToken: authToken,
 		type: 'generic'
 	}),
 
 	new Pass({
 		serialNumber: 'mock-boarding',
 		description: 'Example Boarding Pass',
+		authenticationToken: authToken,
 		type: 'boardingPass'
 	}),
 
 	new Pass({
 		serialNumber: 'mock-coupon',
-
+authenticationToken: authToken,
 		description: 'Example Coupon',
 		type: 'coupon'
 	}),
 
 	new Pass({
 		serialNumber: 'mock-eventticket',
+		authenticationToken: authToken,
 		description: 'Example Event Ticket',
 		type: 'eventTicket'
 	}),
 
 	new Pass({
 		serialNumber: 'mock-storecard',
+		authenticationToken: authToken,
 		description: 'Example Store Card',
 		type: 'storeCard'
+	}),
+	new Pass({
+		serialNumber: 'mock-github',
+		authenticationToken: authToken,
+		description: 'Example Github',
+		type: 'github'
 	})
 ];
 
@@ -69,6 +78,6 @@ exports.mockDevice = new Device({
 	pushToken: 'ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2',
 	deviceLibraryIdentifier: '1234567890',
 	serialNumber: '0123456789876543210',
-	authorization: 'ApplePass 0123456789876543210',
+	authorization: 'ApplePass ' + authToken,
 	passTypeIdentifier: exports.mockPass.passTypeIdentifier
 });

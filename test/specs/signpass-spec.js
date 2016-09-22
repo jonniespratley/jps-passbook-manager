@@ -166,9 +166,11 @@ describe('SignPass', function () {
 			});
 		});
 
+
 		describe('Batching', function () {
 			var _passes = [];
 			var _mockPassFilenames = [];
+			var _mockPkpassFilenames = [];
 
 			before('find all passes', function (done) {
 				program.db.find({
@@ -197,15 +199,54 @@ describe('SignPass', function () {
 				_.forEach(_mockPassFilenames, function (filename) {
 					console.log('Sign pass', options, filename);
 					options.passFilename = filename;
+
 					signpass = new SignPass(options);
 					signpass.signPromise().then(function (resp) {
+						_mockPkpassFilenames.push(resp.dest);
 						assert(resp);
 						assert(fs.existsSync(resp.dest));
 						_done(resp);
 					}).catch(function (err) {
+
+						assert.fail(err);
 						_done();
-						//assert.fail(err);
-						//done();
+					});
+				});
+			});
+
+			describe('Validation', function () {
+				it('validate - should validate pass with signpass bin and resolve on success', function(done){
+					SignPass.validate(_mockPkpassFilenames[0]).then(function(resp){
+						assert(resp);
+						done();
+					}).catch(function(err){
+						done(err);
+					});
+				});
+
+				it('validate - should validate pass with signpass bin and reject on error', function(done){
+					SignPass.validate('invalid-pkpass').then(function(resp){
+						assert.fail(resp);
+						done();
+					}).catch(function(err){
+						assert(err);
+						done();
+					});
+				});
+
+				it('validate - all signed passes must be valid', function(done) {
+					var _done = _.after(_mockPkpassFilenames.length, function(){
+						done();
+					});
+					_.forEach(_mockPkpassFilenames, function(filename){
+						assert(filename);
+						SignPass.validate(filename).then(function(_resp) {
+							assert(_resp);
+							_done();
+						}).catch(function(err) {
+							assert.fail(err);
+							done(err);
+						});
 					});
 				});
 			});
