@@ -56,6 +56,7 @@
     "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
     "pem": "^1.8.1",
+    "pshell": "^1.0.2",
     "redis": "^2.4.2",
     "request": "^2.0.5",
     "serve-index": "^1.6.0",

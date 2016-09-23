@@ -1,5 +1,6 @@
 'use strict';
 var path = require('path');
+var log = require('npmlog');
 var config = require(path.resolve(__dirname, '../../config.js'));
 var program = require(path.resolve(__dirname, '../../lib/program.js'))({
 	dataPath: path.resolve(__dirname, '../temp')
@@ -14,48 +15,58 @@ exports.mockIdentifer = {
 	passTypeIdentifier: config.passkit.passTypeIdentifier,
 	wwdr: path.resolve(__dirname, '../../certificates/wwdr-authority.pem'),
 	p12: path.resolve(__dirname, `../../certificates/${config.passkit.passTypeIdentifier}.p12`),
-	passphrase: 'fred'
+	passphrase: 'test'
 };
-program.config.defaults.passkit.passTypeIdentifier = exports.mockIdentifer.passTypeIdentifier;
 
-console.log('MOCK program', program.config.defaults);
+var authToken = '0123456789876543210';
 
 
+log.info('mock-program', 'config', program.config.defaults);
+
+log.info('passTypeIdentifier', config.passkit.passTypeIdentifier);
 exports.program = program;
 
 exports.mockPasses = [
 
 	new Pass({
-		_id: 'mock-generic',
+		serialNumber: 'mock-generic',
 		description: 'Example Generic',
-		serialNumber: '0123456789876543210',
-		authenticationToken: '0123456789876543210',
-
+		authenticationToken: authToken,
 		type: 'generic'
 	}),
 
 	new Pass({
-		_id: 'mock-boardingpass',
+		serialNumber: 'mock-boarding',
 		description: 'Example Boarding Pass',
+		authenticationToken: authToken,
 		type: 'boardingPass'
 	}),
 
 	new Pass({
-		_id: 'mock-coupon',
+		serialNumber: 'mock-coupon',
+authenticationToken: authToken,
 		description: 'Example Coupon',
 		type: 'coupon'
 	}),
 
 	new Pass({
-		_id: 'mock-eventticket',
+		serialNumber: 'mock-eventticket',
+		authenticationToken: authToken,
 		description: 'Example Event Ticket',
 		type: 'eventTicket'
 	}),
 
 	new Pass({
-		_id: 'mock-storecard',
+		serialNumber: 'mock-storecard',
+		authenticationToken: authToken,
 		description: 'Example Store Card',
 		type: 'storeCard'
+	}),
+	new Pass({
+		serialNumber: 'mock-github',
+		authenticationToken: authToken,
+		description: 'Example Github',
+		type: 'github'
 	})
 ];
 
@@ -67,6 +78,6 @@ exports.mockDevice = new Device({
 	pushToken: 'ce0a5983ba7e600416d5da202cf9c218050fd424581ea259bc01174238b5a9d2',
 	deviceLibraryIdentifier: '1234567890',
 	serialNumber: '0123456789876543210',
-	authorization: 'ApplePass 0123456789876543210',
+	authorization: 'ApplePass ' + authToken,
 	passTypeIdentifier: exports.mockPass.passTypeIdentifier
 });

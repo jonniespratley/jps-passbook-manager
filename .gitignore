@@ -32,17 +32,13 @@ temp/data
 node_modules/gruntacular/node_modules/testacular/node_modules/socket.io/node_modules/socket.io-client/lib/vendor/web-socket-js/flash-src/com/hurlant/crypto/rsa/RSAKey.as
 
 /mochawesome-reports/
-
 www
-
 atlassian-ide-plugin.xml
 
 
-
-# Data store
-#data
 temp.json
 data.json
 
 coverage
 test/temp
+esdoc

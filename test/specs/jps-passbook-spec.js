@@ -3,28 +3,25 @@ var assert = require('assert'),
 	path = require('path'),
 	_ = require('lodash'),
 	fs = require('fs-extra'),
-	SignPass = require(path.resolve(__dirname, '../../lib/signpass')),
 	Passbook = require(path.resolve(__dirname, '../../lib/jps-passbook'));
 
 var mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 var program = mocks.program;
 var jpsPassbook = new Passbook(program);
-
+var pkpassFilename = null;
 var mockIdentifer = mocks.mockIdentifer;
 var mockPass = mocks.mockPass;
 var mockPasses = mocks.mockPasses;
-var _passes = [];
-var passFiles = [];
+var mockPkPassFilenames = [];
 
+/*global describe, it, before*/
 describe('jps-passbook', function() {
 
-
-
-	this.timeout(20000);
 	describe('Batching', function() {
 		before(function() {
 			program.db.saveAll(mocks.mockPasses).then(function(resp) {
 				mockPasses = resp;
+				mockPass = resp[1];
 				console.log('GOT PASSES', resp);
 			});
 		});
@@ -39,16 +36,20 @@ describe('jps-passbook', function() {
 			});
 		});
 
-		xit('batchPromise("sign", passes) - should create each pass in database', function(done) {
+		it('batchPromise("sign", passes) - should create each pass in database', function(done) {
 			this.timeout(10000);
-			var mockIds = _.pluck(mockPasses, '_id');
-			console.log('mockIds', mockIds);
-			jpsPassbook.batchPromise('sign', mockPasses).then(function(_resp) {
+			var _done = _.after(mockPasses.length, function(){
+				done();
+			});
+			jpsPassbook.batchSignPasses(mockPasses).then(function(_resp) {
 				console.log(_resp);
 				assert(_resp);
-				assert(mockIds.length === _resp.length);
-				assert(fs.existsSync(_resp.dest), 'returns .pkpass path');
-				done();
+				_resp.forEach(function(p){
+					mockPkPassFilenames.push(p.dest);
+					assert(fs.existsSync(p.dest), 'returns .pkpass path');
+					_done();
+				});
+
 			}).catch(function(err) {
 				assert.fail(err);
 				done();
@@ -134,7 +135,7 @@ describe('jps-passbook', function() {
 			it('signPass() - should sign .raw package into a .pkpass', function(done) {
 				jpsPassbook.signPass(mockPass, function(err, p) {
 					if (err) {
-						assert.fail(err);
+						done(err);
 					}
 					assert(fs.existsSync(p.dest), 'returns .pkpass path');
 					done();
@@ -144,15 +145,19 @@ describe('jps-passbook', function() {
 			it('signPassPromise() - should sign pass .raw into .pkpass and resolve promise', function(done) {
 				jpsPassbook.signPassPromise(mockPass).then(function(p) {
 					assert(fs.existsSync(p.dest), 'returns .pkpass path');
+					pkpassFilename = p.dest;
 					done();
+				}).catch(function(err){
+					done(err);
 				});
 			});
 
 			describe('Validation', function() {
+
 				it('validatePass() - should validate a pass', function(done) {
 					jpsPassbook.validatePass(mockPass, function(err, p) {
 						if (err) {
-							assert.fail(err);
+							done(err);
 						}
 						assert(p, 'returns pass');
 						//	assert(p.filename, 'returns pass filename');
@@ -163,6 +168,31 @@ describe('jps-passbook', function() {
 
 				it('validatePassPromise() - should validate pass .pkpass signature and resolve promise', function(done) {
 					done();
+				});
+
+				it('signpassValidation - signed pass must be valid', function(done) {
+					jpsPassbook.signpassValidation(pkpassFilename).then(function(_resp) {
+						assert(_resp);
+						done();
+					}).catch(function(err) {
+						done(err);
+					});
+				});
+
+
+				it('signpassValidation - all signed passes must be valid', function(done) {
+					var _done = _.after(mockPkPassFilenames.length, function(){
+						done();
+					});
+					_.forEach(mockPkPassFilenames, function(filename){
+						jpsPassbook.signpassValidation(filename).then(function(_resp) {
+							assert(_resp);
+							_done();
+						}).catch(function(err) {
+							done(err);
+						});
+					});
+
 				});
 
 			});
