@@ -5,18 +5,22 @@ const assert = require('assert');
 const path = require('path');
 const mocks = require(path.resolve(__dirname, '../helpers/mocks'));
 const program = mocks.program;
-const config = program.config.defaults;
+
 const SignPass = require(path.resolve(__dirname, '../../lib/signpass'));
 const jpsPassbook = require(path.resolve(__dirname, '../../lib/jps-passbook'))(program);
 
 var options = mocks.mockIdentifer;
-
+//options.tempDir = path.resolve(__dirname, '../tmp');
 var signpass;
 var mockPass = mocks.mockPass;
 var passes = mocks.mockPasses;
 var mockIdentifer = mocks.mockIdentifer;
-var testPasses = [];
+
 var mockPasses;
+var _passes = [];
+var _mockPassFilenames = [];
+var _mockPkpassFilenames = [];
+var _mockPkpassFilename;
 
 /*global describe, it, before*/
 describe('SignPass', function () {
@@ -146,16 +150,18 @@ describe('SignPass', function () {
 			jpsPassbook.createPassPromise(mockPasses[2]).then(function (resp) {
 				mockPass = resp;
 				//	mockPass = resp[0];
-				console.log('Using Mock Pass', mockPass);
+			//	console.log('Using Mock Pass', mockPass);
 				done();
 			});
 		});
 
 		it('sign() - should create .zip and .pkpass files', function (done) {
 			options.passFilename = mockPass.rawFilename || mockPass.filename;
+			//options.tempDir = path.resolve(__dirname, '../tmp');
 			signpass = new SignPass(options);
 			signpass.sign(function (err, resp) {
 				console.log('\n\n Signed using', options.passFilename);
+				mockPass.pkpassFilename = resp.dest;
 				if (err) {
 					assert.fail(err);
 					done();
@@ -166,11 +172,19 @@ describe('SignPass', function () {
 			});
 		});
 
+		it('validate - should validate pass with signpass bin and resolve on success', function(done){
+			SignPass.validate(mockPass.pkpassFilename).then(function(resp){
+				assert(resp);
+				done();
+			}).catch(function(err){
+				done(err);
+			});
+		});
+
+
 
 		describe('Batching', function () {
-			var _passes = [];
-			var _mockPassFilenames = [];
-			var _mockPkpassFilenames = [];
+
 
 			before('find all passes', function (done) {
 				program.db.find({
@@ -179,8 +193,8 @@ describe('SignPass', function () {
 					_passes = resp;
 					jpsPassbook.batchCreatePasses(_passes).then(function (r) {
 						mockPass = r[1];
-						console.log('Created passes', r);
-						console.log('Using Mock Pass', mockPass);
+						//console.log('Created passes', r);
+						//console.log('Using Mock Pass', mockPass);
 						_mockPassFilenames = _.map(r, 'filename');
 						console.log('_mockPassFilenames', _mockPassFilenames);
 						done();
@@ -197,32 +211,25 @@ describe('SignPass', function () {
 				});
 
 				_.forEach(_mockPassFilenames, function (filename) {
-					console.log('Sign pass', options, filename);
+//					filename = filename.replace('.raw', '.pkpass');
+					console.log('Sign', filename);
 					options.passFilename = filename;
-
 					signpass = new SignPass(options);
-					signpass.signPromise().then(function (resp) {
+					signpass.sign(function (err, resp) {
+						if(err){
+							assert.fail(err);
+							done();
+						}
 						_mockPkpassFilenames.push(resp.dest);
-						assert(resp);
+						_mockPkpassFilename = resp.dest;
+						assert(resp.dest);
 						assert(fs.existsSync(resp.dest));
 						_done(resp);
-					}).catch(function (err) {
-
-						assert.fail(err);
-						_done();
 					});
 				});
 			});
 
 			describe('Validation', function () {
-				it('validate - should validate pass with signpass bin and resolve on success', function(done){
-					SignPass.validate(_mockPkpassFilenames[0]).then(function(resp){
-						assert(resp);
-						done();
-					}).catch(function(err){
-						done(err);
-					});
-				});
 
 				it('validate - should validate pass with signpass bin and reject on error', function(done){
 					SignPass.validate('invalid-pkpass').then(function(resp){
@@ -234,7 +241,7 @@ describe('SignPass', function () {
 					});
 				});
 
-				it('validate - all signed passes must be valid', function(done) {
+				xit('validate - all signed passes must be valid', function(done) {
 					var _done = _.after(_mockPkpassFilenames.length, function(){
 						done();
 					});
