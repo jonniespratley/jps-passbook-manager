@@ -109,7 +109,7 @@ describe('Auth', function() {
 		});
 		describe('Account', function() {
 
-			it('GET - /account - should return account view', function(done) {
+			xit('GET - /account - should return account view', function(done) {
 				request(app)
 					.get('/account')
 					.set('Accept', 'application/json')

@@ -1,6 +1,6 @@
 'use strict';
 const gulp = require('gulp');
-const mocha = require('gulp-mocha');
+const mocha = require('gulp-spawn-mocha');
 const istanbul = require('gulp-istanbul');
 
 const config = {
@@ -27,13 +27,14 @@ gulp.task('pre-test', function() {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function() {
+gulp.task('test', function() {
   return gulp.src(config.specs)
     .pipe(mocha({
       read: false,
-			reporter:'mochawesome'
+      istanbul: true,
+      reporter: 'mochawesome'
     }))
-    .pipe(istanbul.writeReports())
+    //.pipe(istanbul.writeReports())
     .once('error', function() {
       process.exit(1);
     })
