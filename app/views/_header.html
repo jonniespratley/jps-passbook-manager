@@ -1,12 +1,16 @@
 <header>
   <nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
-    <div class="nav navbar-nav">
-      
-        <a ng-repeat="item in App.menu"
-        class="nav-item nav-link"
-        ng-href="{{item.href}}"><i class="icon-{{item.icon}}"></i> <span>{{item.title}}</span></a>
-
-    </div>
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a href="#" class="navbar-brand">passbook-manager</a>
+		</div>
+		<div class="nav navbar-nav">
+				<a ng-repeat="item in App.menu"
+				class="nav-item nav-link"
+				ng-href="{{item.href}}"><i class="icon-{{item.icon}}"></i> <span>{{item.title}}</span></a>
+				<a class="nav-item nav-link pull-right" href="" data-toggle="modal" data-target="#passTypeModal">Create new pass</button>
+		</div>
+	</div>
   </nav>
 
 </header>

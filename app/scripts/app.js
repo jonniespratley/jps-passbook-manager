@@ -65,13 +65,7 @@ var jpsPassbookManagerApp = angular.module('jpsPassbookManagerApp', [
 				"_key": "user-jonniespratley"
 			}
 		},
-		menu: [{
-			id: null,
-			slug: 'home',
-			title: 'Home',
-			icon: 'home',
-			href: '#/home'
-		}, {
+		menu: [ {
 			id: null,
 			slug: 'manage',
 			title: 'Manage',
